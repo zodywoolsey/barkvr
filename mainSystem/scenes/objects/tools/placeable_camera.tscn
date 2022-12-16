@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://o0ng7ti5ekqx"]
+
+[ext_resource type="Script" path="res://mainSystem/scripts/placeable_camera.gd" id="1_ex4eg"]
+[ext_resource type="PackedScene" uid="uid://wk11tl1w3f3d" path="res://mainAssets/modelScenes/camerIndicator.tscn" id="2_abq7b"]
+
+[node name="placeableCamera" type="Node3D"]
+script = ExtResource("1_ex4eg")
+
+[node name="Window" type="Window" parent="."]
+title = "camera"
+position = Vector2i(40, 40)
+size = Vector2i(500, 500)
+
+[node name="Camera3d" type="Camera3D" parent="Window"]
+current = true
+fov = 122.8
+
+[node name="Cube" parent="." instance=ExtResource("2_abq7b")]

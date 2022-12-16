@@ -1,0 +1,36 @@
+[remap]
+
+importer="scene"
+importer_version=1
+type="PackedScene"
+uid="uid://bu6cnk25ml18j"
+path="res://.godot/imported/cameraIndicator.gltf-857586f9d9b2f73d5fc35dc755959a5a.scn"
+
+[deps]
+
+source_file="res://mainAssets/models/cameraIndicator.gltf"
+dest_files=["res://.godot/imported/cameraIndicator.gltf-857586f9d9b2f73d5fc35dc755959a5a.scn"]
+
+[params]
+
+nodes/root_type="Node3D"
+nodes/root_name="Scene Root"
+nodes/apply_root_scale=true
+nodes/root_scale=0.5
+meshes/ensure_tangents=true
+meshes/generate_lods=true
+meshes/create_shadow_meshes=true
+meshes/light_baking=1
+meshes/lightmap_texel_size=0.2
+skins/use_named_skins=false
+animation/import=false
+animation/fps=30
+import_script/path=""
+_subresources={
+"nodes": {
+"PATH:Cube": {
+"physics/body_type": 1,
+"physics/shape_type": 1
+}
+}
+}

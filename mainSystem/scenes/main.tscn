@@ -1,0 +1,46 @@
+[gd_scene load_steps=6 format=3 uid="uid://ctwckofb07cfw"]
+
+[ext_resource type="PackedScene" uid="uid://dy52qtwo8hvfq" path="res://mainSystem/scenes/player/xrplayer.tscn" id="1_8cqag"]
+[ext_resource type="Script" path="res://mainSystem/scenes/fpsLabel.gd" id="3_gkioa"]
+[ext_resource type="PackedScene" uid="uid://bprg1q4jfdtmj" path="res://mainAssets/modelScenes/tng_quarters.tscn" id="4_4b2c1"]
+[ext_resource type="PackedScene" uid="uid://dglcj6xs6x076" path="res://mainSystem/scenes/objects/toys/rigid_body_3d_grabbable.tscn" id="4_7qdbs"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_2sh5v"]
+font_size = 48
+
+[node name="main" type="Node3D"]
+
+[node name="xrplayer" parent="." instance=ExtResource("1_8cqag")]
+
+[node name="Label" type="Label" parent="."]
+offset_left = 860.0
+offset_top = 563.0
+offset_right = 949.0
+offset_bottom = 633.0
+text = "test"
+label_settings = SubResource("LabelSettings_2sh5v")
+script = ExtResource("3_gkioa")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.704159, 0.9302, 0.327558)
+shadow_enabled = true
+
+[node name="TNG_quarters" parent="." instance=ExtResource("4_4b2c1")]
+
+[node name="RigidBody3d" parent="." instance=ExtResource("4_7qdbs")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.788552, -0.703433)
+
+[node name="RigidBody3d2" parent="." instance=ExtResource("4_7qdbs")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.147277, 0.788552, -0.703433)
+
+[node name="RigidBody3d3" parent="." instance=ExtResource("4_7qdbs")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.134432, 0.788552, -0.703433)
+
+[node name="RigidBody3d4" parent="." instance=ExtResource("4_7qdbs")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.150541, 0.912467, -0.703433)
+
+[node name="RigidBody3d5" parent="." instance=ExtResource("4_7qdbs")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0091092, 0.912467, -0.703433)
+
+[node name="RigidBody3d6" parent="." instance=ExtResource("4_7qdbs")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.153633, 0.912467, -0.703433)
