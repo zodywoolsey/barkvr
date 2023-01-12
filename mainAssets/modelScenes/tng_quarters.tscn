@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://bprg1q4jfdtmj"]
+[gd_scene load_steps=3 format=3]
 
 [ext_resource type="PackedScene" uid="uid://dh55t601p8gai" path="res://mainAssets/models/TNG_quarters.gltf" id="1_nbmrm"]
 [ext_resource type="Material" uid="uid://c5umyffwwj1nk" path="res://mainAssets/materials/shinyCarpet/shiny carpet.tres" id="2_sohni"]
+
 
 [node name="TNG_quarters" instance=ExtResource("1_nbmrm")]
 
