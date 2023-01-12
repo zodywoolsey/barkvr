@@ -1,4 +1,4 @@
-[gd_scene load_steps=3 format=3 uid="uid://o0ng7ti5ekqx"]
+[gd_scene load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://mainSystem/scripts/placeable_camera.gd" id="1_ex4eg"]
 [ext_resource type="PackedScene" uid="uid://wk11tl1w3f3d" path="res://mainAssets/modelScenes/camerIndicator.tscn" id="2_abq7b"]

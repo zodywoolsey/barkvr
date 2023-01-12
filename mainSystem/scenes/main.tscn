@@ -1,16 +1,59 @@
-[gd_scene load_steps=6 format=3 uid="uid://ctwckofb07cfw"]
+[gd_scene load_steps=7 format=3 uid="uid://ctwckofb07cfw"]
 
-[ext_resource type="PackedScene" uid="uid://dy52qtwo8hvfq" path="res://mainSystem/scenes/player/xrplayer.tscn" id="1_8cqag"]
+[ext_resource type="PackedScene" uid="uid://dcek6tv5hch7e" path="res://mainSystem/scenes/player/xrplayer.tscn" id="1_8cqag"]
 [ext_resource type="Script" path="res://mainSystem/scenes/fpsLabel.gd" id="3_gkioa"]
-[ext_resource type="PackedScene" uid="uid://bprg1q4jfdtmj" path="res://mainAssets/modelScenes/tng_quarters.tscn" id="4_4b2c1"]
-[ext_resource type="PackedScene" uid="uid://dglcj6xs6x076" path="res://mainSystem/scenes/objects/toys/rigid_body_3d_grabbable.tscn" id="4_7qdbs"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_8chx5"]
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_uux0j"]
+data = PackedVector3Array(-0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, 0.5, 0.5, 0.5, -0.5, 0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, -0.5, -0.5)
 
 [sub_resource type="LabelSettings" id="LabelSettings_2sh5v"]
 font_size = 48
 
+[sub_resource type="GDScript" id="GDScript_al5yd"]
+script/source = "extends Node3D
+
+@onready var thread = Thread.new()
+var loader = ResourceLoader
+var loaded = false
+var asset :PackedScene
+@export var pathToLoad : String
+
+func _ready():
+	loader.load_threaded_request(pathToLoad)
+	
+
+func _process(delta):
+	if !loaded:
+		if loader.load_threaded_get_status(pathToLoad) == ResourceLoader.THREAD_LOAD_LOADED:
+			print('loaded')
+			loaded = true
+			asset = loader.load_threaded_get(pathToLoad)
+			add_child(asset.instantiate())
+		elif loader.load_threaded_get_status(pathToLoad) == loader.THREAD_LOAD_FAILED:
+			print('failed loading')
+			loaded = true
+		elif loader.load_threaded_get_status(pathToLoad) == loader.THREAD_LOAD_IN_PROGRESS:
+			print('not loaded yet')
+		elif loader.load_threaded_get_status(pathToLoad) == loader.THREAD_LOAD_INVALID_RESOURCE:
+			print('invalid')
+			loaded = true
+"
+
 [node name="main" type="Node3D"]
 
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.28707, 0)
+mesh = SubResource("BoxMesh_8chx5")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D/StaticBody3D"]
+shape = SubResource("ConcavePolygonShape3D_uux0j")
+
 [node name="xrplayer" parent="." instance=ExtResource("1_8cqag")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.21646, 0)
 
 [node name="Label" type="Label" parent="."]
 offset_left = 860.0
@@ -21,26 +64,6 @@ text = "test"
 label_settings = SubResource("LabelSettings_2sh5v")
 script = ExtResource("3_gkioa")
 
-[node name="OmniLight3D" type="OmniLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.704159, 0.9302, 0.327558)
-shadow_enabled = true
-
-[node name="TNG_quarters" parent="." instance=ExtResource("4_4b2c1")]
-
-[node name="RigidBody3d" parent="." instance=ExtResource("4_7qdbs")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.788552, -0.703433)
-
-[node name="RigidBody3d2" parent="." instance=ExtResource("4_7qdbs")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.147277, 0.788552, -0.703433)
-
-[node name="RigidBody3d3" parent="." instance=ExtResource("4_7qdbs")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.134432, 0.788552, -0.703433)
-
-[node name="RigidBody3d4" parent="." instance=ExtResource("4_7qdbs")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.150541, 0.912467, -0.703433)
-
-[node name="RigidBody3d5" parent="." instance=ExtResource("4_7qdbs")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0091092, 0.912467, -0.703433)
-
-[node name="RigidBody3d6" parent="." instance=ExtResource("4_7qdbs")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.153633, 0.912467, -0.703433)
+[node name="loaderTest" type="Node3D" parent="."]
+script = SubResource("GDScript_al5yd")
+pathToLoad = "res://mainAssets/modelScenes/pupper_home.tscn"
