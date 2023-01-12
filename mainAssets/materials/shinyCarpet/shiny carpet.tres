@@ -1,9 +1,10 @@
-[gd_resource type="StandardMaterial3D" load_steps=5 format=3 uid="uid://c5umyffwwj1nk"]
+[gd_resource type="StandardMaterial3D" load_steps=5 format=3]
 
 [ext_resource type="Texture2D" uid="uid://bhfrv6lenvdvk" path="res://mainAssets/materials/shinyCarpet/shiny carpet_albedo.png" id="1"]
 [ext_resource type="Texture2D" uid="uid://chdadb8x16137" path="res://mainAssets/materials/shinyCarpet/shiny carpet_orm.png" id="2"]
 [ext_resource type="Texture2D" uid="uid://ddhoqx0wq4h58" path="res://mainAssets/materials/shinyCarpet/shiny carpet_normal.png" id="3"]
 [ext_resource type="Texture2D" uid="uid://smct31trun1" path="res://mainAssets/materials/shinyCarpet/shiny carpet_depth.png" id="4"]
+
 
 [resource]
 albedo_texture = ExtResource("1")

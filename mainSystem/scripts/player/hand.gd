@@ -11,6 +11,19 @@ func _ready():
 	grabArea.connect("body_exited", grabBodyExited)
 	connect("button_pressed",buttonPressed)
 	connect("button_released",buttonReleased)
+	input_value_changed.connect(func(name:String,value:float):
+		print('input {0}, {1}'.format([name,value]))
+		if name == "grip" and value > .5:
+			if grabAreaBodies.size() > 0:
+				grab(grabAreaBodies[0])
+			elif handRay.is_colliding():
+				var rayCollided = handRay.get_collider()
+				if rayCollided.has_meta("grabbable"):
+					grab(rayCollided,true)
+		)
+	input_axis_changed.connect(func(name:String,value):
+		print('input {0}, {1}'.format([name,value]))
+		)
 
 func _process(delta):
 	pass
@@ -31,15 +44,16 @@ func grabBodyExited(body):
 
 func buttonPressed(name):
 	if name == "grip_click":
-		if grabAreaBodies.size() > 0:
-			grab(grabAreaBodies[0])
-		elif handRay.is_colliding():
-			var rayCollided = handRay.get_collider()
-			if rayCollided.has_meta("grabbable"):
-				grab(rayCollided,true)
+#		if grabAreaBodies.size() > 0:
+#			grab(grabAreaBodies[0])
+#		elif handRay.is_colliding():
+#			var rayCollided = handRay.get_collider()
+#			if rayCollided.has_meta("grabbable"):
+#				grab(rayCollided,true)
+		pass
 	elif name == "trigger_click":
 		handRay.enabled = true
-	print(name)
+	print("button: {0}".format([name]))
 	
 func buttonReleased(name):
 	if name == "grip_click" and !grabConstraint.node_b.is_empty():
@@ -53,7 +67,7 @@ func buttonReleased(name):
 
 func grab(node, laser:bool=false):
 	var tmpgrab = node.get_meta("grabbable")
-	print(tmpgrab)
+#	print(tmpgrab)
 	if tmpgrab == 1:
 		if laser:
 			grabConstraint.global_position = node.global_position

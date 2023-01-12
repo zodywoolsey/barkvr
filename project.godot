@@ -33,6 +33,9 @@ common/physics_ticks_per_second=72
 
 [rendering]
 
+occlusion_culling/bvh_build_quality=0
+driver/threads/thread_model=2
+occlusion_culling/use_occlusion_culling=true
 vrs/mode=2
 environment/defaults/default_environment="res://defaultEnvironment.tres"
 
