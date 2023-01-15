@@ -64,8 +64,6 @@ func _ready():
 		)
 
 func _physics_process(delta):
-	collision_shape_3d.global_position.x = xr_camera_3d.global_position.x
-	collision_shape_3d.global_position.z = xr_camera_3d.global_position.z
 	
 	# Add the gravity.
 	if not is_on_floor():
