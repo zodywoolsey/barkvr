@@ -1,0 +1,18 @@
+[gd_resource type="StandardMaterial3D" load_steps=5 format=3 uid="uid://kd5bhdqw1r6e"]
+
+[ext_resource type="Texture2D" uid="uid://bmyo12jv1nvvi" path="res://vtube/arflin/Textures/Clothes/PurpleTex.png" id="1_6i0ro"]
+[ext_resource type="Texture2D" uid="uid://tjlxhtypbm35" path="res://vtube/arflin/Textures/Clothes/Clothes_Roughness.png" id="2_2p5lo"]
+[ext_resource type="Texture2D" uid="uid://daoo2ytrsi4l3" path="res://vtube/arflin/Textures/Clothes/Clothes_Metallic.png" id="2_4rxca"]
+[ext_resource type="Texture2D" uid="uid://tsv6da38ak7j" path="res://vtube/arflin/Textures/Clothes/Clothes_Normal_OpenGL.png" id="2_la0xe"]
+
+[resource]
+resource_name = "Clothes"
+cull_mode = 2
+vertex_color_use_as_albedo = true
+albedo_color = Color(0.6, 0, 1, 1)
+albedo_texture = ExtResource("1_6i0ro")
+metallic = 1.0
+metallic_texture = ExtResource("2_4rxca")
+roughness_texture = ExtResource("2_2p5lo")
+normal_enabled = true
+normal_texture = ExtResource("2_la0xe")

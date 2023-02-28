@@ -1,0 +1,15 @@
+[gd_resource type="StandardMaterial3D" load_steps=3 format=3 uid="uid://6hyktyginhkm"]
+
+[ext_resource type="Texture2D" uid="uid://b274eytoxh2bs" path="res://vtube/arflin/Textures/brown hair texture.png" id="1_4i1eg"]
+[ext_resource type="Texture2D" uid="uid://dwxgux8be3jgy" path="res://vtube/arflin/Textures/hair norm.jpg" id="2_ggsji"]
+
+[resource]
+resource_name = "Hair"
+transparency = 4
+cull_mode = 2
+vertex_color_use_as_albedo = true
+albedo_texture = ExtResource("1_4i1eg")
+roughness = 0.5
+normal_enabled = true
+normal_scale = 0.3
+normal_texture = ExtResource("2_ggsji")

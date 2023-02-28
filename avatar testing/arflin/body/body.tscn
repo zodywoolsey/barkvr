@@ -1,0 +1,67 @@
+[gd_scene load_steps=3 format=3 uid="uid://blrikadbrv6oq"]
+
+[ext_resource type="Skin" uid="uid://kf2vekj8trah" path="res://vtube/arflin/body/bodySkin.tres" id="1_c8fsn"]
+[ext_resource type="ArrayMesh" uid="uid://byl1gm0qbpdaj" path="res://vtube/arflin/body/bodyMesh.mesh" id="1_md23q"]
+
+[node name="body" type="MeshInstance3D"]
+mesh = ExtResource("1_md23q")
+skin = ExtResource("1_c8fsn")
+blend_shapes/Blink = 0.0
+"blend_shapes/Blink Left" = 0.0
+"blend_shapes/Blink Right" = 0.0
+blend_shapes/Blush = 0.0
+"blend_shapes/Brow - Angry" = 0.0
+"blend_shapes/Brow - Raised" = 0.0
+"blend_shapes/Brow - Sad" = 0.0
+"blend_shapes/Cust - Bigger Hiney" = 0.0
+"blend_shapes/Cust - Bigger Tummy" = 0.0
+"blend_shapes/Cust - Boobiee" = 0.0
+"blend_shapes/Cust - Hide Chest Fluff" = 0.0
+"blend_shapes/Cust - Hide Hip Fluff" = 0.0
+"blend_shapes/Cust - Muzzle Length" = 0.0
+"blend_shapes/Cust - Smaller Hips" = 0.0
+"blend_shapes/Cust - Smaller Tummy" = 0.0
+"blend_shapes/Cust - Smaller hiney D:" = 0.0
+"blend_shapes/Cust - Wider Hips" = 0.0
+"blend_shapes/Eye - Happy Left" = 0.0
+"blend_shapes/Eye - Happy Right" = 0.0
+"blend_shapes/Eyes - Angular" = 0.0
+"blend_shapes/Eyes - Bored" = 0.0
+"blend_shapes/Eyes - Mofu eyes" = 0.0
+"blend_shapes/Eyes - Mofu eyes - left" = 0.0
+"blend_shapes/Eyes - Mofu eyes - right" = 0.0
+"blend_shapes/Eyes - Smug" = 0.0
+"blend_shapes/Eyes - Surprised" = 0.0
+"blend_shapes/Hair - PonyTailHide" = 0.0
+"blend_shapes/Hair - ShortHide" = 0.0
+blend_shapes/Heart = 0.0
+"blend_shapes/Hide - FrontShort" = 0.0
+"blend_shapes/Hnnng > <" = 0.0
+"blend_shapes/Mouth - Closed Angry" = 0.0
+"blend_shapes/Mouth - Sad Open" = 0.0
+"blend_shapes/Mouth - Smile Closed" = 0.0
+"blend_shapes/Mouth - Smile Open" = 0.0
+"blend_shapes/Mouth - Smile Open Small" = 0.0
+"blend_shapes/Mouth - Surprised" = 0.0
+"blend_shapes/Mouth - Tongue out Closed" = 0.0
+"blend_shapes/Mouth - Tongue out Open" = 0.0
+"blend_shapes/Mouth - Toothy Grin" = 0.0
+"blend_shapes/Open Mouth" = 0.0
+"blend_shapes/Puffy Cheeks" = 0.0
+blend_shapes/Stars = 0.0
+blend_shapes/Tears = 0.0
+blend_shapes/vrc.v_aa = 0.0
+blend_shapes/vrc.v_ch = 0.0
+blend_shapes/vrc.v_dd = 0.0
+blend_shapes/vrc.v_ee = 0.0
+blend_shapes/vrc.v_ff = 0.0
+blend_shapes/vrc.v_ih = 0.0
+blend_shapes/vrc.v_kk = 0.0
+blend_shapes/vrc.v_nn = 0.0
+blend_shapes/vrc.v_oh = 0.0
+blend_shapes/vrc.v_ou = 0.0
+blend_shapes/vrc.v_pp = 0.0
+blend_shapes/vrc.v_rr = 0.0
+blend_shapes/vrc.v_sil = 0.0
+blend_shapes/vrc.v_ss = 0.0
+blend_shapes/vrc.v_th = 0.0

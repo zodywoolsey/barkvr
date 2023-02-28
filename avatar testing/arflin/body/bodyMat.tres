@@ -1,0 +1,20 @@
+[gd_resource type="StandardMaterial3D" load_steps=5 format=3 uid="uid://duelplpy047i1"]
+
+[ext_resource type="Texture2D" uid="uid://13jq1r27enfq" path="res://vtube/arflin/Textures/Body_Base_Color.png" id="1_ooht7"]
+[ext_resource type="Texture2D" uid="uid://crvuxd02moe21" path="res://vtube/arflin/Textures/Body_Metallic.png" id="2_k2gxb"]
+[ext_resource type="Texture2D" uid="uid://xuqfq1qxjjoq" path="res://vtube/arflin/Textures/Body_Normal_OpenGL.png" id="3_xk5g8"]
+[ext_resource type="Texture2D" uid="uid://c5b41gi5h0e8v" path="res://vtube/arflin/Textures/Body_Roughness.png" id="4_jjneb"]
+
+[resource]
+resource_name = "Body"
+cull_mode = 2
+vertex_color_use_as_albedo = true
+albedo_color = Color(0.666667, 0.564706, 0.870588, 1)
+albedo_texture = ExtResource("1_ooht7")
+metallic_texture = ExtResource("2_k2gxb")
+metallic_texture_channel = 2
+roughness_texture = ExtResource("4_jjneb")
+roughness_texture_channel = 1
+normal_enabled = true
+normal_scale = 0.3
+normal_texture = ExtResource("3_xk5g8")
