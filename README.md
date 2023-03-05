@@ -45,8 +45,7 @@ proved to not be quite up to par. There is a consideration on our part to refact
 A-Frame to use newer/faster rendering APIs.
 
 
-# Massive list of goals from my notes file:
-# PTB
+# Current ideas list
 
 ## planned features:
 
