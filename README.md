@@ -80,6 +80,7 @@ A-Frame to use newer/faster rendering APIs.
     - Pimax
     - VivePort
     - PSVR
+    - Monado
   - Web
     - ensure widspread compatibility in the hosting method
   - mobile
