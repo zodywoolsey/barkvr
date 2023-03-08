@@ -11,7 +11,7 @@ func _ready():
 	grabArea.connect("body_exited", grabBodyExited)
 	connect("button_pressed",buttonPressed)
 	connect("button_released",buttonReleased)
-	input_value_changed.connect(func(name:String,value:float):
+	input_float_changed.connect(func(name:String,value:float):
 		print('input {0}, {1}'.format([name,value]))
 		if name == "grip" and value > .5:
 			if grabAreaBodies.size() > 0:
@@ -21,7 +21,7 @@ func _ready():
 				if rayCollided.has_meta("grabbable"):
 					grab(rayCollided,true)
 		)
-	input_axis_changed.connect(func(name:String,value):
+	input_vector2_changed.connect(func(name:String,value):
 		print('input {0}, {1}'.format([name,value]))
 		)
 

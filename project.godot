@@ -13,7 +13,6 @@ config_version=5
 config/name="PTB"
 run/main_scene="res://mainSystem/scenes/main.tscn"
 config/features=PackedStringArray("4.0", "Mobile")
-run/max_fps=120
 boot_splash/show_image=false
 config/icon="res://icon.svg"
 
@@ -23,7 +22,9 @@ settings/stdout/print_fps=true
 
 [display]
 
-window/vsync/vsync_mode=3
+window/size/viewport_width=800
+window/size/viewport_height=600
+window/vsync/vsync_mode=0
 window/subwindows/embed_subwindows=false
 
 [physics]
@@ -34,7 +35,6 @@ common/physics_ticks_per_second=72
 [rendering]
 
 occlusion_culling/bvh_build_quality=0
-driver/threads/thread_model=2
 occlusion_culling/use_occlusion_culling=true
 vrs/mode=2
 environment/defaults/default_environment="res://defaultEnvironment.tres"

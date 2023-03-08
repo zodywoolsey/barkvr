@@ -22,6 +22,7 @@ var asset :PackedScene
 
 func _ready():
 	loader.load_threaded_request(pathToLoad)
+	pass
 	
 
 func _process(delta):
@@ -56,10 +57,17 @@ shape = SubResource("ConcavePolygonShape3D_uux0j")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.21646, 0)
 
 [node name="Label" type="Label" parent="."]
-offset_left = 860.0
-offset_top = 563.0
-offset_right = 949.0
-offset_bottom = 633.0
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -44.5
+offset_top = -35.0
+offset_right = 44.5
+offset_bottom = 35.0
+grow_horizontal = 2
+grow_vertical = 2
 text = "test"
 label_settings = SubResource("LabelSettings_2sh5v")
 script = ExtResource("3_gkioa")

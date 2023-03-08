@@ -36,10 +36,10 @@ func _ready():
 		if name == "ax_button":
 			rightaxbtn = false
 		)
-	righthand.input_value_changed.connect(func(name:String,value:float):
+	righthand.input_float_changed.connect(func(name:String,value:float):
 		print('value {0}, {1}'.format([name,value]))
 		)
-	righthand.input_axis_changed.connect(func(name:String,value):
+	righthand.input_vector2_changed.connect(func(name:String,value):
 		print('axis {0}, {1}'.format([name,value]))
 		if name == "primary":
 			rightStick = value
@@ -54,10 +54,10 @@ func _ready():
 		if name == "ax_button":
 			leftaxbtn = false
 		)
-	lefthand.input_value_changed.connect(func(name:String,value:float):
+	lefthand.input_float_changed.connect(func(name:String,value:float):
 		print('value {0}, {1}'.format([name,value]))
 		)
-	lefthand.input_axis_changed.connect(func(name:String,value):
+	lefthand.input_vector2_changed.connect(func(name:String,value):
 		print('axis {0}, {1}'.format([name,value]))
 		if name == "primary":
 			leftStick = value
