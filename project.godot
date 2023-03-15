@@ -16,6 +16,10 @@ config/features=PackedStringArray("4.0", "Mobile")
 boot_splash/show_image=false
 config/icon="res://icon.svg"
 
+[autoload]
+
+XRToolsUserSettings="res://addons/godot-xr-tools/user_settings/user_settings.gd"
+
 [debug]
 
 settings/stdout/print_fps=true
@@ -26,6 +30,13 @@ window/size/viewport_width=800
 window/size/viewport_height=600
 window/vsync/vsync_mode=0
 window/subwindows/embed_subwindows=false
+
+[layer_names]
+
+3d_physics/layer_1="characters"
+3d_physics/layer_2="3dlaser"
+3d_physics/layer_3="uilaser"
+3d_physics/layer_4="grabbable"
 
 [physics]
 
