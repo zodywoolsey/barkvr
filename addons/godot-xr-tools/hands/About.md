@@ -9,9 +9,9 @@ https://github.com/makehumancommunity/makehuman/blob/master/LICENSE.md#d-concern
 As the assets have been released under CC0, there is no limitation on what you can do with this combined output.
 The MakeHuman project makes no claim whatsoever over output such as:
 
-    Exports to files (FBX, OBJ, DAE, MHX2...)
-    Exports via direct integration (import via MPFB)
-    Graphical data generated via scripting or plugins
-    Renderings
-    Screenshots
-    Saved model files
+	Exports to files (FBX, OBJ, DAE, MHX2...)
+	Exports via direct integration (import via MPFB)
+	Graphical data generated via scripting or plugins
+	Renderings
+	Screenshots
+	Saved model files

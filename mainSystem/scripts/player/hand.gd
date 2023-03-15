@@ -1,10 +1,10 @@
 extends XRController3D
 
 @onready var grabArea : Area3D = $grabArea
-@onready var grabConstraint : Generic6DOFJoint3D = $grabConstraint
 @onready var handRay : RayCast3D = $RayCast3D
 var grabAreaBodies : Array = []
 var rayBody : RigidBody3D
+var rightStickVec
 
 func _ready():
 	grabArea.connect("body_entered", grabBodyEntered)
@@ -20,6 +20,11 @@ func _ready():
 				var rayCollided = handRay.get_collider()
 				if rayCollided.has_meta("grabbable"):
 					grab(rayCollided,true)
+		if name == "trigger":
+			if value > .3:
+				handRay.enabled = true
+			else:
+				handRay.enabled = false
 		)
 	input_vector2_changed.connect(func(name:String,value):
 		print('input {0}, {1}'.format([name,value]))
@@ -51,18 +56,15 @@ func buttonPressed(name):
 #			if rayCollided.has_meta("grabbable"):
 #				grab(rayCollided,true)
 		pass
-	elif name == "trigger_click":
-		handRay.enabled = true
 	print("button: {0}".format([name]))
 	
 func buttonReleased(name):
-	if name == "grip_click" and !grabConstraint.node_b.is_empty():
-		if get_node(grabConstraint.node_b).get_class() == "RigidBody3D":
-			get_node(grabConstraint.node_b).freeze = false
-		grabConstraint.position = Vector3(0,0,0)
-		grabConstraint.node_b = ""
+#	if name == "grip_click" and !grabConstraint.node_b.is_empty():
+#		if get_node(grabConstraint.node_b).get_class() == "RigidBody3D":
+#			get_node(grabConstraint.node_b).freeze = false
+#		grabConstraint.position = Vector3(0,0,0)
+#		grabConstraint.node_b = ""
 	if name == "trigger_click":
-		handRay.enabled = false
 		rayBody = null
 
 func grab(node, laser:bool=false):
@@ -70,7 +72,6 @@ func grab(node, laser:bool=false):
 #	print(tmpgrab)
 	if tmpgrab == 1:
 		if laser:
-			grabConstraint.global_position = node.global_position
-		grabConstraint.node_b = node.get_path()
+			pass
 	
 	#node.freeze = true
