@@ -1,0 +1,39 @@
+[gd_scene load_steps=7 format=3 uid="uid://2o2f8tknq7me"]
+
+[ext_resource type="Script" path="res://mainAssets/ui/3dPanel/3dpanel.gd" id="1_h1226"]
+[ext_resource type="PackedScene" uid="uid://ulqedhd05v8a" path="res://mainAssets/ui/3dPanel/testui.tscn" id="1_iqngy"]
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_m4o2o"]
+viewport_path = NodePath("SubViewport")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4ksv4"]
+resource_local_to_scene = true
+transparency = 2
+alpha_scissor_threshold = 0.5
+alpha_antialiasing_mode = 0
+albedo_texture = SubResource("ViewportTexture_m4o2o")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_r1rr1"]
+material = SubResource("StandardMaterial3D_4ksv4")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_j0pg5"]
+size = Vector3(1, 0.01, 1)
+
+[node name="3dpanel" type="Node3D"]
+script = ExtResource("1_h1226")
+
+[node name="SubViewport" type="SubViewport" parent="."]
+transparent_bg = true
+
+[node name="Control" parent="SubViewport" instance=ExtResource("1_iqngy")]
+
+[node name="panel" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.707107, -0.707107, 0, 0.707107, 0.707107, 0, 0, 0)
+mesh = SubResource("PlaneMesh_r1rr1")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="panel"]
+collision_layer = 0
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="panel/StaticBody3D"]
+shape = SubResource("BoxShape3D_j0pg5")

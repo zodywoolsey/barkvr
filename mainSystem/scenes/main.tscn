@@ -1,57 +1,35 @@
-[gd_scene load_steps=7 format=3 uid="uid://ctwckofb07cfw"]
+[gd_scene load_steps=9 format=3 uid="uid://ctwckofb07cfw"]
 
-[ext_resource type="PackedScene" uid="uid://dcek6tv5hch7e" path="res://mainSystem/scenes/player/xrplayer.tscn" id="1_8cqag"]
+[ext_resource type="PackedScene" uid="uid://r68jre2w5k33" path="res://mainSystem/scenes/player/xrplayer.tscn" id="1_8cqag"]
+[ext_resource type="Material" uid="uid://dum7xrf8gdl7k" path="res://addons/kenney_prototype_textures/materials/dark01Triplanar.material" id="3_ad6t3"]
 [ext_resource type="Script" path="res://mainSystem/scenes/fpsLabel.gd" id="3_gkioa"]
+[ext_resource type="PackedScene" uid="uid://2o2f8tknq7me" path="res://mainAssets/ui/3dPanel/3dpanel.tscn" id="4_vmwas"]
 
-[sub_resource type="BoxMesh" id="BoxMesh_8chx5"]
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_3royi"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
 
-[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_uux0j"]
-data = PackedVector3Array(-0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, 0.5, 0.5, 0.5, -0.5, 0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, -0.5, -0.5)
+[sub_resource type="Sky" id="Sky_sd3km"]
+sky_material = SubResource("ProceduralSkyMaterial_3royi")
+
+[sub_resource type="Environment" id="Environment_n00cx"]
+background_mode = 2
+sky = SubResource("Sky_sd3km")
+tonemap_mode = 2
+sdfgi_enabled = true
+glow_enabled = true
 
 [sub_resource type="LabelSettings" id="LabelSettings_2sh5v"]
 font_size = 48
 
-[sub_resource type="GDScript" id="GDScript_al5yd"]
-script/source = "extends Node3D
-
-@onready var thread = Thread.new()
-var loader = ResourceLoader
-var loaded = false
-var asset :PackedScene
-@export var pathToLoad : String
-
-func _ready():
-	loader.load_threaded_request(pathToLoad)
-	pass
-	
-
-func _process(delta):
-	if !loaded:
-		if loader.load_threaded_get_status(pathToLoad) == ResourceLoader.THREAD_LOAD_LOADED:
-			print('loaded')
-			loaded = true
-			asset = loader.load_threaded_get(pathToLoad)
-			add_child(asset.instantiate())
-		elif loader.load_threaded_get_status(pathToLoad) == loader.THREAD_LOAD_FAILED:
-			print('failed loading')
-			loaded = true
-		elif loader.load_threaded_get_status(pathToLoad) == loader.THREAD_LOAD_IN_PROGRESS:
-			print('not loaded yet')
-		elif loader.load_threaded_get_status(pathToLoad) == loader.THREAD_LOAD_INVALID_RESOURCE:
-			print('invalid')
-			loaded = true
-"
-
 [node name="main" type="Node3D"]
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.28707, 0)
-mesh = SubResource("BoxMesh_8chx5")
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_n00cx")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D"]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D/StaticBody3D"]
-shape = SubResource("ConcavePolygonShape3D_uux0j")
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 0, 0)
+shadow_enabled = true
 
 [node name="xrplayer" parent="." instance=ExtResource("1_8cqag")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.21646, 0)
@@ -72,6 +50,11 @@ text = "test"
 label_settings = SubResource("LabelSettings_2sh5v")
 script = ExtResource("3_gkioa")
 
-[node name="loaderTest" type="Node3D" parent="."]
-script = SubResource("GDScript_al5yd")
-pathToLoad = "res://mainAssets/modelScenes/pupper_home.tscn"
+[node name="CSGBox3D" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+material_override = ExtResource("3_ad6t3")
+use_collision = true
+size = Vector3(16, 1, 16)
+
+[node name="3dpanel" parent="." instance=ExtResource("4_vmwas")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -6)
