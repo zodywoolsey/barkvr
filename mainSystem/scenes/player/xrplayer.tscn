@@ -17,8 +17,9 @@ size = Vector3(0.05, 0.05, 0.15)
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_1uxmk"]
 radius = 0.1
+height = 1.0
 
-[node name="CharacterBody3D" type="CharacterBody3D"]
+[node name="CharacterBody3D" type="CharacterBody3D" groups=["player"]]
 script = ExtResource("1_wrucs")
 
 [node name="xrplayer" type="XROrigin3D" parent="."]
@@ -27,6 +28,7 @@ script = ExtResource("1_jm64e")
 
 [node name="XrCamera3d" type="XRCamera3D" parent="xrplayer"]
 current = true
+fov = 179.0
 
 [node name="righthand" type="XRController3D" parent="xrplayer"]
 tracker = &"right_hand"
@@ -75,5 +77,5 @@ mesh = SubResource("BoxMesh_mky8q")
 skeleton = NodePath("")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.496656, 0)
 shape = SubResource("CapsuleShape3D_1uxmk")
