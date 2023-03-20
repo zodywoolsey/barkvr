@@ -28,7 +28,6 @@ script = ExtResource("1_jm64e")
 
 [node name="XrCamera3d" type="XRCamera3D" parent="xrplayer"]
 current = true
-fov = 179.0
 
 [node name="righthand" type="XRController3D" parent="xrplayer"]
 tracker = &"right_hand"
