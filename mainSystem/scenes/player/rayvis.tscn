@@ -1,0 +1,12 @@
+[gd_scene load_steps=3 format=3 uid="uid://b5e67b4tlsvfs"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_q8b1w"]
+no_depth_test = true
+fixed_size = true
+
+[sub_resource type="BoxMesh" id="BoxMesh_pgw6w"]
+material = SubResource("StandardMaterial3D_q8b1w")
+size = Vector3(0.01, 0.01, 0.01)
+
+[node name="rayvis" type="MeshInstance3D"]
+mesh = SubResource("BoxMesh_pgw6w")
