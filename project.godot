@@ -31,6 +31,10 @@ window/size/viewport_height=600
 window/vsync/vsync_mode=0
 window/subwindows/embed_subwindows=false
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/simplegrasstextured/plugin.cfg")
+
 [layer_names]
 
 3d_physics/layer_1="characters"
@@ -47,10 +51,11 @@ common/physics_ticks_per_second=72
 
 occlusion_culling/bvh_build_quality=0
 occlusion_culling/use_occlusion_culling=true
-vrs/mode=2
+vrs/mode=1
 environment/defaults/default_environment="res://defaultEnvironment.tres"
 
 [xr]
 
 openxr/enabled=true
+openxr/reference_space=1
 shaders/enabled=true
