@@ -136,7 +136,10 @@ A-Frame to use newer/faster rendering APIs.
   - allow users to self-host content repositories
   - allow experiences to have their own content repositories with custom data types
     - for example, if a user created a rhythm game, they should be able to define a custom resource that stores the audio data and the data related to the mechanics of the rhythm game
+- localization
 - 
+
+
 
 ### planned helpers:
 
