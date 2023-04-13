@@ -13,6 +13,6 @@ func _process(delta):
 	elif !vis.visible:
 		vis.show()
 	var tmp = get_collision_point()
-	vis.global_position.x = lerpf(vis.global_position.x, tmp.x, .1)
-	vis.global_position.z = lerpf(vis.global_position.z, tmp.z, .1)
-	vis.global_position.y = lerpf(vis.global_position.y, tmp.y, .1)
+	vis.global_position.x = lerpf(vis.global_position.x, tmp.x, .5)
+	vis.global_position.z = lerpf(vis.global_position.z, tmp.z, .5)
+	vis.global_position.y = lerpf(vis.global_position.y, tmp.y, .5)

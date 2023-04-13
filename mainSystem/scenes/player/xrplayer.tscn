@@ -38,6 +38,7 @@ script = ExtResource("2_boqlt")
 [node name="RayCast3D" type="RayCast3D" parent="xrplayer/righthand"]
 enabled = false
 target_position = Vector3(0, 0, -1000)
+collision_mask = 6
 script = ExtResource("4_43k0e")
 
 [node name="grabArea" type="Area3D" parent="xrplayer/righthand"]
@@ -61,6 +62,7 @@ script = ExtResource("2_boqlt")
 [node name="RayCast3D" type="RayCast3D" parent="xrplayer/lefthand"]
 enabled = false
 target_position = Vector3(0, 0, -1000)
+collision_mask = 6
 script = ExtResource("4_43k0e")
 
 [node name="grabArea" type="Area3D" parent="xrplayer/lefthand"]

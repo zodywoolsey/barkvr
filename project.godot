@@ -28,8 +28,8 @@ settings/stdout/print_fps=true
 
 window/size/viewport_width=800
 window/size/viewport_height=600
-window/vsync/vsync_mode=0
 window/subwindows/embed_subwindows=false
+window/vsync/vsync_mode=0
 
 [editor_plugins]
 
