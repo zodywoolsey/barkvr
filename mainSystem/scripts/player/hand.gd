@@ -12,7 +12,7 @@ func _ready():
 	connect("button_pressed",buttonPressed)
 	connect("button_released",buttonReleased)
 	input_float_changed.connect(func(name:String,value:float):
-		print('input {0}, {1}'.format([name,value]))
+#		print('input {0}, {1}'.format([name,value]))
 		if name == "grip" and value > .5:
 			if grabAreaBodies.size() > 0:
 				grab(grabAreaBodies[0])
@@ -27,7 +27,8 @@ func _ready():
 				handRay.enabled = false
 		)
 	input_vector2_changed.connect(func(name:String,value):
-		print('input {0}, {1}'.format([name,value]))
+#		print('input {0}, {1}'.format([name,value]))
+		pass
 		)
 
 func _process(delta):
@@ -56,7 +57,12 @@ func buttonPressed(name):
 #			if rayCollided.has_meta("grabbable"):
 #				grab(rayCollided,true)
 		pass
-	print("button: {0}".format([name]))
+	if name == "trigger_click":
+		var tmpcol = handRay.get_collider()
+		if tmpcol.get_collision_layer_value(3):
+			tmpcol.laserClick(handRay.get_collision_point())
+		
+#	print("button: {0}".format([name]))
 	
 func buttonReleased(name):
 #	if name == "grip_click" and !grabConstraint.node_b.is_empty():
