@@ -27,7 +27,7 @@ var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 
 func _ready():
 	righthand.connect("button_pressed",func(name):
-#		print("pressed: "+name)
+		
 		pass
 		if name == "ax_button":
 			rightaxbtn = true

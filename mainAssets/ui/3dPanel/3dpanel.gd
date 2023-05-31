@@ -6,6 +6,7 @@ extends Node3D
 
 func _ready():
 	mesh.mesh.material.albedo_texture = viewport.get_texture()
+	print(mesh.mesh.material.albedo_texture)
 
 func _process(delta):
 	colShape.shape.size = Vector3(mesh.mesh.size.x,.01,mesh.mesh.size.y)
