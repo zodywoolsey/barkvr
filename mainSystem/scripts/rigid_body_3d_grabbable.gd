@@ -22,6 +22,7 @@ func setPhysicsProps(dampening: float):
 
 func assignParent():
 	parent = get_parent()
+	print(parent)
 
 func resetParent():
-	parent.add_child(self)
+	reparent(parent)

@@ -1,12 +1,27 @@
-[gd_scene load_steps=3 format=3 uid="uid://b5e67b4tlsvfs"]
+[gd_scene load_steps=4 format=3 uid="uid://b5e67b4tlsvfs"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_q8b1w"]
+depth_draw_mode = 1
 no_depth_test = true
+emission_enabled = true
+emission = Color(100, 100, 100, 1)
+emission_energy_multiplier = 16.0
 fixed_size = true
 
 [sub_resource type="BoxMesh" id="BoxMesh_pgw6w"]
 material = SubResource("StandardMaterial3D_q8b1w")
 size = Vector3(0.01, 0.01, 0.01)
 
+[sub_resource type="GDScript" id="GDScript_15upk"]
+script/source = "extends MeshInstance3D
+
+func _process(delta):
+	if get_tree().get_first_node_in_group(\"player\"):
+		var dist = global_position.distance_to(get_tree().get_first_node_in_group(\"playerCamera\").global_position)
+		scale = Vector3(1,1,1)*dist/1.0
+"
+
 [node name="rayvis" type="MeshInstance3D"]
+sorting_offset = 99.0
 mesh = SubResource("BoxMesh_pgw6w")
+script = SubResource("GDScript_15upk")

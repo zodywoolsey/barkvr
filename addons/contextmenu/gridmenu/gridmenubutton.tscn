@@ -1,0 +1,37 @@
+[gd_scene load_steps=5 format=3 uid="uid://b2r6qi0effaiw"]
+
+[ext_resource type="Script" path="res://addons/contextmenu/gridmenu/gridMenuButton.gd" id="1_oxc5m"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_f8ppm"]
+resource_local_to_scene = true
+transparency = 4
+albedo_color = Color(0.6, 0.466667, 1, 5.60519e-45)
+emission_enabled = true
+emission = Color(0.6, 0.466667, 1, 1)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_xa0iw"]
+resource_local_to_scene = true
+material = SubResource("StandardMaterial3D_f8ppm")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_xwkcp"]
+size = Vector3(0.1, 0.01, 0.1)
+
+[node name="StaticBody3D" type="StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -0.1, 0.1, 0)
+collision_layer = 4
+collision_mask = 4
+script = ExtResource("1_oxc5m")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.045, 0, 0, 0, 0.045, 0, 0, 0, 0.045, 0, 0, 0)
+mesh = SubResource("PlaneMesh_xa0iw")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_xwkcp")
+
+[node name="Label3D" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.00903093, 0)
+pixel_size = 0.0005
+text = "spawn
+cube"
+font_size = 51
