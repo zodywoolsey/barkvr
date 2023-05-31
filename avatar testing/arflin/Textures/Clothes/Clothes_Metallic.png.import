@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://daoo2ytrsi4l3"
 path.s3tc="res://.godot/imported/Clothes_Metallic.png-c344ebf75a74072e4af5dd1ad5adc55a.s3tc.ctex"
+path.etc2="res://.godot/imported/Clothes_Metallic.png-c344ebf75a74072e4af5dd1ad5adc55a.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://avatar testing/arflin/Textures/Clothes/Clothes_Metallic.png"
-dest_files=["res://.godot/imported/Clothes_Metallic.png-c344ebf75a74072e4af5dd1ad5adc55a.s3tc.ctex"]
+dest_files=["res://.godot/imported/Clothes_Metallic.png-c344ebf75a74072e4af5dd1ad5adc55a.s3tc.ctex", "res://.godot/imported/Clothes_Metallic.png-c344ebf75a74072e4af5dd1ad5adc55a.etc2.ctex"]
 
 [params]
 

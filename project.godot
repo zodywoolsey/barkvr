@@ -20,10 +20,6 @@ config/icon="res://icon.svg"
 
 XRToolsUserSettings="res://addons/godot-xr-tools/user_settings/user_settings.gd"
 
-[debug]
-
-settings/stdout/print_fps=true
-
 [display]
 
 window/size/viewport_width=800
@@ -33,7 +29,7 @@ window/vsync/vsync_mode=0
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/simplegrasstextured/plugin.cfg")
+enabled=PackedStringArray("res://addons/simplegrasstextured/plugin.cfg", "res://addons/contextmenu/plugin.cfg")
 
 [layer_names]
 
@@ -50,12 +46,12 @@ common/physics_ticks_per_second=72
 [rendering]
 
 occlusion_culling/bvh_build_quality=0
+renderer/rendering_method="mobile"
+textures/vram_compression/import_etc2_astc=true
 occlusion_culling/use_occlusion_culling=true
-vrs/mode=1
 environment/defaults/default_environment="res://defaultEnvironment.tres"
 
 [xr]
 
 openxr/enabled=true
-openxr/reference_space=1
 shaders/enabled=true

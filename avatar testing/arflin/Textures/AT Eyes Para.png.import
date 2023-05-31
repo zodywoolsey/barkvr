@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://bq72hd5lifb04"
 path.s3tc="res://.godot/imported/AT Eyes Para.png-8fa2ee53c2b9a286375a493ab84512d7.s3tc.ctex"
+path.etc2="res://.godot/imported/AT Eyes Para.png-8fa2ee53c2b9a286375a493ab84512d7.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://avatar testing/arflin/Textures/AT Eyes Para.png"
-dest_files=["res://.godot/imported/AT Eyes Para.png-8fa2ee53c2b9a286375a493ab84512d7.s3tc.ctex"]
+dest_files=["res://.godot/imported/AT Eyes Para.png-8fa2ee53c2b9a286375a493ab84512d7.s3tc.ctex", "res://.godot/imported/AT Eyes Para.png-8fa2ee53c2b9a286375a493ab84512d7.etc2.ctex"]
 
 [params]
 

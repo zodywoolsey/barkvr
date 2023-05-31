@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://13jq1r27enfq"
 path.s3tc="res://.godot/imported/Body_Base_Color.png-363994976da487360a41a465dd8a1247.s3tc.ctex"
+path.etc2="res://.godot/imported/Body_Base_Color.png-363994976da487360a41a465dd8a1247.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://avatar testing/arflin/Textures/Body_Base_Color.png"
-dest_files=["res://.godot/imported/Body_Base_Color.png-363994976da487360a41a465dd8a1247.s3tc.ctex"]
+dest_files=["res://.godot/imported/Body_Base_Color.png-363994976da487360a41a465dd8a1247.s3tc.ctex", "res://.godot/imported/Body_Base_Color.png-363994976da487360a41a465dd8a1247.etc2.ctex"]
 
 [params]
 
