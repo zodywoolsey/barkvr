@@ -1,0 +1,48 @@
+[gd_scene load_steps=7 format=3 uid="uid://b3sbt3oft3cxg"]
+
+[ext_resource type="Script" path="res://mainAssets/ui/3dPanel/editmode/vreditor.gd" id="1_8pitw"]
+[ext_resource type="PackedScene" uid="uid://2o2f8tknq7me" path="res://mainAssets/ui/3dPanel/3dpanel.tscn" id="2_85jm4"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_syify"]
+resource_local_to_scene = true
+transparency = 2
+alpha_scissor_threshold = 0.5
+alpha_antialiasing_mode = 0
+cull_mode = 2
+shading_mode = 0
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_r7iej"]
+resource_local_to_scene = true
+material = SubResource("StandardMaterial3D_syify")
+size = Vector2(0.5, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_s8pr1"]
+resource_local_to_scene = true
+transparency = 2
+alpha_scissor_threshold = 0.5
+alpha_antialiasing_mode = 0
+cull_mode = 2
+shading_mode = 0
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_ujxtt"]
+resource_local_to_scene = true
+material = SubResource("StandardMaterial3D_s8pr1")
+size = Vector2(0.5, 0.5)
+
+[node name="vreditor" type="Node3D"]
+script = ExtResource("1_8pitw")
+
+[node name="inspector" parent="." instance=ExtResource("2_85jm4")]
+
+[node name="panel" parent="inspector" index="1"]
+mesh = SubResource("PlaneMesh_r7iej")
+
+[node name="attributes" parent="inspector" instance=ExtResource("2_85jm4")]
+transform = Transform3D(0.707107, -0.707107, 0, 0.707107, 0.707107, 0, 0, 0, 1, 0.445292, 0.181695, 0)
+
+[node name="panel" parent="inspector/attributes" index="1"]
+mesh = SubResource("PlaneMesh_ujxtt")
+skeleton = NodePath("../../..")
+
+[editable path="inspector"]
+[editable path="inspector/attributes"]

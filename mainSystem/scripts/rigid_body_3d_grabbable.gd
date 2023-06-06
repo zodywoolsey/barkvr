@@ -1,6 +1,6 @@
 extends RigidBody3D
 
-@export_enum("none", "physical", "kinematic") var grabbable = 0
+@export var grabbable : bool = true
 @export var dampening : float = 0
 var parent:Node
 

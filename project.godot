@@ -10,21 +10,26 @@ config_version=5
 
 [application]
 
-config/name="PTB"
+config/name="barkVR"
 run/main_scene="res://mainSystem/scenes/main.tscn"
 config/features=PackedStringArray("4.0", "Mobile")
-boot_splash/show_image=false
-config/icon="res://icon.svg"
+boot_splash/bg_color=Color(0, 0, 0, 1)
+boot_splash/image="res://assets/doge-color-darker-dog.png"
+boot_splash/fullsize=false
+config/icon="res://assets/doge-color-darker-dog.png"
+boot_splash/minimum_display_time=2000
 
 [autoload]
 
 XRToolsUserSettings="res://addons/godot-xr-tools/user_settings/user_settings.gd"
+LocalGlobals="*res://mainSystem/scripts/localGlobals.gd"
 
 [display]
 
 window/size/viewport_width=800
 window/size/viewport_height=600
 window/subwindows/embed_subwindows=false
+window/handheld/orientation=4
 window/vsync/vsync_mode=0
 
 [editor_plugins]
@@ -41,13 +46,14 @@ enabled=PackedStringArray("res://addons/simplegrasstextured/plugin.cfg", "res://
 [physics]
 
 3d/run_on_separate_thread=true
-common/physics_ticks_per_second=72
+common/physics_ticks_per_second=200
+common/physics_jitter_fix=0.0
 
 [rendering]
 
 occlusion_culling/bvh_build_quality=0
-renderer/rendering_method="mobile"
 textures/vram_compression/import_etc2_astc=true
+textures/default_filters/anisotropic_filtering_level=0
 occlusion_culling/use_occlusion_culling=true
 environment/defaults/default_environment="res://defaultEnvironment.tres"
 

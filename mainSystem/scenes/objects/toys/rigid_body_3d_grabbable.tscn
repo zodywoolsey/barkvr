@@ -9,13 +9,11 @@ size = Vector3(0.1, 0.1, 0.1)
 size = Vector3(0.1, 0.1, 0.1)
 
 [node name="RigidBody3d" type="RigidBody3D"]
-mass = 100.0
+continuous_cd = true
 max_contacts_reported = 1
 contact_monitor = true
 can_sleep = false
-freeze_mode = 1
 script = ExtResource("1_vhris")
-grabbable = 1
 
 [node name="CollisionShape3d" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_pydgp")
