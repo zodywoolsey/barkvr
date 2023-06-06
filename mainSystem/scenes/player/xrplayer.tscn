@@ -1,13 +1,12 @@
-[gd_scene load_steps=11 format=3 uid="uid://r68jre2w5k33"]
+[gd_scene load_steps=14 format=3 uid="uid://r68jre2w5k33"]
 
-[ext_resource type="Script" path="res://mainSystem/scripts/player/xrplayer.gd" id="1_jm64e"]
 [ext_resource type="Script" path="res://mainSystem/scripts/player/xrplayer-controller.gd" id="1_wrucs"]
 [ext_resource type="Script" path="res://mainSystem/scripts/player/hand.gd" id="2_boqlt"]
-[ext_resource type="Script" path="res://mainSystem/scripts/player/rayvisual.gd" id="4_43k0e"]
 [ext_resource type="PackedScene" uid="uid://cr02u36wo3sqp" path="res://addons/contextmenu/gridmenu/handmenu.tscn" id="5_fbsom"]
-
-[sub_resource type="BoxMesh" id="BoxMesh_aibxh"]
-size = Vector3(0.01, 0.1, 0.01)
+[ext_resource type="PackedScene" uid="uid://b2r6qi0effaiw" path="res://addons/contextmenu/gridmenu/gridmenubutton.tscn" id="5_gavsp"]
+[ext_resource type="Script" path="res://mainSystem/scenes/player/worldRay.gd" id="6_d735y"]
+[ext_resource type="Texture2D" uid="uid://cm7tsng6rg8cs" path="res://mainAssets/ui/assets/wrist_menu/UI_mockup_trasparent.png" id="6_kbimw"]
+[ext_resource type="Script" path="res://mainSystem/scenes/player/uiRay.gd" id="7_y3521"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_1q63w"]
 radius = 0.1
@@ -19,92 +18,158 @@ albedo_color = Color(0.6, 0.466667, 0.866667, 1)
 material = SubResource("StandardMaterial3D_cw1w7")
 size = Vector3(0.05, 0.05, 0.15)
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_ndmcs"]
+margin = 0.0
+size = Vector3(0, 0, 0)
+
+[sub_resource type="GDScript" id="GDScript_utwae"]
+script/source = "extends Node3D
+
+#func _process(delta):
+#	look_at(get_tree().get_first_node_in_group(\"playerCamera\").global_position)
+"
+
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_1uxmk"]
 radius = 0.1
 height = 1.0
 
-[node name="CharacterBody3D" type="CharacterBody3D" groups=["player"]]
+[node name="playercontainer" type="Node3D"]
+
+[node name="CharacterBody3D" type="CharacterBody3D" parent="." groups=["player"]]
+unique_name_in_owner = true
 script = ExtResource("1_wrucs")
 
-[node name="xrplayer" type="XROrigin3D" parent="."]
-current = true
-script = ExtResource("1_jm64e")
-
-[node name="XrCamera3d" type="XRCamera3D" parent="xrplayer" groups=["playerCamera"]]
+[node name="xrplayer" type="XROrigin3D" parent="CharacterBody3D"]
 current = true
 
-[node name="righthand" type="XRController3D" parent="xrplayer"]
+[node name="XrCamera3d" type="XRCamera3D" parent="CharacterBody3D/xrplayer" groups=["playerCamera"]]
+current = true
+
+[node name="righthand" type="XRController3D" parent="CharacterBody3D/xrplayer"]
+unique_name_in_owner = true
 tracker = &"right_hand"
 script = ExtResource("2_boqlt")
 
-[node name="grabParent" type="Node3D" parent="xrplayer/righthand"]
+[node name="grabParent" type="Node3D" parent="CharacterBody3D/xrplayer/righthand"]
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="xrplayer/righthand/grabParent"]
-mesh = SubResource("BoxMesh_aibxh")
-
-[node name="RayCast3D" type="RayCast3D" parent="xrplayer/righthand"]
+[node name="worldRay" type="RayCast3D" parent="CharacterBody3D/xrplayer/righthand"]
 target_position = Vector3(0, 0, -1000)
-collision_mask = 7
+collision_mask = 3
 debug_shape_custom_color = Color(0, 0, 0, 0.109804)
 debug_shape_thickness = 1
-script = ExtResource("4_43k0e")
+script = ExtResource("6_d735y")
 
-[node name="grabArea" type="Area3D" parent="xrplayer/righthand"]
+[node name="uiRay" type="RayCast3D" parent="CharacterBody3D/xrplayer/righthand"]
+target_position = Vector3(0, 0, -1000)
+collision_mask = 4
+debug_shape_custom_color = Color(0, 0, 0, 0.109804)
+debug_shape_thickness = 1
+script = ExtResource("7_y3521")
+
+[node name="grabArea" type="Area3D" parent="CharacterBody3D/xrplayer/righthand"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.05, 0, 0)
 input_ray_pickable = false
 monitorable = false
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="xrplayer/righthand/grabArea"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D/xrplayer/righthand/grabArea"]
 shape = SubResource("SphereShape3D_1q63w")
 
-[node name="MeshInstance3d" type="MeshInstance3D" parent="xrplayer/righthand"]
+[node name="MeshInstance3d" type="MeshInstance3D" parent="CharacterBody3D/xrplayer/righthand"]
 mesh = SubResource("BoxMesh_mky8q")
 skeleton = NodePath("")
 
-[node name="Label3D" type="Label3D" parent="xrplayer/righthand"]
+[node name="Label3D" type="Label3D" parent="CharacterBody3D/xrplayer/righthand"]
 transform = Transform3D(0.316245, 0, -0.948677, 0, 1, 0, 0.948677, 0, 0.316245, 0, 0.1, -0.00572462)
+visible = false
 pixel_size = 0.001
 text = "test"
 
-[node name="handMenuPoint" type="Node3D" parent="xrplayer/righthand"]
+[node name="handMenuPoint" type="Node3D" parent="CharacterBody3D/xrplayer/righthand"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.203384)
 
-[node name="lefthand" type="XRController3D" parent="xrplayer"]
+[node name="StaticBody3D" type="StaticBody3D" parent="CharacterBody3D/xrplayer/righthand"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D/xrplayer/righthand/StaticBody3D"]
+shape = SubResource("BoxShape3D_ndmcs")
+disabled = true
+
+[node name="grabjoint" type="Generic6DOFJoint3D" parent="CharacterBody3D/xrplayer/righthand"]
+node_a = NodePath("../StaticBody3D")
+
+[node name="wristmenu" type="Node3D" parent="CharacterBody3D/xrplayer/righthand"]
+transform = Transform3D(8.67451e-16, 1.9845e-08, 0.454, 1.5876e-07, 0.454, -1.9845e-08, -0.454, 1.5876e-07, -6.07216e-15, 0, 0, 0.2)
+script = SubResource("GDScript_utwae")
+
+[node name="StaticBody3D" parent="CharacterBody3D/xrplayer/righthand/wristmenu" instance=ExtResource("5_gavsp")]
+transform = Transform3D(-1, 6.99383e-07, -8.74228e-08, 6.99383e-07, 1, -8.74229e-08, 8.74227e-08, -8.74229e-08, -1, 0.05, 7.78848e-08, 2.18557e-09)
+itemToSpawn = "res://mainSystem/scenes/objects/toys/particlepen.tscn"
+text = "spawn pen"
+
+[node name="StaticBody3D2" parent="CharacterBody3D/xrplayer/righthand/wristmenu" instance=ExtResource("5_gavsp")]
+transform = Transform3D(-1, 6.99383e-07, -8.74228e-08, 6.99383e-07, 1, -8.74229e-08, 8.74227e-08, -8.74229e-08, -1, 0.15, -7.95723e-10, -1.09278e-08)
+
+[node name="Sprite3D" type="Sprite3D" parent="CharacterBody3D/xrplayer/righthand/wristmenu"]
+transform = Transform3D(1.24578e-08, 0.019, -8.30518e-10, 0.019, -1.24578e-08, -2.49155e-09, -2.49155e-09, -8.30517e-10, -0.019, 0, -2.77682e-09, -0.0635259)
+visible = false
+texture = ExtResource("6_kbimw")
+
+[node name="lefthand" type="XRController3D" parent="CharacterBody3D/xrplayer"]
+unique_name_in_owner = true
 tracker = &"left_hand"
 script = ExtResource("2_boqlt")
 
-[node name="grabParent" type="Node3D" parent="xrplayer/lefthand"]
+[node name="grabParent" type="Node3D" parent="CharacterBody3D/xrplayer/lefthand"]
 
-[node name="RayCast3D" type="RayCast3D" parent="xrplayer/lefthand"]
+[node name="worldRay" type="RayCast3D" parent="CharacterBody3D/xrplayer/lefthand"]
 target_position = Vector3(0, 0, -1000)
-collision_mask = 7
+collision_mask = 3
 debug_shape_custom_color = Color(0, 0, 0, 0.109804)
 debug_shape_thickness = 1
-script = ExtResource("4_43k0e")
+script = ExtResource("6_d735y")
 
-[node name="grabArea" type="Area3D" parent="xrplayer/lefthand"]
+[node name="uiRay" type="RayCast3D" parent="CharacterBody3D/xrplayer/lefthand"]
+target_position = Vector3(0, 0, -1000)
+collision_mask = 4
+debug_shape_custom_color = Color(0, 0, 0, 0.109804)
+debug_shape_thickness = 1
+script = ExtResource("7_y3521")
+
+[node name="grabArea" type="Area3D" parent="CharacterBody3D/xrplayer/lefthand"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.05, 0, 0)
 input_ray_pickable = false
 monitorable = false
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="xrplayer/lefthand/grabArea"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D/xrplayer/lefthand/grabArea"]
 shape = SubResource("SphereShape3D_1q63w")
 
-[node name="MeshInstance3d" type="MeshInstance3D" parent="xrplayer/lefthand"]
+[node name="MeshInstance3d" type="MeshInstance3D" parent="CharacterBody3D/xrplayer/lefthand"]
 mesh = SubResource("BoxMesh_mky8q")
 skeleton = NodePath("")
 
-[node name="Label3D" type="Label3D" parent="xrplayer/lefthand"]
+[node name="Label3D" type="Label3D" parent="CharacterBody3D/xrplayer/lefthand"]
 transform = Transform3D(0.285086, 0, 0.958502, 0, 1, 0, -0.958502, 0, 0.285086, 0, 0.1, -0.00572462)
+visible = false
 pixel_size = 0.001
 text = "test"
 
-[node name="handMenuPoint" type="Node3D" parent="xrplayer/lefthand"]
+[node name="handMenuPoint" type="Node3D" parent="CharacterBody3D/xrplayer/lefthand"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.203384)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+[node name="StaticBody3D" type="StaticBody3D" parent="CharacterBody3D/xrplayer/lefthand"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D/xrplayer/lefthand/StaticBody3D"]
+shape = SubResource("BoxShape3D_ndmcs")
+disabled = true
+
+[node name="grabjoint" type="Generic6DOFJoint3D" parent="CharacterBody3D/xrplayer/lefthand"]
+node_a = NodePath("../StaticBody3D")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.496656, 0)
 shape = SubResource("CapsuleShape3D_1uxmk")
 
-[node name="handmenu" parent="." instance=ExtResource("5_fbsom")]
+[node name="playercamoffset" type="Node3D" parent="CharacterBody3D"]
+
+[node name="handmenu" parent="CharacterBody3D/playercamoffset" instance=ExtResource("5_fbsom")]
+unique_name_in_owner = true
 visible = false

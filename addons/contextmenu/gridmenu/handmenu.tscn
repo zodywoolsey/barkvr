@@ -8,9 +8,12 @@ script = ExtResource("1_jd5nk")
 
 [node name="StaticBody3D" parent="." instance=ExtResource("1_1fmp6")]
 transform = Transform3D(-1, -8.74228e-08, 3.82137e-15, 0, -4.37114e-08, -1, 8.74228e-08, -1, 4.37114e-08, 0.1, 0.1, -8.74228e-09)
+text = "set root"
 
 [node name="StaticBody3D2" parent="." instance=ExtResource("1_1fmp6")]
 transform = Transform3D(-1, -8.74228e-08, 3.82137e-15, 0, -4.37114e-08, -1, 8.74228e-08, -1, 4.37114e-08, 0, 0.1, 0)
+itemToSpawn = "res://mainSystem/scenes/objects/toys/rigid_body_3d_grabbable.tscn"
+text = "spawn cube"
 
 [node name="StaticBody3D3" parent="." instance=ExtResource("1_1fmp6")]
 transform = Transform3D(-1, -8.74228e-08, 3.82137e-15, 0, -4.37114e-08, -1, 8.74228e-08, -1, 4.37114e-08, -0.1, 0.1, 8.74228e-09)

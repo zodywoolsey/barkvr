@@ -1,27 +1,36 @@
-[gd_scene load_steps=4 format=3 uid="uid://b5e67b4tlsvfs"]
+[gd_scene load_steps=5 format=3 uid="uid://b5e67b4tlsvfs"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_q8b1w"]
-depth_draw_mode = 1
-no_depth_test = true
-emission_enabled = true
-emission = Color(100, 100, 100, 1)
-emission_energy_multiplier = 16.0
-fixed_size = true
+[ext_resource type="Script" path="res://mainSystem/scripts/player/rayvis.gd" id="1_6wvgr"]
+[ext_resource type="Texture2D" uid="uid://cr0wli5q0f2o0" path="res://mainAssets/ui/assets/rayvis_icons/pointing.svg" id="2_exe05"]
+[ext_resource type="Texture2D" uid="uid://dbmo2fb27mmgx" path="res://mainAssets/ui/assets/rayvis_icons/physics.svg" id="3_j7jdp"]
+[ext_resource type="Texture2D" uid="uid://uvjsq5djwc52" path="res://mainAssets/ui/assets/rayvis_icons/cursor.svg" id="4_3x516"]
 
-[sub_resource type="BoxMesh" id="BoxMesh_pgw6w"]
-material = SubResource("StandardMaterial3D_q8b1w")
-size = Vector3(0.01, 0.01, 0.01)
+[node name="rayvis" type="Node3D"]
+script = ExtResource("1_6wvgr")
 
-[sub_resource type="GDScript" id="GDScript_15upk"]
-script/source = "extends MeshInstance3D
-
-func _process(delta):
-	if get_tree().get_first_node_in_group(\"player\"):
-		var dist = global_position.distance_to(get_tree().get_first_node_in_group(\"playerCamera\").global_position)
-		scale = Vector3(1,1,1)*dist/1.0
-"
-
-[node name="rayvis" type="MeshInstance3D"]
+[node name="pointer" type="Sprite3D" parent="."]
+transform = Transform3D(0.01, 0, 0, 0, 0.01, 0, 0, 0, 0.01, 0, 0, 0)
+visible = false
 sorting_offset = 99.0
-mesh = SubResource("BoxMesh_pgw6w")
-script = SubResource("GDScript_15upk")
+billboard = 1
+no_depth_test = true
+texture_filter = 0
+texture = ExtResource("2_exe05")
+
+[node name="physics" type="Sprite3D" parent="."]
+transform = Transform3D(0.01, 0, 0, 0, 0.01, 0, 0, 0, 0.01, 0, 0, 0)
+visible = false
+sorting_offset = 99.0
+billboard = 1
+no_depth_test = true
+texture_filter = 0
+texture = ExtResource("3_j7jdp")
+
+[node name="cursor" type="Sprite3D" parent="."]
+transform = Transform3D(0.019, 0, 0, 0, 0.019, 0, 0, 0, 0.019, 0.00719908, -0.0179832, 0)
+visible = false
+sorting_offset = 99.0
+billboard = 1
+no_depth_test = true
+texture_filter = 0
+texture = ExtResource("4_3x516")

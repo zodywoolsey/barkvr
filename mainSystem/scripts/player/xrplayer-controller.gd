@@ -6,6 +6,7 @@ extends CharacterBody3D
 @onready var lefthand = $xrplayer/lefthand
 @onready var xr_camera_3d = $xrplayer/XrCamera3d
 @onready var xrplayer = $xrplayer
+@onready var playercamoffset = $playercamoffset
 
 #controller input vars:
 var rightStick :Vector2 = Vector2()
@@ -24,10 +25,15 @@ const JUMP_VELOCITY = 4.5
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 
+var selected : Array = []
+var grabbed : Dictionary = {}
+var vreditor : Node3D = null
+var vrinspector : Control = null
 
 func _ready():
+	var spawnLoc = get_tree().get_nodes_in_group("PlayerSpawnLocation").pick_random()
+	global_position = spawnLoc.global_position
 	righthand.connect("button_pressed",func(name):
-		
 		pass
 		if name == "ax_button":
 			rightaxbtn = true
@@ -85,6 +91,8 @@ func _physics_process(delta):
 	xrplayer.position.z = -xr_camera_3d.position.z
 	position.x += (transform.basis*(xr_camera_3d.position-camPrevPos)).x
 	position.z += (transform.basis*(xr_camera_3d.position-camPrevPos)).z
+	playercamoffset.global_position.x -= (transform.basis*(xr_camera_3d.position-camPrevPos)).x
+	playercamoffset.global_position.z -= (transform.basis*(xr_camera_3d.position-camPrevPos)).z
 	camPrevPos = xr_camera_3d.position
 	transform = transform.rotated_local(Vector3.UP,-rightStick.x*delta)
 	xrplayer.position = xrplayer.position.rotated(Vector3.UP,rightStick.x*delta)
