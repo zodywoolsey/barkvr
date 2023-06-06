@@ -1,39 +1,53 @@
 [gd_scene load_steps=6 format=3 uid="uid://2o2f8tknq7me"]
 
 [ext_resource type="Script" path="res://mainAssets/ui/3dPanel/3dpanel.gd" id="1_h1226"]
-[ext_resource type="PackedScene" uid="uid://ulqedhd05v8a" path="res://mainAssets/ui/3dPanel/testui.tscn" id="1_iqngy"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_j0pg5"]
+size = Vector3(1, 0.01, 1)
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_tm77y"]
+viewport_path = NodePath("SubViewport")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4ksv4"]
 resource_local_to_scene = true
 transparency = 2
 alpha_scissor_threshold = 0.5
 alpha_antialiasing_mode = 0
+cull_mode = 2
+shading_mode = 0
+albedo_texture = SubResource("ViewportTexture_tm77y")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_r1rr1"]
+resource_local_to_scene = true
 material = SubResource("StandardMaterial3D_4ksv4")
+size = Vector2(0.5, 0.5)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_j0pg5"]
-size = Vector3(1, 0.01, 1)
-
-[node name="3dpanel" type="Node3D" node_paths=PackedStringArray("viewport", "mesh", "colShape")]
+[node name="StaticBody3D" type="StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0)
+collision_layer = 4
+collision_mask = 0
 script = ExtResource("1_h1226")
-viewport = NodePath("SubViewport")
-mesh = NodePath("panel")
-colShape = NodePath("panel/StaticBody3D/CollisionShape3D")
+metadata/grabbable = true
 
-[node name="SubViewport" type="SubViewport" parent="."]
-transparent_bg = true
-size = Vector2i(1024, 1024)
-
-[node name="Control" parent="SubViewport" instance=ExtResource("1_iqngy")]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_j0pg5")
 
 [node name="panel" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.707107, -0.707107, 0, 0.707107, 0.707107, 0, 0, 0)
 mesh = SubResource("PlaneMesh_r1rr1")
+skeleton = NodePath("../..")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="panel"]
-collision_layer = 6
-collision_mask = 0
+[node name="Label3D" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="panel/StaticBody3D"]
-shape = SubResource("BoxShape3D_j0pg5")
+[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+offset_left = 39.0
+offset_top = 2053.0
+offset_right = 79.0
+offset_bottom = 2093.0
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
+unique_name_in_owner = true
+transparent_bg = true
+handle_input_locally = false
+size = Vector2i(1024, 1024)
+render_target_update_mode = 4

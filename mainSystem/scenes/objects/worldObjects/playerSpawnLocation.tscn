@@ -1,0 +1,3 @@
+[gd_scene format=3 uid="uid://dckbok0o553v7"]
+
+[node name="playerSpawnLocation" type="Node3D" groups=["PlayerSpawnLocation"]]

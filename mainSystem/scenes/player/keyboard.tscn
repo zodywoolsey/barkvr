@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://b8wn2qfph4b01"]
+
+[node name="keyboard" type="StaticBody3D"]
+metadata/grabbable = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]

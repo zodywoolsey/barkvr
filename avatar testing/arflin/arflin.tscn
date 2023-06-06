@@ -755,7 +755,7 @@ process_priority = 1
 root_bone = &"Left_arm"
 tip_bone = &"Left_wrist"
 use_magnet = true
-magnet = Vector3(2.76608, 6.25539, -9.90882)
+magnet = Vector3(1.40927, 6.71023, -8.39532)
 target_node = NodePath("../Node3D")
 min_distance = 0.05
 max_iterations = 500
@@ -763,7 +763,7 @@ script = ExtResource("3_d58j4")
 offset = Vector3(0, 1, -10)
 
 [node name="Node3D" type="Node3D" parent="."]
-transform = Transform3D(-0.340087, -0.214668, 0.915565, 0.909549, 0.172227, 0.378233, -0.23888, 0.961382, 0.136679, 2.11082, 5.71501, 1.5675)
+transform = Transform3D(-0.340087, -0.214668, 0.915565, 0.909549, 0.172227, 0.378233, -0.23888, 0.961382, 0.136679, 1.4086, 5.71501, 1.5675)
 script = SubResource("GDScript_objsl")
 
 [node name="Camera3D" type="Camera3D" parent="."]
