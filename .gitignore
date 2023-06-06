@@ -3,6 +3,6 @@
 .export/
 .assetsNotForUpload/
 .noUpload/
-.android/build
+.android/build/
 .export/
 .exports/
