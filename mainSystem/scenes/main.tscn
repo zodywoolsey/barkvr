@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://ctwckofb07cfw"]
+[gd_scene load_steps=23 format=3 uid="uid://ctwckofb07cfw"]
 
 [ext_resource type="PackedScene" uid="uid://r68jre2w5k33" path="res://mainSystem/scenes/player/xrplayer.tscn" id="1_8cqag"]
 [ext_resource type="Material" uid="uid://dum7xrf8gdl7k" path="res://addons/kenney_prototype_textures/materials/dark01Triplanar.material" id="3_ad6t3"]
@@ -11,6 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://dckbok0o553v7" path="res://mainSystem/scenes/objects/worldObjects/playerSpawnLocation.tscn" id="10_kj5nl"]
 [ext_resource type="PackedScene" uid="uid://b3sbt3oft3cxg" path="res://mainAssets/ui/3dPanel/editmode/vreditor.tscn" id="10_s18un"]
 [ext_resource type="PackedScene" uid="uid://og3t2qnt8ukh" path="res://mainSystem/scenes/objects/toys/particlepen.tscn" id="11_w7bny"]
+[ext_resource type="PackedScene" uid="uid://bobiq7h0hkw2m" path="res://avatar testing/arflin/arflin.tscn" id="12_unl1u"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_3royi"]
 sky_top_color = Color(0.494118, 0.772549, 1, 1)
@@ -34,7 +35,7 @@ volumetric_fog_emission_energy = 0.03
 [sub_resource type="LabelSettings" id="LabelSettings_2sh5v"]
 font_size = 48
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_ci3wm"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_8vn3x"]
 render_priority = 0
 shader = ExtResource("5_o0de1")
 shader_parameter/player_pos = Vector3(1e+06, 1e+06, 1e+06)
@@ -66,7 +67,7 @@ _surfaces = [{
 "format": 4123,
 "index_count": 12,
 "index_data": PackedByteArray(0, 0, 1, 0, 2, 0, 3, 0, 1, 0, 0, 0, 4, 0, 5, 0, 6, 0, 7, 0, 5, 0, 4, 0),
-"material": SubResource("ShaderMaterial_ci3wm"),
+"material": SubResource("ShaderMaterial_8vn3x"),
 "primitive": 3,
 "vertex_count": 8,
 "vertex_data": PackedByteArray(0, 0, 0, 191, 0, 0, 128, 63, 0, 0, 0, 0, 255, 127, 255, 127, 0, 0, 0, 63, 0, 0, 0, 0, 0, 0, 0, 0, 255, 127, 255, 127, 0, 0, 0, 191, 0, 0, 0, 0, 0, 0, 0, 0, 255, 127, 255, 127, 0, 0, 0, 63, 0, 0, 128, 63, 0, 0, 0, 0, 255, 127, 255, 127, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 0, 191, 0, 0, 255, 127, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 63, 0, 0, 255, 127, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 191, 0, 0, 255, 127, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 0, 63, 0, 0, 255, 127)
@@ -177,3 +178,6 @@ grow_vertical = 2
 [node name="TouchScreenButton" type="TouchScreenButton" parent="."]
 position = Vector2(695, 429)
 shape = SubResource("CircleShape2D_kv3ui")
+
+[node name="arflin" parent="." instance=ExtResource("12_unl1u")]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0.0774641, 2.38419e-07, -4.23405)
