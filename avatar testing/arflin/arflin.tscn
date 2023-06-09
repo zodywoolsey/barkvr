@@ -1,19 +1,19 @@
-[gd_scene load_steps=5 format=3 uid="uid://bobiq7h0hkw2m"]
+[gd_scene load_steps=7 format=3 uid="uid://bobiq7h0hkw2m"]
 
 [ext_resource type="PackedScene" uid="uid://iasdv8fq2h7y" path="res://avatar testing/arflin/sweater/sweater.tscn" id="1_ww7dt"]
 [ext_resource type="PackedScene" uid="uid://blrikadbrv6oq" path="res://avatar testing/arflin/body/body.tscn" id="2_03f87"]
 [ext_resource type="Script" path="res://avatar testing/arflin/SkeletonIK3D.gd" id="3_d58j4"]
 
-[sub_resource type="GDScript" id="GDScript_objsl"]
-script/source = "extends Node3D
+[sub_resource type="BoxShape3D" id="BoxShape3D_k3hci"]
+size = Vector3(0.1, 0.1, 0.1)
 
-@onready var pos = global_position
-var timer = 0
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hyt8f"]
+cull_mode = 2
+no_depth_test = true
 
-func _process(delta):
-	timer += delta
-	global_position.x = pos.x + sin(timer)*.1
-"
+[sub_resource type="BoxMesh" id="BoxMesh_05ocm"]
+material = SubResource("StandardMaterial3D_hyt8f")
+size = Vector3(0.1, 0.1, 0.1)
 
 [node name="arflin" type="Skeleton3D"]
 transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
@@ -755,16 +755,23 @@ process_priority = 1
 root_bone = &"Left_arm"
 tip_bone = &"Left_wrist"
 use_magnet = true
-magnet = Vector3(1.40927, 6.71023, -8.39532)
+magnet = Vector3(2.76608, 6.25539, -9.90882)
 target_node = NodePath("../Node3D")
 min_distance = 0.05
 max_iterations = 500
 script = ExtResource("3_d58j4")
 offset = Vector3(0, 1, -10)
 
-[node name="Node3D" type="Node3D" parent="."]
+[node name="Node3D" type="StaticBody3D" parent="."]
 transform = Transform3D(-0.340087, -0.214668, 0.915565, 0.909549, 0.172227, 0.378233, -0.23888, 0.961382, 0.136679, 1.4086, 5.71501, 1.5675)
-script = SubResource("GDScript_objsl")
+collision_layer = 2
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Node3D"]
+shape = SubResource("BoxShape3D_k3hci")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Node3D"]
+mesh = SubResource("BoxMesh_05ocm")
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 5, 8.02869)

@@ -16,4 +16,3 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 right_disconnects = true
-scroll_offset = Vector2(-40, -40)
