@@ -1,12 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://2o2f8tknq7me"]
+[gd_scene load_steps=5 format=3 uid="uid://2o2f8tknq7me"]
 
 [ext_resource type="Script" path="res://mainAssets/ui/3dPanel/3dpanel.gd" id="1_h1226"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_j0pg5"]
 size = Vector3(1, 0.01, 1)
-
-[sub_resource type="ViewportTexture" id="ViewportTexture_tm77y"]
-viewport_path = NodePath("SubViewport")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4ksv4"]
 resource_local_to_scene = true
@@ -15,7 +12,6 @@ alpha_scissor_threshold = 0.5
 alpha_antialiasing_mode = 0
 cull_mode = 2
 shading_mode = 0
-albedo_texture = SubResource("ViewportTexture_tm77y")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_r1rr1"]
 resource_local_to_scene = true

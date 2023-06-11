@@ -41,7 +41,7 @@ volumetric_fog_emission_energy = 0.03
 [sub_resource type="LabelSettings" id="LabelSettings_2sh5v"]
 font_size = 48
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_7ge4s"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ixe2r"]
 render_priority = 0
 shader = ExtResource("5_o0de1")
 shader_parameter/player_pos = Vector3(1e+06, 1e+06, 1e+06)
@@ -73,7 +73,7 @@ _surfaces = [{
 "format": 4123,
 "index_count": 12,
 "index_data": PackedByteArray(0, 0, 1, 0, 2, 0, 3, 0, 1, 0, 0, 0, 4, 0, 5, 0, 6, 0, 7, 0, 5, 0, 4, 0),
-"material": SubResource("ShaderMaterial_7ge4s"),
+"material": SubResource("ShaderMaterial_ixe2r"),
 "primitive": 3,
 "vertex_count": 8,
 "vertex_data": PackedByteArray(0, 0, 0, 191, 0, 0, 128, 63, 0, 0, 0, 0, 255, 127, 255, 127, 0, 0, 0, 63, 0, 0, 0, 0, 0, 0, 0, 0, 255, 127, 255, 127, 0, 0, 0, 191, 0, 0, 0, 0, 0, 0, 0, 0, 255, 127, 255, 127, 0, 0, 0, 63, 0, 0, 128, 63, 0, 0, 0, 0, 255, 127, 255, 127, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 0, 191, 0, 0, 255, 127, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 63, 0, 0, 255, 127, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 191, 0, 0, 255, 127, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 0, 63, 0, 0, 255, 127)
