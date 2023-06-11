@@ -5,6 +5,8 @@ var interface : XRInterface
 var webxr_interface
 var vr_supported = false
 
+signal playerinit(isvr:bool)
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	if OS.get_name() == "Web":
@@ -13,10 +15,10 @@ func _ready():
 		interface = XRServer.find_interface("OpenXR")
 		interface.initialize()
 		if interface and interface.is_initialized():
-			print("openxr started")
 			get_viewport().use_xr = true
+			get_tree().get_first_node_in_group("worldroot").add_child(load('res://mainSystem/scenes/player/xrplayer.tscn').instantiate())
 		else:
-			print('openxr not work')
+			get_tree().get_first_node_in_group("worldroot").add_child(load('res://mainSystem/scenes/player/flatplayer.tscn').instantiate())
 
 
 func webxr():

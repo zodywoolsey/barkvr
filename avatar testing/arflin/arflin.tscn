@@ -755,7 +755,7 @@ process_priority = 1
 root_bone = &"Left_arm"
 tip_bone = &"Left_wrist"
 use_magnet = true
-magnet = Vector3(2.76608, 6.25539, -9.90882)
+magnet = Vector3(1.40927, 6.71023, -8.39532)
 target_node = NodePath("../Node3D")
 min_distance = 0.05
 max_iterations = 500
@@ -772,6 +772,3 @@ shape = SubResource("BoxShape3D_k3hci")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Node3D"]
 mesh = SubResource("BoxMesh_05ocm")
-
-[node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 5, 8.02869)

@@ -1,7 +1,7 @@
 extends XRController3D
 
 @onready var grabArea : Area3D = $grabArea
-@onready var worldRay : RayCast3D = $worldRay
+@onready var world_ray : RayCast3D = $worldRay
 @onready var ui_ray = $uiRay
 @onready var label_3d = $Label3D
 @onready var handmenu = %"handmenu"
@@ -12,6 +12,7 @@ extends XRController3D
 @onready var local_player = %CharacterBody3D
 @onready var righthand = %righthand
 @onready var lefthand = %lefthand
+@onready var line_3d = $Line3D
 var otherhand : XRController3D
 
 var prevHover : Node
@@ -47,8 +48,8 @@ func _ready():
 			elif grabArea.get_overlapping_bodies().size() > 0:
 				for item in grabArea.get_overlapping_bodies():
 					grab(item,true)
-			elif worldRay.is_colliding():
-				var rayCollided = worldRay.get_collider()
+			elif world_ray.is_colliding():
+				var rayCollided = world_ray.get_collider()
 				if rayCollided.has_meta("grabbable"):
 					grab(rayCollided,true)
 			grabbing = true
@@ -56,9 +57,9 @@ func _ready():
 			grabbing = false
 #		if name == "trigger":
 #			if value > .3:
-#				worldRay.enabled = true
+#				world_ray.enabled = true
 #			else:
-#				worldRay.enabled = false
+#				world_ray.enabled = false
 		)
 
 func _process(delta):
@@ -72,9 +73,13 @@ func _process(delta):
 		ts *= 4.0
 		scalinggrabbedobject.scale = scalinggrabbedstartscale+Vector3(ts,ts,ts)
 	if ui_ray.is_colliding():
-		worldRay.enabled = false
+		line_3d.target = ui_ray.get_collision_point()
+		world_ray.enabled = false
+		world_ray.hide()
 	else:
-		worldRay.enabled = true
+		line_3d.target = world_ray.vispos
+		world_ray.enabled = true
+		world_ray.show()
 
 func _input(event):
 	pass
@@ -99,7 +104,7 @@ func buttonPressed(name):
 		if ui_ray.is_colliding():
 			ui_ray.click()
 		else:
-			worldRay.click()
+			world_ray.click()
 		if grab_parent.get_child_count()>0:
 			for item in grab_parent.get_children():
 				if item.has_method('primary'):
