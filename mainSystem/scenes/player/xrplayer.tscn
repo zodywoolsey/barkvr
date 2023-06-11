@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://r68jre2w5k33"]
+[gd_scene load_steps=17 format=3 uid="uid://r68jre2w5k33"]
 
 [ext_resource type="Script" path="res://mainSystem/scripts/player/xrplayer-controller.gd" id="1_wrucs"]
 [ext_resource type="Script" path="res://mainSystem/scripts/player/hand.gd" id="2_boqlt"]
@@ -6,7 +6,9 @@
 [ext_resource type="PackedScene" uid="uid://b2r6qi0effaiw" path="res://addons/contextmenu/gridmenu/gridmenubutton.tscn" id="5_gavsp"]
 [ext_resource type="Script" path="res://mainSystem/scenes/player/worldRay.gd" id="6_d735y"]
 [ext_resource type="Texture2D" uid="uid://cm7tsng6rg8cs" path="res://mainAssets/ui/assets/wrist_menu/UI_mockup_trasparent.png" id="6_kbimw"]
+[ext_resource type="Script" path="res://mainSystem/scenes/objects/tools/Line3D.gd" id="7_wshbv"]
 [ext_resource type="Script" path="res://mainSystem/scenes/player/uiRay.gd" id="7_y3521"]
+[ext_resource type="Script" path="res://mainSystem/scripts/player/notificationpositioner.gd" id="8_ngss2"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_1q63w"]
 radius = 0.1
@@ -28,6 +30,10 @@ script/source = "extends Node3D
 #func _process(delta):
 #	look_at(get_tree().get_first_node_in_group(\"playerCamera\").global_position)
 "
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3575f"]
+cull_mode = 2
+shading_mode = 0
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_1uxmk"]
 radius = 0.1
@@ -113,6 +119,11 @@ transform = Transform3D(1.24578e-08, 0.019, -8.30518e-10, 0.019, -1.24578e-08, -
 visible = false
 texture = ExtResource("6_kbimw")
 
+[node name="Line3D" type="MeshInstance3D" parent="CharacterBody3D/xrplayer/righthand"]
+material_override = SubResource("StandardMaterial3D_3575f")
+cast_shadow = 0
+script = ExtResource("7_wshbv")
+
 [node name="lefthand" type="XRController3D" parent="CharacterBody3D/xrplayer"]
 unique_name_in_owner = true
 tracker = &"left_hand"
@@ -163,6 +174,15 @@ disabled = true
 
 [node name="grabjoint" type="Generic6DOFJoint3D" parent="CharacterBody3D/xrplayer/lefthand"]
 node_a = NodePath("../StaticBody3D")
+
+[node name="Line3D" type="MeshInstance3D" parent="CharacterBody3D/xrplayer/lefthand"]
+material_override = SubResource("StandardMaterial3D_3575f")
+cast_shadow = 0
+script = ExtResource("7_wshbv")
+
+[node name="notificationparent" type="Node3D" parent="CharacterBody3D/xrplayer/lefthand" groups=["notificationparent"]]
+transform = Transform3D(-4.37114e-09, 4.37114e-09, -0.1, -4.37114e-09, -0.1, -4.37114e-09, -0.1, 4.37114e-09, 4.37114e-09, -0.048, -0.064, 0.077)
+script = ExtResource("8_ngss2")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.496656, 0)

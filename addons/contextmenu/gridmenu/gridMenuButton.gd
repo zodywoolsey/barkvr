@@ -37,7 +37,6 @@ func laserHover(data:Dictionary):
 		hover = false
 
 func laserClick(data:Dictionary):
-	print('click button')
 	if itemToSpawn:
 		var tmp = load(itemToSpawn).instantiate()
 		get_tree().root.add_child(tmp)

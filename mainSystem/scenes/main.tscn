@@ -1,6 +1,5 @@
-[gd_scene load_steps=23 format=3 uid="uid://ctwckofb07cfw"]
+[gd_scene load_steps=22 format=3 uid="uid://ctwckofb07cfw"]
 
-[ext_resource type="PackedScene" uid="uid://r68jre2w5k33" path="res://mainSystem/scenes/player/xrplayer.tscn" id="1_8cqag"]
 [ext_resource type="Material" uid="uid://dum7xrf8gdl7k" path="res://addons/kenney_prototype_textures/materials/dark01Triplanar.material" id="3_ad6t3"]
 [ext_resource type="Script" path="res://mainSystem/scenes/fpsLabel.gd" id="3_gkioa"]
 [ext_resource type="Shader" path="res://addons/simplegrasstextured/shaders/grass.gdshader" id="5_o0de1"]
@@ -12,6 +11,13 @@
 [ext_resource type="PackedScene" uid="uid://b3sbt3oft3cxg" path="res://mainAssets/ui/3dPanel/editmode/vreditor.tscn" id="10_s18un"]
 [ext_resource type="PackedScene" uid="uid://og3t2qnt8ukh" path="res://mainSystem/scenes/objects/toys/particlepen.tscn" id="11_w7bny"]
 [ext_resource type="PackedScene" uid="uid://bobiq7h0hkw2m" path="res://avatar testing/arflin/arflin.tscn" id="12_unl1u"]
+
+[sub_resource type="GDScript" id="GDScript_py2iv"]
+script/source = "extends Node3D
+
+func _ready():
+	pass
+"
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_3royi"]
 sky_top_color = Color(0.494118, 0.772549, 1, 1)
@@ -35,7 +41,7 @@ volumetric_fog_emission_energy = 0.03
 [sub_resource type="LabelSettings" id="LabelSettings_2sh5v"]
 font_size = 48
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_8vn3x"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_7ge4s"]
 render_priority = 0
 shader = ExtResource("5_o0de1")
 shader_parameter/player_pos = Vector3(1e+06, 1e+06, 1e+06)
@@ -67,7 +73,7 @@ _surfaces = [{
 "format": 4123,
 "index_count": 12,
 "index_data": PackedByteArray(0, 0, 1, 0, 2, 0, 3, 0, 1, 0, 0, 0, 4, 0, 5, 0, 6, 0, 7, 0, 5, 0, 4, 0),
-"material": SubResource("ShaderMaterial_8vn3x"),
+"material": SubResource("ShaderMaterial_7ge4s"),
 "primitive": 3,
 "vertex_count": 8,
 "vertex_data": PackedByteArray(0, 0, 0, 191, 0, 0, 128, 63, 0, 0, 0, 0, 255, 127, 255, 127, 0, 0, 0, 63, 0, 0, 0, 0, 0, 0, 0, 0, 255, 127, 255, 127, 0, 0, 0, 191, 0, 0, 0, 0, 0, 0, 0, 0, 255, 127, 255, 127, 0, 0, 0, 63, 0, 0, 128, 63, 0, 0, 0, 0, 255, 127, 255, 127, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 0, 191, 0, 0, 255, 127, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 63, 0, 0, 255, 127, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 191, 0, 0, 255, 127, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 0, 63, 0, 0, 255, 127)
@@ -91,10 +97,8 @@ func _ready():
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_csaaw"]
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_kv3ui"]
-radius = 80.0
-
 [node name="main" type="Node3D" groups=["worldroot"]]
+script = SubResource("GDScript_py2iv")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_n00cx")
@@ -105,17 +109,10 @@ light_energy = 0.112
 shadow_enabled = true
 
 [node name="Label" type="Label" parent="."]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -44.5
-offset_top = -35.0
-offset_right = 44.5
-offset_bottom = 35.0
-grow_horizontal = 2
-grow_vertical = 2
+offset_left = 43.0
+offset_top = 40.0
+offset_right = 132.0
+offset_bottom = 110.0
 text = "test"
 label_settings = SubResource("LabelSettings_2sh5v")
 script = ExtResource("3_gkioa")
@@ -152,13 +149,6 @@ shape = SubResource("WorldBoundaryShape3D_csaaw")
 [node name="Node3D" parent="." instance=ExtResource("9_vjrqu")]
 transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, -0.0261809, 5.74945)
 
-[node name="SpotLight3D" type="SpotLight3D" parent="Node3D"]
-transform = Transform3D(0.269546, -8.57191e-09, 0.196102, -0.196102, -1.17822e-08, 0.269546, 0, -0.333333, -1.45705e-08, 0.415527, 1.29867, 0)
-visible = false
-light_energy = 0.135
-
-[node name="xrplayer" parent="." instance=ExtResource("1_8cqag")]
-
 [node name="playerSpawnLocation" parent="." instance=ExtResource("10_kj5nl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.21053, 0.146511, 0)
 
@@ -175,9 +165,31 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="TouchScreenButton" type="TouchScreenButton" parent="."]
-position = Vector2(695, 429)
-shape = SubResource("CircleShape2D_kv3ui")
-
 [node name="arflin" parent="." instance=ExtResource("12_unl1u")]
 transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0.0774641, 2.38419e-07, -4.23405)
+
+[node name="LineEdit" type="LineEdit" parent="."]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -33.5313
+offset_right = 33.5313
+offset_bottom = 31.0
+grow_horizontal = 2
+alignment = 1
+expand_to_text_length = true
+
+[node name="Button" type="Button" parent="LineEdit"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -13.5
+offset_top = 2.0
+offset_right = 13.5
+offset_bottom = 33.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "go"

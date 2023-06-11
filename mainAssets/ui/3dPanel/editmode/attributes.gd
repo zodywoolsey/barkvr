@@ -17,7 +17,7 @@ var is_field_focused = false
 var target : Node = null
 
 func _input(event):
-	print(event)
+	pass
 
 func _process(delta):
 	if !is_field_focused:
@@ -62,7 +62,6 @@ func clear_fields():
 func _ready():
 	button.pressed.connect(func():
 		if target:
-			print('deleting: ', target.name)
 			target.queue_free()
 			target = null
 			clear_fields()
@@ -169,7 +168,6 @@ func _ready():
 	grabbable.toggled.connect(func(pressed):
 		if target:
 			target.set_meta('grabbable',pressed)
-			print(target.get_meta('grabbable'))
 		)
 	grabbable.focus_entered.connect(func():
 		is_field_focused = true
