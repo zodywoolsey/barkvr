@@ -99,7 +99,6 @@ occlusion_culling/bvh_build_quality=0
 textures/vram_compression/import_etc2_astc=true
 textures/default_filters/anisotropic_filtering_level=0
 occlusion_culling/use_occlusion_culling=true
-environment/defaults/default_environment="res://defaultEnvironment.tres"
 
 [xr]
 

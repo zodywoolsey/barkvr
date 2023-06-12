@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://ctwckofb07cfw"]
+[gd_scene load_steps=25 format=3 uid="uid://ctwckofb07cfw"]
 
 [ext_resource type="Material" uid="uid://dum7xrf8gdl7k" path="res://addons/kenney_prototype_textures/materials/dark01Triplanar.material" id="3_ad6t3"]
 [ext_resource type="Script" path="res://mainSystem/scenes/fpsLabel.gd" id="3_gkioa"]
@@ -9,7 +9,6 @@
 [ext_resource type="PackedScene" uid="uid://bfigugqwutfii" path="res://mainAssets/modelScenes/dome.scn" id="9_vjrqu"]
 [ext_resource type="PackedScene" uid="uid://dckbok0o553v7" path="res://mainSystem/scenes/objects/worldObjects/playerSpawnLocation.tscn" id="10_kj5nl"]
 [ext_resource type="PackedScene" uid="uid://b3sbt3oft3cxg" path="res://mainAssets/ui/3dPanel/editmode/vreditor.tscn" id="10_s18un"]
-[ext_resource type="PackedScene" uid="uid://og3t2qnt8ukh" path="res://mainSystem/scenes/objects/toys/particlepen.tscn" id="11_w7bny"]
 [ext_resource type="PackedScene" uid="uid://bobiq7h0hkw2m" path="res://avatar testing/arflin/arflin.tscn" id="12_unl1u"]
 
 [sub_resource type="GDScript" id="GDScript_py2iv"]
@@ -37,11 +36,13 @@ volumetric_fog_density = 0.2198
 volumetric_fog_albedo = Color(0.6, 0.466667, 1, 1)
 volumetric_fog_emission = Color(0.6, 0.466667, 1, 1)
 volumetric_fog_emission_energy = 0.03
+adjustment_enabled = true
+adjustment_brightness = 1.5
 
 [sub_resource type="LabelSettings" id="LabelSettings_2sh5v"]
 font_size = 48
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_ixe2r"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_px3rx"]
 render_priority = 0
 shader = ExtResource("5_o0de1")
 shader_parameter/player_pos = Vector3(1e+06, 1e+06, 1e+06)
@@ -73,7 +74,7 @@ _surfaces = [{
 "format": 4123,
 "index_count": 12,
 "index_data": PackedByteArray(0, 0, 1, 0, 2, 0, 3, 0, 1, 0, 0, 0, 4, 0, 5, 0, 6, 0, 7, 0, 5, 0, 4, 0),
-"material": SubResource("ShaderMaterial_ixe2r"),
+"material": SubResource("ShaderMaterial_px3rx"),
 "primitive": 3,
 "vertex_count": 8,
 "vertex_data": PackedByteArray(0, 0, 0, 191, 0, 0, 128, 63, 0, 0, 0, 0, 255, 127, 255, 127, 0, 0, 0, 63, 0, 0, 0, 0, 0, 0, 0, 0, 255, 127, 255, 127, 0, 0, 0, 191, 0, 0, 0, 0, 0, 0, 0, 0, 255, 127, 255, 127, 0, 0, 0, 63, 0, 0, 128, 63, 0, 0, 0, 0, 255, 127, 255, 127, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 0, 191, 0, 0, 255, 127, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 63, 0, 0, 255, 127, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 191, 0, 0, 255, 127, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 0, 63, 0, 0, 255, 127)
@@ -97,6 +98,51 @@ func _ready():
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_csaaw"]
 
+[sub_resource type="GDScript" id="GDScript_q387d"]
+script/source = "extends Button
+
+@onready var type = $\"..\"
+@onready var sdp = $\"../LineEdit\"
+
+func _ready():
+	pressed.connect(func():
+		NetworkHandler.peer.set_remote_description(type.text, sdp.text)
+		)
+"
+
+[sub_resource type="GDScript" id="GDScript_w8qt6"]
+script/source = "extends Button
+
+@onready var mid = $\"..\"
+@onready var index = $\"../LineEdit\"
+@onready var sdp = $\"../LineEdit2\"
+
+func _ready():
+	pressed.connect(func():
+		NetworkHandler.peer.add_ice_candidate(mid.text, index.text.to_int(), sdp.text)
+		)
+"
+
+[sub_resource type="GDScript" id="GDScript_10lg4"]
+script/source = "extends Button
+
+
+func _ready():
+	pressed.connect(func():
+		NetworkHandler.peer.create_offer()
+		)
+"
+
+[sub_resource type="GDScript" id="GDScript_5xksr"]
+script/source = "extends Button
+
+
+func _ready():
+	pressed.connect(func():
+		NetworkHandler.channel.put_packet(\"test\".to_utf8_buffer())
+		)
+"
+
 [node name="main" type="Node3D" groups=["worldroot"]]
 script = SubResource("GDScript_py2iv")
 
@@ -104,7 +150,7 @@ script = SubResource("GDScript_py2iv")
 environment = SubResource("Environment_n00cx")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 0, 0)
+transform = Transform3D(-0.865617, -0.417461, 0.276465, -0.267145, 0.852051, 0.450158, -0.423486, 0.315808, -0.849073, 0, 0, 0)
 light_energy = 0.112
 shadow_enabled = true
 
@@ -116,6 +162,17 @@ offset_bottom = 110.0
 text = "test"
 label_settings = SubResource("LabelSettings_2sh5v")
 script = ExtResource("3_gkioa")
+
+[node name="Label2" type="TextEdit" parent="." groups=["candidate"]]
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -69.0
+offset_right = 1246.0
+offset_bottom = 518.0
+grow_vertical = 2
+scale = Vector2(0.605, 0.605)
+text = "test"
 
 [node name="CSGBox3D" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
@@ -155,8 +212,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.21053, 0.146511, 0)
 [node name="vreditor" parent="." instance=ExtResource("10_s18un")]
 transform = Transform3D(1, 0, 0, 0, 0.998359, -0.0572678, 0, 0.0572678, 0.998359, 4.70908, 1.03694, -0.983281)
 
-[node name="particlepen" parent="." instance=ExtResource("11_w7bny")]
-
 [node name="Button" type="Button" parent="." groups=["webxr"]]
 visible = false
 anchors_preset = 15
@@ -179,6 +234,12 @@ grow_horizontal = 2
 alignment = 1
 expand_to_text_length = true
 
+[node name="LineEdit" type="TextEdit" parent="LineEdit"]
+layout_mode = 0
+offset_top = 32.0
+offset_right = 67.0625
+offset_bottom = 63.0
+
 [node name="Button" type="Button" parent="LineEdit"]
 layout_mode = 1
 anchors_preset = 7
@@ -187,9 +248,78 @@ anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
 offset_left = -13.5
-offset_top = 2.0
+offset_top = 34.0
 offset_right = 13.5
-offset_bottom = 33.0
+offset_bottom = 65.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "set remote desc"
+script = SubResource("GDScript_q387d")
+
+[node name="LineEdit2" type="LineEdit" parent="."]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -34.0
+offset_top = 110.0
+offset_right = 33.0626
+offset_bottom = 141.0
+grow_horizontal = 2
+alignment = 1
+expand_to_text_length = true
+
+[node name="LineEdit" type="LineEdit" parent="LineEdit2"]
+layout_mode = 0
+offset_top = 32.0
+offset_right = 67.0625
+offset_bottom = 63.0
+alignment = 1
+expand_to_text_length = true
+
+[node name="LineEdit2" type="LineEdit" parent="LineEdit2"]
+layout_mode = 0
+offset_top = 63.0
+offset_right = 67.0625
+offset_bottom = 94.0
+alignment = 1
+expand_to_text_length = true
+
+[node name="Button" type="Button" parent="LineEdit2"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -13.5
+offset_top = 65.0
+offset_right = 13.5
+offset_bottom = 96.0
 grow_horizontal = 2
 grow_vertical = 0
 text = "go"
+script = SubResource("GDScript_w8qt6")
+
+[node name="Button2" type="Button" parent="."]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -99.0
+offset_bottom = 31.0
+grow_horizontal = 0
+text = "create offer"
+script = SubResource("GDScript_10lg4")
+
+[node name="Button3" type="Button" parent="."]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -100.0
+offset_top = 43.0
+offset_right = -1.0
+offset_bottom = 74.0
+grow_horizontal = 0
+text = "send test"
+script = SubResource("GDScript_5xksr")
+
+[node name="networkplayers" type="Node3D" parent="." groups=["networkplayers"]]
