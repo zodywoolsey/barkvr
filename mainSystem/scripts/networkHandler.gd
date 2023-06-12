@@ -20,14 +20,27 @@ func _ready():
 func _process(delta):
 	timer += delta
 	peer.poll()
+	if channel:
+		channel.poll()
+		if channel.get_ready_state() == WebRTCDataChannel.STATE_OPEN:
+			while channel.get_available_packet_count() > 0:
+				print(get_path(), " received: ", str(channel.get_var()))
 	if timer > 2.0:
-		if peer.get_connection_state() == 0:
-			print("attempting to create data channel again")
-			channel = peer.create_data_channel("chat", {'id':1,'negotiated': true})
+		if !channel:
+			print("attempting to create data channel")
+			channel = peer.create_data_channel("bark-chat", {'id':1,'negotiated': true})
+		else:
+			var tmpplayer = get_tree().get_first_node_in_group("player")
+			if tmpplayer:
+				channel.put_var({
+					'p_id': OS.get_unique_id(),
+					'p_pos': tmpplayer.global_position,
+				})
+#			else:
+#				print('failed: ',channel)
+		if peer.get_gathering_state() == 2:
 			if channel:
-				print("offer: ",peer.create_offer())
-			else:
-				print('failed: ',channel)
+				pass
 		timer = 0.0
 		Notifyvr.send_notification(
 			"connection state: {0}\ngathering state: {1}\nsignaling state: {2}".format([
@@ -36,6 +49,10 @@ func _process(delta):
 				peer.get_signaling_state()
 				])
 		)
+		if channel:
+			Notifyvr.send_notification(
+				"channel state: "+str(channel.get_ready_state())
+			)
 
 func initwebrtc():
 	# init the webrtc peer with the public google ice server
@@ -57,9 +74,13 @@ func initwebrtc():
 func _on_ice_candidate(mid, index, sdp):
 	print("ice:")
 	print("mid: ",str(mid),"\nindex: ",str(index),"\nsdp: ",str(sdp))
-
+	get_tree().get_first_node_in_group('candidate').text += "\n"+str(sdp)
 
 func description_created(type:String, sdp:String):
+	get_tree().get_first_node_in_group('candidate').text += "send from here:\n"
+	get_tree().get_first_node_in_group('candidate').text += "type:\n"+type+"\n"
+	get_tree().get_first_node_in_group('candidate').text += "sdp:\n"+sdp+"\n"
+	get_tree().get_first_node_in_group('candidate').text += "to here \n"
 	print("type: ",type,"\nsdp: ",sdp)
 	print('set local description')
 	peer.set_local_description(type,sdp)

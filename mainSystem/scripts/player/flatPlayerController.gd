@@ -65,7 +65,7 @@ func _input(event):
 			else:
 				Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	if event is InputEventScreenTouch:
-		Notifyvr.send_notification(str(event))
+#		Notifyvr.send_notification(str(event))
 		if event.position.x > get_viewport().size.x/2.0 and lookdrag.is_empty():
 			lookdrag = {
 				'index': event.index,

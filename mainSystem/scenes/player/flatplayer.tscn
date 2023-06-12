@@ -11,7 +11,7 @@
 
 [node name="flatplayer" type="Node3D"]
 
-[node name="CharacterBody3D" type="CharacterBody3D" parent="."]
+[node name="CharacterBody3D" type="CharacterBody3D" parent="." groups=["player"]]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 script = ExtResource("2_uq1sy")
@@ -22,7 +22,7 @@ shape = SubResource("CapsuleShape3D_0klqa")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterBody3D"]
 mesh = SubResource("CapsuleMesh_qkydm")
 
-[node name="Camera3D" type="Camera3D" parent="CharacterBody3D"]
+[node name="Camera3D" type="Camera3D" parent="CharacterBody3D" groups=["playerCamera"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 
 [node name="worldRay" type="RayCast3D" parent="CharacterBody3D/Camera3D"]
@@ -42,8 +42,7 @@ debug_shape_thickness = 1
 script = ExtResource("3_4qe4n")
 
 [node name="notificationparent" type="Node3D" parent="CharacterBody3D/Camera3D" groups=["notificationparent"]]
-transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -0.313101, -0.119835, -0.325979)
-visible = false
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -0.228724, -0.119835, -0.325979)
 script = ExtResource("4_5dls0")
 
 [node name="Label3D" type="Label3D" parent="CharacterBody3D/Camera3D/notificationparent"]
