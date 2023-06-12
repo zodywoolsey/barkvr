@@ -1,4 +1,4 @@
-[gd_scene load_steps=2 format=3 uid="uid://bx2lhlh7c3f7b"]
+[gd_scene load_steps=2 format=3 uid="uid://buiy5jgywujh8"]
 
 [ext_resource type="Script" path="res://mainAssets/ui/3dPanel/editmode/sceneinspector.gd" id="1_apb1e"]
 
