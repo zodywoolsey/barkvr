@@ -36,8 +36,6 @@ func _process(delta):
 					'p_id': OS.get_unique_id(),
 					'p_pos': tmpplayer.global_position,
 				})
-#			else:
-#				print('failed: ',channel)
 		if peer.get_gathering_state() == 2:
 			if channel:
 				pass
