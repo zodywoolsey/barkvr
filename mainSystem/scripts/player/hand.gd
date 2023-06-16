@@ -109,6 +109,8 @@ func buttonPressed(name):
 			for item in grab_parent.get_children():
 				if item.has_method('primary'):
 					item.primary(true)
+		if grabjoint.node_b and get_node(grabjoint.node_b).has_method('primary'):
+			get_node(grabjoint.node_b).primary(true)
 
 func buttonReleased(name):
 	buttons[name] = false
@@ -127,11 +129,7 @@ func buttonReleased(name):
 				vreditor.global_position = hand_menu_point.global_position
 	if name == "grip_click":
 		for item in grab_parent.get_children():
-			if item.has_method('resetParent'):
-				item.resetParent()
-				item.freeze = false
-			else:
-				releasegrab(item)
+			releasegrab(item)
 		if grabjoint.node_b:
 			grabjoint.node_b = ""
 		if isscalinggrabbedobject:
@@ -144,6 +142,8 @@ func buttonReleased(name):
 			for item in grab_parent.get_children():
 				if item.has_method('primary'):
 					item.primary(false)
+		if grabjoint.node_b and get_node(grabjoint.node_b).has_method('primary'):
+			get_node(grabjoint.node_b).primary(false)
 		rayBody = null
 
 func grab(node:Node, laser:bool=false):
@@ -174,7 +174,10 @@ func grab(node:Node, laser:bool=false):
 
 func releasegrab(node:Node):
 	if local_player.grabbed.has(node.name) and isgrabbed(node):
-		node.reparent(local_player.grabbed[node.name].parent)
+		if lefthand == local_player.grabbed[node.name].parent or righthand == local_player.grabbed[node.name].parent:
+			node.reparent(get_tree().get_first_node_in_group('worldroot'))
+		else:
+			node.reparent(local_player.grabbed[node.name].parent)
 		local_player.grabbed.erase(node.name)
 
 func isgrabbed(node):

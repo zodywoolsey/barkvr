@@ -1,0 +1,30 @@
+[gd_scene load_steps=5 format=3 uid="uid://c76jook46cjyx"]
+
+[ext_resource type="Script" path="res://mainSystem/scenes/objects/toys/bouncyballgun.gd" id="1_akfv3"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_duhwo"]
+size = Vector3(0.2, 0.2, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_jvvxf"]
+size = Vector3(0.2, 0.2, 0.2)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_d5u1c"]
+radius = 0.05
+height = 0.1
+radial_segments = 4
+rings = 1
+
+[node name="bouncyballgun" type="RigidBody3D"]
+script = ExtResource("1_akfv3")
+metadata/grabbable = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_duhwo")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_jvvxf")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="MeshInstance3D"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, -0.302092)
+mesh = SubResource("CapsuleMesh_d5u1c")
+skeleton = NodePath("../..")

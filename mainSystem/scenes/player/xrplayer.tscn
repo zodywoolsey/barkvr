@@ -94,6 +94,7 @@ text = "test"
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.203384)
 
 [node name="StaticBody3D" type="StaticBody3D" parent="CharacterBody3D/xrplayer/righthand"]
+visible = false
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D/xrplayer/righthand/StaticBody3D"]
 shape = SubResource("BoxShape3D_ndmcs")
@@ -108,7 +109,7 @@ script = SubResource("GDScript_utwae")
 
 [node name="StaticBody3D" parent="CharacterBody3D/xrplayer/righthand/wristmenu" instance=ExtResource("5_gavsp")]
 transform = Transform3D(-1, 6.99383e-07, -8.74228e-08, 6.99383e-07, 1, -8.74229e-08, 8.74227e-08, -8.74229e-08, -1, 0.05, 7.78848e-08, 2.18557e-09)
-itemToSpawn = "res://mainSystem/scenes/objects/toys/particlepen.tscn"
+itemToSpawn = "res://mainSystem/scenes/objects/toys/bouncyballgun.tscn"
 text = "spawn pen"
 
 [node name="StaticBody3D2" parent="CharacterBody3D/xrplayer/righthand/wristmenu" instance=ExtResource("5_gavsp")]
@@ -167,6 +168,7 @@ text = "test"
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.203384)
 
 [node name="StaticBody3D" type="StaticBody3D" parent="CharacterBody3D/xrplayer/lefthand"]
+visible = false
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D/xrplayer/lefthand/StaticBody3D"]
 shape = SubResource("BoxShape3D_ndmcs")
