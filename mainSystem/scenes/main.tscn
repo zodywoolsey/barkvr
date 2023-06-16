@@ -36,13 +36,12 @@ volumetric_fog_density = 0.2198
 volumetric_fog_albedo = Color(0.6, 0.466667, 1, 1)
 volumetric_fog_emission = Color(0.6, 0.466667, 1, 1)
 volumetric_fog_emission_energy = 0.03
-adjustment_enabled = true
 adjustment_brightness = 1.5
 
 [sub_resource type="LabelSettings" id="LabelSettings_2sh5v"]
 font_size = 48
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_px3rx"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_mlxpi"]
 render_priority = 0
 shader = ExtResource("5_o0de1")
 shader_parameter/player_pos = Vector3(1e+06, 1e+06, 1e+06)
@@ -74,7 +73,7 @@ _surfaces = [{
 "format": 4123,
 "index_count": 12,
 "index_data": PackedByteArray(0, 0, 1, 0, 2, 0, 3, 0, 1, 0, 0, 0, 4, 0, 5, 0, 6, 0, 7, 0, 5, 0, 4, 0),
-"material": SubResource("ShaderMaterial_px3rx"),
+"material": SubResource("ShaderMaterial_mlxpi"),
 "primitive": 3,
 "vertex_count": 8,
 "vertex_data": PackedByteArray(0, 0, 0, 191, 0, 0, 128, 63, 0, 0, 0, 0, 255, 127, 255, 127, 0, 0, 0, 63, 0, 0, 0, 0, 0, 0, 0, 0, 255, 127, 255, 127, 0, 0, 0, 191, 0, 0, 0, 0, 0, 0, 0, 0, 255, 127, 255, 127, 0, 0, 0, 63, 0, 0, 128, 63, 0, 0, 0, 0, 255, 127, 255, 127, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 0, 191, 0, 0, 255, 127, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 63, 0, 0, 255, 127, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 191, 0, 0, 255, 127, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 0, 63, 0, 0, 255, 127)
@@ -150,11 +149,12 @@ script = SubResource("GDScript_py2iv")
 environment = SubResource("Environment_n00cx")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(-0.865617, -0.417461, 0.276465, -0.267145, 0.852051, 0.450158, -0.423486, 0.315808, -0.849073, 0, 0, 0)
+transform = Transform3D(-0.865617, -0.417461, 0.276465, -0.267145, 0.852051, 0.450158, -0.423486, 0.315808, -0.849073, 0, 1.72518, 0)
 light_energy = 0.112
 shadow_enabled = true
 
 [node name="Label" type="Label" parent="."]
+visible = false
 offset_left = 43.0
 offset_top = 40.0
 offset_right = 132.0
@@ -164,6 +164,7 @@ label_settings = SubResource("LabelSettings_2sh5v")
 script = ExtResource("3_gkioa")
 
 [node name="Label2" type="TextEdit" parent="." groups=["candidate"]]
+visible = false
 anchors_preset = 4
 anchor_top = 0.5
 anchor_bottom = 0.5
@@ -178,6 +179,8 @@ text = "test"
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
 material_override = ExtResource("3_ad6t3")
 use_collision = true
+collision_layer = 9
+collision_mask = 9
 size = Vector3(100, 1, 100)
 
 [node name="SimpleGrassTextured" type="MultiMeshInstance3D" parent="."]
@@ -205,6 +208,8 @@ shape = SubResource("WorldBoundaryShape3D_csaaw")
 
 [node name="Node3D" parent="." instance=ExtResource("9_vjrqu")]
 transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, -0.0261809, 5.74945)
+collision_layer = 9
+collision_mask = 9
 
 [node name="playerSpawnLocation" parent="." instance=ExtResource("10_kj5nl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.21053, 0.146511, 0)
@@ -224,6 +229,7 @@ grow_vertical = 2
 transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0.0774641, 2.38419e-07, -4.23405)
 
 [node name="LineEdit" type="LineEdit" parent="."]
+visible = false
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
@@ -257,6 +263,7 @@ text = "set remote desc"
 script = SubResource("GDScript_q387d")
 
 [node name="LineEdit2" type="LineEdit" parent="."]
+visible = false
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5

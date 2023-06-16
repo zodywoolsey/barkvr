@@ -19,5 +19,4 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 scroll_smooth = true
-minimap_draw = true
 line_folding = true

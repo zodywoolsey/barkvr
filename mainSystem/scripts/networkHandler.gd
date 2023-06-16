@@ -25,7 +25,7 @@ func _process(delta):
 		if channel.get_ready_state() == WebRTCDataChannel.STATE_OPEN:
 			while channel.get_available_packet_count() > 0:
 				print(get_path(), " received: ", str(channel.get_var()))
-	if timer > 2.0:
+	if timer > .1:
 		if !channel:
 			print("attempting to create data channel")
 			channel = peer.create_data_channel("bark-chat", {'id':1,'negotiated': true})
@@ -36,21 +36,18 @@ func _process(delta):
 					'p_id': OS.get_unique_id(),
 					'p_pos': tmpplayer.global_position,
 				})
-		if peer.get_gathering_state() == 2:
-			if channel:
-				pass
 		timer = 0.0
-		Notifyvr.send_notification(
-			"connection state: {0}\ngathering state: {1}\nsignaling state: {2}".format([
-				peer.get_connection_state(),
-				peer.get_gathering_state(),
-				peer.get_signaling_state()
-				])
-		)
-		if channel:
-			Notifyvr.send_notification(
-				"channel state: "+str(channel.get_ready_state())
-			)
+#		Notifyvr.send_notification(
+#			"connection state: {0}\ngathering state: {1}\nsignaling state: {2}".format([
+#				peer.get_connection_state(),
+#				peer.get_gathering_state(),
+#				peer.get_signaling_state()
+#				])
+#		)
+#		if channel:
+#			Notifyvr.send_notification(
+#				"channel state: "+str(channel.get_ready_state())
+#			)
 
 func initwebrtc():
 	# init the webrtc peer with the public google ice server
