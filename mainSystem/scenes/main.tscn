@@ -41,7 +41,7 @@ adjustment_brightness = 1.5
 [sub_resource type="LabelSettings" id="LabelSettings_2sh5v"]
 font_size = 48
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_mlxpi"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_l30iw"]
 render_priority = 0
 shader = ExtResource("5_o0de1")
 shader_parameter/player_pos = Vector3(1e+06, 1e+06, 1e+06)
@@ -73,7 +73,7 @@ _surfaces = [{
 "format": 4123,
 "index_count": 12,
 "index_data": PackedByteArray(0, 0, 1, 0, 2, 0, 3, 0, 1, 0, 0, 0, 4, 0, 5, 0, 6, 0, 7, 0, 5, 0, 4, 0),
-"material": SubResource("ShaderMaterial_mlxpi"),
+"material": SubResource("ShaderMaterial_l30iw"),
 "primitive": 3,
 "vertex_count": 8,
 "vertex_data": PackedByteArray(0, 0, 0, 191, 0, 0, 128, 63, 0, 0, 0, 0, 255, 127, 255, 127, 0, 0, 0, 63, 0, 0, 0, 0, 0, 0, 0, 0, 255, 127, 255, 127, 0, 0, 0, 191, 0, 0, 0, 0, 0, 0, 0, 0, 255, 127, 255, 127, 0, 0, 0, 63, 0, 0, 128, 63, 0, 0, 0, 0, 255, 127, 255, 127, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 0, 191, 0, 0, 255, 127, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 63, 0, 0, 255, 127, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 191, 0, 0, 255, 127, 0, 0, 0, 0, 0, 0, 128, 63, 0, 0, 0, 63, 0, 0, 255, 127)
@@ -154,7 +154,6 @@ light_energy = 0.112
 shadow_enabled = true
 
 [node name="Label" type="Label" parent="."]
-visible = false
 offset_left = 43.0
 offset_top = 40.0
 offset_right = 132.0
@@ -164,15 +163,14 @@ label_settings = SubResource("LabelSettings_2sh5v")
 script = ExtResource("3_gkioa")
 
 [node name="Label2" type="TextEdit" parent="." groups=["candidate"]]
-visible = false
 anchors_preset = 4
 anchor_top = 0.5
 anchor_bottom = 0.5
-offset_top = -69.0
-offset_right = 1246.0
-offset_bottom = 518.0
+offset_top = -158.0
+offset_right = 484.0
+offset_bottom = 362.0
 grow_vertical = 2
-scale = Vector2(0.605, 0.605)
+scale = Vector2(0.86, 0.86)
 text = "test"
 
 [node name="CSGBox3D" type="CSGBox3D" parent="."]
@@ -215,7 +213,7 @@ collision_mask = 9
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.21053, 0.146511, 0)
 
 [node name="vreditor" parent="." instance=ExtResource("10_s18un")]
-transform = Transform3D(1, 0, 0, 0, 0.998359, -0.0572678, 0, 0.0572678, 0.998359, 4.70908, 1.03694, -0.983281)
+transform = Transform3D(1, 0, 0, 0, 0.998359, -0.0572678, 0, 0.0572678, 0.998359, -0.0996146, 1.03694, -1.40078)
 
 [node name="Button" type="Button" parent="." groups=["webxr"]]
 visible = false
@@ -229,13 +227,13 @@ grow_vertical = 2
 transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0.0774641, 2.38419e-07, -4.23405)
 
 [node name="LineEdit" type="LineEdit" parent="."]
-visible = false
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -33.5313
-offset_right = 33.5313
-offset_bottom = 31.0
+offset_left = 23.4688
+offset_top = 1.0
+offset_right = 90.5314
+offset_bottom = 32.0
 grow_horizontal = 2
 alignment = 1
 expand_to_text_length = true
@@ -263,14 +261,13 @@ text = "set remote desc"
 script = SubResource("GDScript_q387d")
 
 [node name="LineEdit2" type="LineEdit" parent="."]
-visible = false
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -34.0
-offset_top = 110.0
-offset_right = 33.0626
-offset_bottom = 141.0
+offset_left = 23.0
+offset_top = 111.0
+offset_right = 90.0626
+offset_bottom = 142.0
 grow_horizontal = 2
 alignment = 1
 expand_to_text_length = true
