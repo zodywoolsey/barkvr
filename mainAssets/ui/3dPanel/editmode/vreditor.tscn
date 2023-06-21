@@ -61,11 +61,23 @@ transform = Transform3D(0.707107, -0.707107, 0, 0.707107, 0.707107, 0, 0, 0, 1, 
 mesh = SubResource("PlaneMesh_ujxtt")
 skeleton = NodePath("../../..")
 
+[node name="SubViewportContainer" parent="inspector/attributes" index="3"]
+offset_left = 2772.0
+offset_top = 2234.0
+offset_right = 3796.0
+offset_bottom = 3258.0
+
 [node name="gdscript" parent="inspector" instance=ExtResource("2_85jm4")]
 transform = Transform3D(0.707107, 0.707107, 9.27258e-08, -0.707107, 0.707107, -3.09086e-08, -8.74228e-08, -4.37114e-08, 1, -0.442787, 0.18931, 0)
 
 [node name="panel" parent="inspector/gdscript" index="1"]
 mesh = SubResource("PlaneMesh_w5ls6")
+
+[node name="SubViewportContainer" parent="inspector/gdscript" index="3"]
+offset_left = -1592.0
+offset_top = 2038.0
+offset_right = -568.0
+offset_bottom = 3062.0
 
 [editable path="inspector"]
 [editable path="inspector/attributes"]

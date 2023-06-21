@@ -74,6 +74,11 @@ func _input(event):
 				'startposition': event.position,
 				'position': event.position
 			}
+		if event.double_tap:
+			Notifyvr.send_notification("double tapped")
+			ui_ray.click()
+			await get_tree().process_frame
+			ui_ray.release()
 		if !lookdrag.is_empty() and event.index == lookdrag.index and event.pressed == false:
 			lookdrag = {}
 	if event is InputEventScreenDrag:

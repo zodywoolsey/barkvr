@@ -12,10 +12,6 @@ func _ready():
 	# connect functions
 	peer.ice_candidate_created.connect(_on_ice_candidate)
 	peer.session_description_created.connect(description_created)
-#	Notifyvr.send_notification('creating offer')
-#	var err = peer.create_offer()
-#	print(err)
-#	Notifyvr.send_notification("error code: {0}".format([str(err)]))
 
 func _process(delta):
 	timer += delta
@@ -37,17 +33,6 @@ func _process(delta):
 					'p_pos': tmpplayer.global_position,
 				})
 		timer = 0.0
-#		Notifyvr.send_notification(
-#			"connection state: {0}\ngathering state: {1}\nsignaling state: {2}".format([
-#				peer.get_connection_state(),
-#				peer.get_gathering_state(),
-#				peer.get_signaling_state()
-#				])
-#		)
-#		if channel:
-#			Notifyvr.send_notification(
-#				"channel state: "+str(channel.get_ready_state())
-#			)
 
 func initwebrtc():
 	# init the webrtc peer with the public google ice server
