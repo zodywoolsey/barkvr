@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://r68jre2w5k33"]
+[gd_scene load_steps=18 format=3 uid="uid://r68jre2w5k33"]
 
 [ext_resource type="Script" path="res://mainSystem/scripts/player/xrplayer-controller.gd" id="1_wrucs"]
 [ext_resource type="Script" path="res://mainSystem/scripts/player/hand.gd" id="2_boqlt"]
@@ -9,6 +9,7 @@
 [ext_resource type="Script" path="res://mainSystem/scenes/objects/tools/Line3D.gd" id="7_wshbv"]
 [ext_resource type="Script" path="res://mainSystem/scenes/player/uiRay.gd" id="7_y3521"]
 [ext_resource type="Script" path="res://mainSystem/scripts/player/notificationpositioner.gd" id="8_ngss2"]
+[ext_resource type="PackedScene" uid="uid://16colgxrw27d" path="res://addons/godot-xr-tools/hands/model/Hand_low_L.gltf" id="9_8f5su"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_1q63w"]
 radius = 0.1
@@ -185,6 +186,11 @@ script = ExtResource("7_wshbv")
 [node name="notificationparent" type="Node3D" parent="CharacterBody3D/xrplayer/lefthand" groups=["notificationparent"]]
 transform = Transform3D(-4.37114e-09, 4.37114e-09, -0.1, -4.37114e-09, -0.1, -4.37114e-09, -0.1, 4.37114e-09, 4.37114e-09, -0.048, -0.064, 0.077)
 script = ExtResource("8_ngss2")
+
+[node name="OpenXRHand" type="OpenXRHand" parent="CharacterBody3D/xrplayer"]
+
+[node name="Hand_low_L" parent="CharacterBody3D/xrplayer/OpenXRHand" instance=ExtResource("9_8f5su")]
+transform = Transform3D(-4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.496656, 0)

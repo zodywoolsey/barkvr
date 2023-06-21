@@ -7,7 +7,7 @@ extends StaticBody3D
 
 func _ready():
 #	mesh.mesh.material.albedo_texture = viewport.get_texture()
-	pass
+	print(mesh.mesh.material.albedo_texture)
 
 func _process(delta):
 	mesh.mesh.material.albedo_texture = viewport.get_texture()
@@ -15,8 +15,9 @@ func _process(delta):
 
 func laserClick(data):
 	# We need to fabricate a fake mouse input even for translating a raycast click to a simulated mouse click on the viewport.
-	var event = InputEventScreenDrag.new()
-	event = InputEventScreenTouch.new()
+	var event = InputEventMouseMotion.new()
+	
+	event = InputEventMouseButton.new()
 	event.pressed = data.pressed
 	event.button_index = 1
 	event.button_mask = 1
@@ -57,11 +58,11 @@ func laserClick(data):
 	release.pressed = false
 	release.button_index = 1
 	release.button_mask = 1
-#	Input.parse_input_event(release)
+	Input.parse_input_event(release)
 
 func laserHover(data):
 	# We need to fabricate a fake mouse input even for translating a raycast click to a simulated mouse click on the viewport.
-	var event = InputEventScreenDrag.new()
+	var event = InputEventMouseMotion.new()
 #	event.pressed = data.pressed
 #	event.button_index = 1
 #	event.button_mask = 1
@@ -84,6 +85,7 @@ func laserHover(data):
 	Input.parse_input_event(release)
 
 #func _input(event):
+#	print(event)
 #	viewport.push_input(event)
 
 func set_ui(node:Control):

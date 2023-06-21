@@ -25,6 +25,7 @@ XRToolsUserSettings="res://addons/godot-xr-tools/user_settings/user_settings.gd"
 LocalGlobals="*res://mainSystem/scripts/localGlobals.gd"
 NetworkHandler="*res://mainSystem/scripts/networkHandler.gd"
 Notifyvr="*res://addons/notifyvr/notifyvr.gd"
+Vector="*res://addons/vector/vector.gd"
 
 [display]
 
@@ -76,10 +77,6 @@ click={
 ]
 }
 
-[input_devices]
-
-pointing/emulate_touch_from_mouse=true
-
 [layer_names]
 
 3d_physics/layer_1="characters"
@@ -103,4 +100,5 @@ occlusion_culling/use_occlusion_culling=true
 [xr]
 
 openxr/enabled=true
+openxr/startup_alert=false
 shaders/enabled=true
