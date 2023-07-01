@@ -16,9 +16,7 @@ func _ready():
 		interface.initialize()
 		if interface and interface.is_initialized():
 			get_viewport().use_xr = true
-			get_tree().get_first_node_in_group("worldroot").add_child(load('res://mainSystem/scenes/player/xrplayer.tscn').instantiate())
-		else:
-			get_tree().get_first_node_in_group("worldroot").add_child(load('res://mainSystem/scenes/player/flatplayer.tscn').instantiate())
+	get_tree().get_first_node_in_group("localroot").add_child(load('res://mainSystem/scenes/player/xrplayer.tscn').instantiate())
 
 
 func webxr():

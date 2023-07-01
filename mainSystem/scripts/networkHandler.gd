@@ -12,6 +12,7 @@ func _ready():
 	# connect functions
 	peer.ice_candidate_created.connect(_on_ice_candidate)
 	peer.session_description_created.connect(description_created)
+	peer.create_offer()
 
 func _process(delta):
 	timer += delta

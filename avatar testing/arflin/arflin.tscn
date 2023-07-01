@@ -1,8 +1,8 @@
 [gd_scene load_steps=7 format=3 uid="uid://bobiq7h0hkw2m"]
 
-[ext_resource type="PackedScene" uid="uid://iasdv8fq2h7y" path="res://avatar testing/arflin/sweater/sweater.tscn" id="1_ww7dt"]
-[ext_resource type="PackedScene" uid="uid://blrikadbrv6oq" path="res://avatar testing/arflin/body/body.tscn" id="2_03f87"]
-[ext_resource type="Script" path="res://avatar testing/arflin/SkeletonIK3D.gd" id="3_d58j4"]
+[ext_resource type="PackedScene" uid="uid://iasdv8fq2h7y" path="res://avatar testing/arflin/sweater/sweater.tscn" id="1_23wno"]
+[ext_resource type="PackedScene" uid="uid://blrikadbrv6oq" path="res://avatar testing/arflin/body/body.tscn" id="2_716pa"]
+[ext_resource type="Script" path="res://avatar testing/arflin/SkeletonIK3D.gd" id="3_7kctv"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_k3hci"]
 size = Vector3(0.1, 0.1, 0.1)
@@ -746,9 +746,9 @@ bones/103/position = Vector3(5.96046e-08, 0.816828, 2.98023e-08)
 bones/103/rotation = Quaternion(3.72529e-08, 0, 0, 1)
 bones/103/scale = Vector3(1, 1, 1)
 
-[node name="Sweater" parent="." instance=ExtResource("1_ww7dt")]
+[node name="Sweater" parent="." instance=ExtResource("1_23wno")]
 
-[node name="body" parent="." instance=ExtResource("2_03f87")]
+[node name="body" parent="." instance=ExtResource("2_716pa")]
 
 [node name="SkeletonIK3D" type="SkeletonIK3D" parent="."]
 process_priority = 1
@@ -759,7 +759,7 @@ magnet = Vector3(1.40927, 6.71023, -8.39532)
 target_node = NodePath("../Node3D")
 min_distance = 0.05
 max_iterations = 500
-script = ExtResource("3_d58j4")
+script = ExtResource("3_7kctv")
 offset = Vector3(0, 1, -10)
 
 [node name="Node3D" type="StaticBody3D" parent="."]

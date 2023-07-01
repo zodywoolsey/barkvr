@@ -5,15 +5,16 @@ var tree_root : TreeItem
 signal selected(item)
 
 func _process(delta):
-	print(tree.global_position)
-	print(tree.size)
+#	print(tree.global_position)
+#	print(tree.size)
+	pass
 
 func _ready():
 	tree.item_selected.connect(func():
 		selected.emit(tree.get_selected().get_metadata(0))
 		)
 	gui_input.connect(func(event):
-		print(event)
+#		print(event)
 		)
 
 func init():

@@ -1,7 +1,6 @@
-[gd_scene load_steps=5 format=3 uid="uid://bep6kkkjrdy4k"]
+[gd_scene load_steps=4 format=3 uid="uid://bep6kkkjrdy4k"]
 
-[ext_resource type="Script" path="res://mainSystem/scripts/rigid_body_3d_grabbable.gd" id="1_vhris"]
-[ext_resource type="PackedScene" uid="uid://o0ng7ti5ekqx" path="res://mainSystem/scenes/objects/tools/placeable_camera.tscn" id="2_5ejda"]
+[ext_resource type="PackedScene" uid="uid://bay38na2jeq1o" path="res://mainSystem/scenes/objects/tools/placeable_camera.tscn" id="1_e5kha"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_pydgp"]
 size = Vector3(0.1, 0.1, 0.1)
@@ -13,7 +12,7 @@ size = Vector3(0.1, 0.1, 0.1)
 mass = 100.0
 gravity_scale = 0.0
 contact_monitor = true
-script = ExtResource("1_vhris")
+metadata/grabbable = true
 
 [node name="CollisionShape3d" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_pydgp")
@@ -22,5 +21,4 @@ shape = SubResource("BoxShape3D_pydgp")
 visible = false
 mesh = SubResource("BoxMesh_6fop7")
 
-[node name="placeableCamera" parent="." instance=ExtResource("2_5ejda")]
-transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
+[node name="placeableCamera" parent="." instance=ExtResource("1_e5kha")]
