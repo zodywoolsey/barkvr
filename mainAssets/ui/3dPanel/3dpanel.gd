@@ -7,7 +7,8 @@ extends StaticBody3D
 
 func _ready():
 #	mesh.mesh.material.albedo_texture = viewport.get_texture()
-	print(mesh.mesh.material.albedo_texture)
+#	print(mesh.mesh.material.albedo_texture)
+	pass
 
 func _process(delta):
 	mesh.mesh.material.albedo_texture = viewport.get_texture()

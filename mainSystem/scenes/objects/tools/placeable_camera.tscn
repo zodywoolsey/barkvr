@@ -1,13 +1,13 @@
 [gd_scene load_steps=4 format=3 uid="uid://bay38na2jeq1o"]
 
-[ext_resource type="Script" path="res://mainSystem/scripts/placeable_camera.gd" id="1_ex4eg"]
-[ext_resource type="PackedScene" uid="uid://wk11tl1w3f3d" path="res://mainAssets/modelScenes/camerIndicator.tscn" id="2_abq7b"]
+[ext_resource type="Script" path="res://mainSystem/scripts/placeable_camera.gd" id="1_huwvn"]
+[ext_resource type="PackedScene" uid="uid://wk11tl1w3f3d" path="res://mainAssets/modelScenes/camerIndicator.tscn" id="2_qbxhf"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_lux7f"]
 size = Vector3(0.25, 0.25, 0.25)
 
 [node name="placeableCamera" type="StaticBody3D"]
-script = ExtResource("1_ex4eg")
+script = ExtResource("1_huwvn")
 metadata/grabbable = true
 
 [node name="Window" type="Window" parent="."]
@@ -19,7 +19,7 @@ size = Vector2i(500, 500)
 current = true
 fov = 122.8
 
-[node name="Cube" parent="." instance=ExtResource("2_abq7b")]
+[node name="Cube" parent="." instance=ExtResource("2_qbxhf")]
 transform = Transform3D(-0.25, 0, -3.7749e-08, 0, 0.25, 0, 3.7749e-08, 0, -0.25, 0, 0, -0.1)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
