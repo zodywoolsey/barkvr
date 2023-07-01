@@ -9,6 +9,7 @@ var attributes_ui
 @onready var gdscript = $inspector/gdscript
 var gdscript_scene = load("res://mainAssets/ui/3dPanel/editmode/gdscriptpanel.tscn")
 var gdscript_ui
+
 func _ready():
 	scene_inspector = scene_inspector_scene.instantiate()
 	inspector.set_ui(scene_inspector)

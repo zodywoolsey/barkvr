@@ -1,9 +1,9 @@
 [gd_scene load_steps=7 format=3 uid="uid://bexq572dbl6v4"]
 
-[ext_resource type="Script" path="res://mainSystem/scenes/player/worldRay.gd" id="2_8f7ec"]
-[ext_resource type="Script" path="res://mainSystem/scripts/player/flatPlayerController.gd" id="2_uq1sy"]
-[ext_resource type="Script" path="res://mainSystem/scenes/player/uiRay.gd" id="3_4qe4n"]
-[ext_resource type="Script" path="res://mainSystem/scripts/player/notificationpositioner.gd" id="4_5dls0"]
+[ext_resource type="Script" path="res://mainSystem/scripts/player/flatPlayerController.gd" id="1_ss02e"]
+[ext_resource type="Script" path="res://mainSystem/scenes/player/worldRay.gd" id="2_hfws1"]
+[ext_resource type="Script" path="res://mainSystem/scenes/player/uiRay.gd" id="3_5fei5"]
+[ext_resource type="Script" path="res://mainSystem/scripts/player/notificationpositioner.gd" id="4_fu1br"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_0klqa"]
 
@@ -14,7 +14,7 @@
 [node name="CharacterBody3D" type="CharacterBody3D" parent="." groups=["player"]]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-script = ExtResource("2_uq1sy")
+script = ExtResource("1_ss02e")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D"]
 shape = SubResource("CapsuleShape3D_0klqa")
@@ -31,7 +31,7 @@ target_position = Vector3(0, 0, -1000)
 collision_mask = 3
 debug_shape_custom_color = Color(0, 0, 0, 0.109804)
 debug_shape_thickness = 1
-script = ExtResource("2_8f7ec")
+script = ExtResource("2_hfws1")
 
 [node name="uiRay" type="RayCast3D" parent="CharacterBody3D/Camera3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.579742)
@@ -39,11 +39,11 @@ target_position = Vector3(0, 0, -1000)
 collision_mask = 4
 debug_shape_custom_color = Color(0, 0, 0, 0.109804)
 debug_shape_thickness = 1
-script = ExtResource("3_4qe4n")
+script = ExtResource("3_5fei5")
 
 [node name="notificationparent" type="Node3D" parent="CharacterBody3D/Camera3D" groups=["notificationparent"]]
 transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -0.228724, -0.119835, -0.325979)
-script = ExtResource("4_5dls0")
+script = ExtResource("4_fu1br")
 
 [node name="Label3D" type="Label3D" parent="CharacterBody3D/Camera3D/notificationparent"]
 text = "teatetawdadaadgfsdfasfwafafasdfawef"
