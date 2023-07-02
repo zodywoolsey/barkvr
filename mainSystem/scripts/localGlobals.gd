@@ -16,6 +16,7 @@ func _ready():
 		interface.initialize()
 		if interface and interface.is_initialized():
 			get_viewport().use_xr = true
+			vr_supported = true
 	get_tree().get_first_node_in_group("localroot").add_child(load('res://mainSystem/scenes/player/xrplayer.tscn').instantiate())
 
 
