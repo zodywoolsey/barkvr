@@ -2,11 +2,12 @@ extends CharacterBody3D
 
 
 #controllers:
-@onready var righthand = $xrplayer/righthand
-@onready var lefthand = $xrplayer/lefthand
+@onready var righthand = %righthand
+@onready var lefthand = %lefthand
 @onready var xr_camera_3d = $xrplayer/XrCamera3d
 @onready var xrplayer = $xrplayer
 @onready var playercamoffset = $playercamoffset
+@onready var camray = $xrplayer/XrCamera3d/camray
 
 #controller input vars:
 var rightStick :Vector2 = Vector2()
@@ -30,7 +31,16 @@ var grabbed : Dictionary = {}
 var vreditor : Node3D = null
 var vrinspector : Control = null
 
+# flat vars
+var MOUSE_SPEED := .1
+var lookdrag : Dictionary = {} #{'index': -1,'relative': Vector2(),'velocity': Vector2()}
+@export var touchsticklook := false
+
+
 func _ready():
+	if !LocalGlobals.vr_supported:
+		xr_camera_3d.position.y = .9
+		righthand.position = Vector3(.2,.6,-.2)
 	var spawnLoc = get_tree().get_nodes_in_group("PlayerSpawnLocation").pick_random()
 	global_position = spawnLoc.global_position
 	righthand.connect("button_pressed",func(name):
@@ -84,27 +94,96 @@ func _physics_process(delta):
 		velocity.y -= gravity * delta
 
 	# Handle Jump.
-	if rightaxbtn and is_on_floor():
+	if (rightaxbtn or Input.is_action_just_pressed("ui_accept")) and is_on_floor():
 		velocity.y = JUMP_VELOCITY
 	
-	xrplayer.position.x = -xr_camera_3d.position.x
-	xrplayer.position.z = -xr_camera_3d.position.z
-	position.x += (transform.basis*(xr_camera_3d.position-camPrevPos)).x
-	position.z += (transform.basis*(xr_camera_3d.position-camPrevPos)).z
-	playercamoffset.global_position.x -= (transform.basis*(xr_camera_3d.position-camPrevPos)).x
-	playercamoffset.global_position.z -= (transform.basis*(xr_camera_3d.position-camPrevPos)).z
-	camPrevPos = xr_camera_3d.position
-	transform = transform.rotated_local(Vector3.UP,-rightStick.x*delta)
-	xrplayer.position = xrplayer.position.rotated(Vector3.UP,rightStick.x*delta)
-	# Get the input direction and handle the movement/deceleration.
-	# As good practice, you should replace UI actions with custom gameplay actions.
-	var input_dir = leftStick
-	var direction = ((xr_camera_3d.transform.basis*transform.basis) * Vector3(input_dir.x, 0, -input_dir.y))
+	if LocalGlobals.vr_supported:
+		xrplayer.position.x = -xr_camera_3d.position.x
+		xrplayer.position.z = -xr_camera_3d.position.z
+		position.x += (transform.basis*(xr_camera_3d.position-camPrevPos)).x
+		position.z += (transform.basis*(xr_camera_3d.position-camPrevPos)).z
+		playercamoffset.global_position.x -= (transform.basis*(xr_camera_3d.position-camPrevPos)).x
+		playercamoffset.global_position.z -= (transform.basis*(xr_camera_3d.position-camPrevPos)).z
+		camPrevPos = xr_camera_3d.position
+		transform = transform.rotated_local(Vector3.UP,-rightStick.x*delta)
+		xrplayer.position = xrplayer.position.rotated(Vector3.UP,rightStick.x*delta)
+		# Get the input direction and handle the movement/deceleration.
+		# As good practice, you should replace UI actions with custom gameplay actions.
+		var input_dir = leftStick
+		var direction = ((xr_camera_3d.transform.basis*transform.basis) * Vector3(input_dir.x, 0, -input_dir.y))
+		if direction:
+			velocity.x = direction.x * SPEED
+			velocity.z = direction.z * SPEED
+		else:
+			velocity.x = move_toward(velocity.x, 0, SPEED)
+			velocity.z = move_toward(velocity.z, 0, SPEED)
+	else:
+		flat_movement()
+	
+	
+	move_and_slide()
+
+
+func _input(event):
+	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+		rotate_y(-event.relative.x*(MOUSE_SPEED/100))
+		xr_camera_3d.rotate_x(-event.relative.y*(MOUSE_SPEED/100))
+	if event is InputEventKey:
+		if event.keycode == KEY_ESCAPE and event.pressed == true:
+			if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+				Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+			else:
+				Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	if event is InputEventScreenTouch:
+#		Notifyvr.send_notification(str(event))
+		if event.position.x > get_viewport().size.x/2.0 and lookdrag.is_empty():
+			lookdrag = {
+				'index': event.index,
+				'relative': Vector2(),
+				'velocity': Vector2(),
+				'startposition': event.position,
+				'position': event.position
+			}
+		if event.double_tap:
+			Notifyvr.send_notification("double tapped")
+			righthand.ui_ray.click()
+			await get_tree().process_frame
+			righthand.ui_ray.release()
+		if !lookdrag.is_empty() and event.index == lookdrag.index and event.pressed == false:
+			lookdrag = {}
+	if event is InputEventScreenDrag:
+		if lookdrag and event.index == lookdrag.index:
+			lookdrag = {
+				'index': event.index,
+				'relative': event.relative,
+				'velocity': event.velocity,
+				'startposition': lookdrag.startposition,
+				'position': event.position
+			}
+			if !touchsticklook:
+				rotate_y( -(event.relative.x)*(MOUSE_SPEED/100) )
+				xr_camera_3d.rotate_x( -(event.relative.y)*(MOUSE_SPEED/100) )
+		
+
+func flat_movement():
+	if Input.is_action_just_pressed("click"):
+		righthand.ui_ray.click()
+	if Input.is_action_just_released("click"):
+		righthand.ui_ray.release()
+	if camray.is_colliding():
+		righthand.look_at(camray.get_collision_point())
+	else:
+		righthand.look_at(xr_camera_3d.project_position(get_viewport().size/2.0, 10.0))
+	var input_dir = Input.get_vector("left", "right", "up", "down")
+	var direction = (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 	if direction:
 		velocity.x = direction.x * SPEED
 		velocity.z = direction.z * SPEED
 	else:
 		velocity.x = move_toward(velocity.x, 0, SPEED)
 		velocity.z = move_toward(velocity.z, 0, SPEED)
-
-	move_and_slide()
+	
+	if lookdrag:
+		if touchsticklook:
+			rotate_y( -(lookdrag.position.x-lookdrag.startposition.x)*(MOUSE_SPEED/800) )
+			xr_camera_3d.rotate_x( -(lookdrag.position.y-lookdrag.startposition.y)*(MOUSE_SPEED/800) )
