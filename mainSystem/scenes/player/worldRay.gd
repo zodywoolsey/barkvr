@@ -2,6 +2,7 @@ extends rayvisscript
 
 var prevHover
 @onready var local_player = %CharacterBody3D
+var isclick := false
 
 func _process(delta):
 	procrayvis(delta)
@@ -33,6 +34,7 @@ func _process(delta):
 			prevHover = null
 
 func click():
+	isclick = false
 	if is_colliding():
 		var tmpcol : Node3D = get_collider()
 		if !local_player.selected.has(tmpcol):
