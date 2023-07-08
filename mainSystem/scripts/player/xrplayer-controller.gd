@@ -35,6 +35,7 @@ var vrinspector : Control = null
 var MOUSE_SPEED := .1
 var lookdrag : Dictionary = {} #{'index': -1,'relative': Vector2(),'velocity': Vector2()}
 @export var touchsticklook := false
+var grab_point := Vector3()
 
 
 func _ready():
@@ -167,13 +168,22 @@ func _input(event):
 
 func flat_movement():
 	if Input.is_action_just_pressed("click"):
-		righthand.ui_ray.click()
+		righthand.ui_ray.isclick = true
 	if Input.is_action_just_released("click"):
-		righthand.ui_ray.release()
-	if camray.is_colliding():
-		righthand.look_at(camray.get_collision_point())
-	else:
-		righthand.look_at(xr_camera_3d.project_position(get_viewport().size/2.0, 10.0))
+		righthand.ui_ray.isrelease = true
+	if Input.is_action_just_pressed("rightclick"):
+		righthand.grip()
+	if Input.is_action_just_released("rightclick"):
+		righthand.ungrip()
+	if Input.is_action_just_pressed("middleclick"):
+		righthand.contextMenuSummon()
+	
+	if !Input.is_action_pressed("rightclick"):
+		if camray.is_colliding():
+			grab_point = xr_camera_3d.to_local(camray.get_collision_point())
+		else:
+			grab_point = xr_camera_3d.to_local(xr_camera_3d.project_position(get_viewport().size/2.0, 10.0))
+	righthand.look_at(xr_camera_3d.to_global(grab_point))
 	var input_dir = Input.get_vector("left", "right", "up", "down")
 	var direction = (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 	if direction:

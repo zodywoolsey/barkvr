@@ -41,18 +41,7 @@ func _ready():
 	connect("button_released",buttonReleased)
 	input_float_changed.connect(func(name:String,value:float):
 		if name == "grip" and value > .5 and !grabbing:
-			if ui_ray.is_colliding():
-				var rayCollided = ui_ray.get_collider()
-				if rayCollided.has_meta("grabbable"):
-					grab(rayCollided,true)
-			elif grabArea.get_overlapping_bodies().size() > 0:
-				for item in grabArea.get_overlapping_bodies():
-					grab(item,true)
-			elif world_ray.is_colliding():
-				var rayCollided = world_ray.get_collider()
-				if rayCollided.has_meta("grabbable"):
-					grab(rayCollided,true)
-			grabbing = true
+			grip()
 		elif name == "grip" and value < .5:
 			grabbing = false
 #		if name == "trigger":
@@ -102,7 +91,7 @@ func buttonPressed(name):
 		pass
 	if name == "trigger_click":
 		if ui_ray.is_colliding():
-			ui_ray.click()
+			ui_ray.isclick = true
 		else:
 			world_ray.click()
 		if grab_parent.get_child_count()>0:
@@ -115,29 +104,11 @@ func buttonPressed(name):
 func buttonReleased(name):
 	buttons[name] = false
 	if name == "by_button":
-		if contexttimer < contexteditortimeout:
-			handmenu.summon(hand_menu_point.global_position, global_position)
-		else:
-			if LocalGlobals.editor_refs.has('vreditor'):
-				LocalGlobals.editor_refs.mainpanel.global_position = hand_menu_point.global_position
-				LocalGlobals.editor_refs.mainpanel.global_rotation = hand_menu_point.global_rotation
-				LocalGlobals.editor_refs.mainpanel.global_rotation.x += deg_to_rad(90.0)
-			else:
-				var vreditor = load("res://mainAssets/ui/3dPanel/editmode/vreditor.tscn").instantiate()
-				get_tree().get_first_node_in_group("worldroot").add_child(vreditor)
-				vreditor.set_items(local_player.selected)
-				vreditor.global_position = hand_menu_point.global_position
+		contextMenuSummon()
 	if name == "grip_click":
-		for item in grab_parent.get_children():
-			releasegrab(item)
-		if grabjoint.node_b:
-			grabjoint.node_b = ""
-		if isscalinggrabbedobject:
-			scalinggrabbedobject = null
-			scalinggrabbedstartdist = 0
-			isscalinggrabbedobject = false
+		ungrip()
 	if name == "trigger_click":
-		ui_ray.release()
+		ui_ray.isrelease = true
 		if grab_parent.get_child_count()>0:
 			for item in grab_parent.get_children():
 				if item.has_method('primary'):
@@ -145,6 +116,44 @@ func buttonReleased(name):
 		if grabjoint.node_b and get_node(grabjoint.node_b).has_method('primary'):
 			get_node(grabjoint.node_b).primary(false)
 		rayBody = null
+
+func contextMenuSummon():
+	if contexttimer < contexteditortimeout:
+		handmenu.summon(hand_menu_point.global_position, global_position)
+	else:
+		if LocalGlobals.editor_refs.has('vreditor'):
+			LocalGlobals.editor_refs.mainpanel.global_position = hand_menu_point.global_position
+			LocalGlobals.editor_refs.mainpanel.global_rotation = hand_menu_point.global_rotation
+			LocalGlobals.editor_refs.mainpanel.global_rotation.x += deg_to_rad(90.0)
+		else:
+			var vreditor = load("res://mainAssets/ui/3dPanel/editmode/vreditor.tscn").instantiate()
+			get_tree().get_first_node_in_group("worldroot").add_child(vreditor)
+			vreditor.set_items(local_player.selected)
+			vreditor.global_position = hand_menu_point.global_position
+
+func grip():
+	if ui_ray.is_colliding():
+		var rayCollided = ui_ray.get_collider()
+		if rayCollided.has_meta("grabbable"):
+			grab(rayCollided,true)
+	elif grabArea.get_overlapping_bodies().size() > 0:
+		for item in grabArea.get_overlapping_bodies():
+			grab(item,true)
+	elif world_ray.is_colliding():
+		var rayCollided = world_ray.get_collider()
+		if rayCollided.has_meta("grabbable"):
+			grab(rayCollided,true)
+	grabbing = true
+
+func ungrip():
+	for item in grab_parent.get_children():
+		releasegrab(item)
+	if grabjoint.node_b:
+		grabjoint.node_b = ""
+	if isscalinggrabbedobject:
+		scalinggrabbedobject = null
+		scalinggrabbedstartdist = 0
+		isscalinggrabbedobject = false
 
 func grab(node:Node, laser:bool=false):
 	var tmpgrab = node.get_meta("grabbable")
