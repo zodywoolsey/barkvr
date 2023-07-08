@@ -41,25 +41,14 @@ func laserClick(data):
 	# Set the event's position and global position.
 	event.position = mouse_pos2D
 	event.global_position = mouse_pos2D
-#	# If the event is a mouse motion event...
-#	if event is InputEventMouseMotion:
-#		# If there is not a stored previous position, then we'll assume there is no relative motion.
-#		if last_mouse_pos2D == null:
-#			event.relative = Vector2(0, 0)
-#		# If there is a stored previous position, then we'll calculate the relative position by subtracting
-#		# the previous position from the new position. This will give us the distance the event traveled from prev_pos
-#		else:
-#			event.relative = mouse_pos2D - last_mouse_pos2D
-#	# Update last_mouse_pos2D with the position we just calculated.
-#	last_mouse_pos2D = mouse_pos2D
 
 	# Finally, send the processed input event to the viewport.
 	viewport.push_input(event,true)
-	var release = InputEventMouseButton.new()
-	release.pressed = false
-	release.button_index = 1
-	release.button_mask = 1
-	Input.parse_input_event(release)
+#	var release = InputEventMouseButton.new()
+#	release.pressed = false
+#	release.button_index = 1
+#	release.button_mask = 1
+#	Input.parse_input_event(release)
 
 func laserHover(data):
 	# We need to fabricate a fake mouse input even for translating a raycast click to a simulated mouse click on the viewport.
@@ -79,11 +68,12 @@ func laserHover(data):
 	event.position = mouse_pos2D
 	event.global_position = mouse_pos2D
 	viewport.push_input(event,true)
-	var release = InputEventMouseButton.new()
-	release.pressed = false
-	release.button_index = 1
-	release.button_mask = 1
-	Input.parse_input_event(release)
+	print('hover')
+#	var release = InputEventMouseButton.new()
+#	release.pressed = false
+#	release.button_index = 1
+#	release.button_mask = 1
+#	Input.parse_input_event(release)
 
 #func _input(event):
 #	print(event)

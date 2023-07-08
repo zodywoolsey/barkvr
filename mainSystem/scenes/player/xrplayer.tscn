@@ -52,6 +52,7 @@ current = true
 current = true
 
 [node name="camray" type="RayCast3D" parent="CharacterBody3D/xrplayer/XrCamera3d"]
+visible = false
 target_position = Vector3(0, 0, -1000)
 collision_mask = 15
 
@@ -198,6 +199,12 @@ shape = SubResource("CapsuleShape3D_1uxmk")
 
 [node name="playercamoffset" type="Node3D" parent="CharacterBody3D"]
 
-[node name="handmenu" parent="CharacterBody3D/playercamoffset" instance=ExtResource("9_opil0")]
+[node name="Label" type="Label" parent="."]
+offset_left = 91.0
+offset_top = 84.0
+offset_right = 131.0
+offset_bottom = 107.0
+
+[node name="handmenu" parent="." instance=ExtResource("9_opil0")]
 unique_name_in_owner = true
 visible = false
