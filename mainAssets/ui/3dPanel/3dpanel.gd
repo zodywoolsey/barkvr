@@ -6,9 +6,7 @@ extends StaticBody3D
 @onready var label_3d = $Label3D
 
 func _ready():
-#	mesh.mesh.material.albedo_texture = viewport.get_texture()
-#	print(mesh.mesh.material.albedo_texture)
-	pass
+	colShape.position.y = -colShape.shape.size.y/2.0
 
 func _process(delta):
 	mesh.mesh.material.albedo_texture = viewport.get_texture()

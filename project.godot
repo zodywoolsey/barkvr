@@ -19,6 +19,10 @@ boot_splash/fullsize=false
 config/icon="res://assets/doge-color-darker-dog.png"
 boot_splash/minimum_display_time=2000
 
+[audio]
+
+driver/enable_input=true
+
 [autoload]
 
 XRToolsUserSettings="res://addons/godot-xr-tools/user_settings/user_settings.gd"
