@@ -751,21 +751,18 @@ bones/103/scale = Vector3(1, 1, 1)
 [node name="body" parent="." instance=ExtResource("2_716pa")]
 
 [node name="SkeletonIK3D" type="SkeletonIK3D" parent="."]
-process_priority = 1
 root_bone = &"Left_arm"
 tip_bone = &"Left_wrist"
-use_magnet = true
-magnet = Vector3(1.40927, 6.71023, -8.39532)
+magnet = Vector3(1.07211, 6.85792, -8.26738)
 target_node = NodePath("../Node3D")
-min_distance = 0.05
-max_iterations = 500
 script = ExtResource("3_7kctv")
 offset = Vector3(0, 1, -10)
 
 [node name="Node3D" type="StaticBody3D" parent="."]
-transform = Transform3D(-0.340087, -0.214668, 0.915565, 0.909549, 0.172227, 0.378233, -0.23888, 0.961382, 0.136679, 1.4086, 5.71501, 1.5675)
+transform = Transform3D(0.603967, -0.423952, 0.6749, 0.795818, 0.274477, -0.539757, 0.0435861, 0.863091, 0.503164, 1.07157, 5.85769, 1.73422)
 collision_layer = 2
 collision_mask = 2
+metadata/grabbable = true
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Node3D"]
 shape = SubResource("BoxShape3D_k3hci")

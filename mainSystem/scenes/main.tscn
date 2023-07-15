@@ -1,9 +1,7 @@
-[gd_scene load_steps=10 format=3 uid="uid://ctwckofb07cfw"]
+[gd_scene load_steps=9 format=3 uid="uid://ctwckofb07cfw"]
 
 [ext_resource type="Material" uid="uid://dum7xrf8gdl7k" path="res://addons/kenney_prototype_textures/materials/dark01Triplanar.material" id="1_rkkx6"]
 [ext_resource type="PackedScene" uid="uid://dckbok0o553v7" path="res://mainSystem/scenes/objects/worldObjects/playerSpawnLocation.tscn" id="6_to5vo"]
-[ext_resource type="PackedScene" uid="uid://b3sbt3oft3cxg" path="res://mainAssets/ui/3dPanel/editmode/vreditor.tscn" id="7_a0mdm"]
-[ext_resource type="PackedScene" uid="uid://bobiq7h0hkw2m" path="res://avatar testing/arflin/arflin.tscn" id="8_fxh2y"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_3royi"]
 sky_top_color = Color(0.494118, 0.772549, 1, 1)
@@ -37,6 +35,8 @@ func _ready():
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_csaaw"]
 
+[sub_resource type="AudioStreamMicrophone" id="AudioStreamMicrophone_ve6pm"]
+
 [node name="main" type="Node3D" groups=["localroot"]]
 
 [node name="localworldroot" type="Node3D" parent="." groups=["localworldroot"]]
@@ -49,14 +49,8 @@ transform = Transform3D(-0.865617, -0.417461, 0.276465, -0.267145, 0.852051, 0.4
 light_energy = 0.112
 shadow_enabled = true
 
-[node name="arflin" parent="localworldroot" instance=ExtResource("8_fxh2y")]
-transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0.0774641, 2.38419e-07, -4.23405)
-
-[node name="vreditor" parent="localworldroot" instance=ExtResource("7_a0mdm")]
-transform = Transform3D(1, 0, 0, 0, 0.998359, -0.0572678, 0, 0.0572678, 0.998359, -0.0996146, 1.03694, -1.40078)
-
 [node name="playerSpawnLocation" parent="localworldroot" instance=ExtResource("6_to5vo")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.21053, 0.146511, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.301664, 0)
 
 [node name="floor boundary" type="Area3D" parent="localworldroot"]
 script = SubResource("GDScript_cwteg")
@@ -72,3 +66,8 @@ use_collision = true
 collision_layer = 9
 collision_mask = 9
 size = Vector3(100, 1, 100)
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = SubResource("AudioStreamMicrophone_ve6pm")
+autoplay = true
+bus = &"mic"

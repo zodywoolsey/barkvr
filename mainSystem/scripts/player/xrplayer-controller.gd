@@ -8,6 +8,7 @@ extends CharacterBody3D
 @onready var xrplayer = $xrplayer
 @onready var playercamoffset = $playercamoffset
 @onready var camray = $xrplayer/XrCamera3d/camray
+@onready var collision_shape_3d = %CollisionShape3D
 
 #controller input vars:
 var rightStick :Vector2 = Vector2()
@@ -21,7 +22,6 @@ var camPrevPos : Vector3 = Vector3()
 
 const SPEED = 5.0
 const JUMP_VELOCITY = 4.5
-@onready var collision_shape_3d = $CollisionShape3D
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
@@ -118,9 +118,11 @@ func _physics_process(delta):
 		else:
 			velocity.x = move_toward(velocity.x, 0, SPEED)
 			velocity.z = move_toward(velocity.z, 0, SPEED)
+		collision_shape_3d.shape.height = xr_camera_3d.position.y
+		collision_shape_3d.position = xr_camera_3d.position.y/2.0
+		
 	else:
 		flat_movement()
-	
 	
 	move_and_slide()
 

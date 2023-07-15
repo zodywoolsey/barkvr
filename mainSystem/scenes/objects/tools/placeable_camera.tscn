@@ -16,8 +16,6 @@ position = Vector2i(40, 40)
 size = Vector2i(500, 500)
 
 [node name="Camera3d" type="Camera3D" parent="Window"]
-current = true
-fov = 122.8
 
 [node name="Cube" parent="." instance=ExtResource("2_qbxhf")]
 transform = Transform3D(-0.25, 0, -3.7749e-08, 0, 0.25, 0, 3.7749e-08, 0, -0.25, 0, 0, -0.1)

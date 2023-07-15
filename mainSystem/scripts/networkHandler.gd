@@ -19,16 +19,16 @@ func _ready():
 func _process(delta):
 	timer += delta
 	peer.poll()
-	if channels[0]:
+	if channels.size() > 0:
 		channels[0].poll()
 		if channels[0].get_ready_state() == WebRTCDataChannel.STATE_OPEN:
 			while channels[0].get_available_packet_count() > 0:
 				print(get_path(), " received: ", str(channels[0].get_var()))
 	if timer > .1:
-		if !channels[0]:
+		if !channels.size() > 0:
 			print("attempting to create data channel")
-			channels[0] = peer.create_data_channel("bark-chat", {'id':1,'negotiated': true})
-			channels[1] = peer.create_data_channel("bark-chat", {'id':1,'negotiated': true})
+			channels.append(peer.create_data_channel("bark-chat", {'id':1,'negotiated': true}))
+			channels.append(peer.create_data_channel("bark-chat", {'id':1,'negotiated': true}))
 		else:
 			var tmpplayer = get_tree().get_first_node_in_group("player")
 			if tmpplayer:
