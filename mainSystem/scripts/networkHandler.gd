@@ -31,11 +31,11 @@ func _process(delta):
 			channels.append(peer.create_data_channel("bark-chat", {'id':1,'negotiated': true}))
 		else:
 			var tmpplayer = get_tree().get_first_node_in_group("player")
-			if tmpplayer:
-				channels[0].put_var({
-					'p_id': OS.get_unique_id(),
-					'p_pos': tmpplayer.global_position,
-				})
+#			if tmpplayer:
+#				channels[0].put_var({
+#					'p_id': OS.get_unique_id(),
+#					'p_pos': tmpplayer.global_position,
+#				})
 		timer = 0.0
 
 func initwebrtc():

@@ -147,11 +147,11 @@ debug_shape_thickness = 1
 script = ExtResource("3_n5c2i")
 
 [node name="uiRay" type="RayCast3D" parent="CharacterBody3D/xrplayer/lefthand"]
+enabled = false
 target_position = Vector3(0, 0, -1000)
 collision_mask = 4
 debug_shape_custom_color = Color(0, 0, 0, 0.109804)
 debug_shape_thickness = 1
-script = ExtResource("4_xffyd")
 
 [node name="grabArea" type="Area3D" parent="CharacterBody3D/xrplayer/lefthand"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.05, 0, 0)
