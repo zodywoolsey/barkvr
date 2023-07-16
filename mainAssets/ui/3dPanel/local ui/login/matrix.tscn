@@ -1,0 +1,142 @@
+[gd_scene load_steps=3 format=3 uid="uid://i3pxsgqnbjly"]
+
+[sub_resource type="GDScript" id="GDScript_338jb"]
+script/source = "extends Control
+@onready var item_list = $ItemList
+
+func _ready():
+	Vector.got_joined_rooms.connect(func():
+		# print(Vector.joinedRooms)
+		add_items(Vector.joinedRooms)
+		)
+	if Vector.joinedRooms:
+		add_items(Vector.joinedRooms)
+	Vector.got_room_state.connect(func(state):
+		if state != null:
+			var name
+			var avatar
+			var roomId
+			for event in state:
+				roomId = event['room_id']
+				if event['type'] == \"m.room.name\":
+					name = event['content']['name']
+				if event['type'] == 'm.room.avatar':
+					var tmp = HTTPRequest.new()
+					get_tree().get_first_node_in_group(\"requestParent\").add_child(tmp)
+					var avatarUrl = event['content']['url']
+					var avatarServer = avatarUrl.split('/')[2]
+					var mediaId = avatarUrl.split('/')[3]
+					tmp.download_file = \"res://cache/avatars/\"+roomId
+					tmp.request(
+						\"{0}_matrix/media/v3/download/{1}/{2}\".format([Vector.base_url,avatarServer,mediaId]),
+						Vector.headers,
+						HTTPClient.METHOD_GET
+						)
+					await tmp.request_completed
+					print(FileAccess.file_exists(\"res://cache/avatars/\"+roomId))
+				await get_tree().process_frame
+			var tmp
+			if name:
+				tmp = item_list.add_item(name)
+				item_list.set_item_metadata(tmp,{
+					'state': state,
+					'room_id': roomId
+				})
+			else:
+				tmp = item_list.add_item(roomId.split(':')[0].right(-1))
+				item_list.set_item_metadata(tmp,{
+					'state': state,
+					'room_id': roomId
+				})
+			
+		)
+
+func add_items(items):
+	if items is Array:
+		for i in items:
+			var state = Vector.api.get_room_state(i)
+
+"
+
+[sub_resource type="GDScript" id="GDScript_o0x8o"]
+script/source = "extends Button
+
+func _ready():
+	pressed.connect(func():
+		Vector.readUserDict()
+		)
+"
+
+[node name="matrix" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = SubResource("GDScript_338jb")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "homeserver"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="LineEdit" type="LineEdit" parent="VBoxContainer"]
+layout_mode = 2
+text = "matrix.org"
+placeholder_text = "enter your homeserver url"
+alignment = 1
+
+[node name="Label2" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "username"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="LineEdit2" type="LineEdit" parent="VBoxContainer"]
+layout_mode = 2
+placeholder_text = "username"
+alignment = 1
+
+[node name="Label3" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "password"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="LineEdit3" type="LineEdit" parent="VBoxContainer"]
+layout_mode = 2
+placeholder_text = "password"
+alignment = 1
+secret = true
+
+[node name="Button" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "log in"
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 0
+offset_right = 8.0
+offset_bottom = 8.0
+text = "login using existing session"
+script = SubResource("GDScript_o0x8o")
+
+[node name="ItemList" type="ItemList" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 37.0
+grow_horizontal = 2
+grow_vertical = 2

@@ -17,6 +17,7 @@ boot_splash/bg_color=Color(0, 0, 0, 1)
 boot_splash/image="res://assets/doge-color-darker-dog.png"
 boot_splash/fullsize=false
 config/icon="res://assets/doge-color-darker-dog.png"
+config/windows_native_icon="res://assets/barkvr.ico"
 boot_splash/minimum_display_time=2000
 
 [audio]

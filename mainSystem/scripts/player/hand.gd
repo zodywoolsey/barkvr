@@ -8,7 +8,6 @@ extends XRController3D
 @onready var hand_menu_point = $handMenuPoint
 @onready var grab_parent = $grabParent
 @onready var grabjoint = $grabjoint
-@onready var wristmenu = $wristmenu
 @onready var local_player = %CharacterBody3D
 @onready var righthand = %righthand
 @onready var lefthand = %lefthand
