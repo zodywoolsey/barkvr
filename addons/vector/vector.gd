@@ -38,9 +38,9 @@ func _ready():
 		var msg = body.get_string_from_ascii()
 		var msgJson : Dictionary = JSON.parse_string(msg)
 		if msgJson.has('errcode'):
-			Notifyvr.sendNotification(msgJson.error)
-			if msgJson.has('retry_after_ms'):
-				Notifyvr.sendNotification("Please try again after: "+str(msgJson.retry_after_ms/1000)+" seconds")
+#			Notify.sendNotification(msgJson.error)
+#			if msgJson.has('retry_after_ms'):
+#				Notify.sendNotification("Please try again after: "+str(msgJson.retry_after_ms/1000)+" seconds")
 			return null
 		userToken = msgJson.access_token
 		base_url = msgJson.well_known["m.homeserver"].base_url
@@ -51,6 +51,7 @@ func _ready():
 			headers.push_back("Authorization: Bearer {0}".format([userToken]))
 			print(headers)
 			user_logged_in.emit()
+			print('logged in')
 			return true
 		else:
 			return false
@@ -61,6 +62,7 @@ func _ready():
 		joinedRooms = msgJson['joined_rooms']
 		userData['joined_rooms'] = msgJson['joined_rooms']
 		saveUserDict()
+		print('got joined rooms')
 		got_joined_rooms.emit()
 		)
 	api.got_room_state.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):

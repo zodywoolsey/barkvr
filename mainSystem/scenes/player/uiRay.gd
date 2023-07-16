@@ -6,10 +6,14 @@ var prevHover
 var isclick := false
 var isrelease := false
 var currentAction := ""
+var hovertimer := 0.0
 
 func _process(delta):
-	currentAction = ""
 	procrayvis(delta)
+func _physics_process(delta):
+	currentAction = ""
+	var actioncount = 0
+	hovertimer += delta
 	if isclick:
 		click()
 		currentAction += " click"
@@ -18,11 +22,12 @@ func _process(delta):
 		currentAction += " release"
 	else:
 		currentAction += " notclick"
-		if is_colliding() and false:
+		if is_colliding():
 			currentAction += " hover"
 			vis.show()
 			var tmpcol = get_collider()
-			if tmpcol.get_collision_layer_value(3) and tmpcol.has_method("laserHover"):
+			if tmpcol.get_collision_layer_value(3) and tmpcol.has_method("laserHover") and hovertimer > .1:
+				hovertimer = 0.0
 				if prevHover and prevHover != tmpcol:
 					prevHover.laserHover({
 						'hovering': false,
@@ -36,21 +41,22 @@ func _process(delta):
 						"position": get_collision_point()
 					})
 				prevHover = tmpcol
-			else:
-				if prevHover and prevHover.has_method("laserHover"):
-					prevHover.laserHover({
-						'hovering': false,
-						'position': get_collision_point()
-					})
+#			else:
+#				if prevHover and prevHover.has_method("laserHover"):
+#					prevHover.laserHover({
+#						'hovering': false,
+#						'position': get_collision_point()
+#					})
 		else:
 			vis.hide()
-			if prevHover and prevHover.has_method("laserHover"):
-				prevHover.laserHover({
-					'hovering': false,
-					'position': get_collision_point()
-				})
-				prevHover = null
+#			if prevHover and prevHover.has_method("laserHover"):
+#				prevHover.laserHover({
+#					'hovering': false,
+#					'position': get_collision_point()
+#				})
+#				prevHover = null
 	label.text = currentAction
+#	print(currentAction)
 
 func click():
 	isclick = false
