@@ -1,4 +1,4 @@
-# ptb
+# barkvr
 Social XR creation tool built on Godot 4
 
 ## Status
