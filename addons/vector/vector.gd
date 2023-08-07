@@ -34,7 +34,7 @@ signal synced(data)
 @onready var requestParent = get_tree().get_first_node_in_group("requestParent")
 
 func _ready():
-	api.user_logged_in.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
+	api.user_logged_in.connect(func(result:int,response_code:int,header:PackedStringArray,body:PackedByteArray):
 		var msg = body.get_string_from_ascii()
 		var msgJson : Dictionary = JSON.parse_string(msg)
 		if msgJson.has('errcode'):
@@ -68,7 +68,12 @@ func _ready():
 	api.got_room_state.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 		var msg = body.get_string_from_ascii()
 		var msgJson = JSON.parse_string(msg)
-		got_room_state.emit(msgJson)
+		got_room_state.emit({
+			"result_code": result,
+			"response_code": response_code,
+			"headers": headers,
+			"body": msgJson
+		})
 		)
 	api.synced.connect(func(result:int,response_code:int,header:PackedStringArray,body:PackedByteArray):
 		var msg = body.get_string_from_ascii()
@@ -127,7 +132,7 @@ func saveUserDict():
 
 func readUserDict():
 	var file = FileAccess.open("user://user.data",FileAccess.READ)
-	if file.file_exists("user://user.data"):
+	if file:
 		var read = file.get_var()
 		read.reverse()
 		userData = bytes_to_var(read)
@@ -142,19 +147,20 @@ func readUserDict():
 				next_batch = userData.next_batch
 			if userData.has('joined_rooms'):
 				joinedRooms = userData.joined_rooms
+			user_logged_in.emit()
 			return true
 	return false
 
-func refresh_token(token:String):
-	var res
-	if client.get_status() == HTTPClient.STATUS_CONNECTED:
-		res = client.request(HTTPClient.METHOD_POST, "/_matrix/client/v3/refresh",headers,str({
-			"refresh_token": token
-		}))
-		var msg = await readRequestBytes()
-		var refreshedToken = JSON.parse_string(msg)
-	else:
-		printerr("Vector client not initialized yet")
+#func refresh_token(token:String):
+#	var res
+#	if client.get_status() == HTTPClient.STATUS_CONNECTED:
+#		res = client.request(HTTPClient.METHOD_POST, "/_matrix/client/v3/refresh",headers,str({
+#			"refresh_token": token
+#		}))
+#		var msg = await readRequestBytes()
+#		var refreshedToken = JSON.parse_string(msg)
+#	else:
+#		printerr("Vector client not initialized yet")
 
 func sync():
 	var reqData = {}

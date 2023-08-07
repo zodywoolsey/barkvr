@@ -8,7 +8,7 @@ func _process(delta):
 	procrayvis(delta)
 	if is_colliding():
 		var tmpcol = get_collider()
-		if tmpcol.get_collision_layer_value(3) and tmpcol.has_method("laserHover"):
+		if tmpcol.has_method("get_collision_layer_value") and tmpcol.get_collision_layer_value(3) and tmpcol.has_method("laserHover"):
 			if prevHover and prevHover != tmpcol:
 				prevHover.laserHover({
 					'hovering': false,

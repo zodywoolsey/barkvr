@@ -1,9 +1,12 @@
-[gd_scene load_steps=5 format=3 uid="uid://2o2f8tknq7me"]
+[gd_scene load_steps=6 format=3 uid="uid://2o2f8tknq7me"]
 
 [ext_resource type="Script" path="res://mainAssets/ui/3dPanel/3dpanel.gd" id="1_h1226"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_j0pg5"]
 size = Vector3(1, 0.01, 1)
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_plcpo"]
+viewport_path = NodePath("SubViewportContainer/SubViewport")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4ksv4"]
 resource_local_to_scene = true
@@ -12,16 +15,21 @@ alpha_scissor_threshold = 0.5
 alpha_antialiasing_mode = 0
 cull_mode = 2
 shading_mode = 0
+albedo_texture = SubResource("ViewportTexture_plcpo")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_r1rr1"]
 resource_local_to_scene = true
 material = SubResource("StandardMaterial3D_4ksv4")
 size = Vector2(0.5, 0.5)
 
-[node name="StaticBody3D" type="StaticBody3D"]
+[node name="StaticBody3D" type="RigidBody3D"]
 transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0)
-collision_layer = 4
-collision_mask = 0
+collision_layer = 5
+collision_mask = 5
+gravity_scale = 0.0
+can_sleep = false
+linear_damp = 1.0
+angular_damp = 1.0
 script = ExtResource("1_h1226")
 metadata/grabbable = true
 

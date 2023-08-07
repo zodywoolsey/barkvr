@@ -42,6 +42,7 @@ func _ready():
 	if !LocalGlobals.vr_supported:
 		xr_camera_3d.position.y = .9
 		righthand.position = Vector3(.2,.6,-.2)
+		lefthand.hide()
 	var spawnLoc = get_tree().get_nodes_in_group("PlayerSpawnLocation").pick_random()
 	global_position = spawnLoc.global_position
 	righthand.connect("button_pressed",func(name):
@@ -94,6 +95,14 @@ func _physics_process(delta):
 	if not is_on_floor():
 		velocity.y -= gravity * delta
 
+	# Flat mode toggle
+	if Input.is_action_just_pressed("desktoptoggle"):
+		if LocalGlobals.vr_supported:
+			LocalGlobals.vr_supported = false
+			xr_camera_3d.position.y = .9
+			righthand.position = Vector3(.2,.6,-.2)
+			lefthand.hide()
+
 	# Handle Jump.
 	if (rightaxbtn or Input.is_action_just_pressed("ui_accept")) and is_on_floor():
 		velocity.y = JUMP_VELOCITY
@@ -118,14 +127,16 @@ func _physics_process(delta):
 		else:
 			velocity.x = move_toward(velocity.x, 0, SPEED)
 			velocity.z = move_toward(velocity.z, 0, SPEED)
-		collision_shape_3d.shape.height = xr_camera_3d.position.y
-		collision_shape_3d.position = xr_camera_3d.position.y/2.0
+		if xr_camera_3d.position.y > 0.01:
+			collision_shape_3d.shape.height = xr_camera_3d.position.y
+		else:
+			collision_shape_3d.shape.height = 0.1
+#		collision_shape_3d.position = xr_camera_3d.position.y/2.0
 		
 	else:
 		flat_movement()
 	
 	move_and_slide()
-
 
 func _input(event):
 	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
@@ -147,11 +158,11 @@ func _input(event):
 				'startposition': event.position,
 				'position': event.position
 			}
-		if event.double_tap:
-			Notifyvr.send_notification("double tapped")
-			righthand.ui_ray.click()
+		if event.pressed:
+#			Notifyvr.send_notification("double tapped")
+			righthand.ui_ray.isclick = true
 			await get_tree().process_frame
-			righthand.ui_ray.release()
+			righthand.ui_ray.isrelease = true
 		if !lookdrag.is_empty() and event.index == lookdrag.index and event.pressed == false:
 			lookdrag = {}
 	if event is InputEventScreenDrag:
@@ -179,7 +190,6 @@ func flat_movement():
 		righthand.ungrip()
 	if Input.is_action_just_pressed("middleclick"):
 		righthand.contextMenuSummon()
-	
 	if !Input.is_action_pressed("rightclick"):
 		if camray.is_colliding():
 			grab_point = xr_camera_3d.to_local(camray.get_collision_point())

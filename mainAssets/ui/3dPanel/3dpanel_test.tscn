@@ -1,10 +1,12 @@
-class_name panel3d
-extends RigidBody3D
+[gd_scene load_steps=5 format=3 uid="uid://b7totafptfwco"]
+
+[sub_resource type="GDScript" id="GDScript_pa3k5"]
+script/source = "
+extends StaticBody3D
 @onready var viewport : SubViewport = %SubViewport
 @onready var mesh : MeshInstance3D = $panel
 @onready var colShape : CollisionShape3D = $CollisionShape3D
 @onready var label_3d = $Label3D
-var ui : Control
 var hoverevent : InputEventMouseMotion
 var clickevent : InputEventMouseButton
 var hovered : bool = false
@@ -19,16 +21,12 @@ func _process(delta):
 
 func _physics_process(delta):
 	if clicked:
-		viewport.handle_input_locally = true
 		viewport.push_input(clickevent,true)
-		viewport.handle_input_locally = false
 		print('clickevent')
 		clickevent = InputEventMouseButton.new()
 		clicked = false
 	elif hovered:
-		viewport.handle_input_locally = true
 		viewport.push_input(hoverevent,true)
-		viewport.handle_input_locally = false
 		hovered = false
 
 func laserClick(data:Dictionary):
@@ -54,11 +52,11 @@ func laserClick(data:Dictionary):
 	# We need to do these conversions so the event's position is in the viewport's coordinate system.
 	# Set the event's position and global position.
 	clickevent.position = mouse_pos2D
-#	clickevent.global_position = mouse_pos2D
+	clickevent.global_position = mouse_pos2D
 	clicked = true
 
 func laserHover(data:Dictionary):
-	if !hovered and !clicked and data.has("position"):
+	if !hovered and !clicked and data.has(\"position\"):
 		# We need to fabricate a fake mouse input even for translating a raycast click to a simulated mouse click on the viewport.
 		hoverevent = InputEventMouseMotion.new()
 	#	event.pressed = data.pressed
@@ -83,7 +81,52 @@ func laserHover(data:Dictionary):
 
 func set_ui(node:Control):
 	viewport.add_child(node)
-	ui = node
 #	node.gui_input.connect(func(event):
 #		label_3d.text = str(event)
 #		)
+"
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_j0pg5"]
+size = Vector3(1, 0.01, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4ksv4"]
+resource_local_to_scene = true
+transparency = 2
+alpha_scissor_threshold = 0.5
+alpha_antialiasing_mode = 0
+cull_mode = 2
+shading_mode = 0
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_r1rr1"]
+resource_local_to_scene = true
+material = SubResource("StandardMaterial3D_4ksv4")
+size = Vector2(0.5, 0.5)
+
+[node name="StaticBody3D" type="StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0)
+collision_layer = 4
+collision_mask = 0
+script = SubResource("GDScript_pa3k5")
+metadata/grabbable = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_j0pg5")
+
+[node name="panel" type="MeshInstance3D" parent="."]
+mesh = SubResource("PlaneMesh_r1rr1")
+skeleton = NodePath("../..")
+
+[node name="Label3D" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
+
+[node name="SubViewport" type="SubViewport" parent="."]
+unique_name_in_owner = true
+disable_3d = true
+transparent_bg = true
+size = Vector2i(1024, 1024)
+render_target_update_mode = 4
+
+[node name="Button" type="Button" parent="SubViewport"]
+offset_right = 71.0
+offset_bottom = 31.0
+text = "click me"

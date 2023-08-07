@@ -12,6 +12,8 @@ config_version=5
 
 config/name="barkVR"
 run/main_scene="res://mainSystem/scenes/main.tscn"
+config/use_custom_user_dir=true
+config/custom_user_dir_name="bark"
 config/features=PackedStringArray("4.1", "Mobile")
 boot_splash/bg_color=Color(0, 0, 0, 1)
 boot_splash/image="res://assets/doge-color-darker-dog.png"
@@ -32,6 +34,7 @@ NetworkHandler="*res://mainSystem/scripts/networkHandler.gd"
 Notifyvr="*res://addons/notifyvr/notifyvr.gd"
 Vector="*res://addons/vector/vector.gd"
 Journaling="*res://mainSystem/scripts/journaling.gd"
+DiscordSDKLoader="*res://addons/discord-sdk-gd/nodes/core_updater.gd"
 
 [display]
 
@@ -39,11 +42,10 @@ window/size/viewport_width=800
 window/size/viewport_height=600
 window/subwindows/embed_subwindows=false
 window/handheld/orientation=4
-window/vsync/vsync_mode=0
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/contextmenu/plugin.cfg", "res://addons/simplegrasstextured/plugin.cfg")
+enabled=PackedStringArray("res://addons/Todo_Manager/plugin.cfg", "res://addons/contextmenu/plugin.cfg", "res://addons/discord-sdk-gd/plugin.cfg", "res://addons/simplegrasstextured/plugin.cfg")
 
 [input]
 
@@ -102,6 +104,11 @@ scrolldown={
 "events": [Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"button_mask":16,"position":Vector2(119, 5),"global_position":Vector2(123, 48),"factor":1.0,"button_index":5,"canceled":false,"pressed":true,"double_click":false,"script":null)
 ]
 }
+desktoptoggle={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":4194338,"key_label":0,"unicode":0,"echo":false,"script":null)
+]
+}
 
 [layer_names]
 
@@ -112,18 +119,15 @@ scrolldown={
 
 [physics]
 
-common/physics_ticks_per_second=200
 common/physics_jitter_fix=0.0
 
 [rendering]
 
-occlusion_culling/bvh_build_quality=0
 textures/vram_compression/import_etc2_astc=true
 textures/default_filters/anisotropic_filtering_level=0
-occlusion_culling/use_occlusion_culling=true
+vrs/mode=2
 
 [xr]
 
-openxr/enabled=true
 openxr/startup_alert=false
 shaders/enabled=true

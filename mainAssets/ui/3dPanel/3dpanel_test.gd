@@ -1,10 +1,9 @@
-class_name panel3d
-extends RigidBody3D
+
+extends StaticBody3D
 @onready var viewport : SubViewport = %SubViewport
 @onready var mesh : MeshInstance3D = $panel
 @onready var colShape : CollisionShape3D = $CollisionShape3D
 @onready var label_3d = $Label3D
-var ui : Control
 var hoverevent : InputEventMouseMotion
 var clickevent : InputEventMouseButton
 var hovered : bool = false
@@ -19,16 +18,11 @@ func _process(delta):
 
 func _physics_process(delta):
 	if clicked:
-		viewport.handle_input_locally = true
-		viewport.push_input(clickevent,true)
-		viewport.handle_input_locally = false
 		print('clickevent')
 		clickevent = InputEventMouseButton.new()
 		clicked = false
 	elif hovered:
-		viewport.handle_input_locally = true
 		viewport.push_input(hoverevent,true)
-		viewport.handle_input_locally = false
 		hovered = false
 
 func laserClick(data:Dictionary):
@@ -54,8 +48,10 @@ func laserClick(data:Dictionary):
 	# We need to do these conversions so the event's position is in the viewport's coordinate system.
 	# Set the event's position and global position.
 	clickevent.position = mouse_pos2D
-#	clickevent.global_position = mouse_pos2D
-	clicked = true
+	clickevent.global_position = mouse_pos2D
+	Input.flush_buffered_events()
+	viewport.push_input(clickevent,true)
+#	clicked = true
 
 func laserHover(data:Dictionary):
 	if !hovered and !clicked and data.has("position"):
@@ -83,7 +79,6 @@ func laserHover(data:Dictionary):
 
 func set_ui(node:Control):
 	viewport.add_child(node)
-	ui = node
 #	node.gui_input.connect(func(event):
 #		label_3d.text = str(event)
 #		)

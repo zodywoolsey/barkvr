@@ -12,6 +12,8 @@ size = Vector3(0.1, 0.1, 0.1)
 mass = 100.0
 gravity_scale = 0.0
 contact_monitor = true
+linear_damp = 1.0
+angular_damp = 1.0
 metadata/grabbable = true
 
 [node name="CollisionShape3d" type="CollisionShape3D" parent="."]
