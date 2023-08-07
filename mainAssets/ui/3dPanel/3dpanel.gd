@@ -1,9 +1,10 @@
 class_name panel3d
-extends StaticBody3D
+extends RigidBody3D
 @onready var viewport : SubViewport = %SubViewport
 @onready var mesh : MeshInstance3D = $panel
 @onready var colShape : CollisionShape3D = $CollisionShape3D
 @onready var label_3d = $Label3D
+var ui : Control
 var hoverevent : InputEventMouseMotion
 var clickevent : InputEventMouseButton
 var hovered : bool = false
@@ -18,19 +19,23 @@ func _process(delta):
 
 func _physics_process(delta):
 	if clicked:
+		viewport.handle_input_locally = true
 		viewport.push_input(clickevent,true)
+		viewport.handle_input_locally = false
+		print('clickevent')
+		clickevent = InputEventMouseButton.new()
 		clicked = false
-#		print('click')
 	elif hovered:
+		viewport.handle_input_locally = true
 		viewport.push_input(hoverevent,true)
+		viewport.handle_input_locally = false
 		hovered = false
-#		print('hover')
 
-func laserClick(data):
+func laserClick(data:Dictionary):
 	clickevent = InputEventMouseButton.new()
 	clickevent.pressed = data.pressed
 	clickevent.button_index = 1
-	clickevent.button_mask = 1
+#	clickevent.button_mask = 1
 	# Get mesh size to detect edges and make conversions. This code only support PlaneMesh and QuadMesh.
 	var quad_mesh_size = mesh.mesh.size
 	var mouse_pos3D = to_local(data.position)
@@ -49,11 +54,11 @@ func laserClick(data):
 	# We need to do these conversions so the event's position is in the viewport's coordinate system.
 	# Set the event's position and global position.
 	clickevent.position = mouse_pos2D
-	clickevent.global_position = mouse_pos2D
+#	clickevent.global_position = mouse_pos2D
 	clicked = true
 
-func laserHover(data):
-	if !hovered and !clicked:
+func laserHover(data:Dictionary):
+	if !hovered and !clicked and data.has("position"):
 		# We need to fabricate a fake mouse input even for translating a raycast click to a simulated mouse click on the viewport.
 		hoverevent = InputEventMouseMotion.new()
 	#	event.pressed = data.pressed
@@ -78,6 +83,7 @@ func laserHover(data):
 
 func set_ui(node:Control):
 	viewport.add_child(node)
+	ui = node
 #	node.gui_input.connect(func(event):
 #		label_3d.text = str(event)
 #		)

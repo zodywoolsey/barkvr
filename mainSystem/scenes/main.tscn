@@ -1,7 +1,9 @@
-[gd_scene load_steps=10 format=3 uid="uid://ctwckofb07cfw"]
+[gd_scene load_steps=12 format=3 uid="uid://ctwckofb07cfw"]
 
+[ext_resource type="Script" path="res://mainSystem/scripts/init.gd" id="1_gkt54"]
 [ext_resource type="Material" uid="uid://dum7xrf8gdl7k" path="res://addons/kenney_prototype_textures/materials/dark01Triplanar.material" id="1_rkkx6"]
 [ext_resource type="PackedScene" uid="uid://dfuohjtj40324" path="res://mainAssets/ui/3dPanel/local ui/login/matrixpanel.tscn" id="3_6ndab"]
+[ext_resource type="PackedScene" uid="uid://clc5dre31iskm" path="res://addons/godot-xr-tools/xr/start_xr.tscn" id="4_4y4so"]
 [ext_resource type="PackedScene" uid="uid://dckbok0o553v7" path="res://mainSystem/scenes/objects/worldObjects/playerSpawnLocation.tscn" id="6_to5vo"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_3royi"]
@@ -39,8 +41,13 @@ func _ready():
 [sub_resource type="AudioStreamMicrophone" id="AudioStreamMicrophone_ve6pm"]
 
 [node name="main" type="Node3D" groups=["localroot"]]
+script = ExtResource("1_gkt54")
+
+[node name="StartXR" parent="." instance=ExtResource("4_4y4so")]
+physics_rate_multiplier = 1
 
 [node name="localworldroot" type="Node3D" parent="." groups=["localworldroot"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="localworldroot"]
 environment = SubResource("Environment_n00cx")
@@ -51,7 +58,7 @@ light_energy = 0.112
 shadow_enabled = true
 
 [node name="playerSpawnLocation" parent="localworldroot" instance=ExtResource("6_to5vo")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.301664, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.30166, 0)
 
 [node name="floor boundary" type="Area3D" parent="localworldroot"]
 script = SubResource("GDScript_cwteg")
@@ -66,10 +73,10 @@ material_override = ExtResource("1_rkkx6")
 use_collision = true
 collision_layer = 9
 collision_mask = 9
-size = Vector3(1000, 1, 1000)
+size = Vector3(10, 1, 10)
 
 [node name="matrixpanel" parent="localworldroot" instance=ExtResource("3_6ndab")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.919873, 1.55141)
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 1, -0.550489)
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = SubResource("AudioStreamMicrophone_ve6pm")

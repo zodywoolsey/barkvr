@@ -1,0 +1,83 @@
+[gd_scene load_steps=11 format=3 uid="uid://ctwckofb07cfw"]
+
+[ext_resource type="Material" uid="uid://dum7xrf8gdl7k" path="res://addons/kenney_prototype_textures/materials/dark01Triplanar.material" id="1_rkkx6"]
+[ext_resource type="PackedScene" uid="uid://dfuohjtj40324" path="res://mainAssets/ui/3dPanel/local ui/login/matrixpanel.tscn" id="3_6ndab"]
+[ext_resource type="PackedScene" uid="uid://dkl0qg54mlqpa" path="res://mainAssets/ui/3dPanel/3dpanel_test.tscn" id="4_c7e8t"]
+[ext_resource type="PackedScene" uid="uid://dckbok0o553v7" path="res://mainSystem/scenes/objects/worldObjects/playerSpawnLocation.tscn" id="6_to5vo"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_3royi"]
+sky_top_color = Color(0.494118, 0.772549, 1, 1)
+sky_horizon_color = Color(0, 0, 0, 1)
+sky_energy_multiplier = 0.12
+ground_bottom_color = Color(0, 0, 0, 1)
+ground_horizon_color = Color(0, 0, 0, 1)
+
+[sub_resource type="Sky" id="Sky_sd3km"]
+sky_material = SubResource("ProceduralSkyMaterial_3royi")
+
+[sub_resource type="Environment" id="Environment_n00cx"]
+background_mode = 2
+sky = SubResource("Sky_sd3km")
+tonemap_mode = 2
+volumetric_fog_density = 0.2198
+volumetric_fog_albedo = Color(0.6, 0.466667, 1, 1)
+volumetric_fog_emission = Color(0.6, 0.466667, 1, 1)
+volumetric_fog_emission_energy = 0.03
+adjustment_brightness = 1.5
+
+[sub_resource type="GDScript" id="GDScript_cwteg"]
+script/source = "extends Area3D
+
+func _ready():
+	body_entered.connect(func(body):
+		if body.is_in_group('player'):
+			body.global_position = Vector3(0,5,0)
+		)
+"
+
+[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_csaaw"]
+
+[sub_resource type="AudioStreamMicrophone" id="AudioStreamMicrophone_ve6pm"]
+
+[node name="main" type="Node3D" groups=["localroot"]]
+
+[node name="localworldroot" type="Node3D" parent="." groups=["localworldroot"]]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="localworldroot"]
+environment = SubResource("Environment_n00cx")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="localworldroot"]
+transform = Transform3D(-0.865617, -0.417461, 0.276465, -0.267145, 0.852051, 0.450158, -0.423486, 0.315808, -0.849073, 0, 1.72518, 0)
+light_energy = 0.112
+shadow_enabled = true
+
+[node name="playerSpawnLocation" parent="localworldroot" instance=ExtResource("6_to5vo")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.301664, 0)
+
+[node name="floor boundary" type="Area3D" parent="localworldroot"]
+script = SubResource("GDScript_cwteg")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="localworldroot/floor boundary"]
+transform = Transform3D(-0.99981, -0.0194942, 1.70423e-09, -0.0194942, 0.99981, -8.74062e-08, 0, -8.74228e-08, -1, 0, -10.7255, -0.307133)
+shape = SubResource("WorldBoundaryShape3D_csaaw")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="localworldroot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+material_override = ExtResource("1_rkkx6")
+use_collision = true
+collision_layer = 9
+collision_mask = 9
+size = Vector3(100, 1, 100)
+
+[node name="matrixpanel" parent="localworldroot" instance=ExtResource("3_6ndab")]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 1, -1)
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = SubResource("AudioStreamMicrophone_ve6pm")
+autoplay = true
+bus = &"mic"
+
+[node name="Node" type="Node" parent="." groups=["requestParent"]]
+
+[node name="StaticBody3D" parent="." instance=ExtResource("4_c7e8t")]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, -1.97648, 1.06936, -1.20002)

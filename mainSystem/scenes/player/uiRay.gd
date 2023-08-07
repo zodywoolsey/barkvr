@@ -26,7 +26,7 @@ func _physics_process(delta):
 			currentAction += " hover"
 			vis.show()
 			var tmpcol = get_collider()
-			if tmpcol.get_collision_layer_value(3) and tmpcol.has_method("laserHover") and hovertimer > .1:
+			if tmpcol.get_collision_layer_value(3) and tmpcol.has_method("laserHover"):
 				hovertimer = 0.0
 				if prevHover and prevHover != tmpcol:
 					prevHover.laserHover({
@@ -41,20 +41,20 @@ func _physics_process(delta):
 						"position": get_collision_point()
 					})
 				prevHover = tmpcol
-#			else:
-#				if prevHover and prevHover.has_method("laserHover"):
-#					prevHover.laserHover({
-#						'hovering': false,
-#						'position': get_collision_point()
-#					})
+			else:
+				if prevHover and prevHover.has_method("laserHover"):
+					prevHover.laserHover({
+						'hovering': false,
+						'position': get_collision_point()
+					})
 		else:
 			vis.hide()
-#			if prevHover and prevHover.has_method("laserHover"):
-#				prevHover.laserHover({
-#					'hovering': false,
-#					'position': get_collision_point()
-#				})
-#				prevHover = null
+			if prevHover and prevHover.has_method("laserHover"):
+				prevHover.laserHover({
+					'hovering': false,
+					'position': get_collision_point()
+				})
+				prevHover = null
 	label.text = currentAction
 #	print(currentAction)
 
@@ -67,6 +67,7 @@ func click():
 				"position": get_collision_point(),
 				"pressed": true
 				})
+			print('ui click')
 
 func release():
 	isrelease = false

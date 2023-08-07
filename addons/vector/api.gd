@@ -679,7 +679,7 @@ func login_username_password(homeserver:String,username:String,password:String):
 		"password": password,
 		"user": username,
 		"device_id": OS.get_unique_id(),
-		"initial_device_display_name": "bark"
+		"initial_device_display_name": "barkvr"
 		}
 	var response = await Vector.connect_to_homeserver(homeserver)
 	assert(response == OK)
@@ -690,6 +690,8 @@ func login_username_password(homeserver:String,username:String,password:String):
 		str(loginDict)
 		)
 	assert(response == OK)
+	await client.request_completed
+	var stat = client.get_http_client_status()
 	assert(client.get_http_client_status()==0)
 
 func get_joined_rooms():

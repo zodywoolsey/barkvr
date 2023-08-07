@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://r68jre2w5k33"]
+[gd_scene load_steps=18 format=3 uid="uid://r68jre2w5k33"]
 
 [ext_resource type="Script" path="res://mainSystem/scripts/player/xrplayer-controller.gd" id="1_iwrfe"]
 [ext_resource type="Script" path="res://mainSystem/scripts/player/hand.gd" id="2_npgyv"]
@@ -29,6 +29,13 @@ script/source = "extends Node3D
 
 #func _process(delta):
 #	look_at(get_tree().get_first_node_in_group(\"playerCamera\").global_position)
+"
+
+[sub_resource type="GDScript" id="GDScript_dn0nl"]
+script/source = "extends Label3D
+
+func _process(delta):
+	text = str(1/delta)
 "
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3575f"]
@@ -115,7 +122,7 @@ script = SubResource("GDScript_utwae")
 [node name="StaticBody3D" parent="CharacterBody3D/xrplayer/righthand/wristmenu" instance=ExtResource("5_d1mpu")]
 transform = Transform3D(-1, 6.99383e-07, -8.74228e-08, 6.99383e-07, 1, -8.74229e-08, 8.74227e-08, -8.74229e-08, -1, 0.05, 7.78848e-08, 2.18557e-09)
 itemToSpawn = "res://mainSystem/scenes/objects/toys/bouncyballgun.tscn"
-text = "spawn pen"
+text = "spawn cubegun"
 
 [node name="StaticBody3D2" parent="CharacterBody3D/xrplayer/righthand/wristmenu" instance=ExtResource("5_d1mpu")]
 transform = Transform3D(-1, 6.99383e-07, -8.74228e-08, 6.99383e-07, 1, -8.74229e-08, 8.74227e-08, -8.74229e-08, -1, 0.15, -7.95723e-10, -1.09278e-08)
@@ -126,6 +133,11 @@ text = "spawn camera"
 transform = Transform3D(1.24578e-08, 0.019, -8.30518e-10, 0.019, -1.24578e-08, -2.49155e-09, -2.49155e-09, -8.30517e-10, -0.019, 0, -2.77682e-09, -0.0635259)
 visible = false
 texture = ExtResource("6_j5bbn")
+
+[node name="fps" type="Label3D" parent="CharacterBody3D/xrplayer/righthand/wristmenu"]
+transform = Transform3D(-1, 3.49692e-07, 2.62269e-07, 2.62269e-07, 1.31134e-07, 1, 3.49692e-07, 1, -1.31134e-07, 0.660793, -2.21446e-07, 0.220264)
+text = "test"
+script = SubResource("GDScript_dn0nl")
 
 [node name="Line3D" type="MeshInstance3D" parent="CharacterBody3D/xrplayer/righthand"]
 material_override = SubResource("StandardMaterial3D_3575f")
@@ -147,11 +159,11 @@ debug_shape_thickness = 1
 script = ExtResource("3_n5c2i")
 
 [node name="uiRay" type="RayCast3D" parent="CharacterBody3D/xrplayer/lefthand"]
-enabled = false
 target_position = Vector3(0, 0, -1000)
 collision_mask = 4
 debug_shape_custom_color = Color(0, 0, 0, 0.109804)
 debug_shape_thickness = 1
+script = ExtResource("4_xffyd")
 
 [node name="grabArea" type="Area3D" parent="CharacterBody3D/xrplayer/lefthand"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.05, 0, 0)
@@ -201,6 +213,7 @@ shape = SubResource("CapsuleShape3D_1uxmk")
 [node name="playercamoffset" type="Node3D" parent="CharacterBody3D"]
 
 [node name="Label" type="Label" parent="."]
+visible = false
 offset_left = 91.0
 offset_top = 84.0
 offset_right = 131.0

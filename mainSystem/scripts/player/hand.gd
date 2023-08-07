@@ -51,23 +51,27 @@ func _ready():
 		)
 
 func _process(delta):
-	if buttons.has('by_button'):
-		if buttons['by_button']:
-			contexttimer += delta
+	if visible:
+		if buttons.has('by_button'):
+			if buttons['by_button']:
+				contexttimer += delta
+			else:
+				contexttimer = 0
+		if isscalinggrabbedobject:
+			var ts = global_position.distance_to(otherhand.global_position)-scalinggrabbedstartdist
+			ts *= 4.0
+			scalinggrabbedobject.scale = scalinggrabbedstartscale+Vector3(ts,ts,ts)
+		if ui_ray.is_colliding():
+			line_3d.target = ui_ray.get_collision_point()
+			world_ray.enabled = false
+			world_ray.hide()
 		else:
-			contexttimer = 0
-	if isscalinggrabbedobject:
-		var ts = global_position.distance_to(otherhand.global_position)-scalinggrabbedstartdist
-		ts *= 4.0
-		scalinggrabbedobject.scale = scalinggrabbedstartscale+Vector3(ts,ts,ts)
-	if ui_ray.is_colliding():
-		line_3d.target = ui_ray.get_collision_point()
-		world_ray.enabled = false
-		world_ray.hide()
+			line_3d.target = world_ray.vispos
+			world_ray.enabled = true
+			world_ray.show()
 	else:
-		line_3d.target = world_ray.vispos
-		world_ray.enabled = true
-		world_ray.show()
+		world_ray.enabled = false
+		ui_ray.enabled = false
 
 func _input(event):
 	pass
@@ -126,7 +130,7 @@ func contextMenuSummon():
 			LocalGlobals.editor_refs.mainpanel.global_rotation.x += deg_to_rad(90.0)
 		else:
 			var vreditor = load("res://mainAssets/ui/3dPanel/editmode/vreditor.tscn").instantiate()
-			get_tree().get_first_node_in_group("worldroot").add_child(vreditor)
+			get_tree().get_first_node_in_group("localroot").add_child(vreditor)
 			vreditor.set_items(local_player.selected)
 			vreditor.global_position = hand_menu_point.global_position
 

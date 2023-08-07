@@ -1,7 +1,7 @@
 extends Control
 @onready var tree : Tree = $Tree
 
-var tree_root : TreeItem
+@onready var tree_root : TreeItem = tree.create_item()
 signal selected(item)
 
 func _process(delta):
@@ -33,6 +33,7 @@ func setItems(items:Array):
 
 func setRoot(item:Node):
 	tree.clear()
+	init()
 	addchildren(item,tree_root)
 
 func addchildren(node:Node, parent:TreeItem):
