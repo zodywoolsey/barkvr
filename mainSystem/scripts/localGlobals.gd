@@ -9,14 +9,14 @@ signal playerinit(isvr:bool)
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	if OS.get_name() == "Web":
-		webxr()
-	else:
-		interface = XRServer.find_interface("OpenXR")
-		interface.initialize()
-		if interface and interface.is_initialized():
-			get_viewport().use_xr = true
-			vr_supported = true
+#	if OS.get_name() == "Web":
+#		webxr()
+#	else:
+#		interface = XRServer.find_interface("OpenXR")
+#		interface.initialize()
+#		if interface and interface.is_initialized():
+#			get_viewport().use_xr = true
+#			vr_supported = true
 	get_tree().get_first_node_in_group("localroot").add_child(load('res://mainSystem/scenes/player/xrplayer.tscn').instantiate())
 
 

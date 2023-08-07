@@ -4,3 +4,6 @@ export/
 assetsNotForUpload/
 noUpload/
 android/build/
+exports/android/barkvr.apk
+exports/win/barkvr.exe
+exports/win/barkvr.zip
