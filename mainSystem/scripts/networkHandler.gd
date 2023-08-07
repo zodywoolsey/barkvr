@@ -33,10 +33,14 @@ var candidates : Array
 var timer :float = 0
 
 func get_clipboard_connection_string():
-	DisplayServer.clipboard_set(str({
+	var tmp = str({
 		"description": local_description,
 		"candidates": candidates
-	}))
+	})
+	DisplayServer.clipboard_set(tmp)
+	discord_sdk.join_secret = tmp
+	discord_sdk.state = "testing a session"
+	discord_sdk.refresh()
 
 func apply_connection_string(constring:String):
 	var data = JSON.parse_string(DisplayServer.clipboard_get())
