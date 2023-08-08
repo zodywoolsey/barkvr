@@ -11,15 +11,9 @@ func _ready():
 	# this is boolean if everything worked
 	print("Discord working: " + str(discord_sdk.get_is_discord_working()))
 	print(discord_sdk.get_current_user())
-	discord_sdk.state = "starting up"
+	discord_sdk.details = "local home, not logged in"
 	discord_sdk.large_image = "game"
 	discord_sdk.start_timestamp = int(Time.get_unix_time_from_system())
-	
-	discord_sdk.join_secret = ""
-	
-	discord_sdk.activity_join.connect(func(secret):
-		print(secret)
-		)
 	
 	# Always refresh after changing the values!
 	discord_sdk.refresh() 
