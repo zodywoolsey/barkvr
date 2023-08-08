@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://r68jre2w5k33"]
+[gd_scene load_steps=18 format=3 uid="uid://r68jre2w5k33"]
 
 [ext_resource type="Script" path="res://mainSystem/scripts/player/xrplayer-controller.gd" id="1_iwrfe"]
 [ext_resource type="Script" path="res://mainSystem/scripts/player/hand.gd" id="2_npgyv"]
@@ -35,26 +35,7 @@ script/source = "extends Node3D
 script/source = "extends Label3D
 
 func _process(delta):
-	text = str(1/delta)
-"
-
-[sub_resource type="GDScript" id="GDScript_xsb3m"]
-script/source = "extends Label3D
-
-func _process(delta):
-	match int(NetworkHandler.peer.get_connection_state()):
-		0:
-			text = \"new\"
-		1:
-			text = \"connecting\"
-		2:
-			text = \"connecting\"
-		3:
-			text = \"disconnected\"
-		4:
-			text = \"failed\"
-		5:
-			text = \"closed\"
+	text = str(NetworkHandler.peer.get_connection_state())
 "
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3575f"]
@@ -161,7 +142,7 @@ script = SubResource("GDScript_dn0nl")
 [node name="fps2" type="Label3D" parent="CharacterBody3D/xrplayer/righthand/wristmenu"]
 transform = Transform3D(-1, 3.49692e-07, 2.62269e-07, 2.62269e-07, 1.31134e-07, 1, 3.49692e-07, 1, -1.31134e-07, 0.881057, -2.88843e-07, 0.440528)
 text = "test"
-script = SubResource("GDScript_xsb3m")
+script = SubResource("GDScript_dn0nl")
 
 [node name="Line3D" type="MeshInstance3D" parent="CharacterBody3D/xrplayer/righthand"]
 material_override = SubResource("StandardMaterial3D_3575f")

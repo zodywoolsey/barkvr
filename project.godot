@@ -139,7 +139,6 @@ common/physics_jitter_fix=0.0
 
 textures/vram_compression/import_etc2_astc=true
 textures/default_filters/anisotropic_filtering_level=0
-vrs/mode=2
 
 [xr]
 
