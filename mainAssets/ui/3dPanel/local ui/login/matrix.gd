@@ -23,6 +23,7 @@ func _ready():
 			add_items(Vector.joinedRooms)
 		else:
 			Vector.get_joined_rooms()
+		print()
 		)
 	Vector.got_room_state.connect(func(data):
 		if data.response_code and data.response_code == 200:

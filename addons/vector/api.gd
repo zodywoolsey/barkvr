@@ -22,6 +22,8 @@ signal posted_register(result:int,response_code:int,headers:PackedStringArray,bo
 signal got_register_available(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray)
 signal posted_register_email_requesttoken(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray)
 signal posted_register_msisdn_requesttoken(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray)
+signal placed_room_state(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray)
+signal got_turn_server(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray)
 
 signal user_logged_in(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray)
 signal got_joined_rooms(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray)
@@ -607,7 +609,7 @@ func post_register_msisdn_requesttoken(base_url:String='', headers:Array=[], cli
 	)
 
 ## GET /_matrix/client/v3/rooms/{roomId}/messages
-## accepts: {roomId:String:fp, dir:String:qp, filter:String:qp, from:String:qp, limit:int:qp, to:String:qp}
+## accepts: {base_url:String:fp, headers:Array:fp, roomId:String:fp, dir:String:qp, filter:String:qp, from:String:qp, limit:int:qp, to:String:qp}
 ## https://spec.matrix.org/v1.7/client-server-api/#get_matrixclientv3roomsroomidmessages
 func get_room_messages(base_url:String='', headers:Array=[], roomId: String = '', dir: String = '', filter:String = '', from:String = '', limit:int = -99, to:String = ''):
 	assert(roomId=='',"get_room_messages: roomId is required")
@@ -647,14 +649,67 @@ func get_room_messages(base_url:String='', headers:Array=[], roomId: String = ''
 	HTTPClient.METHOD_GET,
 	str(bodyDict)
 	)
-	
 
-## 
+## /_matrix/client/v3/rooms/{roomId}/state/{eventType}/{stateKey}
+## accepts: {base_url:String:fp, headers:Array:fp, room_id:String:qp, event_type:String:qp, state_key:String:qp
+## https://spec.matrix.org/v1.7/client-server-api/#put_matrixclientv3roomsroomidstateeventtypestatekey
+func put_room_state(base_url:String='', headers:Array=[], room_id:String='', event_type:String='', state_key:String='', bodyDict:Dictionary={}):
+	# check for required fields
+	assert(room_id!='',"put_room_state: room_id is required")
+	assert(event_type!='',"put_room_state: event_type is required")
+	assert(state_key!='',"put_room_state: state_key is required")
+	if headers.is_empty():
+		push_warning("put_room_state: headers are required to be set for this call, due to authentication requirements")
+	# check header array for auth header
+	assert(str(headers).contains("Authorization"),"put_room_state: headers must contain an Authorization header")
+	# build request body with provided info
+	var res
+	var client = HTTPRequest.new()
+	print("putting room_state for: ",room_id)
+	client.use_threads = false
+	Vector.requestParent.add_child(client)
+	client.request_completed.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
+		# if result == RESULT_SUCCESS, emit signal
+		if result == HTTPRequest.RESULT_SUCCESS:
+			placed_room_state.emit(result,response_code,headers,body)
+		else:
+			print("error putting room_state:\n	result: {0}\n	response_code: {1}\n".format([result,response_code]))
+		client.queue_free()
+		)
+	# make request
+	res = client.request(
+	base_url+"_matrix/client/v3/rooms/"+room_id+"/state/"+event_type+"/"+state_key,
+	headers,
+	HTTPClient.METHOD_PUT,
+	str(bodyDict)
+	)
 
-
-
-
-
+## /_matrix/client/v3/voip/turnServer
+## accepts: {base_url:String:fp, headers:Array:fp}
+## https://spec.matrix.org/v1.7/client-server-api/#get_matrixclientv3voipturnserver
+func get_turn_server(base_url:String='', headers:Array=[]):
+	if headers.is_empty():
+		push_warning("get_turn_server: headers are required to be set for this call, due to authentication requirements")
+	var res
+	var client = HTTPRequest.new()
+	print("getting turn_server")
+	client.use_threads = false
+	Vector.requestParent.add_child(client)
+	client.request_completed.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
+		# if result == RESULT_SUCCESS, emit signal
+		if result == HTTPRequest.RESULT_SUCCESS:
+			got_turn_server.emit(result,response_code,headers,body)
+		else:
+			print("error getting turn_server:\n	result: {0}\n	response_code: {1}\n".format([result,response_code]))
+		client.queue_free()
+		)
+	# make request
+	res = client.request(
+	base_url+"_matrix/client/v3/voip/turnServer",
+	headers,
+	HTTPClient.METHOD_GET,
+	'{}'
+	)
 
 
 

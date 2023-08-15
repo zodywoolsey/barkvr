@@ -12,10 +12,11 @@ func procrayvis(delta):
 	vispos = get_collision_point()
 	var tmpnorm = get_collision_normal()
 	if is_colliding():
-		if get_collider().is_class("RigidBody3D"):
-			vis.setType('rigidbody')
-		else:
-			vis.setType('pointer')
+		if is_instance_valid(get_collider()):
+			if get_collider().is_class("RigidBody3D"):
+				vis.setType('rigidbody')
+			else:
+				vis.setType('pointer')
 	else:
 		vispos = to_global(Vector3(0,0,-10))
 	vis.target.x = lerpf(vis.target.x, vispos.x, .9)

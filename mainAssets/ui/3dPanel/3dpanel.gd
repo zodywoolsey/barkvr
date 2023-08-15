@@ -1,5 +1,6 @@
 class_name panel3d
-extends RigidBody3D
+extends StaticBody3D
+#extends RigidBody3D
 @onready var viewport : SubViewport = %SubViewport
 @onready var mesh : MeshInstance3D = $panel
 @onready var colShape : CollisionShape3D = $CollisionShape3D
@@ -10,8 +11,12 @@ var clickevent : InputEventMouseButton
 var hovered : bool = false
 var clicked : bool = false
 
+@export var _auto_load_ui : Resource
+
 func _ready():
-	colShape.position.y = -colShape.shape.size.y/2.0
+#	colShape.position.y = -colShape.shape.size.y/2.0
+	if _auto_load_ui:
+		set_ui(_auto_load_ui.instantiate())
 
 func _process(delta):
 	mesh.mesh.material.albedo_texture = viewport.get_texture()

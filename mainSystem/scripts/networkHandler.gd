@@ -63,7 +63,6 @@ func _process(delta):
 		if channels[0].get_ready_state() == WebRTCDataChannel.STATE_OPEN:
 			while channels[0].get_available_packet_count() > 0:
 				print(get_path(), " received: ", str(channels[0].get_var()))
-			channels[0].put_var("test")
 	if timer > .1:
 		if !channels.size() > 0:
 			print("attempting to create data channel")
