@@ -29,7 +29,7 @@ func set_target(node):
 		update_fields()
 
 func update_fields():
-	if target:
+	if target and is_instance_valid(target):
 		objectname.text = target.name
 		posx.text = str(target.position.x)
 		posy.text = str(target.position.y)
@@ -40,9 +40,9 @@ func update_fields():
 		rotx.text = str(target.rotation.x)
 		roty.text = str(target.rotation.y)
 		rotz.text = str(target.rotation.z)
-		if target.has_meta('grabbable'):
+		if target.has_meta('grabbable') and is_instance_valid(target):
 			grabbable.button_pressed = target.get_meta('grabbable')
-		else:
+		elif is_instance_valid(target):
 			grabbable.button_pressed = false
 
 func clear_fields():

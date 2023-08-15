@@ -1,6 +1,6 @@
 @tool
 class_name XRToolsVirtualKeyboard2D
-extends CanvasLayer
+extends Control
 
 
 ## Enumeration of keyboard view modes
