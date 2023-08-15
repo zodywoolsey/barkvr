@@ -42,7 +42,7 @@ func _ready():
 	if !LocalGlobals.vr_supported:
 		xr_camera_3d.position.y = .9
 		righthand.position = Vector3(.2,.6,-.2)
-		lefthand.hide()
+#		lefthand.hide()
 	var spawnLoc = get_tree().get_nodes_in_group("PlayerSpawnLocation").pick_random()
 	global_position = spawnLoc.global_position
 	righthand.connect("button_pressed",func(name):
@@ -100,7 +100,7 @@ func _physics_process(delta):
 			LocalGlobals.vr_supported = false
 			xr_camera_3d.position.y = .9
 			righthand.position = Vector3(.2,.6,-.2)
-			lefthand.hide()
+#			lefthand.hide()
 
 	# Handle Jump.
 	if (rightaxbtn or Input.is_action_just_pressed("ui_accept")) and is_on_floor():

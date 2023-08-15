@@ -34,7 +34,7 @@ NetworkHandler="*res://mainSystem/scripts/networkHandler.gd"
 Notifyvr="*res://addons/notifyvr/notifyvr.gd"
 Vector="*res://addons/vector/vector.gd"
 Journaling="*res://mainSystem/scripts/journaling.gd"
-DiscordSDKLoader="*res://addons/discord-sdk-gd/nodes/core_updater.gd"
+BarkHelpers="*res://mainSystem/scripts/bark_helpers.gd"
 
 [display]
 
@@ -45,7 +45,7 @@ window/handheld/orientation=4
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/Todo_Manager/plugin.cfg", "res://addons/contextmenu/plugin.cfg", "res://addons/discord-sdk-gd/plugin.cfg", "res://addons/simplegrasstextured/plugin.cfg")
+enabled=PackedStringArray("res://addons/Todo_Manager/plugin.cfg", "res://addons/contextmenu/plugin.cfg", "res://addons/simplegrasstextured/plugin.cfg")
 
 [input]
 
@@ -137,6 +137,7 @@ common/physics_jitter_fix=0.0
 
 [rendering]
 
+textures/vram_compression/import_s3tc_bptc=true
 textures/vram_compression/import_etc2_astc=true
 textures/default_filters/anisotropic_filtering_level=0
 

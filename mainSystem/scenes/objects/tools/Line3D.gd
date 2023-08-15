@@ -1,8 +1,6 @@
 class_name Line3D
 extends MeshInstance3D
 
-@export var world_space: bool = false
-
 var mat : BaseMaterial3D
 
 var amesh := ArrayMesh.new()

@@ -1,10 +1,15 @@
-[gd_scene load_steps=12 format=3 uid="uid://ctwckofb07cfw"]
+[gd_scene load_steps=19 format=3 uid="uid://ctwckofb07cfw"]
 
 [ext_resource type="Script" path="res://mainSystem/scripts/init.gd" id="1_gkt54"]
 [ext_resource type="Material" uid="uid://dum7xrf8gdl7k" path="res://addons/kenney_prototype_textures/materials/dark01Triplanar.material" id="1_rkkx6"]
 [ext_resource type="PackedScene" uid="uid://dfuohjtj40324" path="res://mainAssets/ui/3dPanel/local ui/login/matrixpanel.tscn" id="3_6ndab"]
 [ext_resource type="PackedScene" uid="uid://clc5dre31iskm" path="res://addons/godot-xr-tools/xr/start_xr.tscn" id="4_4y4so"]
+[ext_resource type="PackedScene" uid="uid://2o2f8tknq7me" path="res://mainAssets/ui/3dPanel/3dpanel.tscn" id="6_307b8"]
 [ext_resource type="PackedScene" uid="uid://dckbok0o553v7" path="res://mainSystem/scenes/objects/worldObjects/playerSpawnLocation.tscn" id="6_to5vo"]
+[ext_resource type="PackedScene" uid="uid://cn48x5w44qy6e" path="res://mainAssets/ui/3dPanel/local ui/save world/save world.tscn" id="7_g03bn"]
+[ext_resource type="PackedScene" uid="uid://lauwp8okd1vh" path="res://addons/godot-xr-tools/objects/keyboard/virtual_keyboard_2d.tscn" id="8_it0hc"]
+[ext_resource type="PackedScene" uid="uid://b3sbt3oft3cxg" path="res://mainAssets/ui/3dPanel/editmode/vreditor.tscn" id="8_wf33i"]
+[ext_resource type="PackedScene" uid="uid://dnw1biowam8w" path="res://mainSystem/scenes/objects/toys/audio/synthcube/synthcube.tscn" id="10_pb2ev"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_3royi"]
 sky_top_color = Color(0.494118, 0.772549, 1, 1)
@@ -38,6 +43,12 @@ func _ready():
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_csaaw"]
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_20xwd"]
+size = Vector3(10, 0.1, 10)
+
+[sub_resource type="BoxMesh" id="BoxMesh_2ok1k"]
+size = Vector3(10, 0.1, 10)
+
 [sub_resource type="AudioStreamMicrophone" id="AudioStreamMicrophone_ve6pm"]
 
 [node name="main" type="Node3D" groups=["localroot"]]
@@ -67,16 +78,14 @@ script = SubResource("GDScript_cwteg")
 transform = Transform3D(-0.99981, -0.0194942, 1.70423e-09, -0.0194942, 0.99981, -8.74062e-08, 0, -8.74228e-08, -1, 0, -10.7255, -0.307133)
 shape = SubResource("WorldBoundaryShape3D_csaaw")
 
-[node name="CSGBox3D" type="CSGBox3D" parent="localworldroot"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
-material_override = ExtResource("1_rkkx6")
-use_collision = true
-collision_layer = 9
-collision_mask = 9
-size = Vector3(10, 1, 10)
+[node name="StaticBody3D" type="StaticBody3D" parent="localworldroot"]
 
-[node name="matrixpanel" parent="localworldroot" instance=ExtResource("3_6ndab")]
-transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 1, -0.550489)
+[node name="CollisionShape3D" type="CollisionShape3D" parent="localworldroot/StaticBody3D"]
+shape = SubResource("BoxShape3D_20xwd")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="localworldroot/StaticBody3D"]
+material_override = ExtResource("1_rkkx6")
+mesh = SubResource("BoxMesh_2ok1k")
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = SubResource("AudioStreamMicrophone_ve6pm")
@@ -84,3 +93,20 @@ autoplay = true
 bus = &"mic"
 
 [node name="Node" type="Node" parent="." groups=["requestParent"]]
+
+[node name="matrixpanel" parent="." instance=ExtResource("3_6ndab")]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 2, -0.550489)
+
+[node name="save_load" parent="." instance=ExtResource("6_307b8")]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0.680874, 2, -0.533455)
+_auto_load_ui = ExtResource("7_g03bn")
+
+[node name="keyboard" parent="." instance=ExtResource("6_307b8")]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, -0.633656, 2, -0.533455)
+_auto_load_ui = ExtResource("8_it0hc")
+
+[node name="vreditor" parent="." instance=ExtResource("8_wf33i")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -5.18075, 1.95409, 0)
+
+[node name="synthcube" parent="." instance=ExtResource("10_pb2ev")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.7728, 2.2569, 0)

@@ -30,6 +30,7 @@ signal got_joined_rooms
 signal got_room_state(data)
 signal update_room(data)
 signal synced(data)
+signal got_turn_server(data)
 
 @onready var requestParent = get_tree().get_first_node_in_group("requestParent")
 
@@ -78,11 +79,13 @@ func _ready():
 	api.synced.connect(func(result:int,response_code:int,header:PackedStringArray,body:PackedByteArray):
 		var msg = body.get_string_from_ascii()
 		var msgJson = JSON.parse_string(msg)
-		if msgJson.has('next_batch'):
-			next_batch = msgJson.next_batch
-			userData['next_batch'] = next_batch
-			saveUserDict()
 		synced.emit(msgJson)
+		)
+	api.got_turn_server.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
+		var msg = body.get_string_from_ascii()
+		var msgJson = JSON.parse_string(msg)
+		print("turn server:\n",str(msgJson),"\n")
+		got_turn_server.emit(msgJson)
 		)
 
 func connect_to_homeserver(homeServer:String = ""):
@@ -129,6 +132,7 @@ func saveUserDict():
 	var toStore = var_to_bytes(userData)
 	toStore.reverse()
 	file.store_var(toStore)
+	file.close()
 
 func readUserDict():
 	var file = FileAccess.open("user://user.data",FileAccess.READ)
