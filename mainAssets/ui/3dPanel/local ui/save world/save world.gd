@@ -1,13 +1,19 @@
 extends Control
 
-@onready var world_name = $VBoxContainer/name
-@onready var save = $VBoxContainer/save
-@onready var load = $VBoxContainer/load
+@onready var world_name = $HBoxContainer/VBoxContainer/name
+@onready var save = $HBoxContainer/VBoxContainer/save
+@onready var load = $HBoxContainer/VBoxContainer/load
+@onready var item_list = $HBoxContainer/ItemList
 
 func _ready():
+	init_world_list()
+	item_list.item_clicked.connect(func(i, pos, button_mask):
+		print(item_list.get_item_text(i))
+		world_name.text = item_list.get_item_text(i)
+		)
 	save.pressed.connect(func():
 		var world = get_tree().get_first_node_in_group("localworldroot")
-		if world:
+		if world and !world_name.text.is_empty():
 			var dir = DirAccess.open("user://")
 			if !dir.dir_exists("./worlds"):
 				dir.make_dir("./worlds")
@@ -26,4 +32,15 @@ func _ready():
 				var parent = get_tree().get_first_node_in_group('localroot')
 				localworld.queue_free()
 				parent.add_child(loaded_world)
+				discord_sdk.details = "in world "+world_name.text
 		)
+
+
+func init_world_list():
+	item_list.clear()
+	var dir = DirAccess.open("user://")
+	if !dir.dir_exists("./worlds"):
+		dir.make_dir("./worlds")
+	dir.change_dir("./worlds")
+	for world in dir.get_files():
+		item_list.add_item(world)
