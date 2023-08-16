@@ -2,7 +2,7 @@ extends Node
 
 # todo: Login user
 # todo: display room list
-# todo: user clicks on room to open room (doesn't have to display messages yet)
+# todo: user clicks on room to open room
 # todo: displays button for joining the session
 # todo: when attempting session join, look for nearest barksession room event
 # todo: if room event is alive, find all following and attempt to create data channels for each

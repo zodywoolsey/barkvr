@@ -1,6 +1,7 @@
 extends Control
 
-@onready var button = $VBoxContainer/HBoxContainer/HBoxContainer/Button
+@onready var export = $VBoxContainer/HBoxContainer/HBoxContainer/Button
+@onready var button = $VBoxContainer/HBoxContainer/HBoxContainer2/Button
 @onready var posx:LineEdit = $VBoxContainer/position/x/LineEdit
 @onready var posy:LineEdit = $VBoxContainer/position/y/LineEdit
 @onready var posz:LineEdit = $VBoxContainer/position/z/LineEdit
@@ -11,6 +12,7 @@ extends Control
 @onready var roty:LineEdit = $VBoxContainer/rotation/y/LineEdit
 @onready var rotz:LineEdit = $VBoxContainer/rotation/z/LineEdit
 @onready var grabbable:CheckBox = $VBoxContainer/meta/ColorRect/x/CheckBox
+@onready var isvisible:CheckBox = $VBoxContainer/active/ColorRect/x/CheckBox
 @onready var objectname = $VBoxContainer/HBoxContainer/Panel/LineEdit
 
 var is_field_focused = false
@@ -44,6 +46,8 @@ func update_fields():
 			grabbable.button_pressed = target.get_meta('grabbable')
 		elif is_instance_valid(target):
 			grabbable.button_pressed = false
+		if is_instance_valid(target):
+			isvisible.button_pressed = target.visible
 
 func clear_fields():
 	if target:
@@ -58,6 +62,7 @@ func clear_fields():
 		roty.text = ''
 		rotz.text = ''
 		grabbable.button_pressed = false
+		isvisible.button_pressed = false
 
 func _ready():
 	button.pressed.connect(func():
@@ -65,6 +70,16 @@ func _ready():
 			target.queue_free()
 			target = null
 			clear_fields()
+		)
+	export.pressed.connect(func():
+		var world_root = get_tree().get_first_node_in_group("localworldroot")
+		if world_root and target:
+			var dir = DirAccess.open("user://")
+			if !dir.dir_exists("./objects"):
+				dir.make_dir("./objects")
+			var object_file = FileAccess.open("user://objects/"+target.name, FileAccess.WRITE)
+			object_file.store_string(str(BarkHelpers.node_to_var(target)))
+#			OS.shell_open(OS.get_user_data_dir())
 		)
 	posx.text_changed.connect(func(new_text:String):
 		if target:
@@ -173,6 +188,16 @@ func _ready():
 		is_field_focused = true
 		)
 	grabbable.focus_exited.connect(func():
+		is_field_focused = false
+		)
+	isvisible.toggled.connect(func(pressed):
+		if target:
+			target.visible = pressed
+		)
+	isvisible.focus_entered.connect(func():
+		is_field_focused = true
+		)
+	isvisible.focus_exited.connect(func():
 		is_field_focused = false
 		)
 	objectname.text_changed.connect(func(new_text:String):

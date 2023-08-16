@@ -43,4 +43,4 @@ func laserClick(data:Dictionary):
 		tmp.global_position = global_position
 	if label_3d.text == "set root":
 		if LocalGlobals.editor_refs.has('inspector'):
-			LocalGlobals.editor_refs.inspector.setRoot(get_tree().root)
+			LocalGlobals.editor_refs.inspector.setRoot(get_tree().get_first_node_in_group('localworldroot'))

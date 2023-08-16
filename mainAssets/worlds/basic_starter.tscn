@@ -1,0 +1,73 @@
+[gd_scene load_steps=10 format=3 uid="uid://br1vh8in0e65o"]
+
+[ext_resource type="PackedScene" uid="uid://dckbok0o553v7" path="res://mainSystem/scenes/objects/worldObjects/playerSpawnLocation.tscn" id="1_srupi"]
+[ext_resource type="Material" uid="uid://dum7xrf8gdl7k" path="res://addons/kenney_prototype_textures/materials/dark01Triplanar.material" id="2_xwerc"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_3royi"]
+sky_top_color = Color(0.494118, 0.772549, 1, 1)
+sky_horizon_color = Color(0, 0, 0, 1)
+sky_energy_multiplier = 0.12
+ground_bottom_color = Color(0, 0, 0, 1)
+ground_horizon_color = Color(0, 0, 0, 1)
+
+[sub_resource type="Sky" id="Sky_sd3km"]
+sky_material = SubResource("ProceduralSkyMaterial_3royi")
+
+[sub_resource type="Environment" id="Environment_n00cx"]
+background_mode = 2
+sky = SubResource("Sky_sd3km")
+tonemap_mode = 2
+volumetric_fog_density = 0.2198
+volumetric_fog_albedo = Color(0.6, 0.466667, 1, 1)
+volumetric_fog_emission = Color(0.6, 0.466667, 1, 1)
+volumetric_fog_emission_energy = 0.03
+adjustment_brightness = 1.5
+
+[sub_resource type="GDScript" id="GDScript_cwteg"]
+script/source = "extends Area3D
+
+func _ready():
+	body_entered.connect(func(body):
+		if body.is_in_group('player'):
+			body.global_position = Vector3(0,5,0)
+		)
+"
+
+[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_csaaw"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_20xwd"]
+size = Vector3(10, 0.1, 10)
+
+[sub_resource type="BoxMesh" id="BoxMesh_2ok1k"]
+size = Vector3(10, 0.1, 10)
+
+[node name="basic starter" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_n00cx")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.865617, -0.417461, 0.276465, -0.267145, 0.852051, 0.450158, -0.423486, 0.315808, -0.849073, 0, 1.72518, 0)
+light_energy = 0.112
+shadow_enabled = true
+
+[node name="playerSpawnLocation" parent="." instance=ExtResource("1_srupi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.30166, 0)
+
+[node name="floor boundary" type="Area3D" parent="."]
+script = SubResource("GDScript_cwteg")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="floor boundary"]
+transform = Transform3D(-0.99981, -0.0194942, 1.70423e-09, -0.0194942, 0.99981, -8.74062e-08, 0, -8.74228e-08, -1, 0, -10.7255, -0.307133)
+shape = SubResource("WorldBoundaryShape3D_csaaw")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+collision_layer = 7
+collision_mask = 7
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+shape = SubResource("BoxShape3D_20xwd")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D"]
+material_override = ExtResource("2_xwerc")
+mesh = SubResource("BoxMesh_2ok1k")
