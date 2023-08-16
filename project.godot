@@ -35,6 +35,7 @@ Notifyvr="*res://addons/notifyvr/notifyvr.gd"
 Vector="*res://addons/vector/vector.gd"
 Journaling="*res://mainSystem/scripts/journaling.gd"
 BarkHelpers="*res://mainSystem/scripts/bark_helpers.gd"
+DiscordSDKLoader="*res://addons/discord-sdk-gd/nodes/core_updater.gd"
 
 [display]
 
@@ -45,7 +46,7 @@ window/handheld/orientation=4
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/Todo_Manager/plugin.cfg", "res://addons/contextmenu/plugin.cfg", "res://addons/simplegrasstextured/plugin.cfg")
+enabled=PackedStringArray("res://addons/Todo_Manager/plugin.cfg", "res://addons/contextmenu/plugin.cfg", "res://addons/discord-sdk-gd/plugin.cfg", "res://addons/simplegrasstextured/plugin.cfg")
 
 [input]
 

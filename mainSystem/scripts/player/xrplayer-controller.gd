@@ -44,7 +44,10 @@ func _ready():
 		righthand.position = Vector3(.2,.6,-.2)
 #		lefthand.hide()
 	var spawnLoc = get_tree().get_nodes_in_group("PlayerSpawnLocation").pick_random()
-	global_position = spawnLoc.global_position
+	if spawnLoc:
+		global_position = spawnLoc.global_position
+	else:
+		global_position = Vector3(0,4,0)
 	righthand.connect("button_pressed",func(name):
 		pass
 		if name == "ax_button":
