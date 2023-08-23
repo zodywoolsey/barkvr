@@ -20,4 +20,5 @@ The plan is to make it so that anyone with a Matrix account can just log in and 
 - Decentralized design
 - Let the user control their creations completely
 - Open design
-- Clean, readable codebase and dependencies
+
+### For latest, look at the "dev" branch!
