@@ -16,7 +16,8 @@ The plan is to make it so that anyone with a Matrix account can just log in and 
 
 ## Core focus:
 
-Accessibility
-Decentralized design
-Let the user control their creations completely
-Open design
+- Accessibility
+- Decentralized design
+- Let the user control their creations completely
+- Open design
+- Clean, readable codebase and dependencies
