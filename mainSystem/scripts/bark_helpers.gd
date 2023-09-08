@@ -29,3 +29,72 @@ func var_to_node(item:String='', dict:Dictionary={}):
 				node.add_child(var_to_node('',child))
 		print(node)
 		return node
+
+
+func normalize_float32_array(array:PackedFloat32Array):
+	# holder for normalized array
+	var norm_array :PackedFloat32Array = PackedFloat32Array(array)
+	# magnitude
+	var mag = 0.0
+	# create some vars for intermediate math
+	var a = 0.0
+	var b = 0.0
+	# use pythagorian theorem to calculate the ^2 length of vector
+	for i in array:
+		a += pow(i,2)
+	# root the ^2 length of the array to get it's length
+	mag = sqrt(a)
+	for i in norm_array.size():
+		norm_array[i] = norm_array[i]/mag
+	return norm_array
+
+func normalize_float64_array(array:PackedFloat64Array):
+	# holder for normalized array
+	var norm_array :PackedFloat64Array = PackedFloat64Array(array)
+	# magnitude
+	var mag = 0.0
+	# create some vars for intermediate math
+	var a = 0.0
+	var b = 0.0
+	# use pythagorian theorem to calculate the ^2 length of vector
+	for i in array:
+		a += pow(i,2)
+	# root the ^2 length of the array to get it's length
+	mag = sqrt(a)
+	for i in norm_array.size():
+		norm_array[i] = norm_array[i]/mag
+	return norm_array
+
+func float64_array_size(array:PackedFloat64Array):
+	# magnitude
+	var mag = 0.0
+	# create some vars for intermediate math
+	var a = 0.0
+	# use pythagorian theorem to calculate the ^2 length of vector
+	for i in array:
+		a += pow(i,2)
+	# root the ^2 length of the array to get it's length
+	mag = sqrt(a)
+	return mag
+
+func float32_array_size(array:PackedFloat32Array):
+	# magnitude
+	var mag = 0.0
+	# create some vars for intermediate math
+	var a = 0.0
+	# use pythagorian theorem to calculate the ^2 length of vector
+	for i in array:
+		a += pow(i,2)
+	# root the ^2 length of the array to get it's length
+	mag = sqrt(a)
+	return mag
+
+
+
+
+
+
+
+
+
+

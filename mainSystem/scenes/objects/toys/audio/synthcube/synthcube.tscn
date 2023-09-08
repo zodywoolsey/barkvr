@@ -12,6 +12,8 @@ size = Vector3(0.1, 0.1, 0.1)
 mix_rate = 11025.0
 
 [node name="synthcube" type="RigidBody3D"]
+collision_layer = 3
+collision_mask = 3
 script = ExtResource("1_p4ec3")
 metadata/grabbable = true
 

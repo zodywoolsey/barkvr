@@ -155,11 +155,13 @@ texture = ExtResource("6_j5bbn")
 
 [node name="fps" type="Label3D" parent="CharacterBody3D/xrplayer/righthand/wristmenu"]
 transform = Transform3D(-1, 3.49692e-07, 2.62269e-07, 2.62269e-07, 1.31134e-07, 1, 3.49692e-07, 1, -1.31134e-07, 0.881057, -2.98471e-07, 0.220264)
+pixel_size = 0.002
 text = "test"
 script = SubResource("GDScript_dn0nl")
 
 [node name="fps2" type="Label3D" parent="CharacterBody3D/xrplayer/righthand/wristmenu"]
 transform = Transform3D(-1, 3.49692e-07, 2.62269e-07, 2.62269e-07, 1.31134e-07, 1, 3.49692e-07, 1, -1.31134e-07, 0.881057, -2.88843e-07, 0.440528)
+pixel_size = 0.002
 text = "test"
 script = SubResource("GDScript_xsb3m")
 

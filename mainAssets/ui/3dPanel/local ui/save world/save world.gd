@@ -13,6 +13,7 @@ func _ready():
 		)
 	save.pressed.connect(func():
 		var world = get_tree().get_first_node_in_group("localworldroot")
+		
 		if world and !world_name.text.is_empty():
 			var dir = DirAccess.open("user://")
 			if !dir.dir_exists("./worlds"):

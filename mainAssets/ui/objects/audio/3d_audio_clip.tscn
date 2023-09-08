@@ -1,0 +1,53 @@
+[gd_scene load_steps=6 format=3 uid="uid://cnpbuc6rwr1s0"]
+
+[ext_resource type="Script" path="res://mainAssets/ui/3dPanel/3dpanel.gd" id="1_7q44s"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_j0pg5"]
+size = Vector3(1, 0.05, 1)
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_bf5js"]
+viewport_path = NodePath("SubViewportContainer/SubViewport")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bwlfx"]
+resource_local_to_scene = true
+transparency = 2
+alpha_scissor_threshold = 0.5
+alpha_antialiasing_mode = 0
+cull_mode = 2
+shading_mode = 0
+albedo_texture = SubResource("ViewportTexture_bf5js")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_5ucgc"]
+resource_local_to_scene = true
+material = SubResource("StandardMaterial3D_bwlfx")
+size = Vector2(0.5, 0.5)
+
+[node name="3d audio clip" type="StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0)
+collision_layer = 5
+collision_mask = 5
+script = ExtResource("1_7q44s")
+metadata/grabbable = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_j0pg5")
+
+[node name="panel" type="MeshInstance3D" parent="."]
+mesh = SubResource("PlaneMesh_5ucgc")
+skeleton = NodePath("../..")
+
+[node name="Label3D" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+offset_left = 39.0
+offset_top = 2053.0
+offset_right = 79.0
+offset_bottom = 2093.0
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
+unique_name_in_owner = true
+disable_3d = true
+handle_input_locally = false
+size = Vector2i(1024, 1024)
+render_target_update_mode = 4

@@ -1,0 +1,109 @@
+[gd_scene load_steps=4 format=3 uid="uid://i3pxsgqnbjly"]
+
+[ext_resource type="Script" path="res://mainAssets/ui/3dPanel/local ui/login/loginbutton.gd" id="1_18njo"]
+[ext_resource type="Script" path="res://mainAssets/ui/3dPanel/local ui/login/matrix.gd" id="1_ptvo5"]
+[ext_resource type="Script" path="res://mainAssets/ui/3dPanel/local ui/login/hashed_tree_list.gd" id="3_1m0p6"]
+
+[node name="matrix" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ptvo5")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "homeserver"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="homeserver" type="LineEdit" parent="VBoxContainer"]
+layout_mode = 2
+text = "matrix.pupper.dev"
+placeholder_text = "enter your homeserver url"
+alignment = 1
+
+[node name="Label2" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "username"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="uname" type="LineEdit" parent="VBoxContainer"]
+layout_mode = 2
+placeholder_text = "username"
+alignment = 1
+
+[node name="Label3" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "password"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="pword" type="LineEdit" parent="VBoxContainer"]
+layout_mode = 2
+placeholder_text = "password"
+alignment = 1
+secret = true
+
+[node name="Button" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "log in"
+script = ExtResource("1_18njo")
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 0
+offset_right = 8.0
+offset_bottom = 8.0
+text = "login using existing session"
+
+[node name="clipboard constring" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -217.0
+offset_bottom = 31.0
+grow_horizontal = 0
+text = "copy session connection string"
+
+[node name="read constring" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -245.0
+offset_top = 31.0
+offset_bottom = 62.0
+grow_horizontal = 0
+text = "read session connection string"
+
+[node name="ItemList" type="Tree" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 37.0
+offset_right = -465.0
+grow_horizontal = 2
+grow_vertical = 2
+hide_root = true
+script = ExtResource("3_1m0p6")
+
+[node name="uname" type="LineEdit" parent="."]
+layout_mode = 0
+offset_left = 555.0
+offset_top = 62.0
+offset_right = 800.0
+offset_bottom = 93.0

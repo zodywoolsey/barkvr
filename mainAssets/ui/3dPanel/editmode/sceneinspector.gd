@@ -20,16 +20,16 @@ func _ready():
 func init():
 	tree.clear()
 	tree_root = tree.create_item()
-	tree_root.set_text(0,"selected items")
+	tree_root.set_text(0,"")
 
-func setItems(items:Array):
-	init()
-	var item : Node3D
-	for i in range(items.size()):
-		item = items[i]
-		var tmp = tree.create_item(tree_root)
-		tmp.set_text(0,item.name)
-		tmp.set_metadata(0,item)
+#func setItems(items:Array):
+#	init()
+#	var item : Node
+#	for i in range(items.size()):
+#		item = items[i]
+#		var tmp = tree.create_item(tree_root)
+#		tmp.set_text(0,item.name)
+#		tmp.set_metadata(0,item)
 
 func setRoot(item:Node):
 	tree.clear()
