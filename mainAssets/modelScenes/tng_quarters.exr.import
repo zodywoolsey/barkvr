@@ -1,0 +1,26 @@
+[remap]
+
+importer="2d_array_texture"
+type="CompressedTexture2DArray"
+uid="uid://dnp6mdsnfy4d6"
+path="res://.godot/imported/tng_quarters.exr-9b233ff52d40af6720e86d1465f22b12.ctexarray"
+metadata={
+"vram_texture": false
+}
+
+[deps]
+
+source_file="res://mainAssets/modelScenes/tng_quarters.exr"
+dest_files=["res://.godot/imported/tng_quarters.exr-9b233ff52d40af6720e86d1465f22b12.ctexarray"]
+
+[params]
+
+compress/mode=3
+compress/high_quality=false
+compress/lossy_quality=0.7
+compress/hdr_compression=1
+compress/channel_pack=1
+mipmaps/generate=false
+mipmaps/limit=-1
+slices/horizontal=1
+slices/vertical=2

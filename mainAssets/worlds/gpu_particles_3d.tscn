@@ -1,0 +1,52 @@
+[gd_scene load_steps=6 format=3 uid="uid://dysa0gu1dtgw"]
+
+[sub_resource type="Curve" id="Curve_v24mi"]
+min_value = -1.0
+_data = [Vector2(0, -1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_spfds"]
+width = 32
+curve = SubResource("Curve_v24mi")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_s41rh"]
+emission_shape = 3
+emission_box_extents = Vector3(1, 0, 1)
+spread = 180.0
+gravity = Vector3(0, 0, 0)
+angle_min = -720.0
+angle_max = 720.0
+color = Color(0.6, 0, 1, 1)
+hue_variation_min = -0.1
+hue_variation_max = 0.1
+hue_variation_curve = SubResource("CurveTexture_spfds")
+turbulence_enabled = true
+turbulence_noise_scale = 5.0
+collision_mode = 1
+collision_friction = 0.0
+collision_bounce = 0.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_li4h8"]
+transparency = 1
+cull_mode = 2
+shading_mode = 0
+vertex_color_use_as_albedo = true
+disable_receive_shadows = true
+
+[sub_resource type="QuadMesh" id="QuadMesh_3gk8i"]
+material = SubResource("StandardMaterial3D_li4h8")
+size = Vector2(0.02, 0.02)
+
+[node name="GPUParticles3D" type="GPUParticles3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 15, 0)
+extra_cull_margin = 16384.0
+ignore_occlusion_culling = true
+amount = 1000000
+lifetime = 5.0
+preprocess = 20.0
+speed_scale = 0.2
+explosiveness = 0.1
+fixed_fps = 60
+transform_align = 2
+process_material = SubResource("ParticleProcessMaterial_s41rh")
+draw_pass_1 = SubResource("QuadMesh_3gk8i")
