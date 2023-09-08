@@ -1,36 +1,40 @@
 extends Node
 
-# todo: Login user
-# todo: display room list
-# todo: user clicks on room to open room
-# todo: displays button for joining the session
-# todo: when attempting session join, look for nearest barksession room event
-# todo: if room event is alive, find all following and attempt to create data channels for each
-# todo: if room event is dead, send new offer event and startup the world
+# todo: USER FLOW STUFF:
+# 			user clicks on room to open room
+# 			displays button for joining the session
+# 			when attempting session join, look for nearest barksession room event
+# 			if room event is alive, find all following and attempt to create data channels for each
+# 			if room event is dead, send new offer event and startup the world
 
 # todo: for initial start of world:
-# todo: create a starter journal that will generate the base, which should cause each object to have an id
-# todo: for ids, just increment unsigned int. Use int in object metadata and in global journal lookup dict
-# todo: use dictionary with unsigned int keys for each tick as journal entries for now
-# todo: 120hz tickrate for journal, send events that happened since last tick, enforce ordered (default)
+# 			create a starter journal that will generate the base, which should cause each object to have an id
+# 			for ids, just increment unsigned int. Use int in object metadata and in global journal lookup dict
+# 			use dictionary with unsigned int keys for each tick as journal entries for now
+# 			120hz tickrate for journal, send events that happened since last tick, enforce ordered (default)
 
-# idea - voip is secondary task
-# idea - 1: sync player positions
-# idea - 2: login
-# idea - 3: session handshake
-# idea - 4: make sure still syncing pos
-# idea - 5: setup basic journal and oid generation
-# idea - 6: sync basic journal
+# idea for networking:
+# 			- voip is secondary task
+# 			- 1: sync player positions
+# 			- 2: login
+# 			- 3: session handshake
+# 			- 4: make sure still syncing pos
+# 			- 5: setup basic journal and oid generation
+# 			- 6: sync basic journal
 
 var peer : WebRTCPeerConnection = WebRTCPeerConnection.new()
 
 var channels : Array[WebRTCDataChannel]
+
+var peers : Array[WebRTCPeerConnection]
 
 var local_description : String
 
 var candidates : Array
 
 var timer :float = 0
+
+var uname :String = ""
 
 func get_clipboard_connection_string():
 	var tmp = str({
@@ -58,25 +62,29 @@ func _ready():
 func _process(delta):
 	timer += delta
 	peer.poll()
-	if channels.size() > 0:
-		channels[0].poll()
-		if channels[0].get_ready_state() == WebRTCDataChannel.STATE_OPEN:
-			while channels[0].get_available_packet_count() > 0:
-				print(get_path(), " received: ", str(channels[0].get_var()))
+	for chan in channels:
+		chan.poll()
+		if chan.get_ready_state() == WebRTCDataChannel.STATE_OPEN:
+			while chan.get_available_packet_count() > 0:
+				print(" received: ", str(chan.get_var()))
 	if timer > .1:
-		if !channels.size() > 0:
-			print("attempting to create data channel")
-			channels.append(peer.create_data_channel("bark-chat", {'id':1,'negotiated': true}))
-			channels.append(peer.create_data_channel("bark-chat", {'id':1,'negotiated': true}))
-			print('channels created')
-			peer.create_offer()
+		if !peers.size() > 0:
+			pass
+#			print("attempting to create data channel")
+#			peers.append(peer.create_data_channel("bark-chat", {'id':1,'negotiated': true}))
+#			peers.append(peer.create_data_channel("bark-chat", {'id':1,'negotiated': true}))
+#			peers.append(peer.create_data_channel("bark-chat", {'id':1,'negotiated': true}))
+#			peers.append(peer.create_data_channel("bark-chat", {'id':1,'negotiated': true}))
+#			print('channels created')
+#			peer.create_offer()
 		else:
-			var tmpplayer = get_tree().get_first_node_in_group("player")
-			if tmpplayer and channels[0].get_ready_state() == 1:
-				channels[0].put_var({
-					'p_id': OS.get_unique_id(),
-					'p_pos': tmpplayer.global_position,
-				})
+			for chan in channels:
+				if chan.get_ready_state() == 1:
+					channels[0].put_var({
+						'p_id': OS.get_unique_id(),
+						'uname': uname,
+#							'p_pos': tmpplayer.global_position,
+					})
 		timer = 0.0
 
 func initwebrtc():

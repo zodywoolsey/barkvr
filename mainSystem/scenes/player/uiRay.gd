@@ -10,6 +10,8 @@ var hovertimer := 0.0
 
 func _process(delta):
 	procrayvis(delta)
+	if Input.is_action_just_released("scrollup"):
+		scrollup()
 func _physics_process(delta):
 	currentAction = ""
 	var actioncount = 0
@@ -57,6 +59,16 @@ func _physics_process(delta):
 				prevHover = null
 	label.text = currentAction
 #	print(currentAction)
+
+func scrollup():
+	if is_colliding():
+		var tmpcol = get_collider()
+		if tmpcol.get_collision_layer_value(3) and tmpcol.has_method("laserInput"):
+			tmpcol.laserInput({
+				"position": get_collision_point(),
+				"pressed": true
+				})
+			print('ui click')
 
 func click():
 	isclick = false

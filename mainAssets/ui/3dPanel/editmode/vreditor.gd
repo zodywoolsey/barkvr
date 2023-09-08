@@ -18,11 +18,12 @@ func _ready():
 	gdscript_ui = gdscript_scene.instantiate()
 	gdscript.set_ui(gdscript_ui)
 	scene_inspector.selected.connect(func(item):
-		if attributes_ui and item is Node3D:
-			attributes_ui.set_target(item)
-		if gdscript_ui and item is Node3D:
-			gdscript_ui.set_target(item)
-		)
+		if is_instance_valid(item):
+			if attributes_ui and item:
+				attributes_ui.set_target(item)
+			if gdscript_ui and item:
+				gdscript_ui.set_target(item)
+			)
 	
 	LocalGlobals.editor_refs['inspector'] = scene_inspector
 	LocalGlobals.editor_refs['attributespanel'] = attributes

@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://cw57xg0xewjcv"]
+[gd_scene load_steps=3 format=3 uid="uid://cw57xg0xewjcv"]
 
 [ext_resource type="Script" path="res://mainAssets/ui/3dPanel/editmode/gdscriptpanel.gd" id="1_g4jiw"]
+[ext_resource type="Script" path="res://mainAssets/ui/3dPanel/editmode/scriptPlaceholder.gd" id="2_558wm"]
 
 [node name="gdscriptpanel" type="Control"]
 layout_mode = 3
@@ -20,6 +21,7 @@ grow_horizontal = 2
 grow_vertical = 2
 scroll_smooth = true
 line_folding = true
+script = ExtResource("2_558wm")
 
 [node name="Button" type="Button" parent="."]
 layout_mode = 1

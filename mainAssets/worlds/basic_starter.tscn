@@ -36,10 +36,13 @@ func _ready():
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_csaaw"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_20xwd"]
-size = Vector3(10, 0.1, 10)
+size = Vector3(100, 0.25, 100)
 
 [sub_resource type="BoxMesh" id="BoxMesh_2ok1k"]
-size = Vector3(10, 0.1, 10)
+size = Vector3(100, 0.25, 100)
+subdivide_width = 32
+subdivide_height = 32
+subdivide_depth = 32
 
 [node name="basic starter" type="Node3D"]
 
@@ -48,7 +51,7 @@ environment = SubResource("Environment_n00cx")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(-0.865617, -0.417461, 0.276465, -0.267145, 0.852051, 0.450158, -0.423486, 0.315808, -0.849073, 0, 1.72518, 0)
-light_energy = 0.112
+light_energy = 0.5
 shadow_enabled = true
 
 [node name="playerSpawnLocation" parent="." instance=ExtResource("1_srupi")]
@@ -61,9 +64,10 @@ script = SubResource("GDScript_cwteg")
 transform = Transform3D(-0.99981, -0.0194942, 1.70423e-09, -0.0194942, 0.99981, -8.74062e-08, 0, -8.74228e-08, -1, 0, -10.7255, -0.307133)
 shape = SubResource("WorldBoundaryShape3D_csaaw")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="."]
-collision_layer = 7
-collision_mask = 7
+[node name="StaticBody3D" type="RigidBody3D" parent="."]
+collision_layer = 9
+collision_mask = 9
+freeze = true
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
 shape = SubResource("BoxShape3D_20xwd")
