@@ -23,6 +23,7 @@ signal got_register_available(result:int,response_code:int,headers:PackedStringA
 signal posted_register_email_requesttoken(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray)
 signal posted_register_msisdn_requesttoken(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray)
 signal placed_room_state(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray)
+signal placed_room_send(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray)
 signal got_turn_server(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray)
 
 signal user_logged_in(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray)
@@ -608,11 +609,18 @@ func post_register_msisdn_requesttoken(base_url:String='', headers:Array=[], cli
 	str(bodyDict)
 	)
 
-## GET /_matrix/client/v3/rooms/{roomId}/messages
-## accepts: {base_url:String:fp, headers:Array:fp, roomId:String:fp, dir:String:qp, filter:String:qp, from:String:qp, limit:int:qp, to:String:qp}
-## https://spec.matrix.org/v1.7/client-server-api/#get_matrixclientv3roomsroomidmessages
+## GET /_matrix/client/v3/rooms/{roomId}/messages [br][br]
+## *base_url: the url of the matrix homeserver to use [br]
+## *headers: an array of the headers to send with the request [br]
+## *roomId: string of the room id to get messages from [br]
+## *dir: direction. Options are f (chronological order) or b (reverse chronological order) starting at the "from" token if it's provided. [br]
+## filter: A JSON RoomEventFilter to filter returned events with. [br]
+## from: The token to start returning events from. [br]
+## limit: The maximum number of events to return. Default: 10. [br]
+## to: The token to stop returning events at. [br]
+## [url=https://spec.matrix.org/v1.7/client-server-api/#get_matrixclientv3roomsroomidmessages]matrix documentation page[/url]
 func get_room_messages(base_url:String='', headers:Array=[], roomId: String = '', dir: String = '', filter:String = '', from:String = '', limit:int = -99, to:String = ''):
-	assert(roomId=='',"get_room_messages: roomId is required")
+	assert(roomId!='',"get_room_messages: roomId is required")
 	if dir == '':
 		dir = 'b'
 	if headers.is_empty():
@@ -630,24 +638,30 @@ func get_room_messages(base_url:String='', headers:Array=[], roomId: String = ''
 			print("error getting room_messages:\n	result: {0}\n	response_code: {1}\n".format([result,response_code]))
 		client.queue_free()
 		)
-	# build request body with provided info
-	var bodyDict = {}
+	# build query params
+	var qp = []
 	if dir!='':
-		bodyDict["dir"] = dir
+		qp.append("dir="+dir)
 	if filter!='':
-		bodyDict["filter"] = filter
+		qp.append("filter="+filter)
 	if from!='':
-		bodyDict["from"] = from
+		qp.append("from="+from)
 	if limit!=-99:
-		bodyDict["limit"] = limit
+		qp.append("limit="+str(limit))
 	if to!='':
-		bodyDict["to"] = to
+		qp.append("to="+to)
+	# construct qp string
+	var qpstring = ''
+	if qp.size()>0:qpstring+='?'
+	for i in qp.size():
+		if i != 0:
+			qpstring += '&'
+		qpstring+=qp[i]
 	# make request
 	res = client.request(
-	base_url+"_matrix/client/v3/rooms/"+roomId+"/messages",
+	base_url+"_matrix/client/v3/rooms/"+roomId+"/messages"+qpstring,
 	headers,
-	HTTPClient.METHOD_GET,
-	str(bodyDict)
+	HTTPClient.METHOD_GET
 	)
 
 ## /_matrix/client/v3/rooms/{roomId}/state/{eventType}/{stateKey}
@@ -679,6 +693,39 @@ func put_room_state(base_url:String='', headers:Array=[], room_id:String='', eve
 	# make request
 	res = client.request(
 	base_url+"_matrix/client/v3/rooms/"+room_id+"/state/"+event_type+"/"+state_key,
+	headers,
+	HTTPClient.METHOD_PUT,
+	str(bodyDict)
+	)
+
+## /_matrix/client/v3/rooms/{roomId}/send/{eventType}/{txnId}
+## accepts: {base_url:String:fp, headers:Array:fp, room_id:String:qp, event_type:String:qp, txn_id:String:qp
+## https://spec.matrix.org/v1.7/client-server-api/#put_matrixclientv3roomsroomidsendeventtypetxnid
+func put_room_send(base_url:String='', headers:Array=[], room_id:String='', event_type:String='', txn_id:String='', bodyDict:Dictionary={}):
+	# check for required fields
+	assert(room_id!='',"put_room_send: room_id is required")
+	assert(event_type!='',"put_room_send: event_type is required")
+	assert(txn_id!='',"put_room_send: txn_id is required")
+	if headers.is_empty():
+		push_warning("put_room_send: headers are required to be set for this call, due to authentication requirements")
+	# check header array for auth header
+	assert(str(headers).contains("Authorization"),"put_room_send: headers must contain an Authorization header")
+	# build request body with provided info
+	var res
+	var client = HTTPRequest.new()
+	print("putting room_send for: ",room_id)
+	client.use_threads = false
+	Vector.requestParent.add_child(client)
+	client.request_completed.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
+		if result == HTTPRequest.RESULT_SUCCESS:
+			placed_room_send.emit(result,response_code,headers,body)
+		else:
+			print("error putting room_send:\n	result: {0}\n	response_code: {1}\n".format([result,response_code]))
+		client.queue_free()
+		)
+	# make request
+	res = client.request(
+	base_url+"_matrix/client/v3/rooms/"+room_id+"/send/"+event_type+"/"+txn_id,
 	headers,
 	HTTPClient.METHOD_PUT,
 	str(bodyDict)

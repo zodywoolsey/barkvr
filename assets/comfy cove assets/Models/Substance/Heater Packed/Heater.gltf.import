@@ -1,0 +1,41 @@
+[remap]
+
+importer="scene"
+importer_version=1
+type="PackedScene"
+uid="uid://bqs4ewoxhf4bl"
+path="res://.godot/imported/Heater.gltf-e115796bdf1d96eba2234a3921b2d93a.scn"
+
+[deps]
+
+source_file="res://assets/comfy cove assets/Models/Substance/Heater Packed/Heater.gltf"
+dest_files=["res://.godot/imported/Heater.gltf-e115796bdf1d96eba2234a3921b2d93a.scn"]
+
+[params]
+
+nodes/root_type="Node3D"
+nodes/root_name="Root Scene"
+nodes/apply_root_scale=false
+nodes/root_scale=1.0
+meshes/ensure_tangents=true
+meshes/generate_lods=true
+meshes/create_shadow_meshes=false
+meshes/light_baking=1
+meshes/lightmap_texel_size=0.2
+skins/use_named_skins=true
+animation/import=true
+animation/fps=30
+animation/trimming=false
+animation/remove_immutable_tracks=true
+import_script/path="res://addons/unidot/post_import_unity_model.gd"
+_subresources={
+"animations": {},
+"nodes": {
+"PATH:AnimationPlayer": {
+"optimizer/enabled": true,
+"optimizer/max_angular_error": 0.00277778,
+"optimizer/max_linear_error": 0.5
+}
+}
+}
+gltf/embedded_image_handling=1

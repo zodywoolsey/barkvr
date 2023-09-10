@@ -31,6 +31,7 @@ signal got_room_state(data)
 signal update_room(data)
 signal synced(data)
 signal got_turn_server(data)
+signal got_room_messages(data)
 
 @onready var requestParent = get_tree().get_first_node_in_group("requestParent")
 
@@ -76,6 +77,16 @@ func _ready():
 			"body": msgJson
 		})
 		)
+	api.got_room_messages.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
+		var msg = body.get_string_from_ascii()
+		var msgJson = JSON.parse_string(msg)
+		got_room_messages.emit({
+			"result_code": result,
+			"response_code": response_code,
+			"headers": headers,
+			"body": msgJson
+		})
+		)
 	api.synced.connect(func(result:int,response_code:int,header:PackedStringArray,body:PackedByteArray):
 		var msg = body.get_string_from_ascii()
 		var msgJson = JSON.parse_string(msg)
@@ -87,6 +98,19 @@ func _ready():
 		print("turn server:\n",str(msgJson),"\n")
 		got_turn_server.emit(msgJson)
 		)
+
+func send_room_event(room_id:String, event_type:String, body:Dictionary):
+	api.put_room_send(
+		base_url,
+		headers,
+		room_id,
+		event_type,
+		str( str(OS.get_unique_id(),Time.get_unix_time_from_system()).hash()),
+		body
+		)
+
+func get_room_messages(room_id:String):
+	api.get_room_messages(base_url,headers,room_id,'b','','',100)
 
 func connect_to_homeserver(homeServer:String = ""):
 	var homeserverurl = "https://{0}".format([

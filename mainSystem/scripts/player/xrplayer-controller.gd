@@ -39,6 +39,9 @@ var grab_point := Vector3()
 
 
 func _ready():
+	property_list_changed.connect(func():
+		print('prop changed')
+		)
 	if !LocalGlobals.vr_supported:
 		xr_camera_3d.position.y = .9
 		righthand.position = Vector3(.2,.6,-.2)
@@ -145,16 +148,19 @@ func _input(event):
 		rotate_y(-event.relative.x*(MOUSE_SPEED/100))
 		xr_camera_3d.rotate_x(-event.relative.y*(MOUSE_SPEED/100))
 	if event is InputEventKey:
-		if event.keycode == KEY_ESCAPE and event.pressed == true:
-			if LocalGlobals.player_state == LocalGlobals.PLAYER_STATE_TYPING:
-				LocalGlobals.player_state = LocalGlobals.PLAYER_STATE_PLAYING
+		if event.pressed:
+			if (event.keycode == KEY_ENTER or event.keycode == KEY_KP_ENTER):
+				if LocalGlobals.player_state == LocalGlobals.PLAYER_STATE_TYPING:
+					LocalGlobals.player_state = LocalGlobals.PLAYER_STATE_PLAYING
+					LocalGlobals.emit_signal("playerreleaseuifocus")
+			elif event.keycode == KEY_ESCAPE:
+				LocalGlobals.player_state == LocalGlobals.PLAYER_STATE_PAUSED
 				LocalGlobals.emit_signal("playerreleaseuifocus")
-			elif Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 				Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-				LocalGlobals.player_state = LocalGlobals.PLAYER_STATE_PAUSED
-			else:
-				Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-				LocalGlobals.player_state = LocalGlobals.PLAYER_STATE_PLAYING
+	if event is InputEventMouseButton:
+		if event.pressed:
+			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+			LocalGlobals.player_state = LocalGlobals.PLAYER_STATE_PLAYING
 #		if event.is_action("ui_accept"):
 #			if LocalGlobals.player_state == LocalGlobals.PLAYER_STATE_TYPING:
 #				LocalGlobals.player_state = LocalGlobals.PLAYER_STATE_PLAYING

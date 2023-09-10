@@ -1,0 +1,508 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://c0nfylg33vufv"]
+
+[resource]
+resource_name = "Water"
+depth_draw_mode = 1
+roughness = 0.5
+uv1_scale = Vector3(1, 1, 0)
+metadata/unidot_keys = {
+"": {},
+"disabledShaderPasses": [],
+"m_CorrespondingSourceObject": [null, 0, null, null],
+"m_CustomRenderQueue": 2600,
+"m_DoubleSidedGI": 0,
+"m_EnableInstancingVariants": 0,
+"m_LightmapFlags": 4,
+"m_Name": "Water",
+"m_ObjectHideFlags": 0,
+"m_PrefabAsset": [null, 0, null, null],
+"m_PrefabInstance": [null, 0, null, null],
+"m_SavedProperties": {
+"m_Colors": [{
+"_AngleTint": Color(1, 1, 1, 1)
+}, {
+"_BackfaceTint": Color(1, 1, 1, 1)
+}, {
+"_BlendNoiseScale": Color(2, 2, 0, 0)
+}, {
+"_CausticsColor": Color(1, 1, 1, 1)
+}, {
+"_CausticsDistortionSpeed": Color(0.1, 0.1, 0, 0)
+}, {
+"_CausticsRotation": Color(-20, 0, 20, 0)
+}, {
+"_Color": Color(1, 1, 1, 1)
+}, {
+"_DetailBaseColorTint": Color(1, 1, 1, 1)
+}, {
+"_DetailScroll": Color(0, 0, 0, 0)
+}, {
+"_EmissionColor": Color(0, 0, 0, 1)
+}, {
+"_EmissionMapScroll": Color(0, 0, 0, 0)
+}, {
+"_FlowMapScale": Color(2, 2, 0, 0)
+}, {
+"_FoamColor": Color(1, 1, 1, 1)
+}, {
+"_FoamNoiseTexScale": Color(3, 3, 0, 0)
+}, {
+"_FoamNoiseTexScroll": Color(0, 0.1, 0, 0)
+}, {
+"_FoamTexScale": Color(5, 5, 0, 0)
+}, {
+"_FoamTexScroll": Color(0.1, -0.1, 0, 0)
+}, {
+"_FogTint": Color(0, 0, 0, 1)
+}, {
+"_LightDir": Color(0, 0.75, 1, 0)
+}, {
+"_MainTexScroll": Color(0, 0.1, 0, 0)
+}, {
+"_NoiseTexScale": Color(3, 3, 0, 0)
+}, {
+"_NoiseTexScroll": Color(0, 0.1, 0, 0)
+}, {
+"_NormalMapScale0": Color(3, 3, 0, 0)
+}, {
+"_NormalMapScale1": Color(4, 4, 0, 0)
+}, {
+"_NormalMapScroll0": Color(0.1, 0.1, 0, 0)
+}, {
+"_NormalMapScroll1": Color(-0.1, 0.1, 0, 0)
+}, {
+"_Offset": Color(0, 1, 0, 0)
+}, {
+"_ReflCubeRotation": Color(0, 0, 0, 0)
+}, {
+"_ReflTint": Color(1, 1, 1, 1)
+}, {
+"_SpecTint": Color(1, 1, 1, 1)
+}, {
+"_VoronoiOffset": Color(0, 1, 0, 0)
+}, {
+"_VoronoiScale": Color(2, 2, 0, 0)
+}, {
+"_VoronoiScroll": Color(0, -0.25, 0, 0)
+}],
+"m_Floats": [{
+"_AreaLitRoughnessMult": 1
+}, {
+"_AreaLitStrength": 1
+}, {
+"_AreaLitToggle": 0
+}, {
+"_BackfaceReflections": 1
+}, {
+"_BaseColorDistortionStrength": 0.1
+}, {
+"_BaseColorOffset": 0
+}, {
+"_BaseColorStochasticToggle": 0
+}, {
+"_BlendNoiseSource": 0
+}, {
+"_BumpScale": 1
+}, {
+"_CausticsDisp": 0.25
+}, {
+"_CausticsDistortion": 0.1
+}, {
+"_CausticsDistortionScale": 0.2
+}, {
+"_CausticsFade": 5
+}, {
+"_CausticsOpacity": 0.3
+}, {
+"_CausticsPower": 1.82
+}, {
+"_CausticsScale": 7.5
+}, {
+"_CausticsSpeed": 3
+}, {
+"_CausticsSurfaceFade": 100
+}, {
+"_CausticsThreshold": 0
+}, {
+"_CausticsToggle": 1
+}, {
+"_CullMode": 2
+}, {
+"_Cutoff": 0.5
+}, {
+"_DepthEffects": 1
+}, {
+"_DetailNormalMapScale": 1
+}, {
+"_DetailNormalStrength": 1
+}, {
+"_DetailTextureMode": 0
+}, {
+"_DistortionStrength": 0.5
+}, {
+"_DstBlend": 0
+}, {
+"_EdgeFadeOffset": 48.87
+}, {
+"_EdgeFadePower": 200
+}, {
+"_EdgeFadeSSR": 0.1
+}, {
+"_EdgeFadeToggle": 1
+}, {
+"_EmissionMapStochasticToggle": 0
+}, {
+"_EmissionToggle": 0
+}, {
+"_FlowMapUV": 0
+}, {
+"_FlowSpeed": 0.25
+}, {
+"_FlowStrength": 0.1
+}, {
+"_FlowToggle": 1
+}, {
+"_FoamCrestStrength": 1
+}, {
+"_FoamCrestThreshold": 0.5
+}, {
+"_FoamDistortionStrength": 0.1
+}, {
+"_FoamNoiseTexCrestStrength": 1.1
+}, {
+"_FoamNoiseTexStrength": 0
+}, {
+"_FoamNormalStrength": 4
+}, {
+"_FoamNormalToggle": 1
+}, {
+"_FoamOffset": 0
+}, {
+"_FoamOpacity": 0.3
+}, {
+"_FoamPower": 200
+}, {
+"_FoamRoughness": 0.6
+}, {
+"_FoamStochasticToggle": 0
+}, {
+"_FoamToggle": 1
+}, {
+"_FogPower": 3.78
+}, {
+"_FogToggle": 1
+}, {
+"_GlossMapScale": 1
+}, {
+"_Glossiness": 0.5
+}, {
+"_GlossyReflections": 1
+}, {
+"_Metallic": 0
+}, {
+"_Mode": 0
+}, {
+"_NoiseTexBlur": 0.8
+}, {
+"_Normal0StochasticToggle": 0
+}, {
+"_Normal1StochasticToggle": 0
+}, {
+"_Normal1Toggle": 1
+}, {
+"_NormalMapOffset0": 0
+}, {
+"_NormalMapOffset1": 0
+}, {
+"_NormalStr0": 0.1
+}, {
+"_NormalStr1": 0.2
+}, {
+"_OcclusionStrength": 1
+}, {
+"_Opacity": 1
+}, {
+"_OpaqueLights": 1
+}, {
+"_Parallax": 0.02
+}, {
+"_RainToggle": 1
+}, {
+"_ReflStrength": 1
+}, {
+"_Reflections": 1
+}, {
+"_RippleScale": 230
+}, {
+"_RippleSpeed": 1
+}, {
+"_RippleStr": 0.13
+}, {
+"_Rotation0": 0
+}, {
+"_Rotation1": 0
+}, {
+"_Roughness": 0
+}, {
+"_SSR": 0
+}, {
+"_SSRStrength": 1
+}, {
+"_SmoothnessTextureChannel": 0
+}, {
+"_SpecStrength": 1
+}, {
+"_Specular": 1
+}, {
+"_SpecularHighlights": 1
+}, {
+"_SrcBlend": 1
+}, {
+"_StencilRef": 65
+}, {
+"_TessDistMax": 50
+}, {
+"_TessDistMin": 25
+}, {
+"_TessMax": 9
+}, {
+"_TessMin": 1
+}, {
+"_TessellationOffsetMask": 1
+}, {
+"_TransparencyMode": 2
+}, {
+"_Turbulence": 1
+}, {
+"_TurbulenceScale": 3
+}, {
+"_TurbulenceSpeed": 0.3
+}, {
+"_UVSec": 0
+}, {
+"_VertOffsetMode": 2
+}, {
+"_VertRemapMax": 1
+}, {
+"_VertRemapMin": -1
+}, {
+"_VoronoiSpeed": 1.5
+}, {
+"_VoronoiWaveHeight": 1
+}, {
+"_WaveDirection0": 0
+}, {
+"_WaveDirection1": 335
+}, {
+"_WaveDirection2": 13
+}, {
+"_WaveHeight": 1
+}, {
+"_WaveScale0": 4
+}, {
+"_WaveScale1": 2
+}, {
+"_WaveScale2": 1
+}, {
+"_WaveScaleGlobal": 0.05
+}, {
+"_WaveSpeed0": 1
+}, {
+"_WaveSpeed1": 1.1
+}, {
+"_WaveSpeed2": 1.2
+}, {
+"_WaveSpeedGlobal": 0.1
+}, {
+"_WaveStrength0": 0.1
+}, {
+"_WaveStrength1": 0.1
+}, {
+"_WaveStrength2": 4
+}, {
+"_WaveStrengthGlobal": 0.06
+}, {
+"_ZWrite": 1
+}],
+"m_TexEnvs": [{
+"_AreaLitMask": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 0, null, null]
+}
+}, {
+"_BlendNoise": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 2800000, "352f401c145570f488487622cd5fdaa6", 3]
+}
+}, {
+"_BumpMap": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 0, null, null]
+}
+}, {
+"_CausticsTex": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 0, null, null]
+}
+}, {
+"_DetailAlbedoMap": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 0, null, null]
+}
+}, {
+"_DetailBaseColor": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 0, null, null]
+}
+}, {
+"_DetailMask": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 0, null, null]
+}
+}, {
+"_DetailNormal": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 0, null, null]
+}
+}, {
+"_DetailNormalMap": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 0, null, null]
+}
+}, {
+"_EmissionMap": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 0, null, null]
+}
+}, {
+"_FlowMap": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 2800000, "923a20e8c8f439648bdf7025c790db42", 3]
+}
+}, {
+"_FoamNoiseTex": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 2800000, "dfbb7eeed695dc14d82b08d887041406", 3]
+}
+}, {
+"_FoamTex": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 2800000, "6c6c8f6678ed78e4eb543b06dcbc5b8a", 3]
+}
+}, {
+"_LightMesh": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 0, null, null]
+}
+}, {
+"_LightTex0": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 0, null, null]
+}
+}, {
+"_LightTex1": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 0, null, null]
+}
+}, {
+"_LightTex2": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 0, null, null]
+}
+}, {
+"_LightTex3": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 0, null, null]
+}
+}, {
+"_MainTex": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 0, null, null]
+}
+}, {
+"_MetallicGlossMap": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 0, null, null]
+}
+}, {
+"_MetallicMap": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 0, null, null]
+}
+}, {
+"_NoiseTex": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 2800000, "f0f3d4dc7c5a4f74c8417ea2f593fa7b", 3]
+}
+}, {
+"_NoiseTexSSR": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 2800000, "b7359cc7e3e84444b88656ff6c166220", 3]
+}
+}, {
+"_NormalMap0": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 2800000, "7ad1e725b3c53a34dae68f092ff297cf", 3]
+}
+}, {
+"_NormalMap1": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 2800000, "8c0fe4ffb1eaa3748a17395d8c9bd71a", 3]
+}
+}, {
+"_OcclusionMap": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 0, null, null]
+}
+}, {
+"_ParallaxMap": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 0, null, null]
+}
+}, {
+"_ReflCube": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 0, null, null]
+}
+}, {
+"_RoughnessMap": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 0, null, null]
+}
+}],
+"serializedVersion": 3
+},
+"m_Shader": [null, 4800000, "7e018b47cc1d059439656129107b3445", 3],
+"m_ShaderKeywords": "_CAUSTICS_ON _DEPTHFOG_ON _DEPTH_EFFECTS_ON _EDGEFADE_ON _FLOW_ON",
+"serializedVersion": 6,
+"stringTagMap": []
+}

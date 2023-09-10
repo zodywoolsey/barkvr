@@ -52,15 +52,13 @@ func _physics_process(delta):
 	var bass = BarkHelpers.float64_array_size(PackedFloat64Array([norm[0],norm[1]]))
 	var tmpspeed = lerpf(
 		speed_scale,
-		1.0-bass,
+		a*20,
 		.6
 		)
 
 
 	if is_nan(tmpspeed):
-		tmpspeed = .2
-	
-	clampf(tmpspeed, .2, 1.5)
+		tmpspeed = .1
 	
 	speed_scale = tmpspeed
 

@@ -1,9 +1,13 @@
 extends Node
 
-func node_to_var(node:Node, type:String=''):
+func node_to_var(node:Node, type:String='', cust_name:String=''):
 	var dict:Dictionary = {}
 	if type:
 		dict['asset_type'] = type
+	if cust_name:
+		dict['name'] = cust_name
+	else:
+		dict['name'] = node.name
 	dict['node'] = var_to_bytes_with_objects(node)
 	dict['groups'] = PackedStringArray()
 	for group in node.get_groups():
@@ -27,7 +31,8 @@ func var_to_node(item:String='', dict:Dictionary={}):
 		if dict.has('children'):
 			for child in dict.children:
 				node.add_child(var_to_node('',child))
-		print(node)
+		if dict.has('name'):
+			node.name = dict.name
 		return node
 
 

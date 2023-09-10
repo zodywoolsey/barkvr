@@ -1,0 +1,110 @@
+﻿
+using UdonSharp;
+using UnityEngine;
+using VRC.SDK3.Components;
+using VRC.SDKBase;
+using VRC.Udon;
+
+public class PullerTrigger : UdonSharpBehaviour
+{
+    [Header("Internal Stuff no touchies")]
+    public Transform pulled;
+    public Transform ticktrigger;
+    public VRCPickup pickup;
+    Vector3 basePos;
+
+    Vector3 velocity;
+
+    bool inUse = false;
+    bool dropped = false;
+    bool held = false;
+
+    [Header("Objects to Toggle")]
+    public GameObject[] toToggle;
+
+    [Header("Objects to Enable")]
+    public GameObject[] toEnable;
+
+    [Header("Objects to Disable")]
+    public GameObject[] toDisable;
+
+    [Header("Sound")]
+    public AudioSource click;
+
+    private void Start()
+    {
+        basePos = pulled.position;
+    }
+
+    public override void OnPickup()
+    {
+        inUse= true;
+        dropped= false;
+    }
+
+    public override void OnDrop()
+    {
+        inUse= false;
+        dropped= true;
+    }
+
+    private void Update()
+    {
+        if (inUse)
+        {
+            if (pulled.position.y < ticktrigger.position.y)
+            {
+                TickToggle();
+            }
+        }
+
+        if (dropped)
+        {
+            pulled.position = Vector3.SmoothDamp(pulled.position, basePos, ref velocity, .05f);
+            if (pulled.position == basePos)
+            {
+                dropped= false;
+            }
+        }
+
+        if (!inUse && !dropped)
+        {
+            if (pulled.position.y > ticktrigger.position.y + 0.025f)
+            {
+                inUse= true;
+            }
+        }
+    }
+
+    private void TickToggle()
+    {
+        inUse= false;
+
+        if(toToggle != null)
+        {
+            for (int i = 0; i < toToggle.Length; i++)
+            {
+                toToggle[i].SetActive(!toToggle[i].activeSelf);
+            }
+        }
+        
+        if (toEnable != null)
+        {
+            for (int i = 0; i < toEnable.Length; i++)
+            {
+                toEnable[i].SetActive(true);
+            }
+        }
+        
+        if (toDisable != null)
+        {
+            for (int i = 0; i < toDisable.Length; i++)
+            {
+                toDisable[i].SetActive(false);
+            }
+        }
+        
+        click.Play();
+        Networking.LocalPlayer.PlayHapticEventInHand(pickup.currentHand,.25f,1,40);
+    }
+}
