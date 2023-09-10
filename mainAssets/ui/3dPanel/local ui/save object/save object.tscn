@@ -36,6 +36,7 @@ expand_to_text_length = true
 
 [node name="load" type="Button" parent="HBoxContainer/VBoxContainer"]
 layout_mode = 2
+focus_mode = 0
 text = "load"
 
 [node name="ItemList" type="ItemList" parent="HBoxContainer"]

@@ -12,6 +12,8 @@ func _process(delta):
 	procrayvis(delta)
 	if Input.is_action_just_released("scrollup"):
 		scrollup()
+	if Input.is_action_just_released("scrolldown"):
+		scrolldown()
 func _physics_process(delta):
 	currentAction = ""
 	var actioncount = 0
@@ -66,9 +68,31 @@ func scrollup():
 		if tmpcol.get_collision_layer_value(3) and tmpcol.has_method("laserInput"):
 			tmpcol.laserInput({
 				"position": get_collision_point(),
-				"pressed": true
+				"pressed": true,
+				"action": "scrollup"
 				})
-			print('ui click')
+			tmpcol.laserInput({
+				"position": get_collision_point(),
+				"pressed": false,
+				"action": "scrollup"
+				})
+			print('ui scroll')
+
+func scrolldown():
+	if is_colliding():
+		var tmpcol = get_collider()
+		if tmpcol.get_collision_layer_value(3) and tmpcol.has_method("laserInput"):
+			tmpcol.laserInput({
+				"position": get_collision_point(),
+				"pressed": true,
+				"action": "scrolldown"
+				})
+			tmpcol.laserInput({
+				"position": get_collision_point(),
+				"pressed": false,
+				"action": "scrolldown"
+				})
+			print('ui scroll')
 
 func click():
 	isclick = false

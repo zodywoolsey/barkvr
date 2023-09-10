@@ -1,8 +1,12 @@
-[gd_scene load_steps=4 format=3 uid="uid://i3pxsgqnbjly"]
+[gd_scene load_steps=7 format=3 uid="uid://i3pxsgqnbjly"]
 
 [ext_resource type="Script" path="res://mainAssets/ui/3dPanel/local ui/login/loginbutton.gd" id="1_18njo"]
 [ext_resource type="Script" path="res://mainAssets/ui/3dPanel/local ui/login/matrix.gd" id="1_ptvo5"]
 [ext_resource type="Script" path="res://mainAssets/ui/3dPanel/local ui/login/hashed_tree_list.gd" id="3_1m0p6"]
+[ext_resource type="Script" path="res://mainAssets/ui/custom nodes/barkScrollContainer.gd" id="4_nnj0m"]
+[ext_resource type="Script" path="res://mainAssets/ui/3dPanel/local ui/login/SendMessage.gd" id="5_wc8jy"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_eae1m"]
 
 [node name="matrix" type="Control"]
 layout_mode = 3
@@ -120,17 +124,62 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="chat"]
+[node name="HBoxContainer" type="HSplitContainer" parent="chat"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/autohide = 0
+split_offset = -120
 
 [node name="ItemList" type="Tree" parent="chat/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 focus_mode = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_eae1m")
 hide_root = true
 script = ExtResource("3_1m0p6")
+
+[node name="MessageSplitContainer" type="VSplitContainer" parent="chat/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+split_offset = 250
+
+[node name="ScrollContainer" type="ScrollContainer" parent="chat/HBoxContainer/MessageSplitContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+follow_focus = true
+
+[node name="Control" type="Control" parent="chat/HBoxContainer/MessageSplitContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("4_nnj0m")
+
+[node name="Control" type="Control" parent="chat/HBoxContainer/MessageSplitContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="TextEdit" type="TextEdit" parent="chat/HBoxContainer/MessageSplitContainer/Control"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 0.85
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+placeholder_text = "Type message to send here"
+
+[node name="Button" type="Button" parent="chat/HBoxContainer/MessageSplitContainer/Control"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.85
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+focus_mode = 0
+text = "send"
+script = ExtResource("5_wc8jy")

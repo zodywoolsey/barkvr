@@ -33,7 +33,7 @@ func _ready():
 				var parent = get_tree().get_first_node_in_group('localroot')
 				localworld.queue_free()
 				parent.add_child(loaded_world)
-				discord_sdk.details = "in world "+world_name.text
+#				discord_sdk.details = "in world "+world_name.text
 		)
 
 

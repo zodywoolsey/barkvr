@@ -69,7 +69,7 @@ func _ready():
 			if !dir.dir_exists("./objects"):
 				dir.make_dir("./objects")
 			var object_file = FileAccess.open("user://objects/"+target.name, FileAccess.WRITE)
-			object_file.store_string(str(BarkHelpers.node_to_var(target)))
+			object_file.store_string(str(BarkHelpers.node_to_var(target,'',target.name)))
 #			OS.shell_open(OS.get_user_data_dir())
 		)
 	objectname.text_changed.connect(func(new_text:String):

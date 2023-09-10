@@ -1,6 +1,5 @@
-[gd_scene load_steps=10 format=3 uid="uid://br1vh8in0e65o"]
+[gd_scene load_steps=9 format=3 uid="uid://br1vh8in0e65o"]
 
-[ext_resource type="PackedScene" uid="uid://dckbok0o553v7" path="res://mainSystem/scenes/objects/worldObjects/playerSpawnLocation.tscn" id="1_srupi"]
 [ext_resource type="Material" uid="uid://dum7xrf8gdl7k" path="res://addons/kenney_prototype_textures/materials/dark01Triplanar.material" id="2_xwerc"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_3royi"]
@@ -53,9 +52,6 @@ environment = SubResource("Environment_n00cx")
 transform = Transform3D(-0.865617, -0.417461, 0.276465, -0.267145, 0.852051, 0.450158, -0.423486, 0.315808, -0.849073, 0, 1.72518, 0)
 light_energy = 0.5
 shadow_enabled = true
-
-[node name="playerSpawnLocation" parent="." instance=ExtResource("1_srupi")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.30166, 0)
 
 [node name="floor boundary" type="Area3D" parent="."]
 script = SubResource("GDScript_cwteg")
