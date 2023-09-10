@@ -1,0 +1,121 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://wkeck2wrcc0m"]
+
+[resource]
+resource_name = "Front Pic"
+depth_draw_mode = 1
+roughness = 0.5
+emission_enabled = true
+emission = Color(1, 1, 1, 1)
+uv1_scale = Vector3(1, 1, 0)
+metadata/unidot_keys = {
+"disabledShaderPasses": [],
+"m_CorrespondingSourceObject": [null, 0, null, null],
+"m_CustomRenderQueue": -1,
+"m_DoubleSidedGI": 0,
+"m_EnableInstancingVariants": 0,
+"m_LightmapFlags": 2,
+"m_Name": "Front Pic",
+"m_ObjectHideFlags": 0,
+"m_PrefabAsset": [null, 0, null, null],
+"m_PrefabInstance": [null, 0, null, null],
+"m_SavedProperties": {
+"m_Colors": [{
+"_Color": Color(1, 1, 1, 1)
+}, {
+"_EmissionColor": Color(1, 1, 1, 1)
+}],
+"m_Floats": [{
+"_BumpScale": 1
+}, {
+"_Cutoff": 0.5
+}, {
+"_DetailNormalMapScale": 1
+}, {
+"_DstBlend": 0
+}, {
+"_GlossMapScale": 1
+}, {
+"_Glossiness": 0.5
+}, {
+"_GlossyReflections": 1
+}, {
+"_Metallic": 0
+}, {
+"_Mode": 0
+}, {
+"_OcclusionStrength": 1
+}, {
+"_Parallax": 0.02
+}, {
+"_SmoothnessTextureChannel": 0
+}, {
+"_SpecularHighlights": 1
+}, {
+"_SrcBlend": 1
+}, {
+"_UVSec": 0
+}, {
+"_ZWrite": 1
+}],
+"m_TexEnvs": [{
+"_BumpMap": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 0, null, null]
+}
+}, {
+"_DetailAlbedoMap": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 0, null, null]
+}
+}, {
+"_DetailMask": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 0, null, null]
+}
+}, {
+"_DetailNormalMap": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 0, null, null]
+}
+}, {
+"_EmissionMap": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 2800000, "d12b589683acac7469b164531359948a", 3]
+}
+}, {
+"_MainTex": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 2800000, "d12b589683acac7469b164531359948a", 3]
+}
+}, {
+"_MetallicGlossMap": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 0, null, null]
+}
+}, {
+"_OcclusionMap": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 0, null, null]
+}
+}, {
+"_ParallaxMap": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 0, null, null]
+}
+}],
+"serializedVersion": 3
+},
+"m_Shader": [null, 46, "0000000000000000f000000000000000", 0],
+"m_ShaderKeywords": "_EMISSION",
+"serializedVersion": 6,
+"stringTagMap": []
+}

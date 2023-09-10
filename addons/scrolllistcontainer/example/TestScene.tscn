@@ -1,0 +1,95 @@
+[gd_scene load_steps=6 format=3 uid="uid://j56m4qeovw61"]
+
+[ext_resource type="Texture2D" uid="uid://bq7738nwh8ski" path="res://addons/scrolllistcontainer/example/iconsmall.png" id="1"]
+[ext_resource type="Script" path="res://addons/scrolllistcontainer/ScrollListContainer.gd" id="2"]
+[ext_resource type="Texture2D" uid="uid://drhn8ncpf5jqd" path="res://addons/scrolllistcontainer/example/PanelBackground.tres" id="3"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_uer5k"]
+content_margin_left = 2.0
+content_margin_top = 2.0
+content_margin_right = 2.0
+content_margin_bottom = 2.0
+bg_color = Color(0.09, 0.09, 0.09, 0.501961)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hq86q"]
+content_margin_left = 5.0
+content_margin_top = 2.0
+content_margin_right = 5.0
+content_margin_bottom = 2.0
+bg_color = Color(0.09, 0.09, 0.09, 0.501961)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[node name="Node2D" type="Panel"]
+offset_right = 435.0
+offset_bottom = 378.0
+
+[node name="ScrollListContainer" type="Container" parent="."]
+clip_contents = true
+layout_mode = 0
+offset_left = 51.0
+offset_top = 45.0
+offset_right = 301.0
+offset_bottom = 295.0
+script = ExtResource("2")
+spacing = 5.0
+initial_spacing = 5.0
+side_margin = 5.0
+background_texture = ExtResource("3")
+background_inner_rect = Rect2(6, 6, 4, 4)
+
+[node name="Label" type="Label" parent="ScrollListContainer"]
+visible = false
+layout_mode = 2
+text = "This is a long line of text with the purpose of deliberately overflowing its container."
+
+[node name="TextureRect" type="TextureRect" parent="ScrollListContainer"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+texture = ExtResource("1")
+expand_mode = 1
+
+[node name="Button" type="Button" parent="ScrollListContainer"]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_uer5k")
+text = "Fun for the whole family!"
+
+[node name="RichTextLabel" type="RichTextLabel" parent="ScrollListContainer"]
+layout_mode = 2
+text = "From where I stand, there isn't much in the way of delicacies to partake in here. Where is the theatre? Where is the music? Beyond the city walls, out in the boondocks, where bandits abound!"
+fit_content = true
+
+[node name="Button2" type="Button" parent="ScrollListContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_styles/normal = SubResource("StyleBoxFlat_hq86q")
+text = "Non-expanding button"
+
+[node name="TextureRect2" type="TextureRect" parent="ScrollListContainer"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+size_flags_horizontal = 0
+texture = ExtResource("1")
+expand_mode = 1
+
+[node name="Button4" type="Button" parent="ScrollListContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "Non-expanding button"
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="ScrollListContainer"]
+layout_mode = 2
+text = "From where I stand, there isn't much in the way of delicacies to partake in here. Where is the theatre? Where is the music? Beyond the city walls, out in the boondocks, where bandits abound!"
+
+[node name="Button5" type="Button" parent="ScrollListContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "Non-expanding button"

@@ -1,0 +1,12 @@
+[gd_resource type="AnimationLibrary" load_steps=2 format=3 uid="uid://cmh2j5s1cd6st"]
+
+[ext_resource type="Animation" uid="uid://cfrpdh8qlikf5" path="res://assets/comfy cove assets/Animations/LightHouse Rotation.anim.tres" id="1_sxfcg"]
+
+[resource]
+resource_name = "Spheres"
+_data = {
+"LightHouse Rotation": ExtResource("1_sxfcg")
+}
+metadata/animation_guid_fileid_to_name = {
+"28ef22ecb654c4a4e8e89b82ec7db05b:7400000": "LightHouse Rotation"
+}

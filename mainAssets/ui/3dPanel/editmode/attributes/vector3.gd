@@ -14,13 +14,22 @@ var timer := 0.0
 
 func _ready():
 	xval.text_changed.connect(func(new_text):
-		target[property_name].x = float(new_text)
+		Journaling.set_property(
+			Journaling.root.get_path_to(target),
+			property_name+":x",
+			float(new_text))
 		)
 	yval.text_changed.connect(func(new_text):
-		target[property_name].y = float(new_text)
+		Journaling.set_property(
+			Journaling.root.get_path_to(target),
+			property_name+":y",
+			float(new_text))
 		)
 	zval.text_changed.connect(func(new_text):
-		target[property_name].z = float(new_text)
+		Journaling.set_property(
+			Journaling.root.get_path_to(target),
+			property_name+":z",
+			float(new_text))
 		)
 
 func _process(delta):

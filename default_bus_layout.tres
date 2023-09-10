@@ -1,15 +1,10 @@
-[gd_resource type="AudioBusLayout" load_steps=3 format=3 uid="uid://bnxndu834y4ws"]
-
-[sub_resource type="AudioEffectSpectrumAnalyzer" id="AudioEffectSpectrumAnalyzer_pp08g"]
-resource_name = "SpectrumAnalyzer"
+[gd_resource type="AudioBusLayout" load_steps=2 format=3 uid="uid://bnxndu834y4ws"]
 
 [sub_resource type="AudioEffectCapture" id="AudioEffectCapture_d6rf7"]
 resource_name = "Capture"
 
 [resource]
 bus/0/volume_db = 6.02
-bus/0/effect/0/effect = SubResource("AudioEffectSpectrumAnalyzer_pp08g")
-bus/0/effect/0/enabled = true
 bus/1/name = &"mic sink"
 bus/1/solo = false
 bus/1/mute = true

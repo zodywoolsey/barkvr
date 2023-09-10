@@ -1,0 +1,12 @@
+[gd_resource type="AnimationLibrary" load_steps=2 format=3 uid="uid://b6kna050yaax5"]
+
+[ext_resource type="Animation" uid="uid://brrk5ynqqx62p" path="res://assets/comfy cove assets/Animations/TeleFade.anim.tres" id="1_0ak3f"]
+
+[resource]
+resource_name = "TeleFade"
+_data = {
+"TeleFade": ExtResource("1_0ak3f")
+}
+metadata/animation_guid_fileid_to_name = {
+"405dd8eb0fa2ba94a87df1cdf1e74bff:7400000": "TeleFade"
+}

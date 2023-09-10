@@ -1,7 +1,6 @@
-[gd_scene load_steps=8 format=3 uid="uid://cv4xa0o1xdag"]
+[gd_scene load_steps=7 format=3 uid="uid://cv4xa0o1xdag"]
 
 [ext_resource type="Script" path="res://mainAssets/worlds/GPUParticles3D.gd" id="1_six35"]
-[ext_resource type="AudioStream" uid="uid://bsn3pmicng1v6" path="res://assets/audio/Developed Meta.mp3" id="2_lvhvv"]
 
 [sub_resource type="Curve" id="Curve_v24mi"]
 min_value = -1.0
@@ -62,6 +61,5 @@ draw_pass_1 = SubResource("QuadMesh_3gk8i")
 script = ExtResource("1_six35")
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("2_lvhvv")
 volume_db = -21.895
 autoplay = true

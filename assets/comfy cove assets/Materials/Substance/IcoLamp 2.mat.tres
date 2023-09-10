@@ -1,0 +1,575 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://cikho2g3j8myg"]
+
+[resource]
+resource_name = "IcoLamp 2"
+depth_draw_mode = 1
+albedo_color = Color(0, 0.527488, 0.915094, 1)
+roughness = 0.5
+uv1_scale = Vector3(1, 1, 0)
+metadata/unidot_keys = {
+"": {},
+"disabledShaderPasses": ["ALWAYS"],
+"m_CorrespondingSourceObject": [null, 0, null, null],
+"m_CustomRenderQueue": 2000,
+"m_DoubleSidedGI": 0,
+"m_EnableInstancingVariants": 0,
+"m_LightmapFlags": 2,
+"m_Name": "IcoLamp 2",
+"m_ObjectHideFlags": 0,
+"m_PrefabAsset": [null, 0, null, null],
+"m_PrefabInstance": [null, 0, null, null],
+"m_SavedProperties": {
+"m_Colors": [{
+"_Color": Color(0, 0.527488, 0.915094, 1)
+}, {
+"_DetailColor": Color(1, 1, 1, 1)
+}, {
+"_EmissionColor": Color(0, 1.19372, 4, 1)
+}, {
+"_RimCol": Color(1, 1, 1, 1)
+}, {
+"_ScatterCol": Color(1, 1, 1, 1)
+}, {
+"_TintReflShad": Color(1, 1, 1, 1)
+}, {
+"_UV0Scroll": Color(0, 0, 0, 0)
+}, {
+"_UV1Scroll": Color(0, 0, 0, 0)
+}, {
+"_UV2Scroll": Color(0, 0, 0, 0)
+}, {
+"_UV3Scroll": Color(0, 0, 0, 0)
+}, {
+"_UV4Scroll": Color(0, 0, 0, 0)
+}, {
+"_UV5Scroll": Color(0, 0, 0, 0)
+}, {
+"_UVRimMaskScroll": Color(0, 0, 0, 0)
+}],
+"m_Floats": [{
+"BAKERY_META_ALPHA_ENABLE": 1
+}, {
+"_ACES": 0
+}, {
+"_AlphaMaskChannel": 3
+}, {
+"_AlphaMaskOpacity": 1
+}, {
+"_AreaLitRoughnessMult": 1
+}, {
+"_AreaLitStrength": 1
+}, {
+"_AreaLitToggle": 0
+}, {
+"_AudioLinkEmission": 0
+}, {
+"_AudioLinkEmissionMeta": 0
+}, {
+"_AudioLinkEmissionStrength": 1
+}, {
+"_BAKERY_LMSPEC": 1
+}, {
+"_BAKERY_SHNONLINEAR": 1
+}, {
+"_BakeryMode": 3
+}, {
+"_BicubicLightmap": 1
+}, {
+"_BlendMode": 0
+}, {
+"_Brightness": 1
+}, {
+"_BrightnessDet": 1
+}, {
+"_BrightnessEmiss": 1
+}, {
+"_BrightnessPost": 1
+}, {
+"_BrightnessReflShad": 1
+}, {
+"_BumpScale": 1
+}, {
+"_Contrast": 1
+}, {
+"_ContrastDet": 1
+}, {
+"_ContrastEmiss": 1
+}, {
+"_ContrastPost": 1
+}, {
+"_ContrastReflShad": 1
+}, {
+"_CubeThreshold": 0.45
+}, {
+"_Cull": 2
+}, {
+"_Cutoff": 0.5
+}, {
+"_DetailAOBlend": 2
+}, {
+"_DetailAlbedoBlend": 2
+}, {
+"_DetailMaskChannel": 3
+}, {
+"_DetailMetallicBlend": 2
+}, {
+"_DetailMetallicChannel": 2
+}, {
+"_DetailMetallicMult": 0
+}, {
+"_DetailMetallicStrength": 1
+}, {
+"_DetailNormalMapScale": 1
+}, {
+"_DetailOcclusionChannel": 0
+}, {
+"_DetailOcclusionMult": 0
+}, {
+"_DetailOcclusionStrength": 1
+}, {
+"_DetailRoughBlend": 2
+}, {
+"_DetailRoughnessChannel": 1
+}, {
+"_DetailRoughnessMult": 0
+}, {
+"_DetailRoughnessStrength": 1
+}, {
+"_DetailSamplingMode": 0
+}, {
+"_DetailTriplanarFalloff": 1
+}, {
+"_DetailUseSmoothness": 0
+}, {
+"_DetailWorkflow": 0
+}, {
+"_DstBlend": 0
+}, {
+"_EdgeFade": 0.1
+}, {
+"_EmissPulseSpeed": 1
+}, {
+"_EmissPulseStrength": 1
+}, {
+"_EmissPulseWave": 0
+}, {
+"_EmissionIntensity": 1
+}, {
+"_Filtering": 0
+}, {
+"_FresnelStrength": 1
+}, {
+"_GSAA": 0
+}, {
+"_GSAAStrength": 1
+}, {
+"_GlossMapScale": 1
+}, {
+"_Glossiness": 0.5
+}, {
+"_GlossyReflections": 1
+}, {
+"_HDRReflShad": 0
+}, {
+"_HeightChannel": 3
+}, {
+"_HeightMult": 0
+}, {
+"_Hue": 0
+}, {
+"_HueDet": 0
+}, {
+"_HueEmiss": 0
+}, {
+"_HuePost": 0
+}, {
+"_LTCGI": 0
+}, {
+"_LTCGIStrength": 1
+}, {
+"_LTCGI_DIFFUSE_OFF": 0
+}, {
+"_LTCGI_SPECULAR_OFF": 0
+}, {
+"_MetaCull": 0
+}, {
+"_Metallic": 1
+}, {
+"_MetallicChannel": 2
+}, {
+"_MetallicMult": 1
+}, {
+"_MirrorToggle": 0
+}, {
+"_Mode": 0
+}, {
+"_NaNLmao": 0
+}, {
+"_OcclusionChannel": 0
+}, {
+"_OcclusionMult": 1
+}, {
+"_OcclusionStrength": 1
+}, {
+"_OcclusionUVSet": 0
+}, {
+"_OpaqueLights": 1
+}, {
+"_Parallax": 0.02
+}, {
+"_ParallaxOffset": 0
+}, {
+"_ParallaxSteps": 25
+}, {
+"_QueueOffset": 0
+}, {
+"_RainToggle": 0
+}, {
+"_ReflShadowStrength": 1
+}, {
+"_ReflShadows": 1
+}, {
+"_ReflVertexColor": 0
+}, {
+"_ReflVertexColorStrength": 1
+}, {
+"_ReflectionStrength": 1
+}, {
+"_RimBlending": 0
+}, {
+"_RimEdge": 0
+}, {
+"_RimStr": 1
+}, {
+"_RimToggle": 0
+}, {
+"_RimWidth": 0.5
+}, {
+"_RippleScale": 40
+}, {
+"_RippleSpeed": 10
+}, {
+"_RippleStr": 1
+}, {
+"_RoughnessChannel": 1
+}, {
+"_RoughnessMult": 1
+}, {
+"_SSR": 0
+}, {
+"_SSRStrength": 1
+}, {
+"_SamplingMode": 0
+}, {
+"_Saturation": 1
+}, {
+"_SaturationDet": 1
+}, {
+"_SaturationEmiss": 1
+}, {
+"_SaturationPost": 1
+}, {
+"_ScatterAlbedoTint": 0
+}, {
+"_ScatterAmbient": 0
+}, {
+"_ScatterDist": 1
+}, {
+"_ScatterIntensity": 1
+}, {
+"_ScatterPow": 1
+}, {
+"_ScatterShadow": 1
+}, {
+"_SmoothnessTextureChannel": 0
+}, {
+"_SpecularHighlights": 1
+}, {
+"_SpecularStrength": 1
+}, {
+"_SrcBlend": 1
+}, {
+"_Subsurface": 0
+}, {
+"_ThicknessMapPower": 1
+}, {
+"_TriplanarFalloff": 1
+}, {
+"_UV0Rotate": 0
+}, {
+"_UV1Rotate": 0
+}, {
+"_UV3Rotate": 0
+}, {
+"_UV4Rotate": 0
+}, {
+"_UV5Rotate": 0
+}, {
+"_UVAlphaMask": 0
+}, {
+"_UVEmissMask": 0
+}, {
+"_UVHeightMask": 0
+}, {
+"_UVPri": 0
+}, {
+"_UVRainMask": 0
+}, {
+"_UVRimMask": 0
+}, {
+"_UVRimMaskRotate": 0
+}, {
+"_UVSec": 0
+}, {
+"_UseAlphaMask": 0
+}, {
+"_UseFresnel": 1
+}, {
+"_UseHeight": 0
+}, {
+"_UseSmoothness": 0
+}, {
+"_Workflow": 1
+}, {
+"_WrappingFactor": 0.01
+}, {
+"_ZTest": 4
+}, {
+"_ZWrite": 1
+}],
+"m_TexEnvs": [{
+"_AlphaMask": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 0, null, null]
+}
+}, {
+"_AreaLitMask": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 0, null, null]
+}
+}, {
+"_AreaLitOcclusion": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 0, null, null]
+}
+}, {
+"_BumpMap": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 2800000, "6efa1863904008c4bb3240221bd1a293", 3]
+}
+}, {
+"_DetailAOMap": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 0, null, null]
+}
+}, {
+"_DetailAlbedoMap": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 0, null, null]
+}
+}, {
+"_DetailMask": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 0, null, null]
+}
+}, {
+"_DetailMetallicMap": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 0, null, null]
+}
+}, {
+"_DetailNormalMap": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 0, null, null]
+}
+}, {
+"_DetailPackedMap": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 0, null, null]
+}
+}, {
+"_DetailRoughnessMap": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 0, null, null]
+}
+}, {
+"_EmissionMap": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 2800000, "2955abd0f89e60941b7f103168608743", 3]
+}
+}, {
+"_EmissionMask": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 0, null, null]
+}
+}, {
+"_LTCGI_amp": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 0, null, null]
+}
+}, {
+"_LTCGI_mat": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 0, null, null]
+}
+}, {
+"_LightMesh": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 0, null, null]
+}
+}, {
+"_LightTex0": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 0, null, null]
+}
+}, {
+"_LightTex1": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 0, null, null]
+}
+}, {
+"_LightTex2": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 0, null, null]
+}
+}, {
+"_LightTex3": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 0, null, null]
+}
+}, {
+"_MainTex": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 2800000, "bf77a0ccbe9d897449c9b1a6e310350d", 3]
+}
+}, {
+"_MetallicGlossMap": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 0, null, null]
+}
+}, {
+"_NoiseTexSSR": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 2800000, "b7359cc7e3e84444b88656ff6c166220", 3]
+}
+}, {
+"_OcclusionMap": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 0, null, null]
+}
+}, {
+"_PackedMap": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 2800000, "65c592f05336ddf439dd3f9d485a74ae", 3]
+}
+}, {
+"_ParallaxMap": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 0, null, null]
+}
+}, {
+"_ParallaxMask": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 0, null, null]
+}
+}, {
+"_RNM0": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 0, null, null]
+}
+}, {
+"_RNM1": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 0, null, null]
+}
+}, {
+"_RNM2": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 0, null, null]
+}
+}, {
+"_RainMask": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 0, null, null]
+}
+}, {
+"_ReflCube": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 0, null, null]
+}
+}, {
+"_ReflCubeOverride": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 0, null, null]
+}
+}, {
+"_ReflectionTex0": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 0, null, null]
+}
+}, {
+"_ReflectionTex1": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 0, null, null]
+}
+}, {
+"_RimMask": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 0, null, null]
+}
+}, {
+"_SpecGlossMap": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 0, null, null]
+}
+}, {
+"_ThicknessMap": {
+"m_Offset": Vector2(0, 0),
+"m_Scale": Vector2(1, 1),
+"m_Texture": [null, 0, null, null]
+}
+}],
+"serializedVersion": 3
+},
+"m_Shader": [null, 4800000, "cddaa3a02eb956746b502b80b76e92bc", 3],
+"m_ShaderKeywords": "BAKERY_LMSPEC BAKERY_MONOSH BAKERY_SHNONLINEAR _BICUBIC_SAMPLING_ON",
+"serializedVersion": 6,
+"stringTagMap": []
+}

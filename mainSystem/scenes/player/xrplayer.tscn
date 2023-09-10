@@ -48,7 +48,7 @@ func _process(delta):
 		1:
 			text = \"connecting\"
 		2:
-			text = \"connecting\"
+			text = \"connected\"
 		3:
 			text = \"disconnected\"
 		4:

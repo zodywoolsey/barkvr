@@ -67,7 +67,10 @@ func laserClick(data:Dictionary):
 func laserInput(data:Dictionary):
 	var event = InputEventMouseButton.new()
 	event.pressed = data.pressed
-	event.button_index = 4
+	if data.action == "scrollup":
+		event.button_index = 4
+	elif data.action == "scrolldown":
+		event.button_index = 5
 #	event.button_mask = 1
 	# Get mesh size to detect edges and make conversions. This code only support PlaneMesh and QuadMesh.
 	var quad_mesh_size = mesh.mesh.size
