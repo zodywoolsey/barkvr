@@ -1,6 +1,12 @@
 # barkvr
 Social XR creation tool built on Godot 4
 
+Though the project is not yet ready for a release of any kind,
+if you would like to test it out and wonder how to launch in
+desktop or XR modes, you can use the terminal and start the
+app with the flag `--xr-mode` set to `default`, `on`, or `off` like
+this: `./barkvr --xr-mode off` will launch without VR active
+
 ## Status
 
 This project is currently very early in development, we are always looking for support
