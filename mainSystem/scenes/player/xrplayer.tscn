@@ -63,7 +63,6 @@ shading_mode = 0
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_1uxmk"]
 radius = 0.1
-height = 1.0
 
 [node name="playercontainer" type="Node3D"]
 

@@ -21,8 +21,14 @@ func node_to_var(node:Node, type:String='', cust_name:String=''):
 	return dict
 
 func var_to_node(item:String='', dict:Dictionary={}):
+	var j = JSON.new()
 	if dict.is_empty() and !item.is_empty():
-		dict = JSON.parse_string(item)
+#		print(item)
+		var err = j.parse(item)
+		if err == OK:
+			dict = j.data
+		else:
+			print(err)
 	if !dict.is_empty():
 		var node :Node = bytes_to_var_with_objects(dict.node)
 		if dict.has('groups') and dict['groups'].size()>0:
