@@ -115,20 +115,13 @@ func _process(delta):
 						if data.has('pos') and data.pos != -1 and data.has('bytes'):
 							pack.append_array(data.bytes)
 							packsize += 1
-							print(data.pos)
-#							print('getting')
 						elif data.has('pos') and data.pos == -1:
-							print('got')
 							pack.append_array(data.bytes)
-							print(data.pos)
 							packsize += 1
-#							print(data.bytes)
 							data = bytes_to_var_with_objects(pack)
 							pack = PackedByteArray()
 						if data and data is Array:
-							print(data)
 							for action in data:
-								print(action)
 								match action.action_name:
 									"net_propogate_node":
 										if action.has('parent'):
