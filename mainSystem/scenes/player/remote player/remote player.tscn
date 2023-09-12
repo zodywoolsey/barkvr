@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3 uid="uid://c0p3oet77tkgf"]
+
+[ext_resource type="Script" path="res://mainSystem/scenes/player/remote player/remote player.gd" id="1_jdtww"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_87pii"]
+
+[node name="remote player" type="MeshInstance3D"]
+mesh = SubResource("BoxMesh_87pii")
+script = ExtResource("1_jdtww")

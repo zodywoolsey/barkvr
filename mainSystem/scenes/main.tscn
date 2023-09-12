@@ -28,7 +28,7 @@ physics_rate_multiplier = 1
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 
 [node name="playerSpawnLocation" parent="localworldroot" instance=ExtResource("6_diugs")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.3441, 0.329271, 1.0157)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.3441, 0.0923181, 1.0157)
 
 [node name="comfy cove" parent="localworldroot" instance=ExtResource("4_b8cfi")]
 

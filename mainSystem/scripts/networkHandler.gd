@@ -28,6 +28,14 @@ var channels : Array[WebRTCDataChannel]
 
 var peers : Array[WebRTCPeerConnection]
 
+var packs : Array[PackedByteArray] = [PackedByteArray()]
+
+var pack : PackedByteArray = PackedByteArray()
+var packsize : int = 0
+var packet_size : int = 1000
+
+var bytes_to_send
+
 var local_description : String
 
 var candidates : Array
@@ -90,58 +98,107 @@ func _process(delta):
 				'bark-chat':
 					while chan.get_available_packet_count() > 0:
 						var data = chan.get_var()
+						var remplayer = get_tree().get_first_node_in_group(data.p_id)
+						if remplayer:
+							remplayer.targetpos = data.user_pos.pos
+						else:
+							var root = get_tree().get_first_node_in_group('localworldroot')
+							var tmp:Node = load("res://mainSystem/scenes/player/remote player/remote player.tscn").instantiate()
+							tmp.add_to_group(data.p_id)
+							root.add_child(tmp)
+							
 #						if data.has('audio'):
 #							mic_playback.buffer_to_push.append_array(data.audio)
 				'bark-journal':
 					while chan.get_available_packet_count() > 0:
-						var data = chan.get_var()
-						print(data)
-						for action in data:
-							print(action)
-							match action.action_name:
-								"net_propogate_node":
-									if action.has('parent'):
-										Journaling.net_propogate_node(action.node_string,action.parent)
-									else:
-										Journaling.net_propogate_node(
-											action.node_string,
-											'',
-											true
-											)
-								"set_property":
-									Journaling.set_property(action.target,action.prop_name,action.value,true)
-	if timer > .5:
+						var data = chan.get_var(true)
+						if data.has('pos') and data.pos != -1 and data.has('bytes'):
+							pack.append_array(data.bytes)
+							packsize += 1
+							print(data.pos)
+#							print('getting')
+						elif data.has('pos') and data.pos == -1:
+							print('got')
+							pack.append_array(data.bytes)
+							print(data.pos)
+							packsize += 1
+#							print(data.bytes)
+							data = bytes_to_var_with_objects(pack)
+							pack = PackedByteArray()
+						if data and data is Array:
+							print(data)
+							for action in data:
+								print(action)
+								match action.action_name:
+									"net_propogate_node":
+										if action.has('parent'):
+											Journaling.net_propogate_node(action.node_string,action.parent)
+										else:
+											Journaling.net_propogate_node(
+												action.node_string,
+												'',
+												true
+												)
+									"set_property":
+										Journaling.set_property(action.target,action.prop_name,action.value,true)
+	if timer > 0.08:
 		if !channels.size() > 0:
 			pass
 			print("attempting to create data channel")
 			channels.append(peer.create_data_channel("bark-chat", {
 				'id':1,
 				'negotiated': true,
-				'ordered': false,
 				'maxPacketLifeTime': 500
 				}))
 			channels.append(peer.create_data_channel("bark-journal", {
 				'id':2,
 				'negotiated': true,
+				'ordered': true
 				}))
 #			print('channels created')
 			peer.create_offer()
 		else:
 			for chan in channels:
 				if chan.get_label() == 'bark-chat':
+					var player = get_tree().get_first_node_in_group('player')
 					var audiobuf = capture.get_buffer(capture.get_frames_available())
 					if chan.get_ready_state() == 1:
 						channels[0].put_var({
 							'p_id': OS.get_unique_id(),
 							'uname': uname,
-							'audio': audiobuf
+							'audio': audiobuf,
+							'user_pos': {
+								'pos':player.global_position,
+								'rhpos':player.righthand.global_position,
+								'lhpos':player.lefthand.global_position
+								}
 	#							'p_pos': tmpplayer.global_position,
 						})
 				if chan.get_label() == 'bark-journal' and chan.get_ready_state() == 1:
 					var tmp = Journaling.get_actions()
 					if tmp.size() >0:
 #						print(tmp)
-						print('err: ',chan.put_var(tmp, true))
+						var bytes_to_send = var_to_bytes_with_objects(tmp)
+						print(bytes_to_send)
+						if bytes_to_send.size() < packet_size:
+							chan.put_var(tmp)
+						else:
+							var parts:int = bytes_to_send.size()/packet_size
+							for i in range(bytes_to_send.size()/packet_size):
+								var pack_dict = {}
+								if i < parts-1: 
+									pack_dict['pos'] = i
+									pack_dict['bytes'] = bytes_to_send.slice(i*packet_size, (i*packet_size)+packet_size)
+	#								print(pack_dict['bytes'].size())
+								else:
+									print('sending final packet')
+									pack_dict['bytes'] = bytes_to_send.slice(i*packet_size)
+									print(pack_dict['bytes'].size())
+									pack_dict['pos'] = -1
+	#							print('err: ',chan.put_var(pack_dict))
+								var err = chan.put_var(pack_dict)
+								if err!= 0:
+									print('err: ', err)
 		timer = 0.0
 
 func initwebrtc():

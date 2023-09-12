@@ -24,8 +24,8 @@ size = Vector2(0.5, 0.5)
 
 [node name="3dpanel" type="StaticBody3D"]
 transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0)
-collision_layer = 5
-collision_mask = 5
+collision_layer = 4
+collision_mask = 4
 script = ExtResource("1_h1226")
 metadata/grabbable = true
 
