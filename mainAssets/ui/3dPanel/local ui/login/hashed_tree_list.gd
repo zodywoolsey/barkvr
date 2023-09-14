@@ -41,4 +41,5 @@ func add_item(text:String,metadata:Variant):
 		roomdict['tree_item'].set_text(0,text)
 		
 		roomdict['tree_item'].set_metadata(0,metadata)
+		tree[metadata['room_id']]['tree_item'].add_button(0, wand)
 	

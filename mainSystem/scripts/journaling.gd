@@ -4,6 +4,8 @@ var registered_actions:PackedStringArray = [
 	'set_parent'
 ]
 
+const vrm_import_extension = preload("res://addons/vrm/vrm_extension.gd")
+
 var actions:Array = []
 
 var root:Node
@@ -28,8 +30,6 @@ func set_parent(target:NodePath, new_parent:NodePath):
 
 func set_property(target:NodePath, prop_name:String, value:Variant, recieved=false):
 	var t_node:Node = root.get_node(target)
-	if recieved:
-		print('recd')
 	if is_instance_valid(t_node) and prop_name.split(':')[0] in t_node:
 #		print(prop_name)
 		t_node.get_indexed(prop_name)
@@ -42,7 +42,7 @@ func set_property(target:NodePath, prop_name:String, value:Variant, recieved=fal
 				'value': value
 			})
 
-func net_propogate_node(node_string:String, parent:NodePath='', recieved=false):
+func net_propogate_node(node_string:String, parent:NodePath='', recieved:=false):
 	var node = BarkHelpers.var_to_node(node_string)
 	if parent:
 		root.get_node(parent).add_child(node)
@@ -58,4 +58,19 @@ func net_propogate_node(node_string:String, parent:NodePath='', recieved=false):
 			actions.append({
 				'action_name': 'net_propogate_node',
 				'node_string':node_string
+			})
+
+func import_asset(type:String, asset_to_import, recieved:=false):
+	if type == 'vrm' and asset_to_import is PackedByteArray:
+		var doc:GLTFDocument = GLTFDocument.new()
+		var state:GLTFState = GLTFState.new()
+		var vrm_extension: GLTFDocumentExtension = vrm_import_extension.new()
+		doc.register_gltf_document_extension(vrm_extension, true)
+		doc.append_from_buffer(asset_to_import,'',state)
+		get_tree().get_first_node_in_group('localworldroot').add_child(doc.generate_scene(state))
+		if !recieved:
+			actions.append({
+				'action_name': 'import_asset',
+				'type': type,
+				'asset_to_import': asset_to_import
 			})

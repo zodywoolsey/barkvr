@@ -37,6 +37,13 @@ Journaling="*res://mainSystem/scripts/journaling.gd"
 BarkHelpers="*res://mainSystem/scripts/bark_helpers.gd"
 DiscordSDKLoader="*res://addons/discord-sdk-gd/nodes/core_updater.gd"
 
+[bark]
+
+webrtc_config/stun_servers=PackedStringArray("stun:stun.l.google.com:19302", "stun:stun1.l.google.com:19302", "stun:stun2.l.google.com:19302", "stun:stun3.l.google.com:19302", "stun:stun4.l.google.com:19302")
+webrtc_config/turn_servers=PackedStringArray()
+webrtc_config/turn_password=""
+webrtc_config/turn_username=""
+
 [display]
 
 window/size/viewport_width=800
@@ -47,6 +54,10 @@ window/handheld/orientation=4
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/Godot-MToon-Shader/plugin.cfg", "res://addons/Todo_Manager/plugin.cfg", "res://addons/contextmenu/plugin.cfg", "res://addons/discord-sdk-gd/plugin.cfg", "res://addons/scrolllistcontainer/plugin.cfg", "res://addons/simplegrasstextured/plugin.cfg", "res://addons/unidot/plugin.cfg", "res://addons/vrm/plugin.cfg")
+
+[gui]
+
+theme/custom="res://mainAssets/ui/default_theme.tres"
 
 [input]
 
