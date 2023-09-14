@@ -14,7 +14,7 @@ size_flags_vertical = 3
 size_flags_stretch_ratio = 2.0
 script = ExtResource("1_f17vl")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -25,8 +25,10 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="Panel2" type="Panel" parent="VBoxContainer"]
+custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
-size_flags_vertical = 3
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.2
 
 [node name="Label" type="Label" parent="VBoxContainer/Panel2"]
 layout_mode = 1
@@ -40,8 +42,9 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="position" type="HBoxContainer" parent="VBoxContainer"]
+custom_minimum_size = Vector2(500, 0)
 layout_mode = 2
-size_flags_vertical = 3
+size_flags_horizontal = 3
 
 [node name="x" type="HBoxContainer" parent="VBoxContainer/position"]
 layout_mode = 2
