@@ -1,0 +1,56 @@
+[gd_scene load_steps=12 format=3 uid="uid://ctwckofb07cfw"]
+
+[ext_resource type="Script" path="res://mainSystem/scripts/init.gd" id="1_gkt54"]
+[ext_resource type="PackedScene" uid="uid://dfuohjtj40324" path="res://mainAssets/ui/3dPanel/local ui/login/matrixpanel.tscn" id="3_6ndab"]
+[ext_resource type="PackedScene" uid="uid://clc5dre31iskm" path="res://addons/godot-xr-tools/xr/start_xr.tscn" id="4_4y4so"]
+[ext_resource type="PackedScene" uid="uid://k3nsddcq0tuv" path="res://mainAssets/worlds/comfy_cove.scn" id="4_b8cfi"]
+[ext_resource type="PackedScene" uid="uid://2o2f8tknq7me" path="res://mainAssets/ui/3dPanel/3dpanel.tscn" id="6_307b8"]
+[ext_resource type="PackedScene" uid="uid://dckbok0o553v7" path="res://mainSystem/scenes/objects/worldObjects/playerSpawnLocation.tscn" id="6_diugs"]
+[ext_resource type="PackedScene" uid="uid://cn48x5w44qy6e" path="res://mainAssets/ui/3dPanel/local ui/save world/save world.tscn" id="7_g03bn"]
+[ext_resource type="PackedScene" uid="uid://by5nu2jf4d1cv" path="res://mainAssets/ui/3dPanel/local ui/save object/save object.tscn" id="7_squu5"]
+[ext_resource type="PackedScene" uid="uid://lauwp8okd1vh" path="res://addons/godot-xr-tools/objects/keyboard/virtual_keyboard_2d.tscn" id="8_it0hc"]
+[ext_resource type="PackedScene" uid="uid://b3sbt3oft3cxg" path="res://mainAssets/ui/3dPanel/editmode/vreditor.tscn" id="8_wf33i"]
+
+[sub_resource type="AudioStreamMicrophone" id="AudioStreamMicrophone_ve6pm"]
+
+[node name="main" type="Node3D" groups=["localroot"]]
+script = ExtResource("1_gkt54")
+
+[node name="RequestParent" type="Node" parent="." groups=["requestParent"]]
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." groups=["microphone"]]
+stream = SubResource("AudioStreamMicrophone_ve6pm")
+autoplay = true
+bus = &"mic"
+
+[node name="StartXR" parent="." instance=ExtResource("4_4y4so")]
+physics_rate_multiplier = 1
+
+[node name="localworldroot" type="Node3D" parent="." groups=["localworldroot"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+
+[node name="playerSpawnLocation" parent="localworldroot" instance=ExtResource("6_diugs")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.3441, 0.0923181, 1.0157)
+
+[node name="comfy cove" parent="localworldroot" instance=ExtResource("4_b8cfi")]
+
+[node name="matrixpanel" parent="." instance=ExtResource("3_6ndab")]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 2, -0.550489)
+
+[node name="save_load_world" parent="." instance=ExtResource("6_307b8")]
+transform = Transform3D(0.537432, -0.843307, 0, 0, 0, -1, 0.843307, 0.537432, 0, 0.499627, 2, 1.96407)
+_auto_load_ui = ExtResource("7_g03bn")
+transparent = false
+
+[node name="save_load_object" parent="." instance=ExtResource("6_307b8")]
+transform = Transform3D(0.537432, -0.843307, 0, 0, 0, -1, 0.843307, 0.537432, 0, 0.168378, 2, 1.44429)
+_auto_load_ui = ExtResource("7_squu5")
+transparent = false
+
+[node name="keyboard" parent="." instance=ExtResource("6_307b8")]
+transform = Transform3D(0.537432, -0.843307, 0, 0, 0, -1, 0.843307, 0.537432, 0, -0.538093, 2, 0.335737)
+_auto_load_ui = ExtResource("8_it0hc")
+transparent = false
+
+[node name="vreditor" parent="." instance=ExtResource("8_wf33i")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -4.5628, 1.95409, 0.987727)

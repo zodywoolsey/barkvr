@@ -23,7 +23,6 @@ func _notification(what):
 		size.y = 0.0
 		var height = 0
 		for child in get_children():
-			print(height)
 			child.position.y = height
 			height += child.size.y
 		custom_minimum_size.y = height

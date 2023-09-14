@@ -25,6 +25,7 @@ signal posted_register_msisdn_requesttoken(result:int,response_code:int,headers:
 signal placed_room_state(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray)
 signal placed_room_send(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray)
 signal got_turn_server(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray)
+signal got_room_members(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray)
 
 signal user_logged_in(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray)
 signal got_joined_rooms(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray)
@@ -665,7 +666,7 @@ func get_room_messages(base_url:String='', headers:Array=[], roomId: String = ''
 	)
 
 ## /_matrix/client/v3/rooms/{roomId}/state/{eventType}/{stateKey}
-## accepts: {base_url:String:fp, headers:Array:fp, room_id:String:qp, event_type:String:qp, state_key:String:qp
+## accepts: {base_url:String:fp, headers:Array:fp, room_id:String:qp, event_type:String:qp, state_key:String:qp}
 ## https://spec.matrix.org/v1.7/client-server-api/#put_matrixclientv3roomsroomidstateeventtypestatekey
 func put_room_state(base_url:String='', headers:Array=[], room_id:String='', event_type:String='', state_key:String='', bodyDict:Dictionary={}):
 	# check for required fields
@@ -758,7 +759,47 @@ func get_turn_server(base_url:String='', headers:Array=[]):
 	'{}'
 	)
 
-
+## /_matrix/client/v3/rooms/{roomId}/members
+## accepts: {base_url:String:fp, headers:Array:fp, room_id:String:qp, at:String:qp, membership:String:qp, not_membership:String:qp}
+## https://spec.matrix.org/v1.7/client-server-api/#get_matrixclientv3roomsroomidmembers
+func get_room_members(base_url:String='', headers:Array=[], room_id:String='', membership:String='', not_membership:String='', at:String=''):
+	# check for required fields
+	assert(room_id!='',"get_room_members: room_id is required")
+	if headers.is_empty():
+		push_warning("get_room_members: headers are required to be set for this call, due to authentication requirements")
+	# build query params
+	var qp = []
+	if at!='':
+		qp.append("at="+at)
+	if membership!='':
+		qp.append("membership="+membership)
+	if not_membership!='':
+		qp.append("not_membership="+not_membership)
+	# construct qp string
+	var qpstring = ''
+	if qp.size()>0:qpstring+='?'
+	for i in qp.size():
+		if i != 0:
+			qpstring += '&'
+		qpstring+=qp[i]
+	# make request
+	var res
+	var client = HTTPRequest.new()
+	print("getting room_members for: ",room_id)
+	client.use_threads = false
+	Vector.requestParent.add_child(client)
+	client.request_completed.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
+		if result == HTTPRequest.RESULT_SUCCESS:
+			got_room_members.emit(result,response_code,headers,body)
+		else:
+			print("error getting room_members:\n	result: {0}\n	response_code: {1}\n".format([result,response_code]))
+		client.queue_free()
+		)
+	res = client.request(
+	base_url+"_matrix/client/v3/rooms/"+room_id+"/members"+qpstring,
+	headers,
+	HTTPClient.METHOD_GET
+	)
 
 
 

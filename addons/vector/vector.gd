@@ -33,9 +33,10 @@ signal synced(data)
 signal got_turn_server(data)
 signal got_room_messages(data)
 
-@onready var requestParent = get_tree().get_first_node_in_group("requestParent")
+var requestParent:Node
 
 func _ready():
+	requestParent = get_tree().get_first_node_in_group('requestParent')
 	api.user_logged_in.connect(func(result:int,response_code:int,header:PackedStringArray,body:PackedByteArray):
 		var msg = body.get_string_from_ascii()
 		var msgJson : Dictionary = JSON.parse_string(msg)
@@ -44,19 +45,22 @@ func _ready():
 #			if msgJson.has('retry_after_ms'):
 #				Notify.sendNotification("Please try again after: "+str(msgJson.retry_after_ms/1000)+" seconds")
 			return null
-		userToken = msgJson.access_token
-		base_url = msgJson.well_known["m.homeserver"].base_url
-		userData['login'] = msgJson
-		userData['login']['home_server'] = home_server
-		saveUserDict()
-		if userToken != "":
-			headers.push_back("Authorization: Bearer {0}".format([userToken]))
-			print(headers)
-			user_logged_in.emit()
-			print('logged in')
-			return true
+		if msgJson.has('access_token') and msgJson.has('well_known'):
+			userToken = msgJson.access_token
+			base_url = msgJson.well_known["m.homeserver"].base_url
+			userData['login'] = msgJson
+			userData['login']['home_server'] = home_server
+			saveUserDict()
+			if userToken != "":
+				headers.push_back("Authorization: Bearer {0}".format([userToken]))
+				print(headers)
+				user_logged_in.emit()
+				print('logged in')
+				return true
+			else:
+				return false
 		else:
-			return false
+			print('Some error occurred')
 		)
 	api.got_joined_rooms.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 		var msg = body.get_string_from_ascii()
@@ -95,8 +99,17 @@ func _ready():
 	api.got_turn_server.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 		var msg = body.get_string_from_ascii()
 		var msgJson = JSON.parse_string(msg)
-		print("turn server:\n",str(msgJson),"\n")
 		got_turn_server.emit(msgJson)
+		)
+
+func send_room_state_event(room_id:String, event_type:String, state_key:String, body:Dictionary):
+	api.put_room_state(
+		base_url,
+		headers,
+		room_id,
+		event_type,
+		state_key,
+		body
 		)
 
 func send_room_event(room_id:String, event_type:String, body:Dictionary):
@@ -108,6 +121,9 @@ func send_room_event(room_id:String, event_type:String, body:Dictionary):
 		str( str(OS.get_unique_id(),Time.get_unix_time_from_system()).hash()),
 		body
 		)
+
+func get_turn_server():
+	api.get_turn_server(base_url,headers)
 
 func get_room_messages(room_id:String):
 	api.get_room_messages(base_url,headers,room_id,'b','','',100)
