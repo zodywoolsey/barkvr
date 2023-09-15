@@ -7,7 +7,8 @@ extends StaticBody3D
 @onready var label_3d = $Label3D
 var ui : Node
 var hoverevent : InputEventMouseMotion
-var clickevent : InputEventMouseButton
+#var clickevent : InputEventMouseButton
+var clickevent : InputEventScreenTouch
 var hovered : bool = false
 var clicked : bool = false
 
@@ -34,9 +35,10 @@ func _process(delta):
 	colShape.shape.size = Vector3(mesh.mesh.size.x,.01,mesh.mesh.size.y)
 
 func laserClick(data:Dictionary):
-	clickevent = InputEventMouseButton.new()
+#	clickevent = InputEventMouseButton.new()
+	clickevent = InputEventScreenTouch.new()
 	clickevent.pressed = data.pressed
-	clickevent.button_index = 1
+#	clickevent.button_index = 1
 #	clickevent.button_mask = 1
 	# Get mesh size to detect edges and make conversions. This code only support PlaneMesh and QuadMesh.
 	var quad_mesh_size = mesh.mesh.size
@@ -61,7 +63,8 @@ func laserClick(data:Dictionary):
 	viewport.handle_input_locally = true
 	viewport.push_input(clickevent,true)
 	viewport.handle_input_locally = false
-	clickevent = InputEventMouseButton.new()
+#	clickevent = InputEventMouseButton.new()
+	clickevent = InputEventScreenTouch.new()
 	clicked = false
 
 func laserInput(data:Dictionary):
@@ -94,7 +97,6 @@ func laserInput(data:Dictionary):
 	viewport.handle_input_locally = true
 	viewport.push_input(event,true)
 	viewport.handle_input_locally = false
-	clickevent = InputEventMouseButton.new()
 
 func laserHover(data:Dictionary):
 	if !hovered and !clicked and data.has("position"):

@@ -5,6 +5,7 @@ extends rayvisscript
 var prevHover
 var isclick := false
 var isrelease := false
+var pressed := false
 var currentAction := ""
 var hovertimer := 0.0
 
@@ -14,6 +15,7 @@ func _process(delta):
 		scrollup()
 	if Input.is_action_just_released("scrolldown"):
 		scrolldown()
+
 func _physics_process(delta):
 	currentAction = ""
 	var actioncount = 0
@@ -33,6 +35,11 @@ func _physics_process(delta):
 			if tmpcol.get_collision_layer_value(3) and tmpcol.has_method("laserHover"):
 				hovertimer = 0.0
 				if prevHover and prevHover != tmpcol:
+					if pressed and prevHover.has_method('laserClick'):
+						prevHover.laserClick({
+							"position": get_collision_point(),
+							"pressed": false
+							})
 					prevHover.laserHover({
 						'hovering': false,
 						'clicked': false,
@@ -53,11 +60,16 @@ func _physics_process(delta):
 					})
 		else:
 			vis.hide()
-			if prevHover and prevHover.has_method("laserHover"):
+			if prevHover and prevHover.has_method("laserHover") and prevHover.has_method('laserClick'):
 				prevHover.laserHover({
 					'hovering': false,
 					'position': get_collision_point()
 				})
+				if pressed and prevHover.has_method('laserClick'):
+					prevHover.laserClick({
+						"position": get_collision_point(),
+						"pressed": false
+						})
 				prevHover = null
 	label.text = currentAction
 #	print(currentAction)
@@ -103,7 +115,7 @@ func click():
 				"position": get_collision_point(),
 				"pressed": true
 				})
-			print('ui click')
+			pressed = true
 
 func release():
 	isrelease = false
@@ -114,3 +126,4 @@ func release():
 				"position": get_collision_point(),
 				"pressed": false
 				})
+			pressed = false
