@@ -44,3 +44,7 @@ func _ready():
 
 #func _process(delta):
 #	discord_sdk.refresh() 
+
+func _input(event):
+	if event is InputEventScreenTouch or event is InputEventScreenDrag:
+		print(event)

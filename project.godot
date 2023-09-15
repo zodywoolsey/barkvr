@@ -147,6 +147,10 @@ jump={
 ]
 }
 
+[input_devices]
+
+pointing/emulate_mouse_from_touch=false
+
 [layer_names]
 
 3d_physics/layer_1="characters"
