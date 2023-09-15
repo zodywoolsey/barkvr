@@ -38,6 +38,7 @@ func laserClick(data:Dictionary):
 #	clickevent = InputEventMouseButton.new()
 	clickevent = InputEventScreenTouch.new()
 	clickevent.pressed = data.pressed
+	clickevent.index = 0
 #	clickevent.button_index = 1
 #	clickevent.button_mask = 1
 	# Get mesh size to detect edges and make conversions. This code only support PlaneMesh and QuadMesh.
@@ -61,6 +62,7 @@ func laserClick(data:Dictionary):
 #	clickevent.global_position = mouse_pos2D
 	clicked = true
 	viewport.handle_input_locally = true
+	print(clickevent)
 	viewport.push_input(clickevent,true)
 	viewport.handle_input_locally = false
 #	clickevent = InputEventMouseButton.new()

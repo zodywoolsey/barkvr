@@ -198,9 +198,9 @@ func _input(event):
 
 func flat_movement():
 	if Input.is_action_just_pressed("click"):
-		righthand.ui_ray.isclick = true
+		righthand.ui_ray.click()
 	if Input.is_action_just_released("click"):
-		righthand.ui_ray.isrelease = true
+		righthand.ui_ray.release()
 	if Input.is_action_just_pressed("rightclick"):
 		righthand.grip()
 	if Input.is_action_just_released("rightclick"):
