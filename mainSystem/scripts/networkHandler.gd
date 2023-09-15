@@ -72,7 +72,7 @@ func apply_connection_string(type:String):
 		for peer in peers:
 			if peer.peer.get_connection_state() == 1:
 				print('found peer1')
-				peer.peer.set_remote_description(type, data.description)
+				print(peer.peer.set_remote_description(type, data.description))
 				print('set remote desc1')
 
 func _ready():
@@ -251,14 +251,15 @@ func create_new_peer_connection(constring:String=''):
 	
 
 func _on_ice_candidate(mid, index, sdp):
-	if candidates.size() < ProjectSettings.get_setting('bark/webrtc_config/stun_servers').size():
-		print("ice:")
-		print("mid: ",str(mid),"\nindex: ",str(index),"\nsdp: ",str(sdp))
-		candidates.append(sdp)
+#	print("ice:")
+#	print("mid: ",str(mid),"\nindex: ",str(index),"\nsdp: ",str(sdp))
+	candidates.append(sdp)
 
 func description_created(type:String, sdp:String, peer:WebRTCPeerConnection):
 #	print("type: ",type,"\nsdp: ",sdp)
 	print('set local description')
+	print(type)
+	if sdp.contains('actpass'):
+		sdp = sdp.replace('actpass', 'passive')
 	peer.set_local_description(type,sdp)
 	local_description = sdp
-	print(local_description)
