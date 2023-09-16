@@ -1,0 +1,5 @@
+[gd_scene format=3 uid="uid://bcwenyhqgqlye"]
+
+[node name="Button" type="Button"]
+size_flags_horizontal = 3
+size_flags_vertical = 3

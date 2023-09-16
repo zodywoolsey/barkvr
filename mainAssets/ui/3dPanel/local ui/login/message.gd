@@ -3,7 +3,7 @@ class_name message_bubble
 extends Control
 
 var panel:Panel
-var label:Label
+var label:RichTextLabel
 
 @export var text = ''
 
@@ -15,7 +15,12 @@ func _enter_tree():
 	if text:
 		label.text = text
 
-func _process(delta):
+func _draw():
+	_recalc_size()
+	await get_tree().process_frame
+	_recalc_size()
+
+func _recalc_size():
 	panel.size.x = size.x/2.0
 	panel.custom_minimum_size.y = label.size.y+20.0
 	custom_minimum_size.y = label.size.y+20.0

@@ -7,15 +7,29 @@ extends StaticBody3D
 @onready var label_3d = $Label3D
 var ui : Node
 var hoverevent : InputEventMouseMotion
-#var clickevent : InputEventMouseButton
-var clickevent : InputEventScreenTouch
+var clickevent : InputEventMouseButton
+#var clickevent : InputEventScreenTouch
 var hovered : bool = false
 var clicked : bool = false
+var tex:ViewportTexture
+
+var is_panel_3d:bool = true
 
 @export var _auto_load_ui : Resource
 @export var transparent : bool = true
+@export var appear_in_local_uis : bool = false
+@export var lock_global_position: bool = false
+
+signal action(data:Dictionary)
 
 func _ready():
+	if lock_global_position:
+		axis_lock_angular_x = true
+		axis_lock_angular_y = true
+		axis_lock_angular_z = true
+		axis_lock_linear_x = true
+		axis_lock_linear_y = true
+		axis_lock_linear_z = true
 	if transparent and OS.get_name() != "Android":
 		viewport.transparent_bg = true
 	else:
@@ -35,11 +49,11 @@ func _process(delta):
 	colShape.shape.size = Vector3(mesh.mesh.size.x,.01,mesh.mesh.size.y)
 
 func laserClick(data:Dictionary):
-#	clickevent = InputEventMouseButton.new()
-	clickevent = InputEventScreenTouch.new()
+	clickevent = InputEventMouseButton.new()
+#	clickevent = InputEventScreenTouch.new()
 	clickevent.pressed = data.pressed
-	clickevent.index = 0
-#	clickevent.button_index = 1
+#	clickevent.index = 0
+	clickevent.button_index = 1
 #	clickevent.button_mask = 1
 	# Get mesh size to detect edges and make conversions. This code only support PlaneMesh and QuadMesh.
 	var quad_mesh_size = mesh.mesh.size
@@ -62,11 +76,10 @@ func laserClick(data:Dictionary):
 #	clickevent.global_position = mouse_pos2D
 	clicked = true
 	viewport.handle_input_locally = true
-	print(clickevent)
-	viewport.push_input(clickevent,true)
+	viewport.call_thread_safe('push_input',clickevent,true)
 	viewport.handle_input_locally = false
-#	clickevent = InputEventMouseButton.new()
-	clickevent = InputEventScreenTouch.new()
+	clickevent = InputEventMouseButton.new()
+#	clickevent = InputEventScreenTouch.new()
 	clicked = false
 
 func laserInput(data:Dictionary):
@@ -97,7 +110,7 @@ func laserInput(data:Dictionary):
 	event.position = mouse_pos2D
 #	event.global_position = mouse_pos2D
 	viewport.handle_input_locally = true
-	viewport.push_input(event,true)
+	viewport.call_thread_safe("push_input",event,true)
 	viewport.handle_input_locally = false
 
 func laserHover(data:Dictionary):
@@ -120,7 +133,7 @@ func laserHover(data:Dictionary):
 		hoverevent.global_position = mouse_pos2D
 		hovered = true
 		viewport.handle_input_locally = true
-		viewport.push_input(hoverevent,true)
+		viewport.call_thread_safe('push_input',hoverevent,true)
 		viewport.handle_input_locally = false
 		hovered = false
 
@@ -131,6 +144,17 @@ func laserHover(data:Dictionary):
 func set_ui(node):
 	viewport.add_child(node)
 	ui = node
+	tex = viewport.get_texture()
+	if appear_in_local_uis:
+		LocalGlobals.local_uis.append({
+			'name':name,
+			'viewport_texture': tex
+		})
+	if node.has_signal('action'):
+		node.action.connect(func(data):
+			emit_signal('action',data)
+			)
+	mesh.mesh.surface_get_material(0).albedo_texture = tex
 #	node.gui_input.connect(func(event):
 #		label_3d.text = str(event)
 #		)

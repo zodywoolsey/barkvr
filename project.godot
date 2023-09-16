@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-config/name="barkVR"
+config/name="barkvr"
 run/main_scene="res://mainSystem/scenes/main.tscn"
 config/use_custom_user_dir=true
 config/custom_user_dir_name="bark"

@@ -18,7 +18,8 @@ func _ready():
 		)
 
 func _notification(what):
-	if what == NOTIFICATION_CHILD_ORDER_CHANGED:
+	if what == NOTIFICATION_PROCESS:
+		clip_children
 		custom_minimum_size.y = 0.0
 		size.y = 0.0
 		var height = 0

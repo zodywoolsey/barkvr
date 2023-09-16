@@ -158,7 +158,7 @@ func _input(event):
 				LocalGlobals.emit_signal("playerreleaseuifocus")
 				Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	if event is InputEventMouseButton:
-		if event.pressed:
+		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 			LocalGlobals.player_state = LocalGlobals.PLAYER_STATE_PLAYING
 #		if event.is_action("ui_accept"):

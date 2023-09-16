@@ -3,10 +3,16 @@ extends Tree
 var wand = preload("res://assets/wand.svg")
 var tree:Dictionary = {}
 
+var target_room:String = ''
+
 func _ready():
+	get_tree().create_timer(1).timeout.connect(_check_room_messages)
 	item_selected.connect(func():
 		if get_selected().get_metadata(0) && get_selected().get_metadata(0).has('room_id'):
 			Vector.get_room_messages(get_selected().get_metadata(0)['room_id'])
+			target_room = get_selected().get_metadata(0)['room_id']
+		else:
+			get_selected().free()
 		)
 
 func add_item(text:String,metadata:Variant):
@@ -43,3 +49,8 @@ func add_item(text:String,metadata:Variant):
 		roomdict['tree_item'].set_metadata(0,metadata)
 		tree[metadata['room_id']]['tree_item'].add_button(0, wand)
 	
+
+func _check_room_messages():
+	if target_room:
+		Vector.get_room_messages(target_room)
+	get_tree().create_timer(1).timeout.connect(_check_room_messages)
