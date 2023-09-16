@@ -1,6 +1,6 @@
 extends Button
 @onready var text_edit = $"../TextEdit"
-@onready var item_list = $"../../../ItemList"
+@onready var item_list = $"../../../../ItemList"
 
 func _ready():
 	pressed.connect(func():

@@ -44,7 +44,7 @@ func _ready():
 #			Notify.sendNotification(msgJson.error)
 #			if msgJson.has('retry_after_ms'):
 #				Notify.sendNotification("Please try again after: "+str(msgJson.retry_after_ms/1000)+" seconds")
-			return null
+			return
 		if msgJson.has('access_token') and msgJson.has('well_known'):
 			userToken = msgJson.access_token
 			base_url = msgJson.well_known["m.homeserver"].base_url
@@ -56,9 +56,7 @@ func _ready():
 				print(headers)
 				user_logged_in.emit()
 				print('logged in')
-				return true
-			else:
-				return false
+				get_turn_server()
 		else:
 			print('Some error occurred')
 		)

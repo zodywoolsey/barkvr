@@ -3,20 +3,9 @@
 [ext_resource type="Script" path="res://mainAssets/ui/3dPanel/local ui/login/loginbutton.gd" id="1_18njo"]
 [ext_resource type="Script" path="res://mainAssets/ui/3dPanel/local ui/login/matrix.gd" id="1_ptvo5"]
 [ext_resource type="Script" path="res://mainAssets/ui/3dPanel/local ui/login/hashed_tree_list.gd" id="3_wf5r8"]
-[ext_resource type="Script" path="res://mainAssets/ui/custom nodes/barkScrollContainer.gd" id="4_nnj0m"]
+[ext_resource type="Script" path="res://mainAssets/ui/3dPanel/local ui/login/messages.gd" id="4_ydkch"]
+[ext_resource type="PackedScene" uid="uid://drvs5pgtp63nx" path="res://mainAssets/ui/3dPanel/local ui/login/message.tscn" id="5_8wc7f"]
 [ext_resource type="Script" path="res://mainAssets/ui/3dPanel/local ui/login/SendMessage.gd" id="5_wc8jy"]
-
-[sub_resource type="GDScript" id="GDScript_gdb18"]
-script/source = "extends Button
-
-func _ready():
-	Vector.got_turn_server.connect(func():
-		print('got the turn')
-		)
-	pressed.connect(func():
-		Vector.get_turn_server()
-		)
-"
 
 [node name="matrix" type="Control"]
 layout_mode = 3
@@ -147,39 +136,151 @@ split_offset = -120
 [node name="ItemList" type="Tree" parent="chat/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+focus_mode = 0
+hide_root = true
 script = ExtResource("3_wf5r8")
 
-[node name="MessageSplitContainer" type="VSplitContainer" parent="chat/HBoxContainer"]
+[node name="RoomSplitContainer" type="VSplitContainer" parent="chat/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-split_offset = 250
+dragger_visibility = 2
 
-[node name="ScrollContainer" type="ScrollContainer" parent="chat/HBoxContainer/MessageSplitContainer"]
+[node name="Panel" type="Panel" parent="chat/HBoxContainer/RoomSplitContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.0
+
+[node name="MessageSplitContainer" type="VSplitContainer" parent="chat/HBoxContainer/RoomSplitContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ScrollContainer" type="ScrollContainer" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 follow_focus = true
+scroll_vertical = 100
 
-[node name="Control" type="Control" parent="chat/HBoxContainer/MessageSplitContainer/ScrollContainer"]
+[node name="Control" type="VBoxContainer" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-script = ExtResource("4_nnj0m")
+script = ExtResource("4_ydkch")
 
-[node name="Control" type="Control" parent="chat/HBoxContainer/MessageSplitContainer"]
+[node name="message" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
+custom_minimum_size = Vector2(0, 45)
+layout_mode = 2
+
+[node name="message2" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
+custom_minimum_size = Vector2(0, 45)
+layout_mode = 2
+
+[node name="message3" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
+custom_minimum_size = Vector2(0, 45)
+layout_mode = 2
+
+[node name="message4" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
+custom_minimum_size = Vector2(0, 45)
+layout_mode = 2
+
+[node name="message5" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
+custom_minimum_size = Vector2(0, 45)
+layout_mode = 2
+
+[node name="message6" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
+custom_minimum_size = Vector2(0, 45)
+layout_mode = 2
+
+[node name="message7" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
+custom_minimum_size = Vector2(0, 45)
+layout_mode = 2
+
+[node name="message8" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
+custom_minimum_size = Vector2(0, 45)
+layout_mode = 2
+
+[node name="message9" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
+custom_minimum_size = Vector2(0, 45)
+layout_mode = 2
+
+[node name="message10" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
+custom_minimum_size = Vector2(0, 45)
+layout_mode = 2
+
+[node name="message11" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
+custom_minimum_size = Vector2(0, 45)
+layout_mode = 2
+
+[node name="message12" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
+custom_minimum_size = Vector2(0, 45)
+layout_mode = 2
+
+[node name="message13" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
+custom_minimum_size = Vector2(0, 45)
+layout_mode = 2
+
+[node name="message14" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
+custom_minimum_size = Vector2(0, 45)
+layout_mode = 2
+
+[node name="message15" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
+custom_minimum_size = Vector2(0, 45)
+layout_mode = 2
+
+[node name="message16" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
+custom_minimum_size = Vector2(0, 45)
+layout_mode = 2
+
+[node name="message17" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
+custom_minimum_size = Vector2(0, 45)
+layout_mode = 2
+
+[node name="message18" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
+custom_minimum_size = Vector2(0, 45)
+layout_mode = 2
+
+[node name="message19" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
+custom_minimum_size = Vector2(0, 45)
+layout_mode = 2
+
+[node name="message20" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
+custom_minimum_size = Vector2(0, 45)
+layout_mode = 2
+
+[node name="message21" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
+custom_minimum_size = Vector2(0, 45)
+layout_mode = 2
+
+[node name="message22" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
+custom_minimum_size = Vector2(0, 45)
+layout_mode = 2
+
+[node name="message23" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
+custom_minimum_size = Vector2(0, 45)
+layout_mode = 2
+
+[node name="message24" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
+custom_minimum_size = Vector2(0, 45)
+layout_mode = 2
+
+[node name="Control" type="Control" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer"]
+custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 size_flags_vertical = 3
+size_flags_stretch_ratio = 0.0
 
-[node name="TextEdit" type="TextEdit" parent="chat/HBoxContainer/MessageSplitContainer/Control"]
+[node name="TextEdit" type="TextEdit" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/Control"]
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 0.85
 anchor_bottom = 1.0
 grow_horizontal = 2
-grow_vertical = 2
+grow_vertical = 0
 size_flags_vertical = 3
 placeholder_text = "Type message to send here"
+scroll_fit_content_height = true
 
-[node name="Button" type="Button" parent="chat/HBoxContainer/MessageSplitContainer/Control"]
+[node name="Button" type="Button" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/Control"]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.85
@@ -190,14 +291,3 @@ grow_vertical = 2
 focus_mode = 0
 text = "send"
 script = ExtResource("5_wc8jy")
-
-[node name="Button" type="Button" parent="chat"]
-layout_mode = 1
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -143.0
-offset_bottom = 31.0
-grow_horizontal = 0
-text = "check turn server"
-script = SubResource("GDScript_gdb18")

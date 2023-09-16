@@ -1,6 +1,7 @@
 extends Node
 
 func node_to_var(node:Node, type:String='', cust_name:String=''):
+	PackedScene
 	var dict:Dictionary = {}
 	if type:
 		dict['asset_type'] = type

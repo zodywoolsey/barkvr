@@ -16,7 +16,10 @@ func _ready():
 		var object_file = FileAccess.open("user://objects/"+object_name.text, FileAccess.READ_WRITE)
 		if object_file:
 			var tmp = object_file.get_as_text()
-			Journaling.net_propogate_node(tmp)
+			print('started loading')
+#			Journaling.net_propogate_node(tmp)
+			ResourceLoader.load_threaded_request('user://objects/'+object_name.text,'',true)
+			get_tree().create_timer(1).timeout.connect(_check_loaded.bind('user://objects/'+object_name.text))
 #			var loaded_object = BarkHelpers.var_to_node(tmp)
 #			var localworld = get_tree().get_first_node_in_group("localworldroot")
 #			if localworld:
@@ -26,6 +29,13 @@ func _ready():
 #					parent.add_child(loaded_object)
 		)
 
+func _check_loaded(path:String):
+	if ResourceLoader.load_threaded_get_status(path) == ResourceLoader.THREAD_LOAD_IN_PROGRESS:
+		print('not loaded yet')
+		get_tree().create_timer(1).timeout.connect(_check_loaded.bind(path))
+	else:
+		var err = ResourceLoader.load_threaded_get(path)
+		get_tree().get_first_node_in_group('localworldroot').add_child(err.instantiate())
 
 func init_object_list():
 	item_list.clear()
