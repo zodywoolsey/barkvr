@@ -18,6 +18,10 @@ func get_actions():
 	actions = []
 	return tmp
 
+func check_root():
+	if !is_instance_valid(root):
+		root = get_tree().get_first_node_in_group('localworldroot')
+
 func set_parent(target:NodePath, new_parent:NodePath):
 	var t_node = root.get_node(target)
 	var np_node = root.get_node(new_parent)
@@ -59,6 +63,9 @@ func net_propogate_node(node_string:String, parent:NodePath='', recieved:=false)
 				'action_name': 'net_propogate_node',
 				'node_string':node_string
 			})
+
+func net_propogate_resource(res, recieved:=false):
+	print(res)
 
 func import_asset(type:String, asset_to_import, recieved:=false):
 	if type == 'vrm' and asset_to_import is PackedByteArray:

@@ -14,18 +14,21 @@ var timer := 0.0
 
 func _ready():
 	xval.text_changed.connect(func(new_text):
+		Journaling.check_root()
 		Journaling.set_property(
 			Journaling.root.get_path_to(target),
 			property_name+":x",
 			float(new_text))
 		)
 	yval.text_changed.connect(func(new_text):
+		Journaling.check_root()
 		Journaling.set_property(
 			Journaling.root.get_path_to(target),
 			property_name+":y",
 			float(new_text))
 		)
 	zval.text_changed.connect(func(new_text):
+		Journaling.check_root()
 		Journaling.set_property(
 			Journaling.root.get_path_to(target),
 			property_name+":z",

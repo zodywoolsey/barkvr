@@ -69,7 +69,11 @@ func _ready():
 			if !dir.dir_exists("./objects"):
 				dir.make_dir("./objects")
 			var object_file = FileAccess.open("user://objects/"+target.name, FileAccess.WRITE)
-			object_file.store_string(str(BarkHelpers.node_to_var(target,'',target.name)))
+#			object_file.store_string(str(BarkHelpers.node_to_var(target,'',target.name)))
+			var tmp:PackedScene = PackedScene.new()
+			assert(tmp.pack(target)==OK)
+			var err = ResourceSaver.save(tmp,'user://objects/'+target.name+'.res')
+			print(err)
 #			OS.shell_open(OS.get_user_data_dir())
 		)
 	objectname.text_changed.connect(func(new_text:String):

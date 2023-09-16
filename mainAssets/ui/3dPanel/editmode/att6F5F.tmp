@@ -1,0 +1,222 @@
+[gd_scene load_steps=3 format=3 uid="uid://jqh6stt10ct5"]
+
+[ext_resource type="Script" path="res://mainAssets/ui/3dPanel/editmode/attributes.gd" id="1_sps2y"]
+[ext_resource type="PackedScene" uid="uid://dd2kp02usski5" path="res://mainAssets/ui/3dPanel/editmode/attributes/vector3.tscn" id="2_1nsm8"]
+
+[node name="attributes" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_sps2y")
+
+[node name="titlebar" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 0.1
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 2.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="titlebar"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Panel" type="ColorRect" parent="titlebar/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+color = Color(0, 0, 0, 1)
+
+[node name="objectname" type="LineEdit" parent="titlebar/HBoxContainer/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+flat = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="titlebar/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.1
+
+[node name="export" type="Button" parent="titlebar/HBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+text = "export"
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="titlebar/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.1
+
+[node name="dupbtn" type="Button" parent="titlebar/HBoxContainer/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+text = "duplicate"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="titlebar/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.1
+
+[node name="delete" type="Button" parent="titlebar/HBoxContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+text = "delete"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="titlebar"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Panel9" type="ColorRect" parent="titlebar/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+color = Color(0, 0, 0, 1)
+
+[node name="Label" type="Label" parent="titlebar/HBoxContainer2/Panel9"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Properties"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="active" type="ColorRect" parent="titlebar/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+color = Color(0, 0, 0, 1)
+
+[node name="HBoxContainer" type="HBoxContainer" parent="titlebar/HBoxContainer2/active"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="active" type="Label" parent="titlebar/HBoxContainer2/active/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+size_flags_stretch_ratio = 4.0
+text = "active:"
+horizontal_alignment = 2
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="CheckButton" type="CheckButton" parent="titlebar/HBoxContainer2/active/HBoxContainer"]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+metadata/_edit_use_anchors_ = true
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.101667
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+follow_focus = true
+metadata/_edit_use_anchors_ = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer"]
+custom_minimum_size = Vector2(0, 4000)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 1
+
+[node name="vector3" parent="ScrollContainer/VBoxContainer" instance=ExtResource("2_1nsm8")]
+layout_mode = 2
+size_flags_horizontal = 1
+
+[node name="vector4" parent="ScrollContainer/VBoxContainer" instance=ExtResource("2_1nsm8")]
+layout_mode = 2
+size_flags_horizontal = 1
+
+[node name="vector5" parent="ScrollContainer/VBoxContainer" instance=ExtResource("2_1nsm8")]
+layout_mode = 2
+size_flags_horizontal = 1
+
+[node name="vector6" parent="ScrollContainer/VBoxContainer" instance=ExtResource("2_1nsm8")]
+layout_mode = 2
+size_flags_horizontal = 1
+
+[node name="vector7" parent="ScrollContainer/VBoxContainer" instance=ExtResource("2_1nsm8")]
+layout_mode = 2
+size_flags_horizontal = 1
+
+[node name="vector8" parent="ScrollContainer/VBoxContainer" instance=ExtResource("2_1nsm8")]
+layout_mode = 2
+size_flags_horizontal = 1
+
+[node name="vector9" parent="ScrollContainer/VBoxContainer" instance=ExtResource("2_1nsm8")]
+layout_mode = 2
+size_flags_horizontal = 1
+
+[node name="vector10" parent="ScrollContainer/VBoxContainer" instance=ExtResource("2_1nsm8")]
+layout_mode = 2
+size_flags_horizontal = 1
+
+[node name="vector11" parent="ScrollContainer/VBoxContainer" instance=ExtResource("2_1nsm8")]
+layout_mode = 2
+size_flags_horizontal = 1
+
+[node name="vector12" parent="ScrollContainer/VBoxContainer" instance=ExtResource("2_1nsm8")]
+layout_mode = 2
+size_flags_horizontal = 1
+
+[node name="vector13" parent="ScrollContainer/VBoxContainer" instance=ExtResource("2_1nsm8")]
+layout_mode = 2
+size_flags_horizontal = 1
+
+[node name="vector14" parent="ScrollContainer/VBoxContainer" instance=ExtResource("2_1nsm8")]
+layout_mode = 2
+size_flags_horizontal = 1
+
+[node name="vector15" parent="ScrollContainer/VBoxContainer" instance=ExtResource("2_1nsm8")]
+layout_mode = 2
+size_flags_horizontal = 1
+
+[node name="vector16" parent="ScrollContainer/VBoxContainer" instance=ExtResource("2_1nsm8")]
+layout_mode = 2
+size_flags_horizontal = 1
+
+[node name="vector17" parent="ScrollContainer/VBoxContainer" instance=ExtResource("2_1nsm8")]
+layout_mode = 2
+size_flags_horizontal = 1
+
+[node name="vector18" parent="ScrollContainer/VBoxContainer" instance=ExtResource("2_1nsm8")]
+layout_mode = 2
+size_flags_horizontal = 1
+
+[node name="vector19" parent="ScrollContainer/VBoxContainer" instance=ExtResource("2_1nsm8")]
+layout_mode = 2
+size_flags_horizontal = 1
+
+[node name="vector20" parent="ScrollContainer/VBoxContainer" instance=ExtResource("2_1nsm8")]
+layout_mode = 2
+size_flags_horizontal = 1
+
+[node name="vector21" parent="ScrollContainer/VBoxContainer" instance=ExtResource("2_1nsm8")]
+layout_mode = 2
+size_flags_horizontal = 1
+
+[node name="vector22" parent="ScrollContainer/VBoxContainer" instance=ExtResource("2_1nsm8")]
+layout_mode = 2
+size_flags_horizontal = 1
