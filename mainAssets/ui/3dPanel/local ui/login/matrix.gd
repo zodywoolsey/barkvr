@@ -1,22 +1,10 @@
 extends Control
-@onready var item_list :hashed_tree_list = $chat/HBoxContainer/ItemList
+@onready var item_list = $chat/HBoxContainer/ItemList
 @onready var chat = $chat
 @onready var login_existing = $login/Button
-@onready var clipboard_constring = $"clipboard constring"
-@onready var read_constring = $"read constring"
-@onready var uname = $uname
 @onready var login = $login
 
 func _ready():
-	uname.text_changed.connect(func(text):
-		NetworkHandler.uname = text
-		)
-	clipboard_constring.pressed.connect(func():
-		NetworkHandler.get_clipboard_connection_string()
-		)
-	read_constring.pressed.connect(func():
-		NetworkHandler.apply_connection_string('')
-		)
 	login_existing.pressed.connect(func():
 		Vector.readUserDict()
 		)

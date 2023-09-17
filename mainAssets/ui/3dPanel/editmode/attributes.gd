@@ -11,7 +11,6 @@ extends Control
 
 @onready var objectname = $titlebar/HBoxContainer/Panel/objectname
 
-@onready var vector_3 : Vector3_Attribute = $ScrollContainer/VBoxContainer/propcontainer/vector3
 @onready var v_box_container = $ScrollContainer/VBoxContainer
 
 var vector_3_field = preload("res://mainAssets/ui/3dPanel/editmode/attributes/vector3.tscn")
