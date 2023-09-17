@@ -199,17 +199,21 @@ func tick_spring_bones(delta: float) -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	if not update_secondary_fixed:
-		if not Engine.is_editor_hint() or check_for_editor_update():
-			tick_spring_bones(delta)
-		elif Engine.is_editor_hint():
-			if secondary_gizmo != null:
-				if skel != null:
-					var skel_transform: Transform3D = skel.global_transform
-					update_centers(skel_transform)
-					for collider_i in range(len(colliders_internal)):
-						colliders_internal[collider_i].update(skel_transform, center_transforms[colliders_centers[collider_i]], skel)
-					secondary_gizmo.draw_in_editor()
+	pass
+	
+func _notification(what):
+	if what == NOTIFICATION_PROCESS:
+		if not update_secondary_fixed:
+			if not Engine.is_editor_hint() or check_for_editor_update():
+				tick_spring_bones(get_process_delta_time())
+			elif Engine.is_editor_hint():
+				if secondary_gizmo != null:
+					if skel != null:
+						var skel_transform: Transform3D = skel.global_transform
+						update_centers(skel_transform)
+						for collider_i in range(len(colliders_internal)):
+							colliders_internal[collider_i].update(skel_transform, center_transforms[colliders_centers[collider_i]], skel)
+						secondary_gizmo.draw_in_editor()
 
 
 func _physics_process(delta: float) -> void:

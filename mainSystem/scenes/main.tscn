@@ -36,6 +36,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.3441, 0.0923181, 1.0157)
 [node name="basic starter" parent="localworldroot" instance=ExtResource("4_ruxi1")]
 
 [node name="Saneko_Loungewear_kyoko" parent="localworldroot" instance=ExtResource("11_3tlay")]
+process_thread_group = 2
+process_thread_group_order = 0
+process_thread_messages = 0
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
 
 [node name="save_load_world" parent="." instance=ExtResource("6_307b8")]

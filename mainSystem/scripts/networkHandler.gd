@@ -1,3 +1,4 @@
+class_name Network_Handler
 extends Node
 
 # todo: USER FLOW STUFF:
@@ -49,6 +50,7 @@ var mic_playback:MicPlayback
 
 signal created_offer(data:Dictionary)
 signal created_answer(data:Dictionary)
+signal finished_candidates(data:Dictionary)
 
 func _input(event):
 	if event is InputEventKey and event.pressed:
@@ -194,8 +196,10 @@ func _process(delta):
 							if err!= 0:
 								print('err: ', err)
 
-
-func create_new_peer_connection(constring:String='', for_user:String=''):
+## Takes an optional offer_string, and an optional for_user string
+## offer_string will automatically set a remote offer description for the created peer
+## for_user attached data to the peer data stored in the list of peers that tell which user it's meant for
+func create_new_peer_connection(offer_string:String='', for_user:String=''):
 	var peer = WebRTCPeerConnection.new()
 #	print('created peer')
 	# init the webrtc peer with the public google ice server
@@ -238,17 +242,18 @@ func create_new_peer_connection(constring:String='', for_user:String=''):
 				'ordered': true
 				})
 		],
-		'for_user': for_user
+		'for_user': for_user,
+		'candidates': []
 		}
 	
 	# connect functions
-	peer.ice_candidate_created.connect(_on_ice_candidate)
+	peer.ice_candidate_created.connect(_on_ice_candidate.bind(peer_dict))
 	peer.session_description_created.connect(description_created.bind(peer_dict))
 	# add peer to list of peers
 	peers.append(peer_dict)
 	# if there is an offer to use, use it
-	if constring:
-		peer.set_remote_description("offer",constring)
+	if offer_string:
+		peer.set_remote_description("offer",offer_string)
 	else: # otherwise, create an offer
 		tmp = peer.create_offer()
 		assert(tmp == OK)
@@ -257,10 +262,14 @@ func create_new_peer_connection(constring:String='', for_user:String=''):
 		
 	
 
-func _on_ice_candidate(mid, index, sdp):
+func _on_ice_candidate(mid, index, sdp, data:Dictionary):
 	print("ice:")
-	print("mid: ",str(mid),"\nindex: ",str(index),"\nsdp: ",str(sdp))
-	candidates.append(sdp)
+#	print("mid: ",str(mid),"\nindex: ",str(index),"\nsdp: ",str(sdp))
+	print(data.candidates)
+	data.candidates.append(sdp)
+	if data.candidates.size() >= 4:
+		emit_signal('finished_candidates', data)
+	
 
 func description_created(type:String, sdp:String, data:Dictionary):
 #	print("type: ",type,"\nsdp: ",sdp)

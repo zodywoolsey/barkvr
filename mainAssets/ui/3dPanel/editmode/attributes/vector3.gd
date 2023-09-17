@@ -5,6 +5,7 @@ extends Control
 @onready var xval = $VBoxContainer/position/x/xval
 @onready var yval = $VBoxContainer/position/y/yval
 @onready var zval = $VBoxContainer/position/z/zval
+@onready var v_box_container = $VBoxContainer
 
 var target:Node
 var _is_editing:bool = false
@@ -37,7 +38,18 @@ func _ready():
 
 func _process(delta):
 	timer += delta
-	update_fields()
+
+func _notification(what):
+	if what == NOTIFICATION_PROCESS:
+		var scrollparentrect = get_parent_control().get_parent_control().get_global_rect()
+		var rect = get_global_rect()
+		if v_box_container.visible and !(rect.end.y > scrollparentrect.position.y and rect.position.y < scrollparentrect.end.y):
+			print('hide')
+			v_box_container.visible = false
+		elif !v_box_container.visible and (rect.end.y > scrollparentrect.position.y and rect.position.y < scrollparentrect.end.y):
+			print('show')
+			v_box_container.show()
+		update_fields()
 
 func update_fields():
 	if target and !property_name.is_empty() and !_is_editing and is_instance_valid(target) and !_check_focus():
