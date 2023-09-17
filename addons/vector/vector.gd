@@ -40,25 +40,28 @@ func _ready():
 	api.user_logged_in.connect(func(result:int,response_code:int,header:PackedStringArray,body:PackedByteArray):
 		var msg = body.get_string_from_ascii()
 		var msgJson : Dictionary = JSON.parse_string(msg)
-		if msgJson.has('errcode'):
-#			Notify.sendNotification(msgJson.error)
-#			if msgJson.has('retry_after_ms'):
-#				Notify.sendNotification("Please try again after: "+str(msgJson.retry_after_ms/1000)+" seconds")
-			return
-		if msgJson.has('access_token') and msgJson.has('well_known'):
-			userToken = msgJson.access_token
-			base_url = msgJson.well_known["m.homeserver"].base_url
-			userData['login'] = msgJson
-			userData['login']['home_server'] = home_server
-			saveUserDict()
-			if userToken != "":
-				headers.push_back("Authorization: Bearer {0}".format([userToken]))
-				print(headers)
-				user_logged_in.emit()
-				print('logged in')
-				get_turn_server()
+		if msgJson:
+			if msgJson.has('errcode'):
+				Notifyvr.send_notification(msgJson.error)
+				if msgJson.has('retry_after_ms'):
+					Notifyvr.send_notification("Please try again after: "+str(msgJson.retry_after_ms/1000)+" seconds")
+				return
+			if msgJson.has('access_token') and msgJson.has('well_known'):
+				userToken = msgJson.access_token
+				base_url = msgJson.well_known["m.homeserver"].base_url
+				userData['login'] = msgJson
+				userData['login']['home_server'] = home_server
+				saveUserDict()
+				if userToken != "":
+					headers.push_back("Authorization: Bearer {0}".format([userToken]))
+					print(headers)
+					user_logged_in.emit()
+					print('logged in')
+					get_turn_server()
+			else:
+				print('Some error occurred')
 		else:
-			print('Some error occurred')
+			print('couldn\'t parse json\nbody:',msg)
 		)
 	api.got_joined_rooms.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 		var msg = body.get_string_from_ascii()
