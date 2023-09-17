@@ -2,9 +2,9 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cwx8rompy3yph"
-path.s3tc="res://.godot/imported/join.svg-e3a1156179c11ab1abe152853041c1ab.s3tc.ctex"
-path.etc2="res://.godot/imported/join.svg-e3a1156179c11ab1abe152853041c1ab.etc2.ctex"
+uid="uid://basljsibkoe5c"
+path.s3tc="res://.godot/imported/wand.svg-459668c99fe3ed342d26841b871e8c5b.s3tc.ctex"
+path.etc2="res://.godot/imported/wand.svg-459668c99fe3ed342d26841b871e8c5b.etc2.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -12,8 +12,8 @@ metadata={
 
 [deps]
 
-source_file="res://assets/icons/join.svg"
-dest_files=["res://.godot/imported/join.svg-e3a1156179c11ab1abe152853041c1ab.s3tc.ctex", "res://.godot/imported/join.svg-e3a1156179c11ab1abe152853041c1ab.etc2.ctex"]
+source_file="res://assets/icons/wand.svg"
+dest_files=["res://.godot/imported/wand.svg-459668c99fe3ed342d26841b871e8c5b.s3tc.ctex", "res://.godot/imported/wand.svg-459668c99fe3ed342d26841b871e8c5b.etc2.ctex"]
 
 [params]
 

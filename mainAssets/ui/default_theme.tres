@@ -1,4 +1,68 @@
-[gd_resource type="Theme" load_steps=11 format=3 uid="uid://b7mxq6cclub5f"]
+[gd_resource type="Theme" load_steps=16 format=3 uid="uid://b7mxq6cclub5f"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_adtlm"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.1, 0.1, 0.1, 0.3)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7gl8b"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(1, 1, 1, 0.75)
+draw_center = false
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+expand_margin_left = 2.0
+expand_margin_top = 2.0
+expand_margin_right = 2.0
+expand_margin_bottom = 2.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_o6rtn"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.225, 0.225, 0.225, 0.6)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_l5a03"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.827451, 0.827451, 0.827451, 1)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5fp7m"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0, 0, 0, 0.6)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jyf8o"]
 content_margin_left = 4.0
@@ -135,6 +199,12 @@ expand_margin_bottom = 2.0
 
 [resource]
 default_base_scale = 1.0
+Button/colors/font_color = Color(0, 0, 0, 1)
+Button/styles/disabled = SubResource("StyleBoxFlat_adtlm")
+Button/styles/focus = SubResource("StyleBoxFlat_7gl8b")
+Button/styles/hover = SubResource("StyleBoxFlat_o6rtn")
+Button/styles/normal = SubResource("StyleBoxFlat_l5a03")
+Button/styles/pressed = SubResource("StyleBoxFlat_5fp7m")
 HScrollBar/styles/grabber = SubResource("StyleBoxFlat_jyf8o")
 HScrollBar/styles/grabber_highlight = SubResource("StyleBoxFlat_wd0yr")
 HScrollBar/styles/grabber_pressed = SubResource("StyleBoxFlat_d4i7r")
