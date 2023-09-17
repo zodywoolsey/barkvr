@@ -17,7 +17,7 @@ func _ready():
 		if var_to_bytes(data).size() != var_to_bytes(prevmessages).size():
 #			for child in get_children():
 #				child.queue_free()
-			if data.has('body') and data.body.has('chunk'):
+			if data and data.has('body') and data.body.has('chunk'):
 				data.body.chunk.reverse()
 			for event in data['body']['chunk']:
 				match event['type']:
@@ -74,8 +74,8 @@ func _ready():
 								if event.content.for_user == Vector.userData.login.user_id:
 									for peer in NetworkHandler.peers:
 										if peer.for_user == event.sender:
-											for candidate in event.candidate:
-												WebRTCPeerConnection.new().add_ice_candidate(
+											for candidate in event.content.candidates:
+												peer.peer.add_ice_candidate(
 													candidate.media,
 													candidate.index,
 													candidate.name

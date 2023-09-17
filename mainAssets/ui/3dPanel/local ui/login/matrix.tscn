@@ -84,39 +84,6 @@ offset_bottom = 31.0
 focus_mode = 0
 text = "login using existing session"
 
-[node name="clipboard constring" type="Button" parent="."]
-visible = false
-layout_mode = 1
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -217.0
-offset_bottom = 31.0
-grow_horizontal = 0
-focus_mode = 0
-text = "copy session connection string"
-
-[node name="read constring" type="Button" parent="."]
-visible = false
-layout_mode = 1
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -245.0
-offset_top = 31.0
-offset_bottom = 62.0
-grow_horizontal = 0
-focus_mode = 0
-text = "read session connection string"
-
-[node name="uname" type="LineEdit" parent="."]
-visible = false
-layout_mode = 0
-offset_left = 555.0
-offset_top = 62.0
-offset_right = 800.0
-offset_bottom = 93.0
-
 [node name="chat" type="Control" parent="."]
 visible = false
 layout_mode = 1

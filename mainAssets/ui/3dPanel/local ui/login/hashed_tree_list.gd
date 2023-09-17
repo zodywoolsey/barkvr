@@ -1,6 +1,6 @@
 class_name hashed_tree_list
 extends Tree
-var wand = preload("res://assets/wand.svg")
+var wand = preload("res://assets/icons/wand.svg")
 var tree:Dictionary = {}
 @onready var messages = $"../RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control"
 
@@ -32,7 +32,7 @@ func add_item(text:String,metadata:Variant):
 		tree[metadata['room_id']]['name'] = text
 		tree[metadata['room_id']]['tree_item'].set_text(0,text)
 		tree[metadata['room_id']]['tree_item'].set_metadata(0, metadata)
-		tree[metadata['room_id']]['tree_item'].add_button(0, wand)
+#		tree[metadata['room_id']]['tree_item'].add_button(0, wand)
 	else:
 		var roomdict = {
 			"name": text,
@@ -59,7 +59,7 @@ func add_item(text:String,metadata:Variant):
 		roomdict['tree_item'].set_text(0,text)
 		
 		roomdict['tree_item'].set_metadata(0,metadata)
-		tree[metadata['room_id']]['tree_item'].add_button(0, wand)
+#		tree[metadata['room_id']]['tree_item'].add_button(0, wand)
 	
 
 func _check_room_messages():
