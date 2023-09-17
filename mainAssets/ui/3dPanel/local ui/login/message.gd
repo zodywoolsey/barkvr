@@ -21,7 +21,7 @@ func _draw():
 	_recalc_size()
 
 func _recalc_size():
-	panel.size.x = size.x/2.0
+	panel.size.x = size.x*0.5
 	panel.custom_minimum_size.y = label.size.y+20.0
 	custom_minimum_size.y = label.size.y+20.0
 	panel.size.y = label.size.y+20.0
@@ -30,4 +30,4 @@ func _recalc_size():
 	if leftside:
 		panel.position.x = 0.0
 	else:
-		panel.position.x = size.x/2.0
+		panel.position.x = size.x*.5

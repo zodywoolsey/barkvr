@@ -99,6 +99,9 @@ func _ready():
 		var msgJson = JSON.parse_string(msg)
 		got_turn_server.emit(msgJson)
 		)
+	api.placed_room_send.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
+		
+		)
 
 func send_room_state_event(room_id:String, event_type:String, state_key:String, body:Dictionary):
 	api.put_room_state(
@@ -116,7 +119,7 @@ func send_room_event(room_id:String, event_type:String, body:Dictionary):
 		headers,
 		room_id,
 		event_type,
-		str( str(OS.get_unique_id(),Time.get_unix_time_from_system()).hash()),
+		str( str( OS.get_unique_id(),Time.get_unix_time_from_system() ).hash()),
 		body
 		)
 

@@ -88,7 +88,6 @@ func scrollup():
 				"pressed": false,
 				"action": "scrollup"
 				})
-			print('ui scroll')
 
 func scrolldown():
 	if is_colliding():
@@ -104,7 +103,6 @@ func scrolldown():
 				"pressed": false,
 				"action": "scrolldown"
 				})
-			print('ui scroll')
 
 func click():
 	isclick = false

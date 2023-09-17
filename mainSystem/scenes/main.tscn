@@ -1,8 +1,8 @@
-[gd_scene load_steps=12 format=3 uid="uid://ctwckofb07cfw"]
+[gd_scene load_steps=13 format=3 uid="uid://ctwckofb07cfw"]
 
 [ext_resource type="Script" path="res://mainSystem/scripts/init.gd" id="1_gkt54"]
 [ext_resource type="PackedScene" uid="uid://clc5dre31iskm" path="res://addons/godot-xr-tools/xr/start_xr.tscn" id="4_4y4so"]
-[ext_resource type="PackedScene" uid="uid://k3nsddcq0tuv" path="res://mainAssets/worlds/comfy_cove.scn" id="4_b8cfi"]
+[ext_resource type="PackedScene" uid="uid://br1vh8in0e65o" path="res://mainAssets/worlds/basic_starter.tscn" id="4_ruxi1"]
 [ext_resource type="PackedScene" uid="uid://2o2f8tknq7me" path="res://mainAssets/ui/3dPanel/3dpanel.tscn" id="6_307b8"]
 [ext_resource type="PackedScene" uid="uid://dckbok0o553v7" path="res://mainSystem/scenes/objects/worldObjects/playerSpawnLocation.tscn" id="6_diugs"]
 [ext_resource type="PackedScene" uid="uid://cn48x5w44qy6e" path="res://mainAssets/ui/3dPanel/local ui/save world/save world.tscn" id="7_g03bn"]
@@ -10,6 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://lauwp8okd1vh" path="res://addons/godot-xr-tools/objects/keyboard/virtual_keyboard_2d.tscn" id="8_it0hc"]
 [ext_resource type="PackedScene" uid="uid://b3sbt3oft3cxg" path="res://mainAssets/ui/3dPanel/editmode/vreditor.tscn" id="8_wf33i"]
 [ext_resource type="PackedScene" uid="uid://i3pxsgqnbjly" path="res://mainAssets/ui/3dPanel/local ui/login/matrix.tscn" id="10_4ke10"]
+[ext_resource type="PackedScene" uid="uid://2hxmu3tbp38q" path="res://mainAssets/avatars/testing/saneko_loungewear_kyoko.scn" id="11_3tlay"]
 
 [sub_resource type="AudioStreamMicrophone" id="AudioStreamMicrophone_ve6pm"]
 
@@ -32,7 +33,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 [node name="playerSpawnLocation" parent="localworldroot" instance=ExtResource("6_diugs")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.3441, 0.0923181, 1.0157)
 
-[node name="comfy cove" parent="localworldroot" instance=ExtResource("4_b8cfi")]
+[node name="basic starter" parent="localworldroot" instance=ExtResource("4_ruxi1")]
+
+[node name="Saneko_Loungewear_kyoko" parent="localworldroot" instance=ExtResource("11_3tlay")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
 
 [node name="save_load_world" parent="." instance=ExtResource("6_307b8")]
 transform = Transform3D(0.537432, -0.843307, 0, 0, 0, -1, 0.843307, 0.537432, 0, 0.499627, 2, 1.96407)

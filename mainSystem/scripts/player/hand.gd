@@ -57,21 +57,25 @@ func _process(delta):
 				contexttimer += delta
 			else:
 				contexttimer = 0
-		if isscalinggrabbedobject:
-			var ts = global_position.distance_to(otherhand.global_position)-scalinggrabbedstartdist
-			ts *= 4.0
-			scalinggrabbedobject.scale = scalinggrabbedstartscale+Vector3(ts,ts,ts)
-		if ui_ray.is_colliding():
-			line_3d.target = ui_ray.get_collision_point()
-			world_ray.enabled = false
-			world_ray.hide()
+
+func _notification(what):
+	if what == NOTIFICATION_PROCESS:
+		if visible:
+			if isscalinggrabbedobject:
+				var ts = global_position.distance_to(otherhand.global_position)-scalinggrabbedstartdist
+				ts *= 4.0
+				scalinggrabbedobject.scale = scalinggrabbedstartscale+Vector3(ts,ts,ts)
+			if ui_ray.is_colliding():
+				line_3d.target = ui_ray.get_collision_point()
+				world_ray.enabled = false
+				world_ray.hide()
+			else:
+				line_3d.target = world_ray.vispos
+				world_ray.enabled = true
+				world_ray.show()
 		else:
-			line_3d.target = world_ray.vispos
-			world_ray.enabled = true
-			world_ray.show()
-	else:
-		world_ray.enabled = false
-		ui_ray.enabled = false
+			world_ray.enabled = false
+			ui_ray.enabled = false
 
 func _input(event):
 	pass
@@ -162,27 +166,34 @@ func grab(node:Node, laser:bool=false):
 	var tmpgrab = node.get_meta("grabbable")
 	if tmpgrab:
 		if node.is_class("RigidBody3D"):
-			grabjoint.node_b = node.get_path()
+#			grabjoint.node_b = node.get_path()
+			node.freeze = true
+			if local_player.grabbed.has(node.name):
+				scalinggrabbedobject = node
+				scalinggrabbedstartdist = global_position.distance_to(otherhand.global_position)
+				scalinggrabbedstartscale = node.scale
+				isscalinggrabbedobject = true
+			else:
+				local_player.grabbed[node.name] = {
+					"parent": node.get_parent(),
+					"offset": grab_parent.global_position.direction_to(node.global_position)*grab_parent.global_position.distance_to(node.global_position),
+					'frozen': node.freeze
+				}
+				node.reparent(grab_parent, true)
 		else:
 			if laser:
 				pass
-			if node.has_method('assignParent'):
-				var alreadyGrabbed = isgrabbed(node)
-				if !alreadyGrabbed:
-					node.assignParent()
-					node.reparent(grab_parent)
+			if local_player.grabbed.has(node.name):
+				scalinggrabbedobject = node
+				scalinggrabbedstartdist = global_position.distance_to(otherhand.global_position)
+				scalinggrabbedstartscale = node.scale
+				isscalinggrabbedobject = true
 			else:
-				if local_player.grabbed.has(node.name):
-					scalinggrabbedobject = node
-					scalinggrabbedstartdist = global_position.distance_to(otherhand.global_position)
-					scalinggrabbedstartscale = node.scale
-					isscalinggrabbedobject = true
-				else:
-					local_player.grabbed[node.name] = {
-						"parent": node.get_parent(),
-						"offset": grab_parent.global_position.direction_to(node.global_position)*grab_parent.global_position.distance_to(node.global_position)
-					}
-					node.reparent(grab_parent, true)
+				local_player.grabbed[node.name] = {
+					"parent": node.get_parent(),
+					"offset": grab_parent.global_position.direction_to(node.global_position)*grab_parent.global_position.distance_to(node.global_position)
+				}
+				node.reparent(grab_parent, true)
 
 func releasegrab(node:Node):
 	if local_player.grabbed.has(node.name) and isgrabbed(node):
@@ -190,7 +201,10 @@ func releasegrab(node:Node):
 			node.reparent(get_tree().get_first_node_in_group('worldroot'))
 		else:
 			node.reparent(local_player.grabbed[node.name].parent)
+		if node is RigidBody3D:
+			node.freeze = false
 		local_player.grabbed.erase(node.name)
+		
 
 func isgrabbed(node):
 	for i in grab_parent.get_children():

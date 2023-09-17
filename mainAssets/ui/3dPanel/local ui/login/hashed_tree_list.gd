@@ -4,6 +4,7 @@ var wand = preload("res://assets/wand.svg")
 var tree:Dictionary = {}
 
 var target_room:String = ''
+@onready var join_button:Button = $"../RoomSplitContainer/Panel/join button"
 
 func _ready():
 	get_tree().create_timer(1).timeout.connect(_check_room_messages)
@@ -13,6 +14,15 @@ func _ready():
 			target_room = get_selected().get_metadata(0)['room_id']
 		else:
 			get_selected().free()
+		)
+	join_button.pressed.connect(func():
+		Vector.send_room_event(
+			target_room,
+			'bark.session.request',
+			{
+				
+			}
+		)
 		)
 
 func add_item(text:String,metadata:Variant):
