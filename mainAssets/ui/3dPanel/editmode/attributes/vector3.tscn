@@ -3,15 +3,16 @@
 [ext_resource type="Script" path="res://mainAssets/ui/3dPanel/editmode/attributes/vector3.gd" id="1_f17vl"]
 
 [node name="vector3" type="Control"]
+custom_minimum_size = Vector2(0, 100)
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_bottom = -550.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-size_flags_stretch_ratio = 2.0
 script = ExtResource("1_f17vl")
 
 [node name="VBoxContainer" type="HBoxContainer" parent="."]

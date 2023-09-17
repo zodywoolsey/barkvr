@@ -182,11 +182,13 @@ size_flags_vertical = 3
 layout_mode = 2
 size_flags_vertical = 3
 follow_focus = true
+scroll_vertical = 100
 
 [node name="Control" type="VBoxContainer" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+alignment = 2
 script = ExtResource("4_ydkch")
 
 [node name="message" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
