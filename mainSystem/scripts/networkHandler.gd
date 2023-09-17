@@ -262,11 +262,14 @@ func create_new_peer_connection(offer_string:String='', for_user:String=''):
 		
 	
 
-func _on_ice_candidate(mid, index, sdp, data:Dictionary):
+func _on_ice_candidate(media, index, ice_name, data:Dictionary):
 	print("ice:")
-#	print("mid: ",str(mid),"\nindex: ",str(index),"\nsdp: ",str(sdp))
-	print(data.candidates)
-	data.candidates.append(sdp)
+#	print("media: ",str(media),"\nindex: ",str(index),"\nname: ",str(ice_name))
+	data.candidates.append({
+		'name':ice_name,
+		'media':media,
+		'index':index
+		})
 	if data.candidates.size() >= 4:
 		emit_signal('finished_candidates', data)
 	
