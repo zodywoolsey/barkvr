@@ -66,7 +66,7 @@ func _ready():
 								if event.content.for_user == Vector.userData.login.user_id:
 									for peer in NetworkHandler.peers:
 										if peer.for_user == event.sender:
-											peer.set_remote_description('answer',event.content.sdp)
+											peer.peer.set_remote_description('answer',event.content.sdp)
 					'bark.session.ice':
 						if event.event_id not in already_processed_answers:
 							already_processed_answers.append(event.event_id)
@@ -74,8 +74,12 @@ func _ready():
 								if event.content.for_user == Vector.userData.login.user_id:
 									for peer in NetworkHandler.peers:
 										if peer.for_user == event.sender:
-											pass
-#											WebRTCPeerConnection.new().add_ice_candidate()
+											for candidate in event.candidate:
+												WebRTCPeerConnection.new().add_ice_candidate(
+													candidate.media,
+													candidate.index,
+													candidate.name
+												)
 			prevmessages = data
 		)
 	if get_parent() is ScrollContainer:
@@ -108,7 +112,7 @@ func candidates_finished(data:Dictionary):
 	if target_room:
 		Vector.send_room_event(
 			target_room,
-			'bark.session.candidates',
+			'bark.session.ice',
 			{
 				'candidates':data.candidates,
 				'for_user': data.for_user
