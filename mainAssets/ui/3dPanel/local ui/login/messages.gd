@@ -94,7 +94,7 @@ func offer_created(data:Dictionary):
 		)
 
 func answer_created(data:Dictionary):
-	if data.for_user == Vector.userData.login.user_id and target_room:
+	if target_room:
 		Vector.send_room_event(
 			target_room,
 			'bark.session.answer',
@@ -105,7 +105,15 @@ func answer_created(data:Dictionary):
 		)
 
 func candidates_finished(data:Dictionary):
-	print(data)
+	if target_room:
+		Vector.send_room_event(
+			target_room,
+			'bark.session.candidates',
+			{
+				'candidates':data.candidates,
+				'for_user': data.for_user
+			}
+		)
 
 func set_room(new_room):
 	target_room = new_room
