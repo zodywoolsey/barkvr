@@ -628,7 +628,7 @@ func get_room_messages(base_url:String='', headers:Array=[], roomId: String = ''
 		push_warning("get_room_messages: headers are required to be set for this call, due to authentication requirements")
 	var res
 	var client = HTTPRequest.new()
-	print("getting room_messages for: ",roomId)
+#	print("getting room_messages for: ",roomId)
 	client.use_threads = false
 	Vector.requestParent.add_child(client)
 	client.request_completed.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
@@ -718,7 +718,7 @@ func put_room_send(base_url:String='', headers:Array=[], room_id:String='', even
 	client.use_threads = false
 	Vector.requestParent.add_child(client)
 	client.request_completed.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
-		if result == HTTPRequest.RESULT_SUCCESS:
+		if result == HTTPRequest.RESULT_SUCCESS and response_code == 200:
 			placed_room_send.emit(result,response_code,headers,body)
 		else:
 			print("error putting room_send:\n	result: {0}\n	response_code: {1}\n".format([result,response_code]))

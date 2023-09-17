@@ -1,8 +1,10 @@
-[gd_scene load_steps=7 format=3 uid="uid://i3pxsgqnbjly"]
+[gd_scene load_steps=9 format=3 uid="uid://i3pxsgqnbjly"]
 
 [ext_resource type="Script" path="res://mainAssets/ui/3dPanel/local ui/login/loginbutton.gd" id="1_18njo"]
+[ext_resource type="Theme" uid="uid://b7mxq6cclub5f" path="res://mainAssets/ui/default_theme.tres" id="1_eqeii"]
 [ext_resource type="Script" path="res://mainAssets/ui/3dPanel/local ui/login/matrix.gd" id="1_ptvo5"]
 [ext_resource type="Script" path="res://mainAssets/ui/3dPanel/local ui/login/hashed_tree_list.gd" id="3_wf5r8"]
+[ext_resource type="Texture2D" uid="uid://bhoipad8j50fr" path="res://assets/icons/vr-headset.svg" id="4_keerj"]
 [ext_resource type="Script" path="res://mainAssets/ui/3dPanel/local ui/login/messages.gd" id="4_ydkch"]
 [ext_resource type="PackedScene" uid="uid://drvs5pgtp63nx" path="res://mainAssets/ui/3dPanel/local ui/login/message.tscn" id="5_8wc7f"]
 [ext_resource type="Script" path="res://mainAssets/ui/3dPanel/local ui/login/SendMessage.gd" id="5_wc8jy"]
@@ -14,6 +16,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("1_eqeii")
 script = ExtResource("1_ptvo5")
 
 [node name="login" type="Control" parent="."]
@@ -151,6 +154,26 @@ layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.0
 
+[node name="join button" type="Button" parent="chat/HBoxContainer/RoomSplitContainer/Panel"]
+z_index = 1
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -101.0
+offset_top = -20.0
+offset_right = -8.0
+offset_bottom = 20.0
+grow_horizontal = 0
+grow_vertical = 2
+focus_mode = 0
+text = "join"
+icon = ExtResource("4_keerj")
+clip_text = true
+expand_icon = true
+
 [node name="MessageSplitContainer" type="VSplitContainer" parent="chat/HBoxContainer/RoomSplitContainer"]
 layout_mode = 2
 size_flags_vertical = 3
@@ -159,7 +182,6 @@ size_flags_vertical = 3
 layout_mode = 2
 size_flags_vertical = 3
 follow_focus = true
-scroll_vertical = 100
 
 [node name="Control" type="VBoxContainer" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer"]
 layout_mode = 2
@@ -168,99 +190,82 @@ size_flags_vertical = 3
 script = ExtResource("4_ydkch")
 
 [node name="message" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
-custom_minimum_size = Vector2(0, 45)
 layout_mode = 2
+size_flags_horizontal = 1
+leftside = false
+
+[node name="message25" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
+layout_mode = 2
+leftside = false
 
 [node name="message2" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
-custom_minimum_size = Vector2(0, 45)
 layout_mode = 2
 
 [node name="message3" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
-custom_minimum_size = Vector2(0, 45)
 layout_mode = 2
 
 [node name="message4" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
-custom_minimum_size = Vector2(0, 45)
 layout_mode = 2
 
 [node name="message5" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
-custom_minimum_size = Vector2(0, 45)
 layout_mode = 2
 
 [node name="message6" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
-custom_minimum_size = Vector2(0, 45)
 layout_mode = 2
+leftside = false
 
 [node name="message7" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
-custom_minimum_size = Vector2(0, 45)
 layout_mode = 2
 
 [node name="message8" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
-custom_minimum_size = Vector2(0, 45)
 layout_mode = 2
 
 [node name="message9" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
-custom_minimum_size = Vector2(0, 45)
 layout_mode = 2
 
 [node name="message10" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
-custom_minimum_size = Vector2(0, 45)
 layout_mode = 2
 
 [node name="message11" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
-custom_minimum_size = Vector2(0, 45)
 layout_mode = 2
 
 [node name="message12" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
-custom_minimum_size = Vector2(0, 45)
 layout_mode = 2
 
 [node name="message13" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
-custom_minimum_size = Vector2(0, 45)
 layout_mode = 2
 
 [node name="message14" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
-custom_minimum_size = Vector2(0, 45)
 layout_mode = 2
 
 [node name="message15" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
-custom_minimum_size = Vector2(0, 45)
 layout_mode = 2
 
 [node name="message16" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
-custom_minimum_size = Vector2(0, 45)
 layout_mode = 2
 
 [node name="message17" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
-custom_minimum_size = Vector2(0, 45)
 layout_mode = 2
 
 [node name="message18" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
-custom_minimum_size = Vector2(0, 45)
 layout_mode = 2
 
 [node name="message19" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
-custom_minimum_size = Vector2(0, 45)
 layout_mode = 2
 
 [node name="message20" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
-custom_minimum_size = Vector2(0, 45)
 layout_mode = 2
 
 [node name="message21" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
-custom_minimum_size = Vector2(0, 45)
 layout_mode = 2
 
 [node name="message22" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
-custom_minimum_size = Vector2(0, 45)
 layout_mode = 2
 
 [node name="message23" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
-custom_minimum_size = Vector2(0, 45)
 layout_mode = 2
 
 [node name="message24" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
-custom_minimum_size = Vector2(0, 45)
 layout_mode = 2
 
 [node name="Control" type="Control" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer"]

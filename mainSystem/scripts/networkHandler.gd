@@ -41,9 +41,14 @@ var journal_timer :float = 0.0
 
 var uname :String = ""
 
+var current_room :String = ''
+
 #var audioshit:Dictionary = {}
 var capture:AudioEffectCapture
 var mic_playback:MicPlayback
+
+signal created_offer(data:Dictionary)
+signal created_answer(data:Dictionary)
 
 func _input(event):
 	if event is InputEventKey and event.pressed:
@@ -190,7 +195,7 @@ func _process(delta):
 								print('err: ', err)
 
 
-func create_new_peer_connection(constring:String=''):
+func create_new_peer_connection(constring:String='', for_user:String=''):
 	var peer = WebRTCPeerConnection.new()
 #	print('created peer')
 	# init the webrtc peer with the public google ice server
@@ -219,13 +224,7 @@ func create_new_peer_connection(constring:String=''):
 	})
 	assert(tmp == OK)
 #	print('initialized new peer')
-	
-	# connect functions
-	peer.ice_candidate_created.connect(_on_ice_candidate)
-	peer.session_description_created.connect(description_created.bind(peer))
-#	print('connected signals')
-	
-	peers.append({
+	var peer_dict = {
 		'peer': peer,
 		'channels': [
 			peer.create_data_channel("bark-chat", {
@@ -238,28 +237,42 @@ func create_new_peer_connection(constring:String=''):
 				'negotiated': true,
 				'ordered': true
 				})
-		]
-		})
-#	print('created channels and added peer to list')
+		],
+		'for_user': for_user
+		}
 	
-	tmp = peer.create_offer()
-	assert(tmp == OK)
-#	print('created offer')
+	# connect functions
+	peer.ice_candidate_created.connect(_on_ice_candidate)
+	peer.session_description_created.connect(description_created.bind(peer_dict))
+	# add peer to list of peers
+	peers.append(peer_dict)
+	# if there is an offer to use, use it
 	if constring:
 		peer.set_remote_description("offer",constring)
-#		print('assigned constring: \n',constring,'\n')
+	else: # otherwise, create an offer
+		tmp = peer.create_offer()
+		assert(tmp == OK)
+	
+	
+		
 	
 
 func _on_ice_candidate(mid, index, sdp):
-#	print("ice:")
-#	print("mid: ",str(mid),"\nindex: ",str(index),"\nsdp: ",str(sdp))
+	print("ice:")
+	print("mid: ",str(mid),"\nindex: ",str(index),"\nsdp: ",str(sdp))
 	candidates.append(sdp)
 
-func description_created(type:String, sdp:String, peer:WebRTCPeerConnection):
+func description_created(type:String, sdp:String, data:Dictionary):
 #	print("type: ",type,"\nsdp: ",sdp)
 	print('set local description')
 	print(type)
 	if sdp.contains('actpass'):
 		sdp = sdp.replace('actpass', 'passive')
-	peer.set_local_description(type,sdp)
+	data.peer.set_local_description(type,sdp)
 	local_description = sdp
+	if type == 'offer':
+		data.offer = sdp
+		emit_signal('created_offer',data)
+	if type == 'answer':
+		data.answer = sdp
+		emit_signal('created_answer',data)
