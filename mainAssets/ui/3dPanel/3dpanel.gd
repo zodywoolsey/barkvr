@@ -30,7 +30,7 @@ func _ready():
 		axis_lock_linear_x = true
 		axis_lock_linear_y = true
 		axis_lock_linear_z = true
-	if transparent and OS.get_name() != "Android":
+	if transparent and OS.get_name() != "Android" and OS.get_name() != 'Web':
 		viewport.transparent_bg = true
 	else:
 		viewport.transparent_bg = false
