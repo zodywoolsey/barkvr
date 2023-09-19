@@ -58,7 +58,7 @@ func apply_connection_string(type:String):
 				print('set remote desc1')
 
 func _ready():
-#	mic_playback = get_tree().get_first_node_in_group('mic_playback')
+	mic_playback = get_tree().get_first_node_in_group('mic_playback')
 	capture = AudioServer.get_bus_effect(2,0)
 	Vector.got_turn_server.connect(func(data):
 		if data.has('username'):
@@ -84,7 +84,7 @@ func _process(delta):
 				
 			peer.peer.poll()
 			
-		#	mic_playback.play()
+			mic_playback.play()
 			for chan in peer.channels:
 	#			if chan.get_ready_state() != 1:
 	#				print(chan.get_ready_state())
@@ -103,8 +103,8 @@ func _process(delta):
 									tmp.add_to_group(data.p_id)
 									root.add_child(tmp)
 									
-		#						if data.has('audio'):
-		#							mic_playback.buffer_to_push.append_array(data.audio)
+								if data.has('audio'):
+									mic_playback.buffer_to_push.append_array(data.audio)
 						'bark-journal':
 							while chan.get_available_packet_count() > 0:
 								var data = chan.get_var(true)
