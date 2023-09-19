@@ -28,7 +28,6 @@ driver/enable_input=true
 
 [autoload]
 
-XRToolsUserSettings="res://addons/godot-xr-tools/user_settings/user_settings.gd"
 LocalGlobals="*res://mainSystem/scripts/localGlobals.gd"
 NetworkHandler="*res://mainSystem/scripts/networkHandler.gd"
 Notifyvr="*res://addons/notifyvr/notifyvr.gd"
@@ -169,6 +168,5 @@ textures/default_filters/anisotropic_filtering_level=0
 
 [xr]
 
-openxr/enabled=true
 openxr/startup_alert=false
 shaders/enabled=true
