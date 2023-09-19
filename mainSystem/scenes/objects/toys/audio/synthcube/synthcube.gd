@@ -12,7 +12,9 @@ func _ready():
 	stream = audio_stream_player.get_stream_playback()
 
 func _process(delta):
-	audio_stream_player.pitch_scale = lerp(audio_stream_player.pitch_scale,1.0,.1)
+#	audio_stream_player.play()
+	var newval = lerp(audio_stream_player.pitch_scale,linear_velocity.length(),.1)
+	audio_stream_player.pitch_scale = clampf(sin(timer/32.0),.2,1.0)
 	label.text = str(audio_stream_player.pitch_scale)
 	timer += stream.get_frames_available()
 	var tofill = stream.get_frames_available()
