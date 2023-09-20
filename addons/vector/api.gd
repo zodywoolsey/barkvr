@@ -634,7 +634,7 @@ func get_room_messages(base_url:String='', headers:Array=[], roomId: String = ''
 	client.request_completed.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 		# if result == RESULT_SUCCESS, emit signal
 		if result == HTTPRequest.RESULT_SUCCESS:
-			got_room_messages.emit(result,response_code,headers,body)
+			emit_signal('got_room_messages',result,response_code,headers,body)
 		else:
 			print("error getting room_messages:\n	result: {0}\n	response_code: {1}\n".format([result,response_code]))
 		client.queue_free()

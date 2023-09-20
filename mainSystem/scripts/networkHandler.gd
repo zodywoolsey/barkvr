@@ -48,6 +48,34 @@ signal created_offer(data:Dictionary)
 signal created_answer(data:Dictionary)
 signal finished_candidates(data:Dictionary)
 
+func _input(event):
+	if event is InputEventKey and event.pressed:
+		if event.keycode == KEY_F2:
+			get_clipboard_connection_string()
+		elif event.keycode == KEY_F3:
+			apply_connection_string('offer')
+		elif event.keycode == KEY_F4:
+			create_new_peer_connection()
+		elif event.keycode == KEY_F5:
+			apply_connection_string('answer')
+
+func get_clipboard_connection_string():
+	var tmp
+	if peers[0].has('offer'):
+		tmp = str({
+			"description": peers[0].offer,
+			"candidates": peers[0].candidates
+		})
+	else:
+		tmp = str({
+			"description": peers[0].answer,
+			"candidates": peers[0].candidates
+		})
+	DisplayServer.clipboard_set(tmp)
+#	discord_sdk.join_secret = tmp
+#	discord_sdk.state = "testing a session"
+#	discord_sdk.refresh()
+
 func apply_connection_string(type:String):
 	var data = JSON.parse_string(DisplayServer.clipboard_get())
 	if data and data.has('description') and data.has('candidates'):
@@ -84,7 +112,7 @@ func _process(delta):
 				
 			peer.peer.poll()
 			
-			mic_playback.play()
+#			mic_playback.play()
 			for chan in peer.channels:
 	#			if chan.get_ready_state() != 1:
 	#				print(chan.get_ready_state())
