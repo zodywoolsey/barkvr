@@ -4,6 +4,7 @@ extends RayCast3D
 var rayvis = preload("res://mainSystem/scenes/player/rayvis.tscn")
 var vis
 var vispos := Vector3()
+@export var leftside:=false
 func _ready():
 	vis = rayvis.instantiate()
 	add_child.call_deferred(vis)

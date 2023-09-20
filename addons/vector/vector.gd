@@ -62,7 +62,7 @@ func _ready():
 				print('Some error occurred')
 		else:
 			print('couldn\'t parse json\nbody:',msg)
-		)
+	)
 	api.got_joined_rooms.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 		var msg = body.get_string_from_ascii()
 		var msgJson = JSON.parse_string(msg)
@@ -81,30 +81,33 @@ func _ready():
 			"headers": headers,
 			"body": msgJson
 		})
-		)
+	)
 	api.got_room_messages.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 		var msg = body.get_string_from_ascii()
 		var msgJson = JSON.parse_string(msg)
-		got_room_messages.emit({
-			"result_code": result,
-			"response_code": response_code,
-			"headers": headers,
-			"body": msgJson
-		})
-		)
+		if result == 0:
+			got_room_messages.emit({
+				"result_code": result,
+				"response_code": response_code,
+				"headers": headers,
+				"body": msgJson
+			})
+		else:
+			print("error getting messages")
+	)
 	api.synced.connect(func(result:int,response_code:int,header:PackedStringArray,body:PackedByteArray):
 		var msg = body.get_string_from_ascii()
 		var msgJson = JSON.parse_string(msg)
 		synced.emit(msgJson)
-		)
+	)
 	api.got_turn_server.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 		var msg = body.get_string_from_ascii()
 		var msgJson = JSON.parse_string(msg)
 		got_turn_server.emit(msgJson)
-		)
+	)
 	api.placed_room_send.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
-		
-		)
+		pass
+	)
 
 func send_room_state_event(room_id:String, event_type:String, state_key:String, body:Dictionary):
 	api.put_room_state(

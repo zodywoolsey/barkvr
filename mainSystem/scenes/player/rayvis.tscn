@@ -26,9 +26,10 @@ no_depth_test = true
 texture_filter = 0
 texture = ExtResource("3_j7jdp")
 
-[node name="cursor" type="Sprite3D" parent="."]
-transform = Transform3D(0.019, 0, 0, 0, 0.019, 0, 0, 0, 0.019, 0.00719908, -0.0179832, 0)
-visible = false
+[node name="cursor" type="Node3D" parent="."]
+
+[node name="cursor" type="Sprite3D" parent="cursor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.403815, -0.976471, 0)
 sorting_offset = 99.0
 billboard = 1
 no_depth_test = true
