@@ -103,6 +103,7 @@ func _ready():
 	api.got_turn_server.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 		var msg = body.get_string_from_ascii()
 		var msgJson = JSON.parse_string(msg)
+		print('got turn server: ',msgJson)
 		got_turn_server.emit(msgJson)
 	)
 	api.placed_room_send.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
