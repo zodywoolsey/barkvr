@@ -15,6 +15,8 @@
 [sub_resource type="AudioStreamMicrophone" id="AudioStreamMicrophone_ve6pm"]
 
 [sub_resource type="AudioStreamGenerator" id="AudioStreamGenerator_f6fry"]
+mix_rate = 11025.0
+buffer_length = 1.0
 
 [node name="main" type="Node3D" groups=["localroot"]]
 script = ExtResource("1_gkt54")
