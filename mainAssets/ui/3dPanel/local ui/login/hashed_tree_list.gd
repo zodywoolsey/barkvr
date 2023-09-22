@@ -14,17 +14,17 @@ func _ready():
 			Vector.get_room_messages(get_selected().get_metadata(0)['room_id'])
 			target_room = get_selected().get_metadata(0)['room_id']
 			messages.set_room(target_room)
+#			LocalGlobals.discord_world = get_selected().get_text(0)
 		else:
-			get_selected().free()
+			get_selected().visible = false
 		)
 	join_button.pressed.connect(func():
 		Vector.send_room_event(
 			target_room,
 			'bark.session.request',
-			{
-				
-			}
+			{}
 		)
+		NetworkHandler.peers = []
 		)
 
 func add_item(text:String,metadata:Variant):
@@ -32,6 +32,7 @@ func add_item(text:String,metadata:Variant):
 		tree[metadata['room_id']]['name'] = text
 		tree[metadata['room_id']]['tree_item'].set_text(0,text)
 		tree[metadata['room_id']]['tree_item'].set_metadata(0, metadata)
+		tree[metadata['room_id']]['tree_item'].visible = true
 #		tree[metadata['room_id']]['tree_item'].add_button(0, wand)
 	else:
 		var roomdict = {

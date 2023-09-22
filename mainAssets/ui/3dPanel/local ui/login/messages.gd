@@ -8,6 +8,7 @@ var already_processed_offers := []
 var already_processed_answers := []
 @onready var item_list := $"../../../../ItemList"
 @onready var scroll_container := $".."
+@onready var text_edit = $"../../Control/TextEdit"
 
 func _ready():
 	NetworkHandler.created_offer.connect(offer_created)
@@ -84,6 +85,10 @@ func _ready():
 		)
 	if get_parent() is ScrollContainer:
 		get_parent().scroll_vertical = 999999999
+
+func _gui_input(event):
+	if event is InputEventMouseButton and event.is_pressed():
+		text_edit.release_focus()
 
 func offer_created(data:Dictionary):
 #	print("type: ",type,"\nsdp: ",sdp)

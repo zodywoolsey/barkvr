@@ -3,9 +3,7 @@
 export/
 assetsNotForUpload/
 noUpload/
-android/build/
-exports/android/barkvr.apk
-exports/win/barkvr.exe
-exports/win/barkvr.zip
-exports/win/win.zip
+android/build
+android/.build_version
+exports/
 temp_unityimp/

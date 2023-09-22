@@ -16,7 +16,7 @@ var otherhand : XRController3D
 
 var prevHover : Node
 var grabAreaBodies : Array = []
-var grabbed
+var grabbed :Dictionary
 var grabbedVel := Vector3()
 var rayBody : RigidBody3D
 var rightStickVec
@@ -58,6 +58,13 @@ func _process(delta):
 			else:
 				contexttimer = 0
 
+func _physics_process(delta):
+	for item in grabbed.values():
+		if self == righthand:
+			item.node.global_transform = righthand.global_transform * item.offset
+		else:
+			item.node.global_transform = lefthand.global_transform * item.offset
+
 func _notification(what):
 	if what == NOTIFICATION_PROCESS:
 		if visible:
@@ -66,11 +73,9 @@ func _notification(what):
 				ts *= 4.0
 				scalinggrabbedobject.scale = scalinggrabbedstartscale+Vector3(ts,ts,ts)
 			if ui_ray.is_colliding():
-				line_3d.target = ui_ray.get_collision_point()
 				world_ray.enabled = false
 				world_ray.hide()
 			else:
-				line_3d.target = world_ray.vispos
 				world_ray.enabled = true
 				world_ray.show()
 		else:
@@ -153,8 +158,8 @@ func grip():
 	grabbing = true
 
 func ungrip():
-	for item in grab_parent.get_children():
-		releasegrab(item)
+	for item in grabbed.values():
+		releasegrab(item.node)
 	if grabjoint.node_b:
 		grabjoint.node_b = ""
 	if isscalinggrabbedobject:
@@ -168,42 +173,46 @@ func grab(node:Node, laser:bool=false):
 		if node.is_class("RigidBody3D"):
 #			grabjoint.node_b = node.get_path()
 			node.freeze = true
-			if local_player.grabbed.has(node.name):
+			if grabbed.has(node.name):
 				scalinggrabbedobject = node
 				scalinggrabbedstartdist = global_position.distance_to(otherhand.global_position)
 				scalinggrabbedstartscale = node.scale
 				isscalinggrabbedobject = true
 			else:
-				local_player.grabbed[node.name] = {
+				grabbed[node.name] = {
 					"parent": node.get_parent(),
-					"offset": grab_parent.global_position.direction_to(node.global_position)*grab_parent.global_position.distance_to(node.global_position),
-					'frozen': node.freeze
+					'offset': global_transform.affine_inverse() * node.global_transform,
+					'rotoffset': node.global_rotation,
+					'frozen': node.freeze,
+					'node': node
 				}
-				node.reparent(grab_parent, true)
+#				node.reparent(grab_parent, true)
 		else:
 			if laser:
 				pass
-			if local_player.grabbed.has(node.name):
+			if grabbed.has(node.name):
 				scalinggrabbedobject = node
 				scalinggrabbedstartdist = global_position.distance_to(otherhand.global_position)
 				scalinggrabbedstartscale = node.scale
 				isscalinggrabbedobject = true
 			else:
-				local_player.grabbed[node.name] = {
+				grabbed[node.name] = {
 					"parent": node.get_parent(),
-					"offset": grab_parent.global_position.direction_to(node.global_position)*grab_parent.global_position.distance_to(node.global_position)
+					'offset': global_transform.affine_inverse() * node.global_transform,
+					'rotoffset': node.global_rotation,
+					'node': node
 				}
-				node.reparent(grab_parent, true)
+#				node.reparent(grab_parent, true)
 
 func releasegrab(node:Node):
-	if local_player.grabbed.has(node.name) and isgrabbed(node):
-		if lefthand == local_player.grabbed[node.name].parent or righthand == local_player.grabbed[node.name].parent:
-			node.reparent(get_tree().get_first_node_in_group('worldroot'))
-		else:
-			node.reparent(local_player.grabbed[node.name].parent)
+	if grabbed.has(node.name):
+#		if lefthand == grabbed[node.name].parent or righthand == grabbed[node.name].parent:
+#			node.reparent(get_tree().get_first_node_in_group('worldroot'))
+#		else:
+#			node.reparent(grabbed[node.name].parent)
 		if node is RigidBody3D:
 			node.freeze = false
-		local_player.grabbed.erase(node.name)
+		grabbed.erase(node.name)
 		
 
 func isgrabbed(node):

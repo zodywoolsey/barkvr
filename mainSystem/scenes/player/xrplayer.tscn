@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://r68jre2w5k33"]
+[gd_scene load_steps=16 format=3 uid="uid://r68jre2w5k33"]
 
 [ext_resource type="Script" path="res://mainSystem/scripts/player/xrplayer-controller.gd" id="1_iwrfe"]
 [ext_resource type="Script" path="res://mainSystem/scripts/player/hand.gd" id="2_npgyv"]
@@ -6,7 +6,6 @@
 [ext_resource type="Script" path="res://mainSystem/scenes/player/uiRay.gd" id="4_xffyd"]
 [ext_resource type="PackedScene" uid="uid://b2r6qi0effaiw" path="res://addons/contextmenu/gridmenu/gridmenubutton.tscn" id="5_d1mpu"]
 [ext_resource type="Texture2D" uid="uid://cm7tsng6rg8cs" path="res://mainAssets/ui/assets/wrist_menu/UI_mockup_trasparent.png" id="6_j5bbn"]
-[ext_resource type="Script" path="res://mainSystem/scenes/objects/tools/Line3D.gd" id="7_atami"]
 [ext_resource type="Script" path="res://mainSystem/scripts/player/notificationpositioner.gd" id="8_n4qtp"]
 [ext_resource type="PackedScene" uid="uid://cr02u36wo3sqp" path="res://addons/contextmenu/gridmenu/handmenu.tscn" id="9_opil0"]
 
@@ -38,10 +37,6 @@ script/source = "extends Label3D
 #	text = str(1/delta)
 "
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3575f"]
-cull_mode = 2
-shading_mode = 0
-
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_1uxmk"]
 radius = 0.1
 height = 1.0
@@ -64,7 +59,7 @@ target_position = Vector3(0, 0, -1000)
 collision_mask = 15
 
 [node name="Node3D" type="Node3D" parent="CharacterBody3D/xrplayer/XrCamera3d" groups=["notificationparent"]]
-transform = Transform3D(0.075, 0, 0, 0, 0.075, 0, 0, 0, 0.075, 0, -0.0845834, -0.174912)
+transform = Transform3D(0.075, 0, 0, 0, 0.075, 0, 0, 0, 0.075, 0, -0.0845834, -1.11836)
 
 [node name="righthand" type="XRController3D" parent="CharacterBody3D/xrplayer"]
 unique_name_in_owner = true
@@ -143,11 +138,6 @@ pixel_size = 0.002
 text = "test"
 script = SubResource("GDScript_dn0nl")
 
-[node name="Line3D" type="MeshInstance3D" parent="CharacterBody3D/xrplayer/righthand"]
-material_override = SubResource("StandardMaterial3D_3575f")
-cast_shadow = 0
-script = ExtResource("7_atami")
-
 [node name="lefthand" type="XRController3D" parent="CharacterBody3D/xrplayer"]
 unique_name_in_owner = true
 tracker = &"left_hand"
@@ -199,11 +189,6 @@ disabled = true
 
 [node name="grabjoint" type="Generic6DOFJoint3D" parent="CharacterBody3D/xrplayer/lefthand"]
 node_a = NodePath("../StaticBody3D")
-
-[node name="Line3D" type="MeshInstance3D" parent="CharacterBody3D/xrplayer/lefthand"]
-material_override = SubResource("StandardMaterial3D_3575f")
-cast_shadow = 0
-script = ExtResource("7_atami")
 
 [node name="notificationparent" type="Node3D" parent="CharacterBody3D/xrplayer/lefthand" groups=["notificationparent"]]
 transform = Transform3D(-4.37114e-09, 4.37114e-09, -0.1, -4.37114e-09, -0.1, -4.37114e-09, -0.1, 4.37114e-09, 4.37114e-09, -0.048, -0.064, 0.077)
