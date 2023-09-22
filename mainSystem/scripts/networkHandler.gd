@@ -48,6 +48,10 @@ signal created_offer(data:Dictionary)
 signal created_answer(data:Dictionary)
 signal finished_candidates(data:Dictionary)
 
+@onready var prev_time:float = Time.get_unix_time_from_system()
+
+var thread = Thread.new()
+
 func _input(event):
 	if event is InputEventKey and event.pressed:
 		if event.keycode == KEY_F2:
@@ -100,111 +104,114 @@ func _ready():
 		uname = Vector.userData.login.user_id.split(':')[0].right(-1)
 		print(uname)
 		)
+	thread.start(poll)
 
 func _reset():
 	peers = []
 
-func _process(delta):
-	chat_timer += delta
-	journal_timer += delta
-	for peer in peers:
-		if peer:
+func poll():
+	while true:
+		var delta = Time.get_unix_time_from_system()-prev_time
+		chat_timer += delta
+		journal_timer += delta
+		for peer in peers:
+			if peer:
+					
+				peer.peer.poll()
 				
-			peer.peer.poll()
-			
-#			mic_playback.play()
-			for chan in peer.channels:
-	#			if chan.get_ready_state() != 1:
-	#				print(chan.get_ready_state())
-				chan.poll()
-				if chan.get_ready_state() == WebRTCDataChannel.STATE_OPEN:
-					match chan.get_label():
-						'bark-chat':
-							while chan.get_available_packet_count() > 0:
-								var data = bytes_to_var(chan.get_packet().decompress_dynamic(999999999999, 3))
-								var remplayer = get_tree().get_first_node_in_group(data.p_id)
-								if remplayer:
-									remplayer.set_target_pos(data.user_pos.pos)
-								else:
-									var root = get_tree().get_first_node_in_group('localworldroot')
-									var tmp:Node = load("res://mainSystem/scenes/player/remote player/remote player.tscn").instantiate()
-									tmp.add_to_group(data.p_id)
-									root.add_child(tmp)
-									
-								if data.has('audio'):
-									mic_playback.buffer_to_push.append_array(data.audio)
-						'bark-journal':
-							while chan.get_available_packet_count() > 0:
-								var data = chan.get_var(true)
-								if data.has('pos') and data.pos != -1 and data.has('bytes'):
-									pack.append_array(data.bytes)
-									packsize += 1
-								elif data.has('pos') and data.pos == -1:
-									pack.append_array(data.bytes)
-									packsize += 1
-									data = bytes_to_var_with_objects(pack.decompress_dynamic(999999999999, 3))
-									pack = PackedByteArray()
-								if data and data is Array:
-									for action in data:
-										match action.action_name:
-											"net_propogate_node":
-												if action.has('parent'):
-													Journaling.net_propogate_node(action.node_string,action.parent)
-												else:
-													Journaling.net_propogate_node(
-														action.node_string,
-														'',
-														true
-														)
-											"set_property":
-												Journaling.set_property(action.target,action.prop_name,action.value,true)
-											"import_asset":
-												Journaling.import_asset(action.type, action.asset_to_import, true)
+	#			mic_playback.play()
+				for chan in peer.channels:
+		#			if chan.get_ready_state() != 1:
+		#				print(chan.get_ready_state())
+					chan.poll()
+					if chan.get_ready_state() == WebRTCDataChannel.STATE_OPEN:
+						match chan.get_label():
+							'bark-chat':
+								while chan.get_available_packet_count() > 0:
+									var data = bytes_to_var(chan.get_packet().decompress_dynamic(999999999999, 3))
+									var remplayer = get_tree().get_first_node_in_group(data.p_id)
+									if remplayer:
+										remplayer.set_target_pos(data.user_pos.pos)
+									else:
+										var root = get_tree().get_first_node_in_group('localworldroot')
+										var tmp:Node = load("res://mainSystem/scenes/player/remote player/remote player.tscn").instantiate()
+										tmp.add_to_group(data.p_id)
+										root.add_child(tmp)
+										
+									if data.has('audio'):
+										mic_playback.buffer_to_push.append_array(data.audio)
+							'bark-journal':
+								while chan.get_available_packet_count() > 0:
+									var data = chan.get_var(true)
+									if data.has('pos') and data.pos != -1 and data.has('bytes'):
+										pack.append_array(data.bytes)
+										packsize += 1
+									elif data.has('pos') and data.pos == -1:
+										pack.append_array(data.bytes)
+										packsize += 1
+										data = bytes_to_var_with_objects(pack.decompress_dynamic(999999999999, 3))
+										pack = PackedByteArray()
+									if data and data is Array:
+										for action in data:
+											match action.action_name:
+												"net_propogate_node":
+													if action.has('parent'):
+														Journaling.net_propogate_node(action.node_string,action.parent)
+													else:
+														Journaling.net_propogate_node(
+															action.node_string,
+															'',
+															true
+															)
+												"set_property":
+													Journaling.set_property(action.target,action.prop_name,action.value,true)
+												"import_asset":
+													Journaling.import_asset(action.type, action.asset_to_import, '', true)
 
-			for chan in peer.channels:
-				if chan.get_label() == 'bark-chat' and chat_timer > 0.01 and chan.get_ready_state() == 1:
-					chat_timer = 0.0
-					var player = get_tree().get_first_node_in_group('player')
-					var audiobuf = capture.get_buffer(capture.get_frames_available())
-					var username:String
-					chan.put_packet(var_to_bytes({
-						'p_id': OS.get_unique_id(),
-						'uname': username,
-						'audio': audiobuf,
-						'user_pos': {
-							'pos':player.global_position,
-							'rhpos':player.righthand.global_position,
-							'lhpos':player.lefthand.global_position
-							}
-						}).compress(3))
-				if chan.get_label() == 'bark-journal' and journal_timer > 0.08 and chan.get_ready_state() == 1:
-					journal_timer = 0.0
-					var tmp = Journaling.get_actions()
-					if tmp.size() >0:
-		#						print(tmp)
-						var bytes_to_send = var_to_bytes_with_objects(tmp).compress(3)
-						if bytes_to_send.size() < packet_size:
-							chan.put_var({
-								'pos': -1,
-								'bytes': bytes_to_send
-							})
-						else:
-							var parts:int = bytes_to_send.size()/packet_size
-							for i in range(bytes_to_send.size()/packet_size):
-								var pack_dict = {}
-								if i < parts-1: 
-									pack_dict['pos'] = i
-									pack_dict['bytes'] = bytes_to_send.slice(i*packet_size, (i*packet_size)+packet_size)
-		#								print(pack_dict['bytes'].size())
-								else:
-									pack_dict['bytes'] = bytes_to_send.slice(i*packet_size)
-									pack_dict['pos'] = -1
-		#							print('err: ',chan.put_var(pack_dict))
-								var err = chan.put_var(pack_dict)
-								if err!= 0:
-									print('err: ', err)
-		else:
-			peers.erase(peer)
+				for chan in peer.channels:
+					if chan.get_label() == 'bark-chat' and chat_timer > 0.01 and chan.get_ready_state() == 1:
+						chat_timer = 0.0
+						var player = get_tree().get_first_node_in_group('player')
+						var audiobuf = capture.get_buffer(capture.get_frames_available())
+						var username:String
+						chan.put_packet(var_to_bytes({
+							'p_id': OS.get_unique_id(),
+							'uname': username,
+							'audio': audiobuf,
+							'user_pos': {
+								'pos':player.global_position,
+								'rhpos':player.righthand.global_position,
+								'lhpos':player.lefthand.global_position
+								}
+							}).compress(3))
+					if chan.get_label() == 'bark-journal' and journal_timer > 0.08 and chan.get_ready_state() == 1:
+						journal_timer = 0.0
+						var tmp = Journaling.get_actions()
+						if tmp.size() >0:
+			#						print(tmp)
+							var bytes_to_send = var_to_bytes_with_objects(tmp).compress(3)
+							if bytes_to_send.size() < packet_size:
+								chan.put_var({
+									'pos': -1,
+									'bytes': bytes_to_send
+								})
+							else:
+								var parts:int = bytes_to_send.size()/packet_size
+								for i in range(bytes_to_send.size()/packet_size):
+									var pack_dict = {}
+									if i < parts-1: 
+										pack_dict['pos'] = i
+										pack_dict['bytes'] = bytes_to_send.slice(i*packet_size, (i*packet_size)+packet_size)
+			#								print(pack_dict['bytes'].size())
+									else:
+										pack_dict['bytes'] = bytes_to_send.slice(i*packet_size)
+										pack_dict['pos'] = -1
+			#							print('err: ',chan.put_var(pack_dict))
+									var err = chan.put_var(pack_dict)
+									if err!= 0:
+										print('err: ', err)
+			else:
+				peers.erase(peer)
 
 ## Takes an optional offer_string, and an optional for_user string
 ## offer_string will automatically set a remote offer description for the created peer

@@ -38,10 +38,15 @@ func _check_loaded(path:String):
 		get_tree().get_first_node_in_group('localworldroot').add_child(err.instantiate())
 
 func init_object_list():
-	item_list.clear()
 	var dir = DirAccess.open("user://")
 	if !dir.dir_exists("./objects"):
 		dir.make_dir("./objects")
 	dir.change_dir("./objects")
-	for world in dir.get_files():
+	var files = dir.get_files()
+	for i in item_list.item_count:
+		files.remove_at(files.find(item_list.get_item_text(i)))
+	for world in files:
 		item_list.add_item(world)
+	get_tree().create_timer(1).timeout.connect(func():
+		init_object_list()
+		)

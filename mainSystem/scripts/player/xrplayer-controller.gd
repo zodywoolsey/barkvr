@@ -52,7 +52,7 @@ func _ready():
 	else:
 		global_position = Vector3(0,4,0)
 	righthand.connect("button_pressed",func(name):
-		pass
+		Notifyvr.send_notification(name)
 		if name == "ax_button":
 			rightaxbtn = true
 		)
@@ -109,9 +109,13 @@ func _physics_process(delta):
 #			lefthand.hide()
 
 	# Handle Jump.
-	if (rightaxbtn or Input.is_action_just_pressed("jump")) and is_on_floor() and LocalGlobals.player_state == LocalGlobals.PLAYER_STATE_PLAYING:
-		velocity.y = JUMP_VELOCITY
-	
+	if LocalGlobals.vr_supported:
+		if rightaxbtn and is_on_floor():
+			velocity.y = JUMP_VELOCITY
+	else:
+		if Input.is_action_just_pressed("jump") and is_on_floor() and LocalGlobals.player_state == LocalGlobals.PLAYER_STATE_PLAYING:
+			velocity.y = JUMP_VELOCITY
+		
 	if LocalGlobals.vr_supported || OS.get_name() == "Android":
 		LocalGlobals.player_state = LocalGlobals.PLAYER_STATE_PLAYING
 		if LocalGlobals.player_state == LocalGlobals.PLAYER_STATE_PLAYING:

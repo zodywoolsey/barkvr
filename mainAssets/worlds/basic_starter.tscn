@@ -1,6 +1,16 @@
-[gd_scene load_steps=9 format=3 uid="uid://br1vh8in0e65o"]
+[gd_scene load_steps=10 format=3 uid="uid://br1vh8in0e65o"]
 
 [ext_resource type="Material" uid="uid://dum7xrf8gdl7k" path="res://addons/kenney_prototype_textures/materials/dark01Triplanar.material" id="2_xwerc"]
+
+[sub_resource type="GDScript" id="GDScript_43myy"]
+script/source = "extends Node3D
+
+func _init():
+	LocalGlobals.discord_world = 'loading basic starter world'
+
+func _ready():
+	LocalGlobals.discord_world = 'basic starter world'
+"
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_3royi"]
 sky_top_color = Color(0.494118, 0.772549, 1, 1)
@@ -44,6 +54,7 @@ subdivide_height = 32
 subdivide_depth = 32
 
 [node name="basic starter" type="Node3D"]
+script = SubResource("GDScript_43myy")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_n00cx")

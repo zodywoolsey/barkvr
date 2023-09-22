@@ -8,29 +8,16 @@ func _ready():
 		LocalGlobals.vr_supported = true
 		)
 	get_window().files_dropped.connect(func(files):
-		print("files: \n\n",files)
-		var file:FileAccess = FileAccess.open(files[0], FileAccess.READ)
+		var filename:String
+		if OS.get_name() == "Windows" or OS.get_name() == "UWP":
+			filename = files[0].split('\\')[-1]
+		else:
+			filename = files[0].split('/')[-1]
 		if files[0].contains('.gltf') or files[0].contains('.glb'):
-			var doc:GLTFDocument = GLTFDocument.new()
-			var state:GLTFState = GLTFState.new()
-			doc.append_from_file(files[0],state)
-			get_tree().get_first_node_in_group('localworldroot').add_child(doc.generate_scene(state))
+			Journaling.import_asset('glb', FileAccess.get_file_as_bytes(files[0]), filename)
 		elif files[0].contains('.vrm'):
-			Journaling.import_asset('vrm',FileAccess.get_file_as_bytes(files[0]))
-#		var world_file = FileAccess.open(files[0], FileAccess.READ_WRITE)
-#		if world_file:
-#			var tmp = world_file.get_as_text()
-#			var loaded_world = BarkHelpers.var_to_node(tmp)
-#			var localworld = get_tree().get_first_node_in_group("localworldroot")
-#			if localworld:
-#				print(str(localworld),"replaced by",str(loaded_world))
-#				var parent = get_tree().get_first_node_in_group('localroot')
-#				localworld.queue_free()
-#				parent.add_child(loaded_world)
+			Journaling.import_asset('vrm',FileAccess.get_file_as_bytes(files[0]), filename)
+#		elif files[0].contains
 		)
-#	Vector.user_logged_in.connect(func():
-#		discord_sdk.details = "local home, logged in"
-#		discord_sdk.refresh()
-#		)
 
 

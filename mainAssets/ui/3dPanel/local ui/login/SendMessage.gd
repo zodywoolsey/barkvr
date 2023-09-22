@@ -9,4 +9,5 @@ func _ready():
 		  "msgtype": "m.text"
 		})
 		text_edit.clear()
+		text_edit.release_focus()
 		)

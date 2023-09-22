@@ -23,6 +23,7 @@ var is_panel_3d:bool = true
 signal action(data:Dictionary)
 
 func _ready():
+	mesh.mesh.material.albedo_texture = viewport.get_texture()
 	if lock_global_position:
 		axis_lock_angular_x = true
 		axis_lock_angular_y = true
@@ -45,7 +46,6 @@ func _ready():
 		set_ui(_auto_load_ui.instantiate())
 
 func _process(delta):
-	mesh.mesh.material.albedo_texture = viewport.get_texture()
 	colShape.shape.size = Vector3(mesh.mesh.size.x,.01,mesh.mesh.size.y)
 
 func laserClick(data:Dictionary):

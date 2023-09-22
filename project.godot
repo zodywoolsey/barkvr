@@ -145,10 +145,6 @@ jump={
 ]
 }
 
-[input_devices]
-
-pointing/emulate_mouse_from_touch=false
-
 [layer_names]
 
 3d_physics/layer_1="characters"
@@ -158,6 +154,7 @@ pointing/emulate_mouse_from_touch=false
 
 [physics]
 
+3d/run_on_separate_thread=true
 common/physics_jitter_fix=0.0
 
 [rendering]

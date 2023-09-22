@@ -67,14 +67,32 @@ func net_propogate_node(node_string:String, parent:NodePath='', recieved:=false)
 func net_propogate_resource(res, recieved:=false):
 	print(res)
 
-func import_asset(type:String, asset_to_import, recieved:=false):
-	if type == 'vrm' and asset_to_import is PackedByteArray:
+func import_asset(type:String, asset_to_import:PackedByteArray, asset_name:='', recieved:=false):
+	if !asset_name:
+		asset_name = str(asset_to_import)
+		print(asset_name)
+	if type == 'vrm' and asset_to_import and asset_to_import is PackedByteArray:
 		var doc:GLTFDocument = GLTFDocument.new()
 		var state:GLTFState = GLTFState.new()
 		var vrm_extension: GLTFDocumentExtension = vrm_import_extension.new()
 		doc.register_gltf_document_extension(vrm_extension, true)
 		doc.append_from_buffer(asset_to_import,'',state)
-		get_tree().get_first_node_in_group('localworldroot').add_child(doc.generate_scene(state))
+		var scene = doc.generate_scene(state)
+		scene.name = asset_name
+		get_tree().get_first_node_in_group('localworldroot').add_child(scene)
+		if !recieved:
+			actions.append({
+				'action_name': 'import_asset',
+				'type': type,
+				'asset_to_import': asset_to_import
+			})
+	elif type == 'glb' and asset_to_import and asset_to_import is PackedByteArray:
+		var doc:GLTFDocument = GLTFDocument.new()
+		var state:GLTFState = GLTFState.new()
+		doc.append_from_buffer(asset_to_import,'',state)
+		var scene = doc.generate_scene(state)
+		scene.name = asset_name
+		get_tree().get_first_node_in_group('localworldroot').add_child(scene)
 		if !recieved:
 			actions.append({
 				'action_name': 'import_asset',
