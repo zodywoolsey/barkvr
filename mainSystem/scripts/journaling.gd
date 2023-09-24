@@ -67,7 +67,7 @@ func net_propogate_node(node_string:String, parent:NodePath='', recieved:=false)
 func net_propogate_resource(res, recieved:=false):
 	print(res)
 
-func import_asset(type:String, asset_to_import:PackedByteArray, asset_name:='', recieved:=false):
+func import_asset(type:String, asset_to_import, asset_name:='', recieved:=false):
 	if !asset_name:
 		asset_name = str(asset_to_import)
 		print(asset_name)
@@ -99,3 +99,20 @@ func import_asset(type:String, asset_to_import:PackedByteArray, asset_name:='', 
 				'type': type,
 				'asset_to_import': asset_to_import
 			})
+	elif type == 'res' and asset_to_import:
+		if asset_to_import is String:
+			var object_file = FileAccess.open(asset_to_import, FileAccess.READ_WRITE)
+			if object_file:
+				var tmp = object_file.get_as_text()
+				print('started loading')
+	#			Journaling.net_propogate_node(tmp)
+				ResourceLoader.load_threaded_request(asset_to_import,'',true)
+				get_tree().create_timer(1).timeout.connect(_check_loaded.bind(asset_to_import, asset_name))
+
+func _check_loaded(path:String, name:String):
+	if ResourceLoader.load_threaded_get_status(path) == ResourceLoader.THREAD_LOAD_IN_PROGRESS:
+		print('not loaded yet')
+		get_tree().create_timer(1).timeout.connect(_check_loaded.bind(path))
+	else:
+		var err = ResourceLoader.load_threaded_get(path)
+		get_tree().get_first_node_in_group('localworldroot').add_child(err.instantiate())

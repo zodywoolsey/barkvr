@@ -24,7 +24,7 @@ func _ready():
 			'bark.session.request',
 			{}
 		)
-		NetworkHandler.peers = []
+		NetworkHandler.reset()
 		)
 
 func add_item(text:String,metadata:Variant):
