@@ -81,9 +81,6 @@ func _notification(what):
 			world_ray.enabled = false
 			ui_ray.enabled = false
 
-func _input(event):
-	pass
-
 func grabBodyEntered(body):
 	if body.has_meta("grabbable"):
 		var bodyMeta = body.get_meta("grabbable")

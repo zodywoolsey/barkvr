@@ -22,10 +22,10 @@ func _process(delta):
 func setType(type:String):
 	pass
 	if type == "rigidbody":
-#		physics.show()
-#		pointer.hide()
-		cursor.show()
+		physics.show()
+		pointer.hide()
+#		cursor.show()
 	if type == "pointer":
-#		physics.hide()
-#		pointer.show()
-		cursor.show()
+		physics.hide()
+		pointer.show()
+#		cursor.show()

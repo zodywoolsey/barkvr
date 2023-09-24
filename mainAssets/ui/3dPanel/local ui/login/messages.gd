@@ -69,11 +69,9 @@ func _ready():
 								if event.content.for_user == Vector.userData.login.user_id:
 									for peer in NetworkHandler.peers:
 										if peer.for_user == event.sender:
-#											peer.peer.call_deferred('set_remote_description','answer',event.content.sdp)
 											peer.peer.set_remote_description('answer',event.content.sdp)
 											peer.set_remote = true
 											Notifyvr.send_notification('got answer')
-#											break
 					'bark.session.ice':
 						if Time.get_unix_time_from_system()*1000.0-10000 < event.origin_server_ts and event.event_id not in already_processed_answers:
 							if event.content.for_user == Vector.userData.login.user_id:
@@ -82,18 +80,12 @@ func _ready():
 										if peer.set_remote:
 											already_processed_answers.append(event.event_id)
 											for candidate in event.content.candidates:
-	#												peer.peer.call_deferred('add_ice_candidate',
-	#													candidate.media,
-	#													candidate.index,
-	#													candidate.name
-	#												)
 												peer.peer.add_ice_candidate(
 													candidate.media,
 													candidate.index,
 													candidate.name
 												)
 												Notifyvr.send_notification('set_ice')
-#										break
 			prevmessages = data
 		)
 
@@ -102,7 +94,6 @@ func _gui_input(event):
 		text_edit.release_focus()
 
 func offer_created(data:Dictionary):
-#	print("type: ",type,"\nsdp: ",sdp)
 	if data.for_user == requesting_user and target_room:
 		Vector.send_room_event(
 			target_room,

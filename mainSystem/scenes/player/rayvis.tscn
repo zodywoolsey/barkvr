@@ -9,7 +9,7 @@
 script = ExtResource("1_6wvgr")
 
 [node name="pointer" type="Sprite3D" parent="."]
-transform = Transform3D(0.01, 0, 0, 0, 0.01, 0, 0, 0, 0.01, 0, 0, 0)
+transform = Transform3D(0.81, 0, 0, 0, 0.81, 0, 0, 0, 0.81, 0, 0, 0)
 visible = false
 sorting_offset = 99.0
 billboard = 1
@@ -18,7 +18,7 @@ texture_filter = 0
 texture = ExtResource("2_exe05")
 
 [node name="physics" type="Sprite3D" parent="."]
-transform = Transform3D(0.01, 0, 0, 0, 0.01, 0, 0, 0, 0.01, 0, 0, 0)
+transform = Transform3D(0.77, 0, 0, 0, 0.77, 0, 0, 0, 0.77, 0, 0, 0)
 visible = false
 sorting_offset = 99.0
 billboard = 1
@@ -27,6 +27,7 @@ texture_filter = 0
 texture = ExtResource("3_j7jdp")
 
 [node name="cursor" type="Node3D" parent="."]
+visible = false
 
 [node name="cursor" type="Sprite3D" parent="cursor"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.403815, -0.976471, 0)
