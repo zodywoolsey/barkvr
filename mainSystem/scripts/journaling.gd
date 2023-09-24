@@ -108,6 +108,8 @@ func import_asset(type:String, asset_to_import, asset_name:='', recieved:=false)
 	#			Journaling.net_propogate_node(tmp)
 				ResourceLoader.load_threaded_request(asset_to_import,'',true)
 				get_tree().create_timer(1).timeout.connect(_check_loaded.bind(asset_to_import, asset_name))
+	elif type == 'pck' and asset_to_import and asset_to_import is PackedByteArray:
+		ResourceLoader
 
 func _check_loaded(path:String, name:String):
 	if ResourceLoader.load_threaded_get_status(path) == ResourceLoader.THREAD_LOAD_IN_PROGRESS:

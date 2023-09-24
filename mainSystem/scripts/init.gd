@@ -19,6 +19,8 @@ func _ready():
 			Journaling.import_asset('vrm',FileAccess.get_file_as_bytes(files[0]), filename)
 		elif files[0].ends_with('.res') or files[0].ends_with('.tres') or files[0].ends_with('.scn') or files[0].ends_with('.tscn'):
 			Journaling.import_asset('res',files[0], filename)
+		elif files[0].ends_with('.zip') or files[0].ends_with('.pck'):
+			Journaling.import_asset('pck', files[0], filename)
 #		elif files[0].contains
 		)
 
