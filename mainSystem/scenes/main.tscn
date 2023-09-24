@@ -40,6 +40,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0706468, 0.0923181, 0.0461
 
 [node name="RigidBody3d" parent="localworldroot" instance=ExtResource("5_dqk6a")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.09354, 1.1629, 0)
+freeze_mode = 1
 
 [node name="save_load_object" parent="." instance=ExtResource("6_307b8")]
 transform = Transform3D(0.537432, -0.843307, 0, 0, 0, -1, 0.843307, 0.537432, 0, 0.168378, 2, 1.44429)
