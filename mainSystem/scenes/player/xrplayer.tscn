@@ -52,6 +52,7 @@ current = true
 
 [node name="XrCamera3d" type="XRCamera3D" parent="CharacterBody3D/xrplayer" groups=["playerCamera"]]
 current = true
+far = 99999.0
 
 [node name="camray" type="RayCast3D" parent="CharacterBody3D/xrplayer/XrCamera3d"]
 visible = false
