@@ -44,10 +44,8 @@ func _notification(what):
 		var scrollparentrect = get_parent_control().get_parent_control().get_global_rect()
 		var rect = get_global_rect()
 		if v_box_container.visible and !(rect.end.y > scrollparentrect.position.y and rect.position.y < scrollparentrect.end.y):
-			print('hide')
 			v_box_container.visible = false
 		elif !v_box_container.visible and (rect.end.y > scrollparentrect.position.y and rect.position.y < scrollparentrect.end.y):
-			print('show')
 			v_box_container.show()
 		update_fields()
 

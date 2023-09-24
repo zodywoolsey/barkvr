@@ -20,13 +20,6 @@ func _ready():
 #			Journaling.net_propogate_node(tmp)
 			ResourceLoader.load_threaded_request('user://objects/'+object_name.text,'',true)
 			get_tree().create_timer(1).timeout.connect(_check_loaded.bind('user://objects/'+object_name.text))
-#			var loaded_object = BarkHelpers.var_to_node(tmp)
-#			var localworld = get_tree().get_first_node_in_group("localworldroot")
-#			if localworld:
-#				print("loaded object: ",str(loaded_object))
-#				var parent = get_tree().get_first_node_in_group('localworldroot')
-#				if parent:
-#					parent.add_child(loaded_object)
 		)
 
 func _check_loaded(path:String):

@@ -154,7 +154,6 @@ jump={
 
 [physics]
 
-3d/run_on_separate_thread=true
 common/physics_jitter_fix=0.0
 
 [rendering]

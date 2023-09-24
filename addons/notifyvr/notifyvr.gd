@@ -17,4 +17,9 @@ func _process(delta):
 				tmp.add_child(i)
 				tmp.move_child(i,0)
 				queuedmessages.erase(i)
+				var tmpsize = 0.0
+				for a in tmp.get_children():
+					tmpsize += a.get_aabb().size.y
+#					print(a)
+				i.position.y = tmpsize
 			

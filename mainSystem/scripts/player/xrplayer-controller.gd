@@ -39,9 +39,6 @@ var grab_point := Vector3()
 
 
 func _ready():
-	property_list_changed.connect(func():
-		print('prop changed')
-		)
 	if !LocalGlobals.vr_supported:
 		xr_camera_3d.position.y = .9
 		righthand.position = Vector3(.2,.6,-.2)

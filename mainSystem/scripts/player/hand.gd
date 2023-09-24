@@ -11,7 +11,6 @@ extends XRController3D
 @onready var local_player = %CharacterBody3D
 @onready var righthand = %righthand
 @onready var lefthand = %lefthand
-@onready var line_3d = $Line3D
 var otherhand : XRController3D
 
 var prevHover : Node
