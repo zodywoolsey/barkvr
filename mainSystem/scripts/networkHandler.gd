@@ -35,6 +35,7 @@ var bytes_to_send
 
 var chat_timer :float = 0.0
 var journal_timer :float = 0.0
+var voip_timer :float = 0.0
 
 var uname :String = ""
 
@@ -43,6 +44,7 @@ var current_room :String = ''
 #var audioshit:Dictionary = {}
 var capture:AudioEffectCapture
 var mic_playback:MicPlayback
+var mic_buffer:PackedByteArray
 
 signal created_offer(data:Dictionary)
 signal created_answer(data:Dictionary)
@@ -133,6 +135,9 @@ func poll():
 		prev_time = Time.get_unix_time_from_system()
 		chat_timer += delta
 		journal_timer += delta
+		voip_timer += delta
+		
+		print(delta)
 		for peer in peers:
 			if peer:
 				peer.peer.poll()
@@ -295,10 +300,6 @@ func create_new_peer_connection(offer_string:String='', for_user:String=''):
 	else: # otherwise, create an offer
 		tmp = peer.create_offer()
 		assert(tmp == OK)
-	
-	
-		
-	
 
 func _on_ice_candidate(media, index, ice_name, data:Dictionary):
 	print("ice:")
