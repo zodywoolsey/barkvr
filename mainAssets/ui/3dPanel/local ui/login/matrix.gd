@@ -4,7 +4,9 @@ extends Control
 @onready var login_existing = $login/Button
 @onready var login = $login
 
+
 func _ready():
+	focus_entered.connect(_on_uname_focus_entered)
 	login_existing.pressed.connect(func():
 		Vector.readUserDict()
 		)
@@ -66,3 +68,15 @@ func add_items(items):
 func loggedIn():
 #	Vector.get_joined_rooms()
 	Vector.sync()
+
+var scene_to_spawn = load("res://addons/godot-xr-tools/objects/virtual_keyboard.tscn")
+
+# Called when the node enters the scene tree for the first time.
+#func _ready():
+#	focus_entered.connect(_on_uname_focus_entered)
+
+# Instantiate the preloaded scene
+# Add it as a child of the root node
+func _on_uname_focus_entered():
+	var new_instance = scene_to_spawn.instantiate()
+	get_tree().get_first_node_in_group('localworldroot').add_child(new_instance)

@@ -1,21 +1,189 @@
-[gd_scene load_steps=14 format=3 uid="uid://ctwckofb07cfw"]
+[gd_scene load_steps=20 format=3 uid="uid://ctwckofb07cfw"]
 
 [ext_resource type="Script" path="res://mainSystem/scripts/init.gd" id="1_gkt54"]
 [ext_resource type="PackedScene" uid="uid://clc5dre31iskm" path="res://addons/godot-xr-tools/xr/start_xr.tscn" id="4_4y4so"]
 [ext_resource type="PackedScene" uid="uid://br1vh8in0e65o" path="res://mainAssets/worlds/basic_starter.tscn" id="4_hmjqc"]
 [ext_resource type="PackedScene" uid="uid://bep6kkkjrdy4k" path="res://mainSystem/scenes/objects/tools/rigid_camera.tscn" id="5_dqk6a"]
 [ext_resource type="PackedScene" uid="uid://2o2f8tknq7me" path="res://mainAssets/ui/3dPanel/3dpanel.tscn" id="6_307b8"]
+[ext_resource type="PackedScene" uid="uid://cdicwm0dk7k78" path="res://work/avail_world/avali_village.tscn" id="6_amk1g"]
 [ext_resource type="PackedScene" uid="uid://dckbok0o553v7" path="res://mainSystem/scenes/objects/worldObjects/playerSpawnLocation.tscn" id="6_diugs"]
 [ext_resource type="PackedScene" uid="uid://by5nu2jf4d1cv" path="res://mainAssets/ui/3dPanel/local ui/save object/save object.tscn" id="7_squu5"]
-[ext_resource type="PackedScene" uid="uid://lauwp8okd1vh" path="res://addons/godot-xr-tools/objects/keyboard/virtual_keyboard_2d.tscn" id="8_it0hc"]
 [ext_resource type="PackedScene" uid="uid://b3sbt3oft3cxg" path="res://mainAssets/ui/3dPanel/editmode/vreditor.tscn" id="8_wf33i"]
 [ext_resource type="PackedScene" uid="uid://i3pxsgqnbjly" path="res://mainAssets/ui/3dPanel/local ui/login/matrix.tscn" id="10_4ke10"]
 [ext_resource type="Script" path="res://mainSystem/scripts/mic_playback.gd" id="11_oevc4"]
+[ext_resource type="PackedScene" uid="uid://dgdb1texynduw" path="res://addons/godot-xr-tools/objects/virtual_keyboard.tscn" id="13_q4k3u"]
+[ext_resource type="PackedScene" uid="uid://clujaf3u776a3" path="res://addons/godot-xr-tools/objects/viewport_2d_in_3d.tscn" id="14_uh0ry"]
 
 [sub_resource type="AudioStreamMicrophone" id="AudioStreamMicrophone_ve6pm"]
 
 [sub_resource type="AudioStreamGenerator" id="AudioStreamGenerator_f6fry"]
 mix_rate = 44800.0
+
+[sub_resource type="GDScript" id="GDScript_pvbgg"]
+script/source = "@tool
+class_name XRToolsVirtualKeyboard2Dtest
+extends Control
+
+
+## Enumeration of keyboard view modes
+enum KeyboardMode {
+	LOWER_CASE,		## Lower-case keys mode
+	UPPER_CASE,		## Upper-case keys mode
+	ALTERNATE		## Alternate keys mode
+}
+
+
+# Shift button down
+var _shift_down := false
+
+# Caps button down
+var _caps_down := false
+
+# Alt button down
+var _alt_down := false
+
+# Current keyboard mode
+var _mode: int = KeyboardMode.LOWER_CASE
+
+
+# Add support for is_xr_class on XRTools classes
+func is_xr_class(name : String) -> bool:
+	return name == \"XRToolsVirtualKeyboard2D\"
+
+
+# Handle key pressed from VirtualKey
+func on_key_pressed(scan_code_text: String, unicode: int, shift: bool):
+	# Find the scan code
+	var scan_code := OS.find_keycode_from_string(scan_code_text)
+
+	# Create the InputEventKey
+	var input := InputEventKey.new()
+	input.physical_keycode = scan_code
+	input.unicode = unicode if unicode else scan_code
+	input.pressed = true
+	input.keycode = scan_code
+	input.shift_pressed = shift
+
+	# Dispatch the input event
+	Input.parse_input_event(input)
+
+	# Pop any temporary shift key
+	if _shift_down:
+		$Background/Standard/ToggleShift.set_pressed_no_signal(false)
+		_shift_down = false
+		_update_visible()
+
+func on_shift_toggle(button_pressed):
+	# Update toggle keys
+	$Background/Standard/ToggleCaps.set_pressed_no_signal(false)
+	$Background/Standard/ToggleAlt.set_pressed_no_signal(false)
+	_shift_down = button_pressed
+	_caps_down = false
+	_alt_down = false
+	_update_visible()
+
+# Handle caps-lock toggle
+func on_caps_toggle(button_pressed):
+	# Update toggle keys
+	$Background/Standard/ToggleShift.set_pressed_no_signal(false)
+	$Background/Standard/ToggleAlt.set_pressed_no_signal(false)
+	_shift_down = false
+	_caps_down = button_pressed
+	_alt_down = false
+	_update_visible()
+
+func on_alt_toggle(button_pressed):
+	# Update toggle keys
+	$Background/Standard/ToggleShift.set_pressed_no_signal(false)
+	$Background/Standard/ToggleCaps.set_pressed_no_signal(false)
+	_shift_down = false
+	_caps_down = false
+	_alt_down = button_pressed
+	_update_visible()
+
+# Update switching the visible case keys
+func _update_visible():
+	# Evaluate the new mode
+	var new_mode: int
+	if _alt_down:
+		new_mode = KeyboardMode.ALTERNATE
+	elif _shift_down or _caps_down:
+		new_mode = KeyboardMode.UPPER_CASE
+	else:
+		new_mode = KeyboardMode.LOWER_CASE
+
+	# Skip if no change
+	if new_mode == _mode:
+		return
+
+	# Update the visible mode
+	_mode = new_mode
+	$Background/LowerCase.visible = _mode == KeyboardMode.LOWER_CASE
+	$Background/UpperCase.visible = _mode == KeyboardMode.UPPER_CASE
+	$Background/Alternate.visible = _mode == KeyboardMode.ALTERNATE
+"
+
+[sub_resource type="GDScript" id="GDScript_rbknj"]
+script/source = "extends Button
+
+
+## Godot scan-code text
+@export var scan_code_text := \"\"
+
+## Unicode character
+@export var unicode := 0
+
+## Shift modifier
+@export var shift_modifier := false
+
+
+func _ready():
+	# Find the VirtualKeyboard parent
+	var keyboard = _get_virtual_keyboard()
+	if keyboard:
+		button_down.connect(keyboard.on_key_pressed.bind(scan_code_text, unicode, shift_modifier))
+
+# Get our virtual keyboard parent
+func _get_virtual_keyboard() -> XRToolsVirtualKeyboard2D:
+	# Get parent node and start walking up the tree
+	var node = get_parent()
+	while node:
+		# Check if the node is the keyboard
+		if node is XRToolsVirtualKeyboard2D:
+			return node
+
+		# Step up the tree
+		node = node.get_parent()
+
+	# No virtual keyboard found
+	return null
+"
+
+[sub_resource type="PackedScene" id="PackedScene_qtv7x"]
+_bundled = {
+"conn_count": 0,
+"conns": PackedInt32Array(),
+"editable_instances": [],
+"names": PackedStringArray("VirtualKey", "Button", "offset_right", "offset_bottom", "focus_mode", "focus_mode", "script"),
+"node_count": 1,
+"node_paths": [],
+"nodes": PackedInt32Array(-1, -1, 1, 0, -1, 5, 2, 0, 3, 1, 4, 2, 5, 3, 6, 4, 0),
+"variants": [30.0, 25.0, 0, 0, SubResource("GDScript_rbknj")],
+"version": 3
+}
+
+[sub_resource type="PackedScene" id="PackedScene_00vfx"]
+_bundled = {
+"conn_count": 3,
+"conns": PackedInt32Array(1073741925, 1073741924, 750, 749, 2, 0, 0, 1073741927, 1073741926, 752, 751, 2, 0, 0, 1073741929, 1073741928, 754, 753, 2, 0, 0),
+"editable_instances": [],
+"names": PackedStringArray("VirtualKeyboard2D", "Control", "layout_mode", "anchors_preset", "anchor_right", "anchor_bottom", "grow_horizontal", "grow_vertical", "script", "Background", "ColorRect", "layout_mode", "offset_right", "offset_bottom", "scale", "color", "Standard", "Control", "layout_mode", "anchors_preset", "offset_right", "offset_bottom", "VirtualKey1", "layout_mode", "text", "scan_code_text", "unicode", "VirtualKey2", "layout_mode", "offset_left", "offset_right", "text", "scan_code_text", "unicode", "VirtualKey3", "layout_mode", "offset_left", "offset_right", "text", "scan_code_text", "unicode", "VirtualKey4", "layout_mode", "offset_left", "offset_right", "text", "scan_code_text", "unicode", "VirtualKey5", "layout_mode", "offset_left", "offset_right", "text", "scan_code_text", "unicode", "VirtualKey6", "layout_mode", "offset_left", "offset_right", "text", "scan_code_text", "unicode", "VirtualKey7", "layout_mode", "offset_left", "offset_right", "text", "scan_code_text", "unicode", "VirtualKey8", "layout_mode", "offset_left", "offset_right", "text", "scan_code_text", "unicode", "VirtualKey9", "layout_mode", "offset_left", "offset_right", "text", "scan_code_text", "unicode", "VirtualKey0", "layout_mode", "offset_left", "offset_right", "text", "scan_code_text", "unicode", "ToggleShift", "Button", "layout_mode", "offset_top", "offset_right", "offset_bottom", "focus_mode", "toggle_mode", "text", "ToggleCaps", "Button", "layout_mode", "offset_top", "offset_right", "offset_bottom", "focus_mode", "toggle_mode", "text", "ToggleAlt", "Button", "layout_mode", "offset_left", "offset_top", "offset_right", "offset_bottom", "focus_mode", "toggle_mode", "text", "VirtualKeyBackspace", "layout_mode", "offset_left", "offset_top", "offset_right", "offset_bottom", "text", "scan_code_text", "VirtualKeySpace", "layout_mode", "offset_left", "offset_top", "offset_right", "offset_bottom", "text", "scan_code_text", "unicode", "VirtualKeyPeriod", "layout_mode", "offset_left", "offset_top", "offset_right", "offset_bottom", "text", "scan_code_text", "unicode", "VirtualKeyEnter", "layout_mode", "offset_left", "offset_top", "offset_right", "offset_bottom", "text", "scan_code_text", "LowerCase", "Node2D", "position", "VirtualKeyLowerQ", "text", "scan_code_text", "unicode", "VirtualKeyLowerW", "offset_left", "offset_right", "text", "scan_code_text", "unicode", "VirtualKeyLowerE", "offset_left", "offset_right", "text", "scan_code_text", "unicode", "VirtualKeyLowerR", "offset_left", "offset_right", "text", "scan_code_text", "unicode", "VirtualKeyLowerT", "offset_left", "offset_right", "text", "scan_code_text", "unicode", "VirtualKeyLowerY", "offset_left", "offset_right", "text", "scan_code_text", "unicode", "VirtualKeyLowerU", "offset_left", "offset_right", "text", "scan_code_text", "unicode", "VirtualKeyLowerI", "offset_left", "offset_right", "text", "scan_code_text", "unicode", "VirtualKeyLowerO", "offset_left", "offset_right", "text", "scan_code_text", "unicode", "VirtualKeyLowerP", "offset_left", "offset_right", "text", "scan_code_text", "unicode", "VirtualKeyLowerA", "offset_left", "offset_top", "offset_right", "offset_bottom", "text", "scan_code_text", "unicode", "VirtualKeyLowerS", "offset_left", "offset_top", "offset_right", "offset_bottom", "text", "scan_code_text", "unicode", "VirtualKeyLowerD", "offset_left", "offset_top", "offset_right", "offset_bottom", "text", "scan_code_text", "unicode", "VirtualKeyLowerF", "offset_left", "offset_top", "offset_right", "offset_bottom", "text", "scan_code_text", "unicode", "VirtualKeyLowerG", "offset_left", "offset_top", "offset_right", "offset_bottom", "text", "scan_code_text", "unicode", "VirtualKeyLowerH", "offset_left", "offset_top", "offset_right", "offset_bottom", "text", "scan_code_text", "unicode", "VirtualKeyLowerJ", "offset_left", "offset_top", "offset_right", "offset_bottom", "text", "scan_code_text", "unicode", "VirtualKeyLowerK", "offset_left", "offset_top", "offset_right", "offset_bottom", "text", "scan_code_text", "unicode", "VirtualKeyLowerL", "offset_left", "offset_top", "offset_right", "offset_bottom", "text", "scan_code_text", "unicode", "VirtualKeyLowerZ", "offset_left", "offset_top", "offset_right", "offset_bottom", "text", "scan_code_text", "unicode", "VirtualKeyLowerX", "offset_left", "offset_top", "offset_right", "offset_bottom", "text", "scan_code_text", "unicode", "VirtualKeyLowerC", "offset_left", "offset_top", "offset_right", "offset_bottom", "text", "scan_code_text", "unicode", "VirtualKeyLowerV", "offset_left", "offset_top", "offset_right", "offset_bottom", "text", "scan_code_text", "unicode", "VirtualKeyLowerB", "offset_left", "offset_top", "offset_right", "offset_bottom", "text", "scan_code_text", "unicode", "VirtualKeyLowerN", "offset_left", "offset_top", "offset_right", "offset_bottom", "text", "scan_code_text", "unicode", "VirtualKeyLowerM", "offset_left", "offset_top", "offset_right", "offset_bottom", "text", "scan_code_text", "unicode", "UpperCase", "Node2D", "visible", "position", "VirtualKeyUpperQ", "text", "scan_code_text", "unicode", "shift_modifier", "VirtualKeyUpperW", "offset_left", "offset_right", "text", "scan_code_text", "unicode", "shift_modifier", "VirtualKeyUpperE", "offset_left", "offset_right", "text", "scan_code_text", "unicode", "shift_modifier", "VirtualKeyUpperR", "offset_left", "offset_right", "text", "scan_code_text", "unicode", "shift_modifier", "VirtualKeyUpperT", "offset_left", "offset_right", "text", "scan_code_text", "unicode", "shift_modifier", "VirtualKeyUpperY", "offset_left", "offset_right", "text", "scan_code_text", "unicode", "shift_modifier", "VirtualKeyUpperU", "offset_left", "offset_right", "text", "scan_code_text", "unicode", "shift_modifier", "VirtualKeyUpperI", "offset_left", "offset_right", "text", "scan_code_text", "unicode", "shift_modifier", "VirtualKeyUpperO", "offset_left", "offset_right", "text", "scan_code_text", "unicode", "shift_modifier", "VirtualKeyUpperP", "offset_left", "offset_right", "text", "scan_code_text", "unicode", "shift_modifier", "VirtualKeyUpperA", "offset_left", "offset_top", "offset_right", "offset_bottom", "text", "scan_code_text", "unicode", "shift_modifier", "VirtualKeyUpperS", "offset_left", "offset_top", "offset_right", "offset_bottom", "text", "scan_code_text", "unicode", "shift_modifier", "VirtualKeyUpperD", "offset_left", "offset_top", "offset_right", "offset_bottom", "text", "scan_code_text", "unicode", "shift_modifier", "VirtualKeyUpperF", "offset_left", "offset_top", "offset_right", "offset_bottom", "text", "scan_code_text", "unicode", "shift_modifier", "VirtualKeyUpperG", "offset_left", "offset_top", "offset_right", "offset_bottom", "text", "scan_code_text", "unicode", "shift_modifier", "VirtualKeyUpperH", "offset_left", "offset_top", "offset_right", "offset_bottom", "text", "scan_code_text", "unicode", "shift_modifier", "VirtualKeyUpperJ", "offset_left", "offset_top", "offset_right", "offset_bottom", "text", "scan_code_text", "unicode", "shift_modifier", "VirtualKeyUpperK", "offset_left", "offset_top", "offset_right", "offset_bottom", "text", "scan_code_text", "unicode", "shift_modifier", "VirtualKeyUpperL", "offset_left", "offset_top", "offset_right", "offset_bottom", "text", "scan_code_text", "unicode", "shift_modifier", "VirtualKeyUpperZ", "offset_left", "offset_top", "offset_right", "offset_bottom", "text", "scan_code_text", "unicode", "shift_modifier", "VirtualKeyUpperX", "offset_left", "offset_top", "offset_right", "offset_bottom", "text", "scan_code_text", "unicode", "shift_modifier", "VirtualKeyUpperC", "offset_left", "offset_top", "offset_right", "offset_bottom", "text", "scan_code_text", "unicode", "shift_modifier", "VirtualKeyUpperV", "offset_left", "offset_top", "offset_right", "offset_bottom", "text", "scan_code_text", "unicode", "shift_modifier", "VirtualKeyUpperB", "offset_left", "offset_top", "offset_right", "offset_bottom", "text", "scan_code_text", "unicode", "shift_modifier", "VirtualKeyUpperN", "offset_left", "offset_top", "offset_right", "offset_bottom", "text", "scan_code_text", "unicode", "shift_modifier", "VirtualKeyUpperM", "offset_left", "offset_top", "offset_right", "offset_bottom", "text", "scan_code_text", "unicode", "shift_modifier", "Alternate", "Node2D", "visible", "position", "VirtualKeyPlus", "text", "scan_code_text", "unicode", "VirtualKeyAsterisk", "offset_left", "offset_right", "text", "scan_code_text", "unicode", "VirtualKeyDivision", "offset_left", "offset_right", "text", "scan_code_text", "unicode", "VirtualKeyEqual", "offset_left", "offset_right", "text", "scan_code_text", "unicode", "VirtualKeySlash", "offset_left", "offset_right", "text", "scan_code_text", "unicode", "VirtualKeyUnderScore", "offset_left", "offset_right", "text", "scan_code_text", "unicode", "VirtualKeyLess", "offset_left", "offset_right", "text", "scan_code_text", "unicode", "shift_modifier", "VirtualKeyGreater", "offset_left", "offset_right", "text", "scan_code_text", "unicode", "VirtualKeyBracketLeft", "offset_left", "offset_right", "text", "scan_code_text", "unicode", "shift_modifier", "VirtualKeyBracketRight", "offset_left", "offset_right", "text", "scan_code_text", "unicode", "VirtualKeyExclam", "offset_left", "offset_top", "offset_right", "offset_bottom", "text", "scan_code_text", "unicode", "VirtualKeyAt", "offset_left", "offset_top", "offset_right", "offset_bottom", "text", "scan_code_text", "unicode", "VirtualKeyNumberSign", "offset_left", "offset_top", "offset_right", "offset_bottom", "text", "scan_code_text", "unicode", "VirtualKeyDollar", "offset_left", "offset_top", "offset_right", "offset_bottom", "text", "scan_code_text", "unicode", "VirtualKeyPercent", "offset_left", "offset_top", "offset_right", "offset_bottom", "text", "scan_code_text", "unicode", "VirtualKeyCircumflex", "offset_left", "offset_top", "offset_right", "offset_bottom", "text", "scan_code_text", "unicode", "VirtualKeyAmpersand", "offset_left", "offset_top", "offset_right", "offset_bottom", "text", "scan_code_text", "unicode", "VirtualKeyParenLeft", "offset_left", "offset_top", "offset_right", "offset_bottom", "text", "scan_code_text", "unicode", "VirtualKeyParenRight", "offset_left", "offset_top", "offset_right", "offset_bottom", "text", "scan_code_text", "unicode", "VirtualKeyMinus", "offset_left", "offset_top", "offset_right", "offset_bottom", "text", "scan_code_text", "unicode", "VirtualKeyApostrophe", "offset_left", "offset_top", "offset_right", "offset_bottom", "text", "scan_code_text", "unicode", "VirtualKeyQuoteDbl", "offset_left", "offset_top", "offset_right", "offset_bottom", "text", "scan_code_text", "unicode", "VirtualKeyColon", "offset_left", "offset_top", "offset_right", "offset_bottom", "text", "scan_code_text", "unicode", "VirtualKeySemicolon", "offset_left", "offset_top", "offset_right", "offset_bottom", "text", "scan_code_text", "unicode", "VirtualKeyComma", "offset_left", "offset_top", "offset_right", "offset_bottom", "text", "scan_code_text", "unicode", "VirtualKeyQuestion", "offset_left", "offset_top", "offset_right", "offset_bottom", "text", "scan_code_text", "unicode", "on_shift_toggle", "toggled", "on_caps_toggle", "toggled", "on_alt_toggle", "toggled"),
+"node_count": 101,
+"node_paths": [NodePath("."), NodePath("./Background"), NodePath("./Background/Standard"), NodePath("./Background/Standard"), NodePath("./Background/Standard"), NodePath("./Background/Standard"), NodePath("./Background/Standard"), NodePath("./Background/Standard"), NodePath("./Background/Standard"), NodePath("./Background/Standard"), NodePath("./Background/Standard"), NodePath("./Background/Standard"), NodePath("./Background/Standard"), NodePath("./Background/Standard"), NodePath("./Background/Standard"), NodePath("./Background/Standard"), NodePath("./Background/Standard"), NodePath("./Background/Standard"), NodePath("./Background/Standard"), NodePath("./Background"), NodePath("./Background/LowerCase"), NodePath("./Background/LowerCase"), NodePath("./Background/LowerCase"), NodePath("./Background/LowerCase"), NodePath("./Background/LowerCase"), NodePath("./Background/LowerCase"), NodePath("./Background/LowerCase"), NodePath("./Background/LowerCase"), NodePath("./Background/LowerCase"), NodePath("./Background/LowerCase"), NodePath("./Background/LowerCase"), NodePath("./Background/LowerCase"), NodePath("./Background/LowerCase"), NodePath("./Background/LowerCase"), NodePath("./Background/LowerCase"), NodePath("./Background/LowerCase"), NodePath("./Background/LowerCase"), NodePath("./Background/LowerCase"), NodePath("./Background/LowerCase"), NodePath("./Background/LowerCase"), NodePath("./Background/LowerCase"), NodePath("./Background/LowerCase"), NodePath("./Background/LowerCase"), NodePath("./Background/LowerCase"), NodePath("./Background/LowerCase"), NodePath("./Background/LowerCase"), NodePath("./Background"), NodePath("./Background/UpperCase"), NodePath("./Background/UpperCase"), NodePath("./Background/UpperCase"), NodePath("./Background/UpperCase"), NodePath("./Background/UpperCase"), NodePath("./Background/UpperCase"), NodePath("./Background/UpperCase"), NodePath("./Background/UpperCase"), NodePath("./Background/UpperCase"), NodePath("./Background/UpperCase"), NodePath("./Background/UpperCase"), NodePath("./Background/UpperCase"), NodePath("./Background/UpperCase"), NodePath("./Background/UpperCase"), NodePath("./Background/UpperCase"), NodePath("./Background/UpperCase"), NodePath("./Background/UpperCase"), NodePath("./Background/UpperCase"), NodePath("./Background/UpperCase"), NodePath("./Background/UpperCase"), NodePath("./Background/UpperCase"), NodePath("./Background/UpperCase"), NodePath("./Background/UpperCase"), NodePath("./Background/UpperCase"), NodePath("./Background/UpperCase"), NodePath("./Background/UpperCase"), NodePath("./Background"), NodePath("./Background/Alternate"), NodePath("./Background/Alternate"), NodePath("./Background/Alternate"), NodePath("./Background/Alternate"), NodePath("./Background/Alternate"), NodePath("./Background/Alternate"), NodePath("./Background/Alternate"), NodePath("./Background/Alternate"), NodePath("./Background/Alternate"), NodePath("./Background/Alternate"), NodePath("./Background/Alternate"), NodePath("./Background/Alternate"), NodePath("./Background/Alternate"), NodePath("./Background/Alternate"), NodePath("./Background/Alternate"), NodePath("./Background/Alternate"), NodePath("./Background/Alternate"), NodePath("./Background/Alternate"), NodePath("./Background/Alternate"), NodePath("./Background/Alternate"), NodePath("./Background/Alternate"), NodePath("./Background/Alternate"), NodePath("./Background/Alternate"), NodePath("./Background/Alternate"), NodePath("./Background/Alternate"), NodePath("./Background/Alternate"), NodePath("."), NodePath("Background/Standard/ToggleShift"), NodePath("."), NodePath("Background/Standard/ToggleCaps"), NodePath("."), NodePath("Background/Standard/ToggleAlt")],
+"nodes": PackedInt32Array(-1, -1, 1, 0, -1, 7, 2, 0, 3, 1, 4, 2, 5, 3, 6, 4, 7, 5, 8, 6, 0, 1073741824, 0, 10, 9, -1, 5, 11, 7, 12, 8, 13, 9, 14, 10, 15, 11, 0, 1073741825, 0, 17, 16, -1, 4, 18, 12, 19, 13, 20, 14, 21, 15, 0, 1073741826, 0, 2147483647, 22, 16, 4, 23, 17, 24, 18, 25, 19, 26, 20, 0, 1073741827, 0, 2147483647, 27, 21, 6, 28, 22, 29, 23, 30, 24, 31, 25, 32, 26, 33, 27, 0, 1073741828, 0, 2147483647, 34, 28, 6, 35, 29, 36, 30, 37, 31, 38, 32, 39, 33, 40, 34, 0, 1073741829, 0, 2147483647, 41, 35, 6, 42, 36, 43, 37, 44, 38, 45, 39, 46, 40, 47, 41, 0, 1073741830, 0, 2147483647, 48, 42, 6, 49, 43, 50, 44, 51, 45, 52, 46, 53, 47, 54, 48, 0, 1073741831, 0, 2147483647, 55, 49, 6, 56, 50, 57, 51, 58, 52, 59, 53, 60, 54, 61, 55, 0, 1073741832, 0, 2147483647, 62, 56, 6, 63, 57, 64, 58, 65, 59, 66, 60, 67, 61, 68, 62, 0, 1073741833, 0, 2147483647, 69, 63, 6, 70, 64, 71, 65, 72, 66, 73, 67, 74, 68, 75, 69, 0, 1073741834, 0, 2147483647, 76, 70, 6, 77, 71, 78, 72, 79, 73, 80, 74, 81, 75, 82, 76, 0, 1073741835, 0, 2147483647, 83, 77, 6, 84, 78, 85, 79, 86, 80, 87, 81, 88, 82, 89, 83, 0, 1073741836, 0, 91, 90, -1, 7, 92, 84, 93, 85, 94, 86, 95, 87, 96, 88, 97, 89, 98, 90, 0, 1073741837, 0, 100, 99, -1, 7, 101, 91, 102, 92, 103, 93, 104, 94, 105, 95, 106, 96, 107, 97, 0, 1073741838, 0, 109, 108, -1, 8, 110, 98, 111, 99, 112, 100, 113, 101, 114, 102, 115, 103, 116, 104, 117, 105, 0, 1073741839, 0, 2147483647, 118, 106, 7, 119, 107, 120, 108, 121, 109, 122, 110, 123, 111, 124, 112, 125, 113, 0, 1073741840, 0, 2147483647, 126, 114, 8, 127, 115, 128, 116, 129, 117, 130, 118, 131, 119, 132, 120, 133, 121, 134, 122, 0, 1073741841, 0, 2147483647, 135, 123, 8, 136, 124, 137, 125, 138, 126, 139, 127, 140, 128, 141, 129, 142, 130, 143, 131, 0, 1073741842, 0, 2147483647, 144, 132, 7, 145, 133, 146, 134, 147, 135, 148, 136, 149, 137, 150, 138, 151, 139, 0, 1073741843, 0, 153, 152, -1, 1, 154, 140, 0, 1073741844, 0, 2147483647, 155, 141, 3, 156, 142, 157, 143, 158, 144, 0, 1073741845, 0, 2147483647, 159, 145, 5, 160, 146, 161, 147, 162, 148, 163, 149, 164, 150, 0, 1073741846, 0, 2147483647, 165, 151, 5, 166, 152, 167, 153, 168, 154, 169, 155, 170, 156, 0, 1073741847, 0, 2147483647, 171, 157, 5, 172, 158, 173, 159, 174, 160, 175, 161, 176, 162, 0, 1073741848, 0, 2147483647, 177, 163, 5, 178, 164, 179, 165, 180, 166, 181, 167, 182, 168, 0, 1073741849, 0, 2147483647, 183, 169, 5, 184, 170, 185, 171, 186, 172, 187, 173, 188, 174, 0, 1073741850, 0, 2147483647, 189, 175, 5, 190, 176, 191, 177, 192, 178, 193, 179, 194, 180, 0, 1073741851, 0, 2147483647, 195, 181, 5, 196, 182, 197, 183, 198, 184, 199, 185, 200, 186, 0, 1073741852, 0, 2147483647, 201, 187, 5, 202, 188, 203, 189, 204, 190, 205, 191, 206, 192, 0, 1073741853, 0, 2147483647, 207, 193, 5, 208, 194, 209, 195, 210, 196, 211, 197, 212, 198, 0, 1073741854, 0, 2147483647, 213, 199, 7, 214, 200, 215, 201, 216, 202, 217, 203, 218, 204, 219, 205, 220, 206, 0, 1073741855, 0, 2147483647, 221, 207, 7, 222, 208, 223, 209, 224, 210, 225, 211, 226, 212, 227, 213, 228, 214, 0, 1073741856, 0, 2147483647, 229, 215, 7, 230, 216, 231, 217, 232, 218, 233, 219, 234, 220, 235, 221, 236, 222, 0, 1073741857, 0, 2147483647, 237, 223, 7, 238, 224, 239, 225, 240, 226, 241, 227, 242, 228, 243, 229, 244, 230, 0, 1073741858, 0, 2147483647, 245, 231, 7, 246, 232, 247, 233, 248, 234, 249, 235, 250, 236, 251, 237, 252, 238, 0, 1073741859, 0, 2147483647, 253, 239, 7, 254, 240, 255, 241, 256, 242, 257, 243, 258, 244, 259, 245, 260, 246, 0, 1073741860, 0, 2147483647, 261, 247, 7, 262, 248, 263, 249, 264, 250, 265, 251, 266, 252, 267, 253, 268, 254, 0, 1073741861, 0, 2147483647, 269, 255, 7, 270, 256, 271, 257, 272, 258, 273, 259, 274, 260, 275, 261, 276, 262, 0, 1073741862, 0, 2147483647, 277, 263, 7, 278, 264, 279, 265, 280, 266, 281, 267, 282, 268, 283, 269, 284, 270, 0, 1073741863, 0, 2147483647, 285, 271, 7, 286, 272, 287, 273, 288, 274, 289, 275, 290, 276, 291, 277, 292, 278, 0, 1073741864, 0, 2147483647, 293, 279, 7, 294, 280, 295, 281, 296, 282, 297, 283, 298, 284, 299, 285, 300, 286, 0, 1073741865, 0, 2147483647, 301, 287, 7, 302, 288, 303, 289, 304, 290, 305, 291, 306, 292, 307, 293, 308, 294, 0, 1073741866, 0, 2147483647, 309, 295, 7, 310, 296, 311, 297, 312, 298, 313, 299, 314, 300, 315, 301, 316, 302, 0, 1073741867, 0, 2147483647, 317, 303, 7, 318, 304, 319, 305, 320, 306, 321, 307, 322, 308, 323, 309, 324, 310, 0, 1073741868, 0, 2147483647, 325, 311, 7, 326, 312, 327, 313, 328, 314, 329, 315, 330, 316, 331, 317, 332, 318, 0, 1073741869, 0, 2147483647, 333, 319, 7, 334, 320, 335, 321, 336, 322, 337, 323, 338, 324, 339, 325, 340, 326, 0, 1073741870, 0, 342, 341, -1, 2, 343, 327, 344, 328, 0, 1073741871, 0, 2147483647, 345, 329, 4, 346, 330, 347, 331, 348, 332, 349, 333, 0, 1073741872, 0, 2147483647, 350, 334, 6, 351, 335, 352, 336, 353, 337, 354, 338, 355, 339, 356, 340, 0, 1073741873, 0, 2147483647, 357, 341, 6, 358, 342, 359, 343, 360, 344, 361, 345, 362, 346, 363, 347, 0, 1073741874, 0, 2147483647, 364, 348, 6, 365, 349, 366, 350, 367, 351, 368, 352, 369, 353, 370, 354, 0, 1073741875, 0, 2147483647, 371, 355, 6, 372, 356, 373, 357, 374, 358, 375, 359, 376, 360, 377, 361, 0, 1073741876, 0, 2147483647, 378, 362, 6, 379, 363, 380, 364, 381, 365, 382, 366, 383, 367, 384, 368, 0, 1073741877, 0, 2147483647, 385, 369, 6, 386, 370, 387, 371, 388, 372, 389, 373, 390, 374, 391, 375, 0, 1073741878, 0, 2147483647, 392, 376, 6, 393, 377, 394, 378, 395, 379, 396, 380, 397, 381, 398, 382, 0, 1073741879, 0, 2147483647, 399, 383, 6, 400, 384, 401, 385, 402, 386, 403, 387, 404, 388, 405, 389, 0, 1073741880, 0, 2147483647, 406, 390, 6, 407, 391, 408, 392, 409, 393, 410, 394, 411, 395, 412, 396, 0, 1073741881, 0, 2147483647, 413, 397, 8, 414, 398, 415, 399, 416, 400, 417, 401, 418, 402, 419, 403, 420, 404, 421, 405, 0, 1073741882, 0, 2147483647, 422, 406, 8, 423, 407, 424, 408, 425, 409, 426, 410, 427, 411, 428, 412, 429, 413, 430, 414, 0, 1073741883, 0, 2147483647, 431, 415, 8, 432, 416, 433, 417, 434, 418, 435, 419, 436, 420, 437, 421, 438, 422, 439, 423, 0, 1073741884, 0, 2147483647, 440, 424, 8, 441, 425, 442, 426, 443, 427, 444, 428, 445, 429, 446, 430, 447, 431, 448, 432, 0, 1073741885, 0, 2147483647, 449, 433, 8, 450, 434, 451, 435, 452, 436, 453, 437, 454, 438, 455, 439, 456, 440, 457, 441, 0, 1073741886, 0, 2147483647, 458, 442, 8, 459, 443, 460, 444, 461, 445, 462, 446, 463, 447, 464, 448, 465, 449, 466, 450, 0, 1073741887, 0, 2147483647, 467, 451, 8, 468, 452, 469, 453, 470, 454, 471, 455, 472, 456, 473, 457, 474, 458, 475, 459, 0, 1073741888, 0, 2147483647, 476, 460, 8, 477, 461, 478, 462, 479, 463, 480, 464, 481, 465, 482, 466, 483, 467, 484, 468, 0, 1073741889, 0, 2147483647, 485, 469, 8, 486, 470, 487, 471, 488, 472, 489, 473, 490, 474, 491, 475, 492, 476, 493, 477, 0, 1073741890, 0, 2147483647, 494, 478, 8, 495, 479, 496, 480, 497, 481, 498, 482, 499, 483, 500, 484, 501, 485, 502, 486, 0, 1073741891, 0, 2147483647, 503, 487, 8, 504, 488, 505, 489, 506, 490, 507, 491, 508, 492, 509, 493, 510, 494, 511, 495, 0, 1073741892, 0, 2147483647, 512, 496, 8, 513, 497, 514, 498, 515, 499, 516, 500, 517, 501, 518, 502, 519, 503, 520, 504, 0, 1073741893, 0, 2147483647, 521, 505, 8, 522, 506, 523, 507, 524, 508, 525, 509, 526, 510, 527, 511, 528, 512, 529, 513, 0, 1073741894, 0, 2147483647, 530, 514, 8, 531, 515, 532, 516, 533, 517, 534, 518, 535, 519, 536, 520, 537, 521, 538, 522, 0, 1073741895, 0, 2147483647, 539, 523, 8, 540, 524, 541, 525, 542, 526, 543, 527, 544, 528, 545, 529, 546, 530, 547, 531, 0, 1073741896, 0, 2147483647, 548, 532, 8, 549, 533, 550, 534, 551, 535, 552, 536, 553, 537, 554, 538, 555, 539, 556, 540, 0, 1073741897, 0, 558, 557, -1, 2, 559, 541, 560, 542, 0, 1073741898, 0, 2147483647, 561, 543, 3, 562, 544, 563, 545, 564, 546, 0, 1073741899, 0, 2147483647, 565, 547, 5, 566, 548, 567, 549, 568, 550, 569, 551, 570, 552, 0, 1073741900, 0, 2147483647, 571, 553, 5, 572, 554, 573, 555, 574, 556, 575, 557, 576, 558, 0, 1073741901, 0, 2147483647, 577, 559, 5, 578, 560, 579, 561, 580, 562, 581, 563, 582, 564, 0, 1073741902, 0, 2147483647, 583, 565, 5, 584, 566, 585, 567, 586, 568, 587, 569, 588, 570, 0, 1073741903, 0, 2147483647, 589, 571, 5, 590, 572, 591, 573, 592, 574, 593, 575, 594, 576, 0, 1073741904, 0, 2147483647, 595, 577, 6, 596, 578, 597, 579, 598, 580, 599, 581, 600, 582, 601, 583, 0, 1073741905, 0, 2147483647, 602, 584, 5, 603, 585, 604, 586, 605, 587, 606, 588, 607, 589, 0, 1073741906, 0, 2147483647, 608, 590, 6, 609, 591, 610, 592, 611, 593, 612, 594, 613, 595, 614, 596, 0, 1073741907, 0, 2147483647, 615, 597, 5, 616, 598, 617, 599, 618, 600, 619, 601, 620, 602, 0, 1073741908, 0, 2147483647, 621, 603, 7, 622, 604, 623, 605, 624, 606, 625, 607, 626, 608, 627, 609, 628, 610, 0, 1073741909, 0, 2147483647, 629, 611, 7, 630, 612, 631, 613, 632, 614, 633, 615, 634, 616, 635, 617, 636, 618, 0, 1073741910, 0, 2147483647, 637, 619, 7, 638, 620, 639, 621, 640, 622, 641, 623, 642, 624, 643, 625, 644, 626, 0, 1073741911, 0, 2147483647, 645, 627, 7, 646, 628, 647, 629, 648, 630, 649, 631, 650, 632, 651, 633, 652, 634, 0, 1073741912, 0, 2147483647, 653, 635, 7, 654, 636, 655, 637, 656, 638, 657, 639, 658, 640, 659, 641, 660, 642, 0, 1073741913, 0, 2147483647, 661, 643, 7, 662, 644, 663, 645, 664, 646, 665, 647, 666, 648, 667, 649, 668, 650, 0, 1073741914, 0, 2147483647, 669, 651, 7, 670, 652, 671, 653, 672, 654, 673, 655, 674, 656, 675, 657, 676, 658, 0, 1073741915, 0, 2147483647, 677, 659, 7, 678, 660, 679, 661, 680, 662, 681, 663, 682, 664, 683, 665, 684, 666, 0, 1073741916, 0, 2147483647, 685, 667, 7, 686, 668, 687, 669, 688, 670, 689, 671, 690, 672, 691, 673, 692, 674, 0, 1073741917, 0, 2147483647, 693, 675, 7, 694, 676, 695, 677, 696, 678, 697, 679, 698, 680, 699, 681, 700, 682, 0, 1073741918, 0, 2147483647, 701, 683, 7, 702, 684, 703, 685, 704, 686, 705, 687, 706, 688, 707, 689, 708, 690, 0, 1073741919, 0, 2147483647, 709, 691, 7, 710, 692, 711, 693, 712, 694, 713, 695, 714, 696, 715, 697, 716, 698, 0, 1073741920, 0, 2147483647, 717, 699, 7, 718, 700, 719, 701, 720, 702, 721, 703, 722, 704, 723, 705, 724, 706, 0, 1073741921, 0, 2147483647, 725, 707, 7, 726, 708, 727, 709, 728, 710, 729, 711, 730, 712, 731, 713, 732, 714, 0, 1073741922, 0, 2147483647, 733, 715, 7, 734, 716, 735, 717, 736, 718, 737, 719, 738, 720, 739, 721, 740, 722, 0, 1073741923, 0, 2147483647, 741, 723, 7, 742, 724, 743, 725, 744, 726, 745, 727, 746, 728, 747, 729, 748, 730, 0),
+"variants": [3, 15, 1.0, 1.0, 2, 2, SubResource("GDScript_pvbgg"), 0, 390.0, 145.0, Vector2(2.0515, 2.0515), Color(0.12549, 0.12549, 0.12549, 0.752941), 1, 0, 390.0, 145.0, SubResource("PackedScene_qtv7x"), 0, "1", "1", 49, SubResource("PackedScene_qtv7x"), 0, 40.0, 70.0, "2", "2", 50, SubResource("PackedScene_qtv7x"), 0, 80.0, 110.0, "3", "3", 51, SubResource("PackedScene_qtv7x"), 0, 120.0, 150.0, "4", "4", 52, SubResource("PackedScene_qtv7x"), 0, 160.0, 190.0, "5", "5", 53, SubResource("PackedScene_qtv7x"), 0, 200.0, 230.0, "6", "6", 54, SubResource("PackedScene_qtv7x"), 0, 240.0, 270.0, "7", "7", 55, SubResource("PackedScene_qtv7x"), 0, 280.0, 310.0, "8", "8", 56, SubResource("PackedScene_qtv7x"), 0, 320.0, 350.0, "9", "9", 57, SubResource("PackedScene_qtv7x"), 0, 360.0, 390.0, "0", "0", 48, 0, 90.0, 50.0, 115.0, 0, true, "SHIFT", 0, 120.0, 45.0, 145.0, 0, true, "CAPS", 0, 55.0, 120.0, 90.0, 145.0, 0, true, "ALT", SubResource("PackedScene_qtv7x"), 0, 340.0, 90.0, 390.0, 115.0, "BKSP", "BackSpace", SubResource("PackedScene_qtv7x"), 0, 100.0, 120.0, 290.0, 145.0, "Space", "Space", 32, SubResource("PackedScene_qtv7x"), 0, 300.0, 120.0, 330.0, 145.0, ".", "Period", 46, SubResource("PackedScene_qtv7x"), 0, 340.0, 120.0, 390.0, 145.0, "Enter", "Enter", Vector2(0, 30), SubResource("PackedScene_qtv7x"), "q", "Q", 113, SubResource("PackedScene_qtv7x"), 40.0, 70.0, "w", "W", 119, SubResource("PackedScene_qtv7x"), 80.0, 110.0, "e", "E", 101, SubResource("PackedScene_qtv7x"), 120.0, 150.0, "r", "R", 114, SubResource("PackedScene_qtv7x"), 160.0, 190.0, "t", "T", 116, SubResource("PackedScene_qtv7x"), 200.0, 230.0, "y", "Y", 121, SubResource("PackedScene_qtv7x"), 240.0, 270.0, "u", "U", 117, SubResource("PackedScene_qtv7x"), 280.0, 310.0, "i", "I", 105, SubResource("PackedScene_qtv7x"), 320.0, 350.0, "o", "O", 111, SubResource("PackedScene_qtv7x"), 360.0, 390.0, "p", "P", 112, SubResource("PackedScene_qtv7x"), 20.0, 30.0, 50.0, 55.0, "a", "A", 97, SubResource("PackedScene_qtv7x"), 60.0, 30.0, 90.0, 55.0, "s", "S", 115, SubResource("PackedScene_qtv7x"), 100.0, 30.0, 130.0, 55.0, "d", "D", 100, SubResource("PackedScene_qtv7x"), 140.0, 30.0, 170.0, 55.0, "f", "F", 102, SubResource("PackedScene_qtv7x"), 180.0, 30.0, 210.0, 55.0, "g", "G", 103, SubResource("PackedScene_qtv7x"), 220.0, 30.0, 250.0, 55.0, "h", "H", 104, SubResource("PackedScene_qtv7x"), 260.0, 30.0, 290.0, 55.0, "j", "J", 106, SubResource("PackedScene_qtv7x"), 300.0, 30.0, 330.0, 55.0, "k", "K", 107, SubResource("PackedScene_qtv7x"), 340.0, 30.0, 370.0, 55.0, "l", "L", 108, SubResource("PackedScene_qtv7x"), 60.0, 60.0, 90.0, 85.0, "z", "Z", 122, SubResource("PackedScene_qtv7x"), 100.0, 60.0, 130.0, 85.0, "x", "X", 120, SubResource("PackedScene_qtv7x"), 140.0, 60.0, 170.0, 85.0, "c", "C", 99, SubResource("PackedScene_qtv7x"), 180.0, 60.0, 210.0, 85.0, "v", "V", 118, SubResource("PackedScene_qtv7x"), 220.0, 60.0, 250.0, 85.0, "b", "B", 98, SubResource("PackedScene_qtv7x"), 260.0, 60.0, 290.0, 85.0, "n", "N", 110, SubResource("PackedScene_qtv7x"), 300.0, 60.0, 330.0, 85.0, "m", "M", 109, false, Vector2(0, 30), SubResource("PackedScene_qtv7x"), "Q", "Q", 81, true, SubResource("PackedScene_qtv7x"), 40.0, 70.0, "W", "W", 87, true, SubResource("PackedScene_qtv7x"), 80.0, 110.0, "E", "E", 69, true, SubResource("PackedScene_qtv7x"), 120.0, 150.0, "R", "R", 82, true, SubResource("PackedScene_qtv7x"), 160.0, 190.0, "T", "T", 84, true, SubResource("PackedScene_qtv7x"), 200.0, 230.0, "Y", "Y", 89, true, SubResource("PackedScene_qtv7x"), 240.0, 270.0, "U", "U", 85, true, SubResource("PackedScene_qtv7x"), 280.0, 310.0, "I", "I", 73, true, SubResource("PackedScene_qtv7x"), 320.0, 350.0, "O", "O", 79, true, SubResource("PackedScene_qtv7x"), 360.0, 390.0, "P", "P", 80, true, SubResource("PackedScene_qtv7x"), 20.0, 30.0, 50.0, 55.0, "A", "A", 65, true, SubResource("PackedScene_qtv7x"), 60.0, 30.0, 90.0, 55.0, "S", "S", 83, true, SubResource("PackedScene_qtv7x"), 100.0, 30.0, 130.0, 55.0, "D", "D", 68, true, SubResource("PackedScene_qtv7x"), 140.0, 30.0, 170.0, 55.0, "F", "F", 70, true, SubResource("PackedScene_qtv7x"), 180.0, 30.0, 210.0, 55.0, "G", "G", 71, true, SubResource("PackedScene_qtv7x"), 220.0, 30.0, 250.0, 55.0, "H", "H", 72, true, SubResource("PackedScene_qtv7x"), 260.0, 30.0, 290.0, 55.0, "J", "J", 74, true, SubResource("PackedScene_qtv7x"), 300.0, 30.0, 330.0, 55.0, "K", "K", 75, true, SubResource("PackedScene_qtv7x"), 340.0, 30.0, 370.0, 55.0, "L", "L", 76, true, SubResource("PackedScene_qtv7x"), 60.0, 60.0, 90.0, 85.0, "Z", "Z", 90, true, SubResource("PackedScene_qtv7x"), 100.0, 60.0, 130.0, 85.0, "X", "X", 88, true, SubResource("PackedScene_qtv7x"), 140.0, 60.0, 170.0, 85.0, "C", "C", 67, true, SubResource("PackedScene_qtv7x"), 180.0, 60.0, 210.0, 85.0, "V", "V", 86, true, SubResource("PackedScene_qtv7x"), 220.0, 60.0, 250.0, 85.0, "B", "B", 66, true, SubResource("PackedScene_qtv7x"), 260.0, 60.0, 290.0, 85.0, "N", "N", 78, true, SubResource("PackedScene_qtv7x"), 300.0, 60.0, 330.0, 85.0, "M", "M", 77, true, false, Vector2(0, 30), SubResource("PackedScene_qtv7x"), "+", "Plus", 43, SubResource("PackedScene_qtv7x"), 40.0, 70.0, "*", "Asterisk", 42, SubResource("PackedScene_qtv7x"), 80.0, 110.0, "÷", "Division", 247, SubResource("PackedScene_qtv7x"), 120.0, 150.0, "=", "Equal", 61, SubResource("PackedScene_qtv7x"), 160.0, 190.0, "/", "Slash", 47, SubResource("PackedScene_qtv7x"), 200.0, 230.0, "_", "UnderScore", 95, SubResource("PackedScene_qtv7x"), 240.0, 270.0, "<", "Less", 60, true, SubResource("PackedScene_qtv7x"), 280.0, 310.0, ">", "Greater", 62, SubResource("PackedScene_qtv7x"), 320.0, 350.0, "[", "BracketLeft", 91, true, SubResource("PackedScene_qtv7x"), 360.0, 390.0, "]", "BracketRight", 93, SubResource("PackedScene_qtv7x"), 20.0, 30.0, 50.0, 55.0, "!", "Exclam", 33, SubResource("PackedScene_qtv7x"), 60.0, 30.0, 90.0, 55.0, "@", "At", 64, SubResource("PackedScene_qtv7x"), 100.0, 30.0, 130.0, 55.0, "#", "NumberSign", 35, SubResource("PackedScene_qtv7x"), 140.0, 30.0, 170.0, 55.0, "$", "Dollar", 36, SubResource("PackedScene_qtv7x"), 180.0, 30.0, 210.0, 55.0, "%", "Percent", 37, SubResource("PackedScene_qtv7x"), 220.0, 30.0, 250.0, 55.0, "^", "AsciiCircum", 94, SubResource("PackedScene_qtv7x"), 260.0, 30.0, 290.0, 55.0, "&", "Ampersand", 38, SubResource("PackedScene_qtv7x"), 300.0, 30.0, 330.0, 55.0, "(", "ParenLeft", 40, SubResource("PackedScene_qtv7x"), 340.0, 30.0, 370.0, 55.0, ")", "ParenRight", 41, SubResource("PackedScene_qtv7x"), 60.0, 60.0, 90.0, 85.0, "-", "Minus", 45, SubResource("PackedScene_qtv7x"), 100.0, 60.0, 130.0, 85.0, "'", "Apostrophe", 39, SubResource("PackedScene_qtv7x"), 140.0, 60.0, 170.0, 85.0, "\"", "QuoteDbl", 34, SubResource("PackedScene_qtv7x"), 180.0, 60.0, 210.0, 85.0, ":", "Colon", 58, SubResource("PackedScene_qtv7x"), 220.0, 60.0, 250.0, 85.0, ";", "Semicolon", 59, SubResource("PackedScene_qtv7x"), 260.0, 60.0, 290.0, 85.0, ",", "Comma", 44, SubResource("PackedScene_qtv7x"), 300.0, 60.0, 330.0, 85.0, "?", "Question", 63],
+"version": 3
+}
 
 [node name="main" type="Node3D" groups=["localroot"]]
 script = ExtResource("1_gkt54")
@@ -28,7 +196,6 @@ autoplay = true
 bus = &"mic"
 
 [node name="StartXR" parent="." instance=ExtResource("4_4y4so")]
-physics_rate_multiplier = 1
 
 [node name="localworldroot" type="Node3D" parent="." groups=["localworldroot"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
@@ -55,7 +222,7 @@ offset_right = 40.0
 offset_bottom = 23.0
 
 [node name="matrix_panel" parent="." instance=ExtResource("6_307b8")]
-transform = Transform3D(1.5, 0, 0, 0, 0, -1.5, 0, 1.5, 0, 0, 2, -0.550489)
+transform = Transform3D(1.5, 0, 0, 0, 0, -1.5, 0, 1.5, 0, -1.13719, 2, -0.550489)
 _auto_load_ui = ExtResource("10_4ke10")
 appear_in_local_uis = true
 
@@ -66,5 +233,14 @@ script = ExtResource("11_oevc4")
 
 [node name="keyboard" parent="." instance=ExtResource("6_307b8")]
 transform = Transform3D(0.537432, -0.843307, 0, 0, 0, -1, 0.843307, 0.537432, 0, -0.538093, 2, 0.335737)
-_auto_load_ui = ExtResource("8_it0hc")
+_auto_load_ui = SubResource("PackedScene_00vfx")
 transparent = false
+
+[node name="Viewport2Din3D" parent="." instance=ExtResource("14_uh0ry")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.87583, 3.08164, -2.65116)
+
+[node name="VirtualKeyboard" parent="." instance=ExtResource("13_q4k3u")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.91129, 2.76691, -0.952727)
+
+[node name="avali-village" parent="." instance=ExtResource("6_amk1g")]
+transform = Transform3D(68, 0, 0, 0, 68, 0, 0, 0, 68, 0, 1.078, 0)
