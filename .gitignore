@@ -7,3 +7,5 @@ android/build
 android/.build_version
 exports/
 temp_unityimp/
+work/
+scenes/

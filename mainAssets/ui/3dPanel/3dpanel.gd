@@ -1,3 +1,4 @@
+@tool
 class_name panel3d
 extends StaticBody3D
 #extends RigidBody3D

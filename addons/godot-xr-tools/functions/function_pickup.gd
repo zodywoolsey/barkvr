@@ -141,8 +141,8 @@ func _ready():
 	_update_colliders()
 
 	# Monitor Grab Button
-	get_parent().connect("button_pressed", _on_button_pressed)
-	get_parent().connect("button_released", _on_button_released)
+	_controller.connect("button_pressed", _on_button_pressed)
+	_controller.connect("button_released", _on_button_released)
 
 
 # Called on each frame to update the pickup
@@ -316,12 +316,12 @@ func _update_closest_object() -> void:
 
 	# remove highlight on old object
 	if is_instance_valid(closest_object):
-		closest_object.decrease_is_closest()
+		closest_object.request_highlight(self, false)
 
 	# add highlight to new object
 	closest_object = new_closest_obj
 	if is_instance_valid(closest_object):
-		closest_object.increase_is_closest()
+		closest_object.request_highlight(self, true)
 
 
 # Find the pickable object closest to our hand's grab location
@@ -405,6 +405,7 @@ func _pick_up_object(target: Node3D) -> void:
 
 	# If object picked up then emit signal
 	if is_instance_valid(picked_up_object):
+		picked_up_object.request_highlight(self, false)
 		emit_signal("has_picked_up", picked_up_object)
 
 
