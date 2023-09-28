@@ -1,3 +1,0 @@
-Source: https://freesound.org/
-License: Public Domain CC0
-Authors: use the number prefix of the files to lookup the author
