@@ -5,8 +5,9 @@ var interface : XRInterface
 var webxr_interface
 var vr_supported = false
 
-var local_uis:Array = [
-	]
+var local_uis:Array = []
+
+var keyboard:StaticBody3D
 
 var discord_world = 'loading'
 var discord_login_status = 'not logged in'

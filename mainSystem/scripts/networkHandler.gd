@@ -136,8 +136,6 @@ func poll():
 		chat_timer += delta
 		journal_timer += delta
 		voip_timer += delta
-		
-		print(delta)
 		for peer in peers:
 			if peer:
 				peer.peer.poll()

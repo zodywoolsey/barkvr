@@ -5,7 +5,7 @@
 [sub_resource type="BoxShape3D" id="BoxShape3D_j0pg5"]
 size = Vector3(0.5, 0.01, 0.5)
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_38nwr"]
+[sub_resource type="ViewportTexture" id="ViewportTexture_aob3o"]
 viewport_path = NodePath("SubViewportContainer/SubViewport")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4ksv4"]
@@ -15,7 +15,7 @@ alpha_scissor_threshold = 0.5
 alpha_antialiasing_mode = 0
 cull_mode = 2
 shading_mode = 0
-albedo_texture = SubResource("ViewportTexture_38nwr")
+albedo_texture = SubResource("ViewportTexture_aob3o")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_r1rr1"]
 resource_local_to_scene = true
