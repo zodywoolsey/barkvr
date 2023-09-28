@@ -52,7 +52,7 @@ window/handheld/orientation=4
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/Godot-MToon-Shader/plugin.cfg", "res://addons/Todo_Manager/plugin.cfg", "res://addons/contextmenu/plugin.cfg", "res://addons/godot-xr-tools/plugin.cfg", "res://addons/scrolllistcontainer/plugin.cfg", "res://addons/simplegrasstextured/plugin.cfg", "res://addons/unidot/plugin.cfg", "res://addons/vrm/plugin.cfg")
+enabled=PackedStringArray("res://addons/Godot-MToon-Shader/plugin.cfg", "res://addons/Todo_Manager/plugin.cfg", "res://addons/contextmenu/plugin.cfg", "res://addons/scrolllistcontainer/plugin.cfg", "res://addons/simplegrasstextured/plugin.cfg", "res://addons/unidot/plugin.cfg", "res://addons/vrm/plugin.cfg")
 
 [gui]
 
@@ -165,6 +165,5 @@ textures/default_filters/anisotropic_filtering_level=0
 
 [xr]
 
-openxr/enabled=true
 openxr/startup_alert=false
 shaders/enabled=true

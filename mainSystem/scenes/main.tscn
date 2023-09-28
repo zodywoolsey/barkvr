@@ -28,7 +28,6 @@ bus = &"mic"
 
 [node name="StartXR" type="Node" parent="."]
 script = ExtResource("2_3r3cq")
-enable_passthrough = true
 
 [node name="EnterWebXR" type="CanvasLayer" parent="StartXR"]
 visible = false
