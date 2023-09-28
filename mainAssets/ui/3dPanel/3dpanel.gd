@@ -16,7 +16,8 @@ var tex:ViewportTexture
 
 var is_panel_3d:bool = true
 
-@export var _auto_load_ui : Resource
+#now accepts packed scene was resources
+@export var _auto_load_ui : PackedScene
 @export var transparent : bool = true
 @export var appear_in_local_uis : bool = false
 @export var lock_global_position: bool = false
