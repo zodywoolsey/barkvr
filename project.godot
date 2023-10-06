@@ -165,5 +165,6 @@ textures/default_filters/anisotropic_filtering_level=0
 
 [xr]
 
+openxr/enabled=true
 openxr/startup_alert=false
 shaders/enabled=true

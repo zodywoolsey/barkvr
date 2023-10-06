@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://mainAssets/ui/3dPanel/local ui/login/loginbutton.gd" id="1_18njo"]
 [ext_resource type="Theme" uid="uid://b7mxq6cclub5f" path="res://mainAssets/ui/default_theme.tres" id="1_eqeii"]
 [ext_resource type="Script" path="res://mainAssets/ui/3dPanel/local ui/login/matrix.gd" id="1_ptvo5"]
-[ext_resource type="Script" path="res://mainAssets/ui/3dPanel/local ui/login/hashed_tree_list.gd" id="3_wf5r8"]
+[ext_resource type="Script" path="res://mainAssets/ui/3dPanel/local ui/login/roomlist.gd" id="4_f325r"]
 [ext_resource type="Texture2D" uid="uid://bhoipad8j50fr" path="res://assets/icons/vr-headset.svg" id="4_keerj"]
 [ext_resource type="Script" path="res://mainAssets/ui/3dPanel/local ui/login/messages.gd" id="4_ydkch"]
 [ext_resource type="PackedScene" uid="uid://drvs5pgtp63nx" path="res://mainAssets/ui/3dPanel/local ui/login/message.tscn" id="5_8wc7f"]
@@ -108,7 +108,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 focus_mode = 0
 hide_root = true
-script = ExtResource("3_wf5r8")
+script = ExtResource("4_f325r")
 
 [node name="RoomSplitContainer" type="VSplitContainer" parent="chat/HBoxContainer"]
 layout_mode = 2

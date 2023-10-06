@@ -159,15 +159,10 @@ func _input(event):
 				LocalGlobals.emit_signal("playerreleaseuifocus")
 				Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	if event is InputEventMouseButton:
-		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT and !LocalGlobals.vr_supported:
 			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 			LocalGlobals.player_state = LocalGlobals.PLAYER_STATE_PLAYING
-#		if event.is_action("ui_accept"):
-#			if LocalGlobals.player_state == LocalGlobals.PLAYER_STATE_TYPING:
-#				LocalGlobals.player_state = LocalGlobals.PLAYER_STATE_PLAYING
-#				LocalGlobals.emit_signal("playerreleaseuifocus")
 	if event is InputEventScreenTouch:
-#		Notifyvr.send_notification(str(event))
 		if event.position.x > get_viewport().size.x/2.0 and lookdrag.is_empty():
 			lookdrag = {
 				'index': event.index,

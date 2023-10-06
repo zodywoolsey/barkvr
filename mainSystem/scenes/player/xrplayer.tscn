@@ -62,6 +62,9 @@ collision_mask = 15
 [node name="Node3D" type="Node3D" parent="CharacterBody3D/xrplayer/XrCamera3d" groups=["notificationparent"]]
 transform = Transform3D(0.075, 0, 0, 0, 0.075, 0, 0, 0, 0.075, -0.0929923, -0.0845834, -0.183947)
 
+[node name="iktarget" type="Node3D" parent="CharacterBody3D/xrplayer/XrCamera3d"]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0.141187)
+
 [node name="righthand" type="XRController3D" parent="CharacterBody3D/xrplayer"]
 unique_name_in_owner = true
 tracker = &"right_hand"
@@ -139,6 +142,9 @@ pixel_size = 0.002
 text = "test"
 script = SubResource("GDScript_dn0nl")
 
+[node name="iktarget" type="Node3D" parent="CharacterBody3D/xrplayer/righthand"]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
+
 [node name="lefthand" type="XRController3D" parent="CharacterBody3D/xrplayer"]
 unique_name_in_owner = true
 tracker = &"left_hand"
@@ -194,6 +200,9 @@ node_a = NodePath("../StaticBody3D")
 [node name="notificationparent" type="Node3D" parent="CharacterBody3D/xrplayer/lefthand" groups=["notificationparent"]]
 transform = Transform3D(-4.37114e-09, 4.37114e-09, -0.1, -4.37114e-09, -0.1, -4.37114e-09, -0.1, 4.37114e-09, 4.37114e-09, -0.048, -0.064, 0.077)
 script = ExtResource("8_n4qtp")
+
+[node name="iktarget" type="Node3D" parent="CharacterBody3D/xrplayer/lefthand"]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D"]
 unique_name_in_owner = true

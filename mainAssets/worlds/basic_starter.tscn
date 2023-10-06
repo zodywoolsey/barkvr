@@ -68,7 +68,7 @@ shadow_enabled = true
 script = SubResource("GDScript_cwteg")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="floor boundary"]
-transform = Transform3D(-0.99981, -0.0194942, 1.70423e-09, -0.0194942, 0.99981, -8.74062e-08, 0, -8.74228e-08, -1, 0, -10.7255, -0.307133)
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, -82.8998, -0.307133)
 shape = SubResource("WorldBoundaryShape3D_csaaw")
 
 [node name="StaticBody3D" type="RigidBody3D" parent="."]

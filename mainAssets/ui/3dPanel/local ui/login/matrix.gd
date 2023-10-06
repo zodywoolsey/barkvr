@@ -30,32 +30,18 @@ func _ready():
 				roomId = event['room_id']
 				if event['type'] == "m.room.name":
 					name = event['content']['name']
-#				if event['type'] == 'm.room.avatar':
-#					var tmp = HTTPRequest.new()
-#					get_tree().get_first_node_in_group("requestParent").add_child(tmp)
-#					var avatarUrl = event['content']['url']
-#					var avatarServer = avatarUrl.split('/')[2]
-#					var mediaId = avatarUrl.split('/')[3]
-#					tmp.download_file = "user://cache/avatars/"+roomId
-#					tmp.request(
-#						"{0}_matrix/media/v3/download/{1}/{2}".format([Vector.base_url,avatarServer,mediaId]),
-#						Vector.headers,
-#						HTTPClient.METHOD_GET
-#						)
-#					await tmp.request_completed
-#					print(FileAccess.file_exists("user://cache/avatars/"+roomId))
 				await get_tree().process_frame
 			var tmp
 			if name:
 				tmp = await item_list.add_item(name,{
 					'state': data.body,
 					'room_id': roomId
-				})
+				}, roomId )
 			else:
 				tmp = await item_list.add_item(roomId.split(':')[0].right(-1),{
 					'state': data.body,
 					'room_id': roomId
-				})
+				}, roomId )
 			
 		)
 
@@ -65,6 +51,5 @@ func add_items(items):
 			var state = Vector.api.get_room_state(i)
 
 func loggedIn():
-#	Vector.get_joined_rooms()
 	Vector.sync()
 

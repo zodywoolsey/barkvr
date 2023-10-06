@@ -11,8 +11,6 @@ var target:Node
 var _is_editing:bool = false
 var property_name:String = ''
 
-var timer := 0.0
-
 func _ready():
 	xval.text_changed.connect(func(new_text):
 		Journaling.check_root()
@@ -35,9 +33,6 @@ func _ready():
 			property_name+":z",
 			float(new_text))
 		)
-
-func _process(delta):
-	timer += delta
 
 func _notification(what):
 	if what == NOTIFICATION_PROCESS:

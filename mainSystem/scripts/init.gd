@@ -21,7 +21,6 @@ func _ready():
 			Journaling.import_asset('res',files[0], filename)
 		elif files[0].ends_with('.zip') or files[0].ends_with('.pck'):
 			Journaling.import_asset('pck', files[0], filename)
-#		elif files[0].contains
 		)
 
 
