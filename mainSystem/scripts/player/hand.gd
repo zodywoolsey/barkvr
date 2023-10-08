@@ -99,7 +99,7 @@ func buttonPressed(name):
 		pass
 	if name == "trigger_click":
 		if ui_ray.is_colliding():
-			ui_ray.isclick = true
+			ui_ray.click()
 		else:
 			world_ray.click()
 		if grab_parent.get_child_count()>0:

@@ -49,6 +49,7 @@ window/size/viewport_width=800
 window/size/viewport_height=600
 window/subwindows/embed_subwindows=false
 window/handheld/orientation=4
+window/vsync/vsync_mode=0
 
 [editor_plugins]
 
@@ -165,6 +166,5 @@ textures/default_filters/anisotropic_filtering_level=0
 
 [xr]
 
-openxr/enabled=true
 openxr/startup_alert=false
 shaders/enabled=true

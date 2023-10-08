@@ -173,7 +173,7 @@ func _input(event):
 			}
 		if event.pressed:
 #			Notifyvr.send_notification("double tapped")
-			righthand.ui_ray.isclick = true
+			righthand.ui_ray.click()
 			await get_tree().process_frame
 			righthand.ui_ray.isrelease = true
 		if !lookdrag.is_empty() and event.index == lookdrag.index and event.pressed == false:
