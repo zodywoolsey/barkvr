@@ -175,7 +175,6 @@ action = SubResource("OpenXRAction_v7861")
 paths = PackedStringArray("/user/hand/left/output/haptic", "/user/hand/right/output/haptic")
 
 [sub_resource type="OpenXRInteractionProfile" id="OpenXRInteractionProfile_dk4db"]
-interaction_profile_path = "/interaction_profiles/khr/simple_controller"
 bindings = [SubResource("OpenXRIPBinding_1it2h"), SubResource("OpenXRIPBinding_vym54"), SubResource("OpenXRIPBinding_xtpin"), SubResource("OpenXRIPBinding_81mio"), SubResource("OpenXRIPBinding_vjacv"), SubResource("OpenXRIPBinding_dvmqi"), SubResource("OpenXRIPBinding_8v2b2")]
 
 [sub_resource type="OpenXRIPBinding" id="OpenXRIPBinding_bewe0"]
@@ -235,7 +234,6 @@ action = SubResource("OpenXRAction_v7861")
 paths = PackedStringArray("/user/hand/left/output/haptic", "/user/hand/right/output/haptic")
 
 [sub_resource type="OpenXRInteractionProfile" id="OpenXRInteractionProfile_w4xkp"]
-interaction_profile_path = "/interaction_profiles/htc/vive_controller"
 bindings = [SubResource("OpenXRIPBinding_bewe0"), SubResource("OpenXRIPBinding_ncb5t"), SubResource("OpenXRIPBinding_li2t4"), SubResource("OpenXRIPBinding_0fuq7"), SubResource("OpenXRIPBinding_mkj32"), SubResource("OpenXRIPBinding_h17oi"), SubResource("OpenXRIPBinding_pje3j"), SubResource("OpenXRIPBinding_d8bge"), SubResource("OpenXRIPBinding_ic1ll"), SubResource("OpenXRIPBinding_38qwg"), SubResource("OpenXRIPBinding_86c7a"), SubResource("OpenXRIPBinding_xv4tq"), SubResource("OpenXRIPBinding_kjkl0"), SubResource("OpenXRIPBinding_ygju4")]
 
 [sub_resource type="OpenXRIPBinding" id="OpenXRIPBinding_mkmjp"]
@@ -299,7 +297,6 @@ action = SubResource("OpenXRAction_v7861")
 paths = PackedStringArray("/user/hand/left/output/haptic", "/user/hand/right/output/haptic")
 
 [sub_resource type="OpenXRInteractionProfile" id="OpenXRInteractionProfile_mxmgd"]
-interaction_profile_path = "/interaction_profiles/microsoft/motion_controller"
 bindings = [SubResource("OpenXRIPBinding_mkmjp"), SubResource("OpenXRIPBinding_uvj1i"), SubResource("OpenXRIPBinding_51va2"), SubResource("OpenXRIPBinding_28xtg"), SubResource("OpenXRIPBinding_iuaph"), SubResource("OpenXRIPBinding_ojjp4"), SubResource("OpenXRIPBinding_naviw"), SubResource("OpenXRIPBinding_pxbm6"), SubResource("OpenXRIPBinding_cwmvu"), SubResource("OpenXRIPBinding_nwvs6"), SubResource("OpenXRIPBinding_8xeh4"), SubResource("OpenXRIPBinding_budiy"), SubResource("OpenXRIPBinding_5pcoj"), SubResource("OpenXRIPBinding_f8xv8"), SubResource("OpenXRIPBinding_mln7q")]
 
 [sub_resource type="OpenXRIPBinding" id="OpenXRIPBinding_e731j"]
@@ -375,7 +372,6 @@ action = SubResource("OpenXRAction_v7861")
 paths = PackedStringArray("/user/hand/left/output/haptic", "/user/hand/right/output/haptic")
 
 [sub_resource type="OpenXRInteractionProfile" id="OpenXRInteractionProfile_u3udg"]
-interaction_profile_path = "/interaction_profiles/oculus/touch_controller"
 bindings = [SubResource("OpenXRIPBinding_e731j"), SubResource("OpenXRIPBinding_kj8a0"), SubResource("OpenXRIPBinding_0pc5o"), SubResource("OpenXRIPBinding_44hv5"), SubResource("OpenXRIPBinding_kh2xy"), SubResource("OpenXRIPBinding_v0yor"), SubResource("OpenXRIPBinding_rmjxq"), SubResource("OpenXRIPBinding_wei6k"), SubResource("OpenXRIPBinding_og3w0"), SubResource("OpenXRIPBinding_uqbky"), SubResource("OpenXRIPBinding_rpvvj"), SubResource("OpenXRIPBinding_no2jq"), SubResource("OpenXRIPBinding_8udpf"), SubResource("OpenXRIPBinding_sxqtb"), SubResource("OpenXRIPBinding_wiok7"), SubResource("OpenXRIPBinding_n2mhw"), SubResource("OpenXRIPBinding_ihjcm"), SubResource("OpenXRIPBinding_6i1f2")]
 
 [sub_resource type="OpenXRIPBinding" id="OpenXRIPBinding_n4gov"]
@@ -455,7 +451,6 @@ action = SubResource("OpenXRAction_v7861")
 paths = PackedStringArray("/user/hand/left/output/haptic", "/user/hand/right/output/haptic")
 
 [sub_resource type="OpenXRInteractionProfile" id="OpenXRInteractionProfile_oxdax"]
-interaction_profile_path = "/interaction_profiles/pico/neo3_controller"
 bindings = [SubResource("OpenXRIPBinding_n4gov"), SubResource("OpenXRIPBinding_s2dnd"), SubResource("OpenXRIPBinding_1jxj0"), SubResource("OpenXRIPBinding_i8pur"), SubResource("OpenXRIPBinding_2bny0"), SubResource("OpenXRIPBinding_jrw5c"), SubResource("OpenXRIPBinding_g137q"), SubResource("OpenXRIPBinding_kt5xb"), SubResource("OpenXRIPBinding_aqru7"), SubResource("OpenXRIPBinding_lyjxp"), SubResource("OpenXRIPBinding_e2krn"), SubResource("OpenXRIPBinding_ogssp"), SubResource("OpenXRIPBinding_1wyty"), SubResource("OpenXRIPBinding_lr2rx"), SubResource("OpenXRIPBinding_jf4kd"), SubResource("OpenXRIPBinding_ekaq6"), SubResource("OpenXRIPBinding_c8nq7"), SubResource("OpenXRIPBinding_vjrcf"), SubResource("OpenXRIPBinding_xe7un")]
 
 [sub_resource type="OpenXRIPBinding" id="OpenXRIPBinding_phm61"]
@@ -547,7 +542,6 @@ action = SubResource("OpenXRAction_v7861")
 paths = PackedStringArray("/user/hand/left/output/haptic", "/user/hand/right/output/haptic")
 
 [sub_resource type="OpenXRInteractionProfile" id="OpenXRInteractionProfile_hygcn"]
-interaction_profile_path = "/interaction_profiles/valve/index_controller"
 bindings = [SubResource("OpenXRIPBinding_phm61"), SubResource("OpenXRIPBinding_elkck"), SubResource("OpenXRIPBinding_3lxu4"), SubResource("OpenXRIPBinding_i6hdf"), SubResource("OpenXRIPBinding_m4ro3"), SubResource("OpenXRIPBinding_tp54j"), SubResource("OpenXRIPBinding_gux16"), SubResource("OpenXRIPBinding_6os65"), SubResource("OpenXRIPBinding_h4esg"), SubResource("OpenXRIPBinding_v0lma"), SubResource("OpenXRIPBinding_h0ii6"), SubResource("OpenXRIPBinding_hibl2"), SubResource("OpenXRIPBinding_ucy3o"), SubResource("OpenXRIPBinding_o2i26"), SubResource("OpenXRIPBinding_b2ddp"), SubResource("OpenXRIPBinding_aqgiq"), SubResource("OpenXRIPBinding_3i7a7"), SubResource("OpenXRIPBinding_n2ofc"), SubResource("OpenXRIPBinding_5llog"), SubResource("OpenXRIPBinding_sbhix"), SubResource("OpenXRIPBinding_tf5h8"), SubResource("OpenXRIPBinding_g3haf")]
 
 [sub_resource type="OpenXRIPBinding" id="OpenXRIPBinding_sorln"]
@@ -607,7 +601,6 @@ action = SubResource("OpenXRAction_v7861")
 paths = PackedStringArray("/user/hand/left/output/haptic", "/user/hand/right/output/haptic")
 
 [sub_resource type="OpenXRInteractionProfile" id="OpenXRInteractionProfile_o37ci"]
-interaction_profile_path = "/interaction_profiles/hp/mixed_reality_controller"
 bindings = [SubResource("OpenXRIPBinding_sorln"), SubResource("OpenXRIPBinding_jh8u6"), SubResource("OpenXRIPBinding_whyd0"), SubResource("OpenXRIPBinding_5uujq"), SubResource("OpenXRIPBinding_twglu"), SubResource("OpenXRIPBinding_dpjtm"), SubResource("OpenXRIPBinding_ch13l"), SubResource("OpenXRIPBinding_68myc"), SubResource("OpenXRIPBinding_gqox0"), SubResource("OpenXRIPBinding_jdlxq"), SubResource("OpenXRIPBinding_cl7cp"), SubResource("OpenXRIPBinding_lqa7n"), SubResource("OpenXRIPBinding_eutk7"), SubResource("OpenXRIPBinding_yevm2")]
 
 [sub_resource type="OpenXRIPBinding" id="OpenXRIPBinding_upjw8"]
@@ -671,7 +664,6 @@ action = SubResource("OpenXRAction_v7861")
 paths = PackedStringArray("/user/hand/left/output/haptic", "/user/hand/right/output/haptic")
 
 [sub_resource type="OpenXRInteractionProfile" id="OpenXRInteractionProfile_q5t7v"]
-interaction_profile_path = "/interaction_profiles/samsung/odyssey_controller"
 bindings = [SubResource("OpenXRIPBinding_upjw8"), SubResource("OpenXRIPBinding_xtolf"), SubResource("OpenXRIPBinding_37khh"), SubResource("OpenXRIPBinding_ef04c"), SubResource("OpenXRIPBinding_010ln"), SubResource("OpenXRIPBinding_h824o"), SubResource("OpenXRIPBinding_ec2fm"), SubResource("OpenXRIPBinding_2hb4y"), SubResource("OpenXRIPBinding_pqh2o"), SubResource("OpenXRIPBinding_j2n6u"), SubResource("OpenXRIPBinding_fpmkg"), SubResource("OpenXRIPBinding_aiu06"), SubResource("OpenXRIPBinding_gdqga"), SubResource("OpenXRIPBinding_xdtas"), SubResource("OpenXRIPBinding_8nq7c")]
 
 [sub_resource type="OpenXRIPBinding" id="OpenXRIPBinding_yh8xt"]
@@ -739,7 +731,6 @@ action = SubResource("OpenXRAction_v7861")
 paths = PackedStringArray("/user/hand/left/output/haptic", "/user/hand/right/output/haptic")
 
 [sub_resource type="OpenXRInteractionProfile" id="OpenXRInteractionProfile_v6q5n"]
-interaction_profile_path = "/interaction_profiles/htc/vive_cosmos_controller"
 bindings = [SubResource("OpenXRIPBinding_yh8xt"), SubResource("OpenXRIPBinding_sffsu"), SubResource("OpenXRIPBinding_8nj02"), SubResource("OpenXRIPBinding_hn413"), SubResource("OpenXRIPBinding_fp5re"), SubResource("OpenXRIPBinding_cjiow"), SubResource("OpenXRIPBinding_a3bym"), SubResource("OpenXRIPBinding_urah6"), SubResource("OpenXRIPBinding_s4hgu"), SubResource("OpenXRIPBinding_2xht2"), SubResource("OpenXRIPBinding_mcnga"), SubResource("OpenXRIPBinding_uxkhe"), SubResource("OpenXRIPBinding_668c6"), SubResource("OpenXRIPBinding_ocmke"), SubResource("OpenXRIPBinding_t3haj"), SubResource("OpenXRIPBinding_4n71g")]
 
 [sub_resource type="OpenXRIPBinding" id="OpenXRIPBinding_wmh2y"]
@@ -815,7 +806,6 @@ action = SubResource("OpenXRAction_v7861")
 paths = PackedStringArray("/user/hand/left/output/haptic", "/user/hand/right/output/haptic")
 
 [sub_resource type="OpenXRInteractionProfile" id="OpenXRInteractionProfile_g8t65"]
-interaction_profile_path = "/interaction_profiles/htc/vive_focus3_controller"
 bindings = [SubResource("OpenXRIPBinding_wmh2y"), SubResource("OpenXRIPBinding_wvc16"), SubResource("OpenXRIPBinding_0ckkq"), SubResource("OpenXRIPBinding_dh82r"), SubResource("OpenXRIPBinding_uyfaf"), SubResource("OpenXRIPBinding_2h4yn"), SubResource("OpenXRIPBinding_yyj14"), SubResource("OpenXRIPBinding_44lth"), SubResource("OpenXRIPBinding_urdty"), SubResource("OpenXRIPBinding_s71ni"), SubResource("OpenXRIPBinding_fvd37"), SubResource("OpenXRIPBinding_krb8y"), SubResource("OpenXRIPBinding_yrim8"), SubResource("OpenXRIPBinding_hf5vo"), SubResource("OpenXRIPBinding_rlw1v"), SubResource("OpenXRIPBinding_mai4n"), SubResource("OpenXRIPBinding_fp7nn"), SubResource("OpenXRIPBinding_8p6ga")]
 
 [sub_resource type="OpenXRIPBinding" id="OpenXRIPBinding_8buv2"]
@@ -827,7 +817,6 @@ action = SubResource("OpenXRAction_v7861")
 paths = PackedStringArray("/user/vive_tracker_htcx/role/left_foot/output/haptic", "/user/vive_tracker_htcx/role/right_foot/output/haptic", "/user/vive_tracker_htcx/role/left_shoulder/output/haptic", "/user/vive_tracker_htcx/role/right_shoulder/output/haptic", "/user/vive_tracker_htcx/role/left_elbow/output/haptic", "/user/vive_tracker_htcx/role/right_elbow/output/haptic", "/user/vive_tracker_htcx/role/left_knee/output/haptic", "/user/vive_tracker_htcx/role/right_knee/output/haptic", "/user/vive_tracker_htcx/role/waist/output/haptic", "/user/vive_tracker_htcx/role/chest/output/haptic", "/user/vive_tracker_htcx/role/camera/output/haptic", "/user/vive_tracker_htcx/role/keyboard/output/haptic")
 
 [sub_resource type="OpenXRInteractionProfile" id="OpenXRInteractionProfile_flto0"]
-interaction_profile_path = "/interaction_profiles/htc/vive_tracker_htcx"
 bindings = [SubResource("OpenXRIPBinding_8buv2"), SubResource("OpenXRIPBinding_o365q")]
 
 [resource]

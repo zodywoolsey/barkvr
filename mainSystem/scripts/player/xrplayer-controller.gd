@@ -146,8 +146,20 @@ func _physics_process(delta):
 
 func _input(event):
 	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
-		rotate_y(-event.relative.x*(MOUSE_SPEED/100))
-		xr_camera_3d.rotate_x(-event.relative.y*(MOUSE_SPEED/100))
+		if Input.is_key_pressed(KEY_E):
+			for node in righthand.grabbed.values():
+				node.offset.basis = node.offset.basis.rotated(
+					basis*Vector3.UP,
+					-event.relative.x*(MOUSE_SPEED/100)
+					)
+				if !Input.is_key_pressed(KEY_SHIFT):
+					node.offset.basis = node.offset.basis.rotated(
+						basis*Vector3.RIGHT,
+						event.relative.y*(MOUSE_SPEED/100)
+						)
+		else:
+			rotate_y(-event.relative.x*(MOUSE_SPEED/100))
+			xr_camera_3d.rotate_x(-event.relative.y*(MOUSE_SPEED/100))
 	if event is InputEventKey:
 		if event.pressed:
 			if (event.keycode == KEY_ENTER or event.keycode == KEY_KP_ENTER):

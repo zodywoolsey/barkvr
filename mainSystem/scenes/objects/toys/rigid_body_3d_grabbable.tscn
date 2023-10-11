@@ -11,11 +11,10 @@ size = Vector3(0.1, 0.1, 0.1)
 [node name="RigidBody3d" type="RigidBody3D"]
 collision_layer = 10
 collision_mask = 10
-gravity_scale = 0.0
+freeze_mode = 1
 continuous_cd = true
 max_contacts_reported = 8
 contact_monitor = true
-freeze_mode = 1
 script = ExtResource("1_vhris")
 
 [node name="CollisionShape3d" type="CollisionShape3D" parent="."]

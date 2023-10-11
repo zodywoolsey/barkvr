@@ -14,7 +14,7 @@ config/name="barkvr"
 run/main_scene="res://mainSystem/scenes/main.tscn"
 config/use_custom_user_dir=true
 config/custom_user_dir_name="bark"
-config/features=PackedStringArray("4.1", "Mobile")
+config/features=PackedStringArray("4.2", "Mobile")
 boot_splash/bg_color=Color(0, 0, 0, 1)
 boot_splash/image="res://assets/doge-color-darker-dog.png"
 boot_splash/fullsize=false
@@ -34,7 +34,6 @@ Notifyvr="*res://addons/notifyvr/notifyvr.gd"
 Vector="*res://addons/vector/vector.gd"
 Journaling="*res://mainSystem/scripts/journaling.gd"
 BarkHelpers="*res://mainSystem/scripts/bark_helpers.gd"
-XRToolsUserSettings="*res://addons/godot-xr-tools/user_settings/user_settings.gd"
 
 [bark]
 
@@ -42,6 +41,10 @@ webrtc_config/stun_servers=PackedStringArray("stun:stun.l.google.com:19302", "st
 webrtc_config/turn_servers=PackedStringArray()
 webrtc_config/turn_password=""
 webrtc_config/turn_username=""
+
+[debug]
+
+settings/stdout/print_fps=true
 
 [display]
 

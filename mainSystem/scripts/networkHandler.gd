@@ -133,7 +133,6 @@ func poll():
 				if peer.channels_ready:
 					for chan in peer.channels:
 						chan.channel.poll()
-#					for chan in peer.channels:
 						if chan.label == 'bark-chat' and chat_timer > 0.008:
 							while chan.channel.get_available_packet_count() > 0:
 								var data = bytes_to_var(chan.channel.get_packet().decompress_dynamic(999999999999, 3))
