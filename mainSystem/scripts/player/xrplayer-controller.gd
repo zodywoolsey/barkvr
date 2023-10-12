@@ -148,13 +148,15 @@ func _input(event):
 	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		if Input.is_key_pressed(KEY_E):
 			for node in righthand.grabbed.values():
-				node.offset.basis = node.offset.basis.rotated(
-					basis*Vector3.UP,
+				var rotation_basis = (basis*Vector3.UP*node.node.basis).normalized()
+				node.offset = node.offset.rotated_local(
+					rotation_basis,
 					-event.relative.x*(MOUSE_SPEED/100)
 					)
 				if !Input.is_key_pressed(KEY_SHIFT):
-					node.offset.basis = node.offset.basis.rotated(
-						basis*Vector3.RIGHT,
+					rotation_basis = (basis*Vector3.RIGHT*node.node.basis)
+					node.offset = node.offset.rotated_local(
+						rotation_basis.normalized(),
 						event.relative.y*(MOUSE_SPEED/100)
 						)
 		else:

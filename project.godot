@@ -42,10 +42,6 @@ webrtc_config/turn_servers=PackedStringArray()
 webrtc_config/turn_password=""
 webrtc_config/turn_username=""
 
-[debug]
-
-settings/stdout/print_fps=true
-
 [display]
 
 window/size/viewport_width=800

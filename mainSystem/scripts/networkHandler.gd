@@ -130,7 +130,7 @@ func poll():
 		for peer in peers:
 			if peer:
 				peer.peer.poll()
-				if peer.channels_ready:
+				if peer.has('channels_ready') and peer.channels_ready:
 					for chan in peer.channels:
 						chan.channel.poll()
 						if chan.label == 'bark-chat' and chat_timer > 0.008:

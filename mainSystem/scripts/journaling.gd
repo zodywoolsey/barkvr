@@ -103,14 +103,22 @@ func import_asset(type:String, asset_to_import, asset_name:='', recieved:=false)
 				print('started loading')
 	#			Journaling.net_propogate_node(tmp)
 				ResourceLoader.load_threaded_request(asset_to_import,'',true)
-				get_tree().create_timer(1).timeout.connect(_check_loaded.bind(asset_to_import, asset_name))
+				get_tree().create_timer(1).timeout.connect(_check_loaded.bind(asset_to_import, asset_name, type))
+		else:
+			get_tree().get_first_node_in_group('localworldroot').add_child(asset_to_import)
 	elif type == 'pck' and asset_to_import and asset_to_import is PackedByteArray:
 		ResourceLoader
 
-func _check_loaded(path:String, name:String):
-	if ResourceLoader.load_threaded_get_status(path) == ResourceLoader.THREAD_LOAD_IN_PROGRESS:
-		print('not loaded yet')
-		get_tree().create_timer(1).timeout.connect(_check_loaded.bind(path))
-	else:
-		var err = ResourceLoader.load_threaded_get(path)
-		get_tree().get_first_node_in_group('localworldroot').add_child(err.instantiate())
+func _check_loaded(path:String, asset_name:String, type:String):
+	match ResourceLoader.load_threaded_get_status(path):
+		ResourceLoader.THREAD_LOAD_IN_PROGRESS:
+			print('not loaded yet')
+			get_tree().create_timer(1).timeout.connect(_check_loaded.bind(path, asset_name, type))
+		ResourceLoader.THREAD_LOAD_LOADED:
+			var err = ResourceLoader.load_threaded_get(path)
+			get_tree().get_first_node_in_group('localworldroot').add_child(err.instantiate())
+			actions.append({
+				'action_name': 'import_asset',
+				'type': type,
+				'asset_to_import': err
+			})

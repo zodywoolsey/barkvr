@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://ctwckofb07cfw"]
+[gd_scene load_steps=13 format=3 uid="uid://ctwckofb07cfw"]
 
 [ext_resource type="Script" path="res://mainSystem/scripts/init.gd" id="1_gkt54"]
 [ext_resource type="Script" path="res://mainSystem/scripts/startxr.gd" id="2_3r3cq"]
@@ -9,7 +9,6 @@
 [ext_resource type="PackedScene" uid="uid://b3sbt3oft3cxg" path="res://mainAssets/ui/3dPanel/editmode/vreditor.tscn" id="8_wf33i"]
 [ext_resource type="PackedScene" uid="uid://i3pxsgqnbjly" path="res://mainAssets/ui/3dPanel/local ui/login/matrix.tscn" id="10_4ke10"]
 [ext_resource type="PackedScene" uid="uid://lauwp8okd1vh" path="res://mainAssets/ui/3dPanel/local ui/keyboard/virtual_keyboard_2d.tscn" id="10_yfgoo"]
-[ext_resource type="PackedScene" uid="uid://dpkivbkxcfjyi" path="res://assets/deleteme/zodiearflin.scn" id="11_g5gq6"]
 [ext_resource type="Script" path="res://mainSystem/scripts/mic_playback.gd" id="11_oevc4"]
 
 [sub_resource type="AudioStreamMicrophone" id="AudioStreamMicrophone_ve6pm"]
@@ -54,9 +53,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0706468, 0.0923181, 0.0461358)
 
 [node name="basic starter" parent="localworldroot" instance=ExtResource("4_hmjqc")]
-
-[node name="zodiearflin" parent="localworldroot" instance=ExtResource("11_g5gq6")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00383699, 0.125, -0.0361085)
 
 [node name="save_load_object" parent="." instance=ExtResource("6_307b8")]
 transform = Transform3D(0.537432, -0.843307, 0, 0, 0, -1, 0.843307, 0.537432, 0, 0.168378, 2, 1.44429)
