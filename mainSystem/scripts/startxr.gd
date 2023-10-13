@@ -53,7 +53,7 @@ var _current_refresh_rate : float = 0
 
 # Handle auto-initialization when ready
 func _ready() -> void:
-	if !Engine.is_editor_hint() and auto_initialize and ProjectSettings.get_setting('xr/openxr/enabled'):
+	if !Engine.is_editor_hint() and auto_initialize:
 		initialize()
 
 

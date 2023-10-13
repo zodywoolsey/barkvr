@@ -116,7 +116,7 @@ func buttonReleased(name):
 	if name == "grip_click":
 		ungrip()
 	if name == "trigger_click":
-		ui_ray.isrelease = true
+		ui_ray.release()
 		if grab_parent.get_child_count()>0:
 			for item in grab_parent.get_children():
 				if item.has_method('primary'):

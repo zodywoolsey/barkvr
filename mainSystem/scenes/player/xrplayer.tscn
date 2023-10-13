@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://r68jre2w5k33"]
+[gd_scene load_steps=17 format=3 uid="uid://r68jre2w5k33"]
 
 [ext_resource type="Script" path="res://mainSystem/scripts/player/xrplayer-controller.gd" id="1_iwrfe"]
 [ext_resource type="Script" path="res://mainSystem/scripts/player/hand.gd" id="2_npgyv"]
@@ -36,6 +36,9 @@ script/source = "extends Label3D
 #func _process(delta):
 #	text = str(1/delta)
 "
+
+[sub_resource type="BoxMesh" id="BoxMesh_kgbb2"]
+size = Vector3(0.1, 0.1, 0.1)
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_1uxmk"]
 radius = 0.1
@@ -203,6 +206,12 @@ script = ExtResource("8_n4qtp")
 
 [node name="iktarget" type="Node3D" parent="CharacterBody3D/xrplayer/lefthand"]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
+
+[node name="XRAnchor3D" type="XRAnchor3D" parent="CharacterBody3D/xrplayer"]
+tracker = &"/user/eyes_ext"
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterBody3D/xrplayer/XRAnchor3D"]
+mesh = SubResource("BoxMesh_kgbb2")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D"]
 unique_name_in_owner = true

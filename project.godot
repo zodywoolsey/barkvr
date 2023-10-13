@@ -14,13 +14,12 @@ config/name="barkvr"
 run/main_scene="res://mainSystem/scenes/main.tscn"
 config/use_custom_user_dir=true
 config/custom_user_dir_name="bark"
-config/features=PackedStringArray("4.2", "Mobile")
+config/features=PackedStringArray("4.1", "Mobile")
 boot_splash/bg_color=Color(0, 0, 0, 1)
 boot_splash/image="res://assets/doge-color-darker-dog.png"
 boot_splash/fullsize=false
 config/icon="res://assets/doge-color-darker-dog.png"
 config/windows_native_icon="res://assets/barkvr.ico"
-boot_splash/minimum_display_time=2000
 
 [audio]
 
@@ -42,13 +41,15 @@ webrtc_config/turn_servers=PackedStringArray()
 webrtc_config/turn_password=""
 webrtc_config/turn_username=""
 
+[debug]
+
+settings/stdout/print_fps=true
+
 [display]
 
 window/size/viewport_width=800
 window/size/viewport_height=600
-window/subwindows/embed_subwindows=false
 window/handheld/orientation=4
-window/vsync/vsync_mode=0
 
 [editor_plugins]
 
@@ -153,6 +154,10 @@ jump={
 3d_physics/layer_3="uilaser"
 3d_physics/layer_4="world"
 
+[memory]
+
+limits/message_queue/max_size_mb=128
+
 [physics]
 
 common/physics_jitter_fix=0.0
@@ -161,9 +166,12 @@ common/physics_jitter_fix=0.0
 
 textures/vram_compression/import_s3tc_bptc=true
 textures/vram_compression/import_etc2_astc=true
-textures/default_filters/anisotropic_filtering_level=0
+anti_aliasing/quality/screen_space_aa=1
 
 [xr]
 
+openxr/enabled=true
 openxr/startup_alert=false
 shaders/enabled=true
+openxr/foveation_level=0
+openxr/extensions/eye_gaze_interaction=false
