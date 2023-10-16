@@ -1,13 +1,13 @@
 extends XRController3D
 
-@onready var grabArea : Area3D = $grabArea
-@onready var world_ray : RayCast3D = $worldRay
-@onready var ui_ray = $uiRay
-@onready var label_3d = $Label3D
+@onready var grabArea : Area3D = $handproxy/grabArea
+@onready var world_ray : RayCast3D = $handproxy/worldRay
+@onready var ui_ray = $handproxy/uiRay
+@onready var label_3d = $handproxy/Label3D
 @onready var handmenu = %"handmenu"
-@onready var hand_menu_point = $handMenuPoint
-@onready var grab_parent = $grabParent
-@onready var grabjoint = $grabjoint
+@onready var hand_menu_point = $handproxy/handMenuPoint
+@onready var grab_parent = $handproxy/grabParent
+@onready var grabjoint = $handproxy/grabjoint
 @onready var local_player = %CharacterBody3D
 @onready var righthand = %righthand
 @onready var lefthand = %lefthand
@@ -51,7 +51,7 @@ func _ready():
 
 func _process(delta):
 	if visible:
-		if buttons.has('by_button'):
+		if buttons.has('by_button') and LocalGlobals.world_state:
 			if buttons['by_button']:
 				contexttimer += delta
 			else:

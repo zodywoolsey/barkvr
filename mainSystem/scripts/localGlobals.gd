@@ -13,9 +13,14 @@ var discord_world = 'loading'
 var discord_login_status = 'not logged in'
 
 @export_enum("PAUSED", "PLAYING", "TYPING") var player_state : int = 0
-var PLAYER_STATE_PAUSED := 0
-var PLAYER_STATE_PLAYING:= 1
-var PLAYER_STATE_TYPING := 2
+static var PLAYER_STATE_PAUSED := 0
+static var PLAYER_STATE_PLAYING:= 1
+static var PLAYER_STATE_TYPING := 2
+
+@export_enum("EDITING", "PLAYING", "VIEWING") var world_state : int = 0
+static var WORLD_STATE_EDITING := 0
+static var WORLD_STATE_PLAYING := 1
+static var WORLD_STATE_VIEWING := 2
 
 signal playerinit(isvr:bool)
 signal playerreleaseuifocus

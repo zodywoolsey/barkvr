@@ -16,10 +16,10 @@ config/use_custom_user_dir=true
 config/custom_user_dir_name="bark"
 config/features=PackedStringArray("4.1", "Mobile")
 boot_splash/bg_color=Color(0, 0, 0, 1)
-boot_splash/image="res://assets/doge-color-darker-dog.png"
+boot_splash/image="res://assets/icons/barkiconrounded.png"
 boot_splash/fullsize=false
-config/icon="res://assets/doge-color-darker-dog.png"
-config/windows_native_icon="res://assets/barkvr.ico"
+config/icon="res://assets/icons/barkiconrounded.png"
+config/windows_native_icon="res://assets/barkvrcorgi.ico"
 
 [audio]
 
@@ -47,9 +47,10 @@ settings/stdout/print_fps=true
 
 [display]
 
-window/size/viewport_width=800
-window/size/viewport_height=600
+window/size/viewport_width=500
+window/size/viewport_height=500
 window/handheld/orientation=4
+window/vsync/vsync_mode=0
 
 [editor_plugins]
 
@@ -57,7 +58,9 @@ enabled=PackedStringArray("res://addons/Godot-MToon-Shader/plugin.cfg", "res://a
 
 [gui]
 
+theme/default_theme_scale=1.5
 theme/custom="res://mainAssets/ui/default_theme.tres"
+theme/custom_font="res://assets/font/OpenSans-VariableFont_wdth,wght.ttf"
 
 [input]
 
@@ -166,12 +169,10 @@ common/physics_jitter_fix=0.0
 
 textures/vram_compression/import_s3tc_bptc=true
 textures/vram_compression/import_etc2_astc=true
-anti_aliasing/quality/screen_space_aa=1
+anti_aliasing/quality/msaa_2d=2
 
 [xr]
 
-openxr/enabled=true
 openxr/startup_alert=false
 shaders/enabled=true
 openxr/foveation_level=0
-openxr/extensions/eye_gaze_interaction=false

@@ -15,15 +15,15 @@ func _ready():
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_3royi"]
 sky_top_color = Color(0.494118, 0.772549, 1, 1)
 sky_horizon_color = Color(0, 0, 0, 1)
-sky_energy_multiplier = 0.12
-ground_bottom_color = Color(0, 0, 0, 1)
-ground_horizon_color = Color(0, 0, 0, 1)
 
 [sub_resource type="Sky" id="Sky_sd3km"]
 sky_material = SubResource("ProceduralSkyMaterial_3royi")
 
 [sub_resource type="Environment" id="Environment_n00cx"]
+background_mode = 2
+background_energy_multiplier = 0.6
 sky = SubResource("Sky_sd3km")
+tonemap_mode = 3
 volumetric_fog_density = 0.2198
 volumetric_fog_albedo = Color(0.6, 0.466667, 1, 1)
 volumetric_fog_emission = Color(0.6, 0.466667, 1, 1)
@@ -59,7 +59,6 @@ environment = SubResource("Environment_n00cx")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(-0.865617, -0.417461, 0.276465, -0.267145, 0.852051, 0.450158, -0.423486, 0.315808, -0.849073, 0, 1.72518, 0)
-light_energy = 0.5
 
 [node name="floor boundary" type="Area3D" parent="."]
 script = SubResource("GDScript_cwteg")

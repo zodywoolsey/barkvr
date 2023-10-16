@@ -15,11 +15,14 @@ var is_panel_3d:bool = true
 @export var transparent : bool = true
 @export var appear_in_local_uis : bool = false
 @export var lock_global_position: bool = false
+@export var viewport_size:Vector2i=Vector2i(1024,1024)
 
 signal action(data:Dictionary)
 
 func _ready():
 	mesh.mesh.material.albedo_texture = viewport.get_texture()
+	if viewport_size:
+		set_viewport_size(viewport_size)
 	if lock_global_position:
 		axis_lock_angular_x = true
 		axis_lock_angular_y = true
@@ -42,10 +45,11 @@ func _ready():
 		set_ui(_auto_load_ui.instantiate())
 
 func _process(delta):
-	colShape.shape.size = Vector3(mesh.mesh.size.x,.01,mesh.mesh.size.y)
+	mesh.mesh.size.x = .0005*viewport.size.x
+	mesh.mesh.size.y = .0005*viewport.size.y
+	colShape.shape.size = Vector3(mesh.mesh.size.x,.001,mesh.mesh.size.y)
 
 func laserInput(data:Dictionary):
-	print('event')
 	var event
 	match data.action:
 		"hover":
@@ -99,6 +103,6 @@ func set_ui(node):
 			emit_signal('action',data)
 			)
 	mesh.mesh.surface_get_material(0).albedo_texture = tex
-#	node.gui_input.connect(func(event):
-#		label_3d.text = str(event)
-#		)
+
+func set_viewport_size(size:Vector2i):
+	viewport.size = size

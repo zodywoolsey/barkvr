@@ -1,0 +1,21 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://df3o6vusfa6nt"
+path="res://.godot/imported/bark.obj-b6f6ed7d12d7ff8a55ef17fd43b1000e.mesh"
+
+[deps]
+
+files=["res://.godot/imported/bark.obj-b6f6ed7d12d7ff8a55ef17fd43b1000e.mesh"]
+
+source_file="res://assets/startup/bark.obj"
+dest_files=["res://.godot/imported/bark.obj-b6f6ed7d12d7ff8a55ef17fd43b1000e.mesh", "res://.godot/imported/bark.obj-b6f6ed7d12d7ff8a55ef17fd43b1000e.mesh"]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+optimize_mesh=true

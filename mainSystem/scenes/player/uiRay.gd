@@ -5,7 +5,7 @@ var prevHover
 var pressed := false
 
 func _process(delta):
-	procrayvis(delta)
+	procrayvis()
 	if Input.is_action_just_released("scrollup"):
 		scrollup()
 	if Input.is_action_just_released("scrolldown"):
@@ -15,7 +15,7 @@ func _physics_process(delta):
 	if is_colliding():
 		vis.show()
 		var tmpcol = get_collider()
-		if tmpcol.has_method("laserHover"):
+		if tmpcol.has_method("laserInput"):
 			if prevHover and prevHover != tmpcol:
 				prevHover.laserInput({
 					'hovering': false,
@@ -35,6 +35,7 @@ func _physics_process(delta):
 			if prevHover and prevHover.has_method("laserInput"):
 				prevHover.laserInput({
 					'hovering': false,
+					'pressed': false,
 					'position': get_collision_point(),
 					"action": "hover"
 				})
@@ -43,6 +44,7 @@ func _physics_process(delta):
 		if prevHover and prevHover.has_method("laserInput") and prevHover.has_method('laserInput'):
 			prevHover.laserInput({
 				'hovering': false,
+				'pressed': false,
 				'position': get_collision_point(),
 				'action': 'hover'
 			})

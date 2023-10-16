@@ -107,6 +107,8 @@ split_offset = -120
 layout_mode = 2
 size_flags_horizontal = 3
 focus_mode = 0
+allow_reselect = true
+allow_search = false
 hide_root = true
 script = ExtResource("4_f325r")
 
@@ -149,7 +151,6 @@ size_flags_vertical = 3
 layout_mode = 2
 size_flags_vertical = 3
 follow_focus = true
-scroll_vertical = 100
 
 [node name="Control" type="VBoxContainer" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer"]
 layout_mode = 2
@@ -162,80 +163,6 @@ script = ExtResource("4_ydkch")
 layout_mode = 2
 size_flags_horizontal = 1
 leftside = false
-
-[node name="message25" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
-layout_mode = 2
-leftside = false
-
-[node name="message2" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
-layout_mode = 2
-
-[node name="message3" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
-layout_mode = 2
-
-[node name="message4" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
-layout_mode = 2
-
-[node name="message5" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
-layout_mode = 2
-
-[node name="message6" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
-layout_mode = 2
-leftside = false
-
-[node name="message7" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
-layout_mode = 2
-
-[node name="message8" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
-layout_mode = 2
-
-[node name="message9" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
-layout_mode = 2
-
-[node name="message10" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
-layout_mode = 2
-
-[node name="message11" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
-layout_mode = 2
-
-[node name="message12" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
-layout_mode = 2
-
-[node name="message13" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
-layout_mode = 2
-
-[node name="message14" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
-layout_mode = 2
-
-[node name="message15" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
-layout_mode = 2
-
-[node name="message16" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
-layout_mode = 2
-
-[node name="message17" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
-layout_mode = 2
-
-[node name="message18" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
-layout_mode = 2
-
-[node name="message19" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
-layout_mode = 2
-
-[node name="message20" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
-layout_mode = 2
-
-[node name="message21" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
-layout_mode = 2
-
-[node name="message22" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
-layout_mode = 2
-
-[node name="message23" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
-layout_mode = 2
-
-[node name="message24" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
-layout_mode = 2
 
 [node name="Control" type="Control" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer"]
 custom_minimum_size = Vector2(0, 50)

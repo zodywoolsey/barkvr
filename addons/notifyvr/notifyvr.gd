@@ -2,7 +2,8 @@ extends Node
 
 var queuedmessages = []
 
-func send_notification(message:String):
+func send_notification(message):
+	message = str(message)
 	var lbl = Label3D.new()
 	lbl.text = message
 	lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT

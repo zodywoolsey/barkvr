@@ -5,11 +5,12 @@ var rayvis = preload("res://mainSystem/scenes/player/rayvis.tscn")
 var vis
 var vispos := Vector3()
 @export var leftside:=false
-func _ready():
+
+func _init():
 	vis = rayvis.instantiate()
 	add_child.call_deferred(vis)
 
-func procrayvis(delta):
+func procrayvis():
 	vispos = get_collision_point()
 	var tmpnorm = get_collision_normal()
 	if is_colliding():

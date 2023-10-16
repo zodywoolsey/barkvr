@@ -134,7 +134,7 @@ func get_turn_server():
 	api.get_turn_server(base_url,headers)
 
 func get_room_messages(room_id:String):
-	api.get_room_messages(base_url,headers,room_id,'b','','',100)
+	api.get_room_messages(base_url,headers,room_id,'b','','',10)
 
 func connect_to_homeserver(homeServer:String = ""):
 	var homeserverurl = "https://{0}".format([
@@ -202,17 +202,6 @@ func readUserDict():
 			user_logged_in.emit()
 			return true
 	return false
-
-#func refresh_token(token:String):
-#	var res
-#	if client.get_status() == HTTPClient.STATUS_CONNECTED:
-#		res = client.request(HTTPClient.METHOD_POST, "/_matrix/client/v3/refresh",headers,str({
-#			"refresh_token": token
-#		}))
-#		var msg = await readRequestBytes()
-#		var refreshedToken = JSON.parse_string(msg)
-#	else:
-#		printerr("Vector client not initialized yet")
 
 func sync():
 	var reqData = {}

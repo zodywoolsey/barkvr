@@ -3,6 +3,7 @@
 [ext_resource type="Script" path="res://mainAssets/ui/3dPanel/3dpanel.gd" id="1_h1226"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_j0pg5"]
+resource_local_to_scene = true
 size = Vector3(0.5, 0.01, 0.5)
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_aob3o"]
@@ -40,10 +41,9 @@ skeleton = NodePath("../..")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
 
 [node name="SubViewportContainer" type="SubViewportContainer" parent="."]
-offset_left = 39.0
-offset_top = 2053.0
-offset_right = 79.0
-offset_bottom = 2093.0
+light_mask = 0
+visibility_layer = 0
+mouse_filter = 2
 
 [node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
 unique_name_in_owner = true

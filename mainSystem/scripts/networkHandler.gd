@@ -122,8 +122,8 @@ func _process(delta):
 
 func poll():
 	while true:
-		var delta = Time.get_unix_time_from_system()-prev_time
-		prev_time = Time.get_unix_time_from_system()
+		var delta = Time.get_ticks_msec()-prev_time
+		prev_time = Time.get_ticks_msec()
 		chat_timer += delta
 		journal_timer += delta
 		voip_timer += delta
@@ -133,7 +133,7 @@ func poll():
 				if peer.has('channels_ready') and peer.channels_ready:
 					for chan in peer.channels:
 						chan.channel.poll()
-						if chan.label == 'bark-chat' and chat_timer > 0.008:
+						if chan.label == 'bark-chat' and chat_timer > 8.3:
 							while chan.channel.get_available_packet_count() > 0:
 								var data = bytes_to_var(chan.channel.get_packet().decompress_dynamic(999999999999, 3))
 								var remplayer = get_tree().get_first_node_in_group(data.p_id)
@@ -147,7 +147,7 @@ func poll():
 							chat_timer = 0.0
 							var packet = var_to_bytes(packetdict).compress(3)
 							chan.channel.put_packet(packet)
-						if chan.label == 'bark-journal' and journal_timer > 0.008:
+						if chan.label == 'bark-journal' and journal_timer > 8.3:
 							# Sync from incoming data
 							while chan.channel.get_available_packet_count() > 0:
 								var data = chan.channel.get_var(true)
@@ -176,6 +176,8 @@ func poll():
 											"import_asset":
 												Notifyvr.send_notification('importing asset')
 												Journaling.call_deferred('import_asset',action.type, action.asset_to_import, '', true)
+											"delete_node":
+												Journaling.call_deferred('delete_node',action.target)
 							# Send all new journal events to the other users
 							journal_timer = 0.0
 							var tmp = Journaling.call('get_actions')

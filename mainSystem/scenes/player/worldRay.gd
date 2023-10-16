@@ -5,7 +5,7 @@ var prevHover
 var isclick := false
 
 func _process(delta):
-	procrayvis(delta)
+	procrayvis()
 	if is_colliding():
 		var tmpcol = get_collider()
 		if is_instance_valid(tmpcol) and tmpcol.has_method("get_collision_layer_value") and tmpcol.get_collision_layer_value(3) and tmpcol.has_method("laserHover"):

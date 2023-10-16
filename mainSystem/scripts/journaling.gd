@@ -32,6 +32,15 @@ func set_parent(target:NodePath, new_parent:NodePath):
 		'new_parent': new_parent
 		})
 
+func delete_node(target:NodePath, recieved=false):
+	var t_node = root.get_node(target)
+	t_node.queue_free()
+	if !recieved:
+		actions.append({
+			'action_name':'delete_node',
+			'target': target
+		})
+
 func set_property(target:NodePath, prop_name:String, value:Variant, recieved=false):
 	var t_node:Node = root.get_node(target)
 	if is_instance_valid(t_node) and prop_name.split(':')[0] in t_node:
@@ -45,7 +54,9 @@ func set_property(target:NodePath, prop_name:String, value:Variant, recieved=fal
 				'value': value
 			})
 
-func net_propogate_node(node_string:String, parent:NodePath='', recieved:=false):
+func net_propogate_node(node_string:String, parent:NodePath='', node_name:String='', recieved:=false):
+	if node_name.is_empty():
+		node_name = node_string.sha256_text()
 	var node = BarkHelpers.var_to_node(node_string)
 	if parent:
 		root.get_node(parent).add_child(node)
@@ -80,7 +91,8 @@ func import_asset(type:String, asset_to_import, asset_name:='', recieved:=false)
 			actions.append({
 				'action_name': 'import_asset',
 				'type': type,
-				'asset_to_import': asset_to_import
+				'asset_to_import': asset_to_import,
+				'asset_name': asset_name
 			})
 	elif type == 'glb' and asset_to_import and asset_to_import is PackedByteArray:
 		var doc:GLTFDocument = GLTFDocument.new()
@@ -93,7 +105,8 @@ func import_asset(type:String, asset_to_import, asset_name:='', recieved:=false)
 			actions.append({
 				'action_name': 'import_asset',
 				'type': type,
-				'asset_to_import': asset_to_import
+				'asset_to_import': asset_to_import,
+				'asset_name': asset_name
 			})
 	elif type == 'res' and asset_to_import:
 		if asset_to_import is String:
@@ -104,10 +117,47 @@ func import_asset(type:String, asset_to_import, asset_name:='', recieved:=false)
 	#			Journaling.net_propogate_node(tmp)
 				ResourceLoader.load_threaded_request(asset_to_import,'',true)
 				get_tree().create_timer(1).timeout.connect(_check_loaded.bind(asset_to_import, asset_name, type))
-		else:
-			get_tree().get_first_node_in_group('localworldroot').add_child(asset_to_import)
+		elif asset_to_import is PackedByteArray:
+			var tmpname = str(str(asset_to_import).hash())
+			var file = FileAccess.open("user://tmp/"+tmpname,FileAccess.WRITE_READ)
+			file.store_buffer(asset_to_import)
+			ResourceLoader.load_threaded_request(file.get_path(),'',true)
+			get_tree().create_timer(1).timeout.connect(_check_loaded.bind(file.get_path(), asset_name, type))
 	elif type == 'pck' and asset_to_import and asset_to_import is PackedByteArray:
 		ResourceLoader
+	elif type == 'image' and asset_to_import:
+		if asset_to_import is String and asset_to_import.is_absolute_path():
+			pass
+		elif asset_to_import is PackedByteArray:
+			var tmp = Image.new()
+			var err
+			if asset_name.ends_with('.jpg') or asset_name.ends_with('.jpeg'):
+				err = tmp.load_jpg_from_buffer(asset_to_import)
+			elif asset_name.ends_with('.png'):
+				err = tmp.load_png_from_buffer(asset_to_import)
+			elif asset_name.ends_with('.bmp'):
+				err = tmp.load_bmp_from_buffer(asset_to_import)
+			elif asset_name.ends_with('.tga'):
+				err = tmp.load_tga_from_buffer(asset_to_import)
+			elif asset_name.ends_with('.webp'):
+				err = tmp.load_webp_from_buffer(asset_to_import)
+			var image = TextureRect.new()
+			var tex = ImageTexture.create_from_image(tmp)
+			image.texture = tex
+			var panel = load('res://mainAssets/ui/3dPanel/3dpanel.tscn').instantiate()
+			print(panel)
+			print(image)
+			get_tree().get_first_node_in_group('localworldroot').add_child(panel)
+			panel.name = asset_name
+			panel.set_ui(image)
+			panel.position.y = 2.0
+			if !recieved:
+				actions.append({
+					'action_name': 'import_asset',
+					'type': type,
+					'asset_to_import': asset_to_import,
+					'asset_name': asset_name
+				})
 
 func _check_loaded(path:String, asset_name:String, type:String):
 	match ResourceLoader.load_threaded_get_status(path):
@@ -116,9 +166,10 @@ func _check_loaded(path:String, asset_name:String, type:String):
 			get_tree().create_timer(1).timeout.connect(_check_loaded.bind(path, asset_name, type))
 		ResourceLoader.THREAD_LOAD_LOADED:
 			var err = ResourceLoader.load_threaded_get(path)
-			get_tree().get_first_node_in_group('localworldroot').add_child(err.instantiate())
+			var tmp = err.instantiate()
+			get_tree().get_first_node_in_group('localworldroot').add_child(tmp)
 			actions.append({
 				'action_name': 'import_asset',
 				'type': type,
-				'asset_to_import': err
+				'asset_to_import': FileAccess.get_file_as_bytes(path)
 			})

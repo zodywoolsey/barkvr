@@ -70,6 +70,7 @@ offset_bottom = 23.0
 transform = Transform3D(1.5, 0, 0, 0, 0, -1.5, 0, 1.5, 0, -1.13719, 2, -0.550489)
 _auto_load_ui = ExtResource("10_4ke10")
 appear_in_local_uis = true
+viewport_size = Vector2i(1920, 1080)
 
 [node name="AudioStreamPlayer2" type="AudioStreamPlayer" parent="." groups=["mic_playback"]]
 stream = SubResource("AudioStreamGenerator_f6fry")

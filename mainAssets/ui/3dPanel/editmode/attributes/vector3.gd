@@ -34,14 +34,14 @@ func _ready():
 			float(new_text))
 		)
 
-func _notification(what):
-	if what == NOTIFICATION_PROCESS:
-		var scrollparentrect = get_parent_control().get_parent_control().get_global_rect()
-		var rect = get_global_rect()
-		if v_box_container.visible and !(rect.end.y > scrollparentrect.position.y and rect.position.y < scrollparentrect.end.y):
-			v_box_container.visible = false
-		elif !v_box_container.visible and (rect.end.y > scrollparentrect.position.y and rect.position.y < scrollparentrect.end.y):
-			v_box_container.show()
+func _process(delta):
+	var scrollparentrect = get_parent_control().get_parent_control().get_global_rect()
+	var rect = get_global_rect()
+	if v_box_container.visible and !(rect.end.y > scrollparentrect.position.y and rect.position.y < scrollparentrect.end.y):
+		v_box_container.visible = false
+	elif !v_box_container.visible and (rect.end.y > scrollparentrect.position.y and rect.position.y < scrollparentrect.end.y):
+		v_box_container.show()
+	if v_box_container.visible:
 		update_fields()
 
 func update_fields():
