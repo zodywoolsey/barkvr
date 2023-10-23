@@ -10,9 +10,9 @@ func _process(delta):
 			tmp = true
 			dismissTimer = 0.0
 			break;
-	if tmp == false and dismissTimer > .2:
+	if visible and tmp == false and dismissTimer > .2:
 		hide()
-		scale = Vector3()
+		scale = Vector3(.0001,.0001,.0001)
 
 func summon(pos:Vector3, look:Vector3):
 	global_position = pos
