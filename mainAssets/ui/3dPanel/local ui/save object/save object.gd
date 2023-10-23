@@ -15,11 +15,14 @@ func _ready():
 	load.pressed.connect(func():
 		var object_file = FileAccess.open("user://objects/"+object_name.text, FileAccess.READ_WRITE)
 		if object_file:
-			var tmp = object_file.get_as_text()
-			print('started loading')
-#			Journaling.net_propogate_node(tmp)
-			ResourceLoader.load_threaded_request('user://objects/'+object_name.text,'',true)
-			get_tree().create_timer(1).timeout.connect(_check_loaded.bind('user://objects/'+object_name.text))
+			if object_name.text.ends_with(".res") or object_name.text.ends_with(".tres") or object_name.text.ends_with(".scn") or object_name.text.ends_with(".tscn"):
+				print('started loading')
+	#			Journaling.net_propogate_node(tmp)
+				ResourceLoader.load_threaded_request('user://objects/'+object_name.text,'',true)
+				get_tree().create_timer(1).timeout.connect(_check_loaded.bind('user://objects/'+object_name.text))
+			elif object_name.text.ends_with('.bark'):
+				var tmp = object_file.get_var(true)
+				BarkHelpers.var_to_node(tmp)
 		)
 
 func _check_loaded(path:String):

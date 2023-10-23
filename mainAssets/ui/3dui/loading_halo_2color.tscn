@@ -1,0 +1,123 @@
+[gd_scene load_steps=12 format=3 uid="uid://ulf7axx80mle"]
+
+[ext_resource type="Script" path="res://mainAssets/ui/3dui/loading_halo.gd" id="1_1jddo"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7xpd5"]
+cull_mode = 1
+shading_mode = 0
+albedo_color = Color(0, 0, 0, 1)
+grow = true
+grow_amount = 0.01
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_x4lbb"]
+next_pass = SubResource("StandardMaterial3D_7xpd5")
+shading_mode = 0
+albedo_color = Color(0.6, 0.466667, 1, 1)
+grow_amount = -0.015
+
+[sub_resource type="TorusMesh" id="TorusMesh_gbg2y"]
+material = SubResource("StandardMaterial3D_x4lbb")
+outer_radius = 0.61
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fmdlu"]
+cull_mode = 1
+shading_mode = 0
+albedo_color = Color(0, 0, 0, 1)
+grow = true
+grow_amount = 0.01
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_je6qh"]
+next_pass = SubResource("StandardMaterial3D_fmdlu")
+shading_mode = 0
+albedo_color = Color(1, 0.466667, 0.6, 1)
+grow_amount = -0.015
+
+[sub_resource type="TorusMesh" id="TorusMesh_mfhch"]
+material = SubResource("StandardMaterial3D_je6qh")
+outer_radius = 0.61
+
+[sub_resource type="Animation" id="Animation_lad5f"]
+resource_name = "rotate"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("purp/MeshInstance3D:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, -0.174533), Vector3(0, 3.14159, -0.174533), Vector3(0, 6.28319, -0.174533)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("red/MeshInstance3D2:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.5, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0.174533), Vector3(0, 3.14159, 0.174533), Vector3(0, 6.28319, 0.174533)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_gg8he"]
+_data = {
+"rotate": SubResource("Animation_lad5f")
+}
+
+[sub_resource type="Animation" id="Animation_pcv2y"]
+resource_name = "rotate"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 3.14159, 0), Vector3(0, 6.28319, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_rep1s"]
+_data = {
+"rotate": SubResource("Animation_pcv2y")
+}
+
+[node name="crossed halos" type="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+script = ExtResource("1_1jddo")
+
+[node name="purp" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, -0.15, 0, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="purp"]
+transform = Transform3D(0.645049, 0.11374, 0, -0.11374, 0.64505, 0, 0, 0, 0.655, 0, 0, 0)
+mesh = SubResource("TorusMesh_gbg2y")
+skeleton = NodePath("../../..")
+
+[node name="red" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.866025, -0.5, 0, 0.5, 0.866026, 0.15, 0, 0)
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="red"]
+transform = Transform3D(0.645048, -0.11374, 0, 0.113739, 0.645049, 0, 0, 0, 0.655, 0, 0, 0)
+mesh = SubResource("TorusMesh_mfhch")
+skeleton = NodePath("../../..")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+speed_scale = 0.2
+libraries = {
+"": SubResource("AnimationLibrary_gg8he")
+}
+
+[node name="AnimationPlayer2" type="AnimationPlayer" parent="."]
+speed_scale = 0.1
+libraries = {
+"": SubResource("AnimationLibrary_rep1s")
+}

@@ -10,7 +10,7 @@ func _process(delta):
 			tmp = true
 			dismissTimer = 0.0
 			break;
-	if tmp == false and dismissTimer > .2 and LocalGlobals.vr_supported:
+	if tmp == false and dismissTimer > .2:
 		hide()
 		scale = Vector3()
 

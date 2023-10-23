@@ -18,14 +18,15 @@ func _process(delta):
 		pointer.global_position = target
 		physics.global_position = target
 		cursor.global_position = target
+		cursor.look_at(get_viewport().get_camera_3d().global_position,Vector3.UP,true)
 
 func setType(type:String):
 	pass
 	if type == "rigidbody":
-		physics.show()
-		pointer.hide()
-#		cursor.show()
+#		physics.show()
+#		pointer.hide()
+		cursor.show()
 	if type == "pointer":
-		physics.hide()
-		pointer.show()
-#		cursor.show()
+#		physics.hide()
+#		pointer.show()
+		cursor.show()

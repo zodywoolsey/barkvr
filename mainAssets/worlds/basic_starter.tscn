@@ -1,16 +1,6 @@
-[gd_scene load_steps=10 format=3 uid="uid://br1vh8in0e65o"]
+[gd_scene load_steps=9 format=3 uid="uid://br1vh8in0e65o"]
 
 [ext_resource type="Material" uid="uid://dum7xrf8gdl7k" path="res://addons/kenney_prototype_textures/materials/dark01Triplanar.material" id="2_xwerc"]
-
-[sub_resource type="GDScript" id="GDScript_43myy"]
-script/source = "extends Node3D
-
-func _init():
-	LocalGlobals.discord_world = 'loading basic starter world'
-
-func _ready():
-	LocalGlobals.discord_world = 'basic starter world'
-"
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_3royi"]
 sky_top_color = Color(0.494118, 0.772549, 1, 1)
@@ -42,23 +32,23 @@ func _ready():
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_csaaw"]
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_20xwd"]
-size = Vector3(100, 0.25, 100)
-
 [sub_resource type="BoxMesh" id="BoxMesh_2ok1k"]
 size = Vector3(100, 0.25, 100)
 subdivide_width = 32
 subdivide_height = 32
 subdivide_depth = 32
 
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_o3pat"]
+points = PackedVector3Array(-50, -0.125, -50, -50, -0.125, 50, -50, 0.125, -50, 50, -0.125, -50, -50, 0.125, 50, 50, -0.125, 49.9902, 49.9902, 0.125, -50, 50, 0.125, 49.9902)
+
 [node name="basic starter" type="Node3D"]
-script = SubResource("GDScript_43myy")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_n00cx")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(-0.865617, -0.417461, 0.276465, -0.267145, 0.852051, 0.450158, -0.423486, 0.315808, -0.849073, 0, 1.72518, 0)
+shadow_enabled = true
 
 [node name="floor boundary" type="Area3D" parent="."]
 script = SubResource("GDScript_cwteg")
@@ -67,14 +57,13 @@ script = SubResource("GDScript_cwteg")
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, -82.8998, -0.307133)
 shape = SubResource("WorldBoundaryShape3D_csaaw")
 
-[node name="StaticBody3D" type="RigidBody3D" parent="."]
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
 collision_layer = 9
 collision_mask = 9
-freeze = true
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
-shape = SubResource("BoxShape3D_20xwd")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D"]
 material_override = ExtResource("2_xwerc")
 mesh = SubResource("BoxMesh_2ok1k")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+shape = SubResource("ConvexPolygonShape3D_o3pat")

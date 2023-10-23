@@ -102,10 +102,9 @@ func buttonPressed(name):
 			ui_ray.click()
 		else:
 			world_ray.click()
-		if grab_parent.get_child_count()>0:
-			for item in grab_parent.get_children():
-				if item.has_method('primary'):
-					item.primary(true)
+		for item in grabbed.values():
+			if item.has_method('primary'):
+				item.primary(true)
 		if grabjoint.node_b and get_node(grabjoint.node_b).has_method('primary'):
 			get_node(grabjoint.node_b).primary(true)
 

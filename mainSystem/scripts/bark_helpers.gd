@@ -5,11 +5,17 @@ func node_to_var(node:Node, type:String='', cust_name:String=''):
 	var dict:Dictionary = {}
 	if type:
 		dict['asset_type'] = type
+	else:
+		dict['asset_type'] = node.get_class()
 	if cust_name:
 		dict['name'] = cust_name
 	else:
 		dict['name'] = node.name
-	dict['node'] = var_to_bytes_with_objects(node)
+#	dict['node'] = Array(var_to_bytes_with_objects(node))
+#	dict['node'] = var_to_str(node)
+	## prop list will be in the format of:
+	##		name, class_name, type, hint, hint_string, usage
+	dict['prperties'] = node.get_property_list()
 	dict['groups'] = PackedStringArray()
 	for group in node.get_groups():
 		if !group.begins_with("_"):
@@ -29,9 +35,10 @@ func var_to_node(item:String='', dict:Dictionary={}):
 		if err == OK:
 			dict = j.data
 		else:
-			print(err)
+			print("Error parsing imported json: "+str(j.get_error_message()))
 	if !dict.is_empty():
-		var node :Node = bytes_to_var_with_objects(dict.node)
+#		var node :Node = bytes_to_var_with_objects(dict.node)
+		var node :Node = str_to_var(dict.node)
 		if dict.has('groups') and dict['groups'].size()>0:
 			for group in dict.groups:
 				node.add_to_group(group)

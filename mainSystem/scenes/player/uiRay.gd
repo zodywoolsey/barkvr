@@ -12,106 +12,131 @@ func _process(delta):
 		scrolldown()
 
 func _physics_process(delta):
-	if is_colliding():
+	if prevHover and pressed and prevHover.has_method("laser_input"):
+		if is_colliding():
+			prevHover.laser_input({
+				'hovering': true,
+				'pressed': pressed,
+				"position": get_collision_point(),
+				"action": "hover",
+				'index': int(leftside)
+			})
+		else:
+			prevHover.laser_input({
+				'hovering': true,
+				'pressed': pressed,
+				"position": vispos,
+				"action": "hover",
+				'index': int(leftside)
+			})
+	elif is_colliding():
 		vis.show()
 		var tmpcol = get_collider()
-		if tmpcol.has_method("laserInput"):
+		if tmpcol.has_method("laser_input"):
 			if prevHover and prevHover != tmpcol:
-				prevHover.laserInput({
+				prevHover.laser_input({
 					'hovering': false,
 					'pressed': false,
 					'position': get_collision_point(),
-					"action": "hover"
+					"action": "hover",
+					'index': int(leftside)
 				})
 			else:
-				tmpcol.laserInput({
+				tmpcol.laser_input({
 					'hovering': true,
-					'pressed': false,
+					'pressed': pressed,
 					"position": get_collision_point(),
-					"action": "hover"
+					"action": "hover",
+					'index': int(leftside)
 				})
 			prevHover = tmpcol
 		else:
-			if prevHover and prevHover.has_method("laserInput"):
-				prevHover.laserInput({
+			if prevHover and prevHover.has_method("laser_input"):
+				prevHover.laser_input({
 					'hovering': false,
 					'pressed': false,
 					'position': get_collision_point(),
-					"action": "hover"
+					"action": "hover",
+					'index': int(leftside)
 				})
 	else:
 		vis.hide()
-		if prevHover and prevHover.has_method("laserInput") and prevHover.has_method('laserInput'):
-			prevHover.laserInput({
+		if prevHover and prevHover.has_method("laser_input"):
+			prevHover.laser_input({
 				'hovering': false,
 				'pressed': false,
 				'position': get_collision_point(),
-				'action': 'hover'
+				'action': 'hover',
+				'index': int(leftside)
 			})
-			if pressed and prevHover.has_method('laserInput'):
-				prevHover.laserInput({
-					"position": get_collision_point(),
-					"pressed": false,
-					'action': 'click'
-					})
 			prevHover = null
 #	print(currentAction)
 
 func scrollup():
 	if is_colliding():
 		var tmpcol = get_collider()
-		if tmpcol.get_collision_layer_value(3) and tmpcol.has_method("laserInput"):
-			tmpcol.laserInput({
+		if tmpcol.get_collision_layer_value(3) and tmpcol.has_method("laser_input"):
+			tmpcol.laser_input({
 				"position": get_collision_point(),
 				"pressed": true,
-				"action": "scrollup"
+				"action": "scrollup",
+				'index': int(leftside)
 				})
-			tmpcol.laserInput({
+			tmpcol.laser_input({
 				"position": get_collision_point(),
 				"pressed": false,
-				"action": "scrollup"
+				"action": "scrollup",
+				'index': int(leftside)
 				})
 
 func scrolldown():
 	if is_colliding():
 		var tmpcol = get_collider()
-		if tmpcol.get_collision_layer_value(3) and tmpcol.has_method("laserInput"):
-			tmpcol.laserInput({
+		if tmpcol.has_method("laser_input"):
+			tmpcol.laser_input({
 				"position": get_collision_point(),
 				"pressed": true,
-				"action": "scrolldown"
+				"action": "scrolldown",
+				'index': int(leftside)
 				})
-			tmpcol.laserInput({
+			tmpcol.laser_input({
 				"position": get_collision_point(),
 				"pressed": false,
-				"action": "scrolldown"
+				"action": "scrolldown",
+				'index': int(leftside)
 				})
 
 func click():
 	if is_colliding():
 		var tmpcol = get_collider()
-		if tmpcol.get_collision_layer_value(3) and tmpcol.has_method("laserInput"):
-			tmpcol.laserInput({
-				"position": get_collision_point(),
-				"pressed": true,
-				'action': 'click'
-				})
+		if tmpcol.has_method("laser_input"):
 			pressed = true
+			tmpcol.laser_input({
+				"position": get_collision_point(),
+				"pressed": pressed,
+				'action': 'click',
+				'index': int(leftside)
+				})
+	pressed = true
 
 func release():
 	if is_colliding():
 		var tmpcol = get_collider()
-		if tmpcol.get_collision_layer_value(3) and tmpcol.has_method("laserInput"):
-			tmpcol.laserInput({
-				"position": get_collision_point(),
-				"pressed": false,
-				'action': 'click'
-				})
+		if tmpcol.has_method("laser_input"):
 			pressed = false
-	elif prevHover:
-		if prevHover.has_method("laserInput"):
-			prevHover.laserInput({
+			tmpcol.laser_input({
 				"position": get_collision_point(),
 				"pressed": false,
-				'action': 'click'
+				'action': 'click',
+				'index': int(leftside)
 				})
+	elif prevHover:
+		if prevHover.has_method("laser_input"):
+			pressed = false
+			prevHover.laser_input({
+				"position": vispos,
+				"pressed": false,
+				'action': 'click',
+				'index': int(leftside)
+				})
+	pressed = false

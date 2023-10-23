@@ -77,7 +77,12 @@ func net_propogate_node(node_string:String, parent:NodePath='', node_name:String
 func net_propogate_resource(res, recieved:=false):
 	pass
 
-func import_asset(type:String, asset_to_import, asset_name:='', recieved:=false):
+func import_asset(type:String, asset_to_import, asset_name:='', recieved:=false, data:Dictionary={}):
+	if asset_name.is_empty():
+		for a in range(20):
+			for i in range(10):
+				asset_name += Array("qwertyuiopasdfghjklzxcvbnm".split()).pick_random()
+			asset_name += ' '
 	if type == 'vrm' and asset_to_import and asset_to_import is PackedByteArray:
 		var doc:GLTFDocument = GLTFDocument.new()
 		var state:GLTFState = GLTFState.new()
@@ -97,17 +102,35 @@ func import_asset(type:String, asset_to_import, asset_name:='', recieved:=false)
 	elif type == 'glb' and asset_to_import and asset_to_import is PackedByteArray:
 		var doc:GLTFDocument = GLTFDocument.new()
 		var state:GLTFState = GLTFState.new()
-		doc.append_from_buffer(asset_to_import,'',state)
-		var scene = doc.generate_scene(state)
-		scene.name = asset_name
-		get_tree().get_first_node_in_group('localworldroot').add_child(scene)
-		if !recieved:
-			actions.append({
-				'action_name': 'import_asset',
-				'type': type,
-				'asset_to_import': asset_to_import,
-				'asset_name': asset_name
-			})
+		var base_path = ''
+		if 'base_path' in data:
+			base_path = data.base_path
+		var err = doc.append_from_buffer(asset_to_import,base_path,state)
+		if err == OK:
+			var scene = doc.generate_scene(state)
+			scene.name = asset_name
+			get_tree().get_first_node_in_group('localworldroot').add_child(scene)
+			var tmpdata = doc.generate_buffer(state)
+			doc = GLTFDocument.new()
+			state = GLTFState.new()
+			err = doc.append_from_buffer(tmpdata,'',state)
+			if err == OK:
+				scene = doc.generate_scene(state)
+				scene.name = asset_name
+				get_tree().get_first_node_in_group('localworldroot').add_child(scene)
+			else:
+				Notifyvr.send_notification("error reimporting gltf document")
+				print(err)
+			if !recieved:
+				actions.append({
+					'action_name': 'import_asset',
+					'type': type,
+					'asset_to_import': state.glb_data,
+					'asset_name': asset_name
+				})
+		else:
+			Notifyvr.send_notification("error importing gltf document")
+			print(err)
 	elif type == 'res' and asset_to_import:
 		if asset_to_import is String:
 			var object_file = FileAccess.open(asset_to_import, FileAccess.READ_WRITE)
@@ -123,8 +146,9 @@ func import_asset(type:String, asset_to_import, asset_name:='', recieved:=false)
 			file.store_buffer(asset_to_import)
 			ResourceLoader.load_threaded_request(file.get_path(),'',true)
 			get_tree().create_timer(1).timeout.connect(_check_loaded.bind(file.get_path(), asset_name, type))
-	elif type == 'pck' and asset_to_import and asset_to_import is PackedByteArray:
-		ResourceLoader
+	elif type == 'pck' and asset_to_import:
+		if asset_to_import is String:
+			print(ResourceLoader.get_dependencies(asset_to_import))
 	elif type == 'image' and asset_to_import:
 		if asset_to_import is String and asset_to_import.is_absolute_path():
 			pass
@@ -144,12 +168,12 @@ func import_asset(type:String, asset_to_import, asset_name:='', recieved:=false)
 			var image = TextureRect.new()
 			var tex = ImageTexture.create_from_image(tmp)
 			image.texture = tex
-			var panel = load('res://mainAssets/ui/3dPanel/3dpanel.tscn').instantiate()
+			var panel = load('res://addons/Panel3D/Panel3D.tscn').instantiate()
 			print(panel)
 			print(image)
 			get_tree().get_first_node_in_group('localworldroot').add_child(panel)
 			panel.name = asset_name
-			panel.set_ui(image)
+			panel.set_viewport_scene(image)
 			panel.position.y = 2.0
 			if !recieved:
 				actions.append({
@@ -163,7 +187,7 @@ func _check_loaded(path:String, asset_name:String, type:String):
 	match ResourceLoader.load_threaded_get_status(path):
 		ResourceLoader.THREAD_LOAD_IN_PROGRESS:
 			print('not loaded yet')
-			get_tree().create_timer(1).timeout.connect(_check_loaded.bind(path, asset_name, type))
+			get_tree().create_timer(.1).timeout.connect(_check_loaded.bind(path, asset_name, type))
 		ResourceLoader.THREAD_LOAD_LOADED:
 			var err = ResourceLoader.load_threaded_get(path)
 			var tmp = err.instantiate()

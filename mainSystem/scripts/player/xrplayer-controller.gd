@@ -187,7 +187,12 @@ func _input(event):
 			}
 		if event.pressed:
 #			Notifyvr.send_notification("double tapped")
-			righthand.ui_ray.click()
+			if righthand.gizmoray.is_colliding():
+				righthand.gizmoray.click()
+			elif righthand.ui_ray.is_colliding():
+				righthand.ui_ray.click()
+			elif righthand.world_ray.is_colliding():
+				righthand.world_ray.click()
 			await get_tree().process_frame
 			righthand.ui_ray.isrelease = true
 		if !lookdrag.is_empty() and event.index == lookdrag.index and event.pressed == false:
@@ -208,9 +213,13 @@ func _input(event):
 
 func flat_movement():
 	if Input.is_action_just_pressed("click"):
-		righthand.ui_ray.click()
+		if righthand.ui_ray.is_colliding():
+			righthand.ui_ray.click()
+		elif righthand.world_ray.is_colliding():
+			righthand.world_ray.click()
 	if Input.is_action_just_released("click"):
 		righthand.ui_ray.release()
+		righthand.world_ray.release()
 	if Input.is_action_just_pressed("rightclick"):
 		righthand.grip()
 	if Input.is_action_just_released("rightclick"):

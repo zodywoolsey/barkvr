@@ -24,11 +24,12 @@ config/windows_native_icon="res://assets/barkvrcorgi.ico"
 [audio]
 
 driver/enable_input=true
+driver/mix_rate=48000
 
 [autoload]
 
 LocalGlobals="*res://mainSystem/scripts/localGlobals.gd"
-NetworkHandler="*res://mainSystem/scripts/networkHandler.gd"
+NetworkHandler="res://mainSystem/scripts/networkHandler.gd"
 Notifyvr="*res://addons/notifyvr/notifyvr.gd"
 Vector="*res://addons/vector/vector.gd"
 Journaling="*res://mainSystem/scripts/journaling.gd"
@@ -45,16 +46,13 @@ webrtc_config/turn_username=""
 
 settings/stdout/print_fps=true
 
-[display]
+[editor]
 
-window/size/viewport_width=500
-window/size/viewport_height=500
-window/handheld/orientation=4
-window/vsync/vsync_mode=0
+export/convert_text_resources_to_binary=false
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/Godot-MToon-Shader/plugin.cfg", "res://addons/Todo_Manager/plugin.cfg", "res://addons/contextmenu/plugin.cfg", "res://addons/unidot/plugin.cfg", "res://addons/vrm/plugin.cfg")
+enabled=PackedStringArray("res://addons/Godot-MToon-Shader/plugin.cfg", "res://addons/Panel3D/plugin.cfg", "res://addons/Todo_Manager/plugin.cfg", "res://addons/contextmenu/plugin.cfg", "res://addons/unidot/plugin.cfg", "res://addons/vrm/plugin.cfg")
 
 [gui]
 
@@ -156,6 +154,7 @@ jump={
 3d_physics/layer_2="3dlaser"
 3d_physics/layer_3="uilaser"
 3d_physics/layer_4="world"
+3d_physics/layer_9="gizmos"
 
 [memory]
 
@@ -169,7 +168,7 @@ common/physics_jitter_fix=0.0
 
 textures/vram_compression/import_s3tc_bptc=true
 textures/vram_compression/import_etc2_astc=true
-anti_aliasing/quality/msaa_2d=2
+scaling_3d/fsr_sharpness=1.0
 
 [xr]
 

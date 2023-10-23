@@ -27,7 +27,6 @@ texture_filter = 0
 texture = ExtResource("3_j7jdp")
 
 [node name="cursor" type="Node3D" parent="."]
-visible = false
 
 [node name="cursor" type="Sprite3D" parent="cursor"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.403815, -0.976471, 0)

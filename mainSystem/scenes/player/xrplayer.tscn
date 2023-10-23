@@ -1,8 +1,9 @@
-[gd_scene load_steps=17 format=3 uid="uid://r68jre2w5k33"]
+[gd_scene load_steps=18 format=3 uid="uid://r68jre2w5k33"]
 
 [ext_resource type="Script" path="res://mainSystem/scripts/player/xrplayer-controller.gd" id="1_iwrfe"]
 [ext_resource type="Script" path="res://mainSystem/scripts/player/hand.gd" id="2_npgyv"]
 [ext_resource type="Script" path="res://mainSystem/scenes/player/worldRay.gd" id="3_n5c2i"]
+[ext_resource type="PackedScene" uid="uid://12mm63qyglpf" path="res://mainSystem/scenes/player/handray.tscn" id="4_316iy"]
 [ext_resource type="Script" path="res://mainSystem/scenes/player/uiRay.gd" id="4_xffyd"]
 [ext_resource type="PackedScene" uid="uid://b2r6qi0effaiw" path="res://addons/contextmenu/gridmenu/gridmenubutton.tscn" id="5_d1mpu"]
 [ext_resource type="Texture2D" uid="uid://cm7tsng6rg8cs" path="res://mainAssets/ui/assets/wrist_menu/UI_mockup_trasparent.png" id="6_j5bbn"]
@@ -32,7 +33,7 @@ script/source = "extends Node3D
 
 [sub_resource type="GDScript" id="GDScript_dn0nl"]
 script/source = "extends Label3D
-
+#
 #func _process(delta):
 #	text = str(1/delta)
 "
@@ -61,7 +62,7 @@ far = 99999.0
 [node name="camray" type="RayCast3D" parent="CharacterBody3D/xrplayer/XrCamera3d"]
 visible = false
 target_position = Vector3(0, 0, -1000)
-collision_mask = 15
+collision_mask = 65535
 
 [node name="Node3D" type="Node3D" parent="CharacterBody3D/xrplayer/XrCamera3d" groups=["notificationparent"]]
 transform = Transform3D(0.075, 0, 0, 0, 0.075, 0, 0, 0, 0.075, -0.0929923, -0.0845834, -0.183947)
@@ -88,13 +89,8 @@ debug_shape_custom_color = Color(0, 0, 0, 0.109804)
 debug_shape_thickness = 1
 script = ExtResource("3_n5c2i")
 
-[node name="uiRay" type="RayCast3D" parent="CharacterBody3D/xrplayer/righthand/handproxy"]
-transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, 0, 0)
-target_position = Vector3(0, 0, -1000)
-collision_mask = 4
-debug_shape_custom_color = Color(0, 0, 0, 0.109804)
-debug_shape_thickness = 1
-script = ExtResource("4_xffyd")
+[node name="uiRay" parent="CharacterBody3D/xrplayer/righthand/handproxy" instance=ExtResource("4_316iy")]
+collision_mask = 260
 
 [node name="grabArea" type="Area3D" parent="CharacterBody3D/xrplayer/righthand/handproxy"]
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0.05, 0, 4.37114e-09)
@@ -173,14 +169,16 @@ collision_mask = 3
 debug_shape_custom_color = Color(0, 0, 0, 0.109804)
 debug_shape_thickness = 1
 script = ExtResource("3_n5c2i")
+leftside = true
 
 [node name="uiRay" type="RayCast3D" parent="CharacterBody3D/xrplayer/lefthand/handproxy"]
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, 0, 0)
 target_position = Vector3(0, 0, -1000)
-collision_mask = 4
+collision_mask = 260
 debug_shape_custom_color = Color(0, 0, 0, 0.109804)
 debug_shape_thickness = 1
 script = ExtResource("4_xffyd")
+leftside = true
 
 [node name="grabArea" type="Area3D" parent="CharacterBody3D/xrplayer/lefthand/handproxy"]
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -0.05, 0, -4.37114e-09)

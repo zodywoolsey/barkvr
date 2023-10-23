@@ -107,9 +107,10 @@ func reset():
 
 func _process(delta):
 	var player = get_tree().get_first_node_in_group('player')
-	packetdict.user_pos.pos = player.global_position
-	packetdict.user_pos.rhpos = player.righthand.global_position
-	packetdict.user_pos.lhpos = player.lefthand.global_position
+	if player:
+		packetdict.user_pos.pos = player.global_position
+		packetdict.user_pos.rhpos = player.righthand.global_position
+		packetdict.user_pos.lhpos = player.lefthand.global_position
 	if !thread.is_alive() and thread.is_started():
 		thread.wait_to_finish()
 		thread.start(poll)

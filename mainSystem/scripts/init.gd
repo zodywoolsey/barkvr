@@ -4,8 +4,8 @@ extends Node3D
 const gltf_document_extension_class = preload("res://addons/vrm/vrm_extension.gd")
 
 func _ready():
+#	print(ProjectSettings.get_global_class_list())
 	get_viewport().canvas_cull_mask
-	ProjectSettings.set_setting("gui/timers/tooltip_delay_sec",100000000)
 	var dir = DirAccess.open('user://')
 	if !dir.dir_exists('./tmp'):
 		dir.make_dir('./tmp')
@@ -13,9 +13,6 @@ func _ready():
 		dir.make_dir('./objects')
 	if !dir.dir_exists('./worlds'):
 		dir.make_dir('./worlds')
-	start_xr.xr_started.connect(func():
-		LocalGlobals.vr_supported = true
-		)
 	get_window().files_dropped.connect(func(files):
 		var filename:String
 		if OS.get_name() == "Windows" or OS.get_name() == "UWP":
@@ -23,7 +20,7 @@ func _ready():
 		else:
 			filename = files[0].split('/')[-1]
 		if files[0].contains('.gltf') or files[0].contains('.glb'):
-			Journaling.import_asset('glb', FileAccess.get_file_as_bytes(files[0]), filename)
+			Journaling.import_asset('glb', FileAccess.get_file_as_bytes(files[0]), filename, false, {"base_path":files[0]})
 		elif files[0].contains('.vrm'):
 			Journaling.import_asset('vrm',FileAccess.get_file_as_bytes(files[0]), filename)
 		elif files[0].ends_with('.res') or files[0].ends_with('.tres') or files[0].ends_with('.scn') or files[0].ends_with('.tscn'):
@@ -33,5 +30,12 @@ func _ready():
 		elif files[0].ends_with('png') or files[0].ends_with('jpg') or files[0].ends_with('jpeg'):
 			Journaling.import_asset('image', FileAccess.get_file_as_bytes(files[0]), filename)
 		)
+
+func _input(event):
+	if event is InputEventKey:
+		if event.keycode == KEY_F8:
+			var tmp = MeshInstance3D.new()
+			tmp.mesh = BoxMesh.new()
+			
 
 
