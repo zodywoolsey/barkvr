@@ -1,22 +1,9 @@
 # Godot 4+ specific ignores
 .godot/
 export/
-assetsNotForUpload/
-noUpload/
 android/build
-android/.build_version
 exports/
 temp_unityimp/
-work/
-scenes/
-ambientcg.comambientcg.com/
-BryanTeoh/
-digitaln8m4r3/
-footsteps/
-freesound/
-godot/
-maps/
-meshes/
-nasa/
-wahooney.itch.io/
 assets/deleteme/
+*.tmp
+*.import

@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://12mm63qyglpf"]
+
+[ext_resource type="Script" path="res://mainSystem/scenes/player/uiRay.gd" id="1_2xn0p"]
+
+[node name="handray" type="RayCast3D"]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, 0, 0)
+target_position = Vector3(0, 0, -1000)
+collision_mask = 4
+script = ExtResource("1_2xn0p")

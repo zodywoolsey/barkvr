@@ -64,14 +64,9 @@ func _ready():
 	export.pressed.connect(func():
 		var world_root = get_tree().get_first_node_in_group("localworldroot")
 		if world_root and target:
-			var dir = DirAccess.open("user://")
-			if !dir.dir_exists("./objects"):
-				dir.make_dir("./objects")
-			var object_file = FileAccess.open("user://objects/"+target.name+".bark", FileAccess.WRITE)
-			var tmpjson = BarkHelpers.node_to_var(target,'',target.name)
-			tmpjson = JSON.stringify(tmpjson)
-			print(tmpjson)
-			object_file.store_var(tmpjson)
+			var thread = Thread.new()
+#			thread.start(_export_node.bind(tmp))
+			_export_node(target)
 #			var tmp:PackedScene = PackedScene.new()
 #			assert(tmp.pack(target)==OK)
 #			var err = ResourceSaver.save(tmp,'user://objects/'+target.name+'.res')
@@ -88,3 +83,14 @@ func _ready():
 	objectname.focus_exited.connect(func():
 		is_field_focused = false
 		)
+
+
+func _export_node(target:Node) -> bool:
+	var dir = DirAccess.open("user://")
+	if !dir.dir_exists("./objects"):
+		dir.make_dir("./objects")
+	var object_file = FileAccess.open("user://objects/"+target.name+".bark", FileAccess.WRITE)
+	var tmpjson = BarkHelpers.node_to_var(target,'',target.name)
+	tmpjson = JSON.stringify(tmpjson)
+	object_file.store_var(tmpjson)
+	return true

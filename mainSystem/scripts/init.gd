@@ -4,6 +4,7 @@ extends Node3D
 const gltf_document_extension_class = preload("res://addons/vrm/vrm_extension.gd")
 
 func _ready():
+	GLTFDocument.register_gltf_document_extension(preload("res://addons/vrm/vrm_extension.gd").new(), true)
 #	print(ProjectSettings.get_global_class_list())
 	get_viewport().canvas_cull_mask
 	var dir = DirAccess.open('user://')

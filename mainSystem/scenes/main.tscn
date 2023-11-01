@@ -7,8 +7,9 @@
 [ext_resource type="PackedScene" uid="uid://dckbok0o553v7" path="res://mainSystem/scenes/objects/worldObjects/playerSpawnLocation.tscn" id="6_diugs"]
 [ext_resource type="PackedScene" uid="uid://by5nu2jf4d1cv" path="res://mainAssets/ui/3dPanel/local ui/save object/save object.tscn" id="7_squu5"]
 [ext_resource type="PackedScene" uid="uid://b3sbt3oft3cxg" path="res://mainAssets/ui/3dPanel/editmode/vreditor.tscn" id="8_wf33i"]
+[ext_resource type="PackedScene" uid="uid://i3pxsgqnbjly" path="res://mainAssets/ui/3dPanel/local ui/login/matrix.tscn" id="10_j6yjr"]
 [ext_resource type="Script" path="res://addons/Panel3D/3dpanel.gd" id="10_rgd75"]
-[ext_resource type="PackedScene" uid="uid://lauwp8okd1vh" path="res://mainAssets/ui/3dPanel/local ui/keyboard/virtual_keyboard_2d.tscn" id="10_yfgoo"]
+[ext_resource type="PackedScene" uid="uid://pnqmxgn13qw2" path="res://mainAssets/ui/3dPanel/local ui/settings/settings.tscn" id="11_hv61c"]
 [ext_resource type="Script" path="res://mainSystem/scripts/mic_playback.gd" id="11_oevc4"]
 
 [sub_resource type="AudioStreamMicrophone" id="AudioStreamMicrophone_ve6pm"]
@@ -17,16 +18,6 @@
 
 [sub_resource type="AudioStreamGenerator" id="AudioStreamGenerator_f6fry"]
 mix_rate = 44800.0
-
-[sub_resource type="GDScript" id="GDScript_c5qk3"]
-script/source = "extends Control
-@onready var h_slider = $HSlider
-
-func _ready():
-	h_slider.value_changed.connect(func(value):
-		get_viewport().scaling_3d_scale = value
-		)
-"
 
 [node name="main" type="Node3D" groups=["localroot"]]
 script = ExtResource("1_gkt54")
@@ -70,10 +61,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.25067, 0.0923181, 0.046135
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 1, -2)
 mesh = SubResource("BoxMesh_1mer8")
 
-[node name="save_load_object" parent="." instance=ExtResource("6_307b8")]
-transform = Transform3D(0.537432, -0.843307, 0, 0, 0, -1, 0.843307, 0.537432, 0, 0.168378, 2, 1.44429)
+[node name="save_load_object2" parent="localworldroot" instance=ExtResource("6_307b8")]
+transform = Transform3D(0.537432, -0.843307, 0, 0, 0, -1, 0.843307, 0.537432, 0, -0.906486, 1, -0.242324)
 _auto_load_ui = ExtResource("7_squu5")
-transparent = false
 
 [node name="Label" type="Label" parent="." groups=["connectionlabel"]]
 offset_right = 40.0
@@ -84,38 +74,23 @@ stream = SubResource("AudioStreamGenerator_f6fry")
 autoplay = true
 script = ExtResource("11_oevc4")
 
-[node name="Control" type="Control" parent="."]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-script = SubResource("GDScript_c5qk3")
-
-[node name="HSlider" type="HSlider" parent="Control"]
-layout_mode = 1
-anchors_preset = 12
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = -24.0
-grow_horizontal = 2
-grow_vertical = 0
-min_value = 0.1
-max_value = 2.0
-step = 0.1
-value = 1.0
-tick_count = 20
-ticks_on_borders = true
-
-[node name="Panel3D" type="StaticBody3D" parent="."]
-transform = Transform3D(-4.37114e-08, -1, 0, -4.37114e-08, 1.91069e-15, -1, 1, -4.37114e-08, -4.37114e-08, 0, 2, 0)
-script = ExtResource("10_rgd75")
-_auto_load_ui = ExtResource("10_yfgoo")
-viewport_size = Vector2i(841, 334)
-
 [node name="vreditor" parent="." instance=ExtResource("8_wf33i")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -4.5628, 1.95409, 0.987727)
+
+[node name="save_load_object" parent="." instance=ExtResource("6_307b8")]
+transform = Transform3D(0.537432, -0.843307, 0, 0, 0, -1, 0.843307, 0.537432, 0, 0.168378, 2, 1.44429)
+_auto_load_ui = ExtResource("7_squu5")
+
+[node name="matrix" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -2.48848, 2, -0.367195)
+script = ExtResource("10_rgd75")
+_auto_load_ui = ExtResource("10_j6yjr")
+viewport_size = Vector2i(1984, 1024)
+
+[node name="settings" type="StaticBody3D" parent="."]
+transform = Transform3D(0.707107, 0.707107, 0, 3.09086e-08, -3.09086e-08, -1, -0.707107, 0.707107, -4.37114e-08, -3.73758, 2, 0)
+script = ExtResource("10_rgd75")
+_auto_load_ui = ExtResource("11_hv61c")
+transparent = false
 
 [connection signal="pressed" from="StartXR/EnterWebXR/EnterVRButton" to="StartXR" method="_on_enter_webxr_button_pressed" flags=18]

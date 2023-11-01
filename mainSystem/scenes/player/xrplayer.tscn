@@ -33,9 +33,9 @@ script/source = "extends Node3D
 
 [sub_resource type="GDScript" id="GDScript_dn0nl"]
 script/source = "extends Label3D
-#
-#func _process(delta):
-#	text = str(1/delta)
+
+func _process(delta):
+	text = str(1/delta)
 "
 
 [sub_resource type="BoxMesh" id="BoxMesh_kgbb2"]

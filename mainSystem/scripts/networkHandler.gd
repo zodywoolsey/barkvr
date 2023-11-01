@@ -128,6 +128,7 @@ func poll():
 		chat_timer += delta
 		journal_timer += delta
 		voip_timer += delta
+		var current_actions = Journaling.get_actions
 		for peer in peers:
 			if peer:
 				peer.peer.poll()
@@ -181,9 +182,8 @@ func poll():
 												Journaling.call_deferred('delete_node',action.target)
 							# Send all new journal events to the other users
 							journal_timer = 0.0
-							var tmp = Journaling.call('get_actions')
-							if tmp.size() >0:
-								var bytes_to_send = var_to_bytes_with_objects(tmp).compress(3)
+							if current_actions.size() >0:
+								var bytes_to_send = var_to_bytes_with_objects(current_actions).compress(3)
 								if bytes_to_send.size() < packet_size:
 									chan.channel.put_var({
 										'pos': -1,

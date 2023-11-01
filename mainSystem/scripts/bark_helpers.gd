@@ -1,7 +1,6 @@
 extends Node
 
 func node_to_var(node:Node, type:String='', cust_name:String=''):
-	PackedScene
 	var dict:Dictionary = {}
 	if type:
 		dict['asset_type'] = type
@@ -11,11 +10,11 @@ func node_to_var(node:Node, type:String='', cust_name:String=''):
 		dict['name'] = cust_name
 	else:
 		dict['name'] = node.name
-#	dict['node'] = Array(var_to_bytes_with_objects(node))
+	dict['node'] = Array(var_to_bytes_with_objects(node))
 #	dict['node'] = var_to_str(node)
 	## prop list will be in the format of:
 	##		name, class_name, type, hint, hint_string, usage
-	dict['prperties'] = node.get_property_list()
+	dict['properties'] = node.get_property_list()
 	dict['groups'] = PackedStringArray()
 	for group in node.get_groups():
 		if !group.begins_with("_"):
@@ -23,6 +22,7 @@ func node_to_var(node:Node, type:String='', cust_name:String=''):
 	if node.get_child_count() > 0:
 		var children : Array = []
 		for i in node.get_children():
+			print('added child')
 			children.append(node_to_var(i))
 		dict['children']=children
 	return dict
@@ -37,8 +37,8 @@ func var_to_node(item:String='', dict:Dictionary={}):
 		else:
 			print("Error parsing imported json: "+str(j.get_error_message()))
 	if !dict.is_empty():
-#		var node :Node = bytes_to_var_with_objects(dict.node)
-		var node :Node = str_to_var(dict.node)
+		var node :Node = bytes_to_var_with_objects(dict.node)
+#		var node :Node = str_to_var(dict.node)
 		if dict.has('groups') and dict['groups'].size()>0:
 			for group in dict.groups:
 				node.add_to_group(group)
@@ -57,7 +57,6 @@ func normalize_float32_array(array:PackedFloat32Array):
 	var mag = 0.0
 	# create some vars for intermediate math
 	var a = 0.0
-	var b = 0.0
 	# use pythagorian theorem to calculate the ^2 length of vector
 	for i in array:
 		a += pow(i,2)
@@ -74,7 +73,6 @@ func normalize_float64_array(array:PackedFloat64Array):
 	var mag = 0.0
 	# create some vars for intermediate math
 	var a = 0.0
-	var b = 0.0
 	# use pythagorian theorem to calculate the ^2 length of vector
 	for i in array:
 		a += pow(i,2)

@@ -8,8 +8,6 @@ var mesh : MeshInstance3D
 var colshape : CollisionShape3D
 var material : StandardMaterial3D
 
-
-
 var ui : Node
 var tex:ViewportTexture
 
@@ -40,6 +38,7 @@ func _init():
 	viewport_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	viewport = SubViewport.new()
 	viewport.own_world_3d = true
+	viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	mesh = MeshInstance3D.new()
 	mesh.mesh = PlaneMesh.new()
 	colshape = CollisionShape3D.new()
@@ -158,11 +157,6 @@ func set_viewport_scene(node):
 	viewport.add_child(node)
 	ui = node
 	tex = viewport.get_texture()
-	# Connects the 'action' signal of the given node to the 'action' signal of this node.
-	if node.has_signal('action'):
-		node.action.connect(func(data):
-			emit_signal('action',data)
-		)
 	mesh.mesh.surface_get_material(0).albedo_texture = tex
 
 func set_viewport_size(size:Vector2i):

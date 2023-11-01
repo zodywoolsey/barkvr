@@ -10,9 +10,10 @@ func _ready():
 		LocalGlobals.clear_gizmos.emit()
 		var giz = load("res://mainSystem/scenes/objects/tools/gizmo/gizmo.tscn").instantiate()
 		var node = tree.get_selected().get_metadata(0).node
-		get_tree().get_first_node_in_group('localworldroot').add_child(giz)
-		giz.global_position = node.global_position
-		giz.target = node
+		if node is Node3D:
+			get_tree().get_first_node_in_group('localworldroot').add_child(giz)
+			giz.global_position = node.global_position
+			giz.target = node
 		)
 	gui_input.connect(func(event):
 		pass

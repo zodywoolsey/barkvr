@@ -12,7 +12,7 @@ func _process(delta):
 		scrolldown()
 
 func _physics_process(delta):
-	if prevHover and pressed and prevHover.has_method("laser_input"):
+	if is_instance_valid(prevHover) and pressed and prevHover.has_method("laser_input"):
 		if is_colliding():
 			prevHover.laser_input({
 				'hovering': true,
@@ -33,7 +33,7 @@ func _physics_process(delta):
 		vis.show()
 		var tmpcol = get_collider()
 		if tmpcol.has_method("laser_input"):
-			if prevHover and prevHover != tmpcol:
+			if is_instance_valid(prevHover) and prevHover != tmpcol:
 				prevHover.laser_input({
 					'hovering': false,
 					'pressed': false,
@@ -51,7 +51,7 @@ func _physics_process(delta):
 				})
 			prevHover = tmpcol
 		else:
-			if prevHover and prevHover.has_method("laser_input"):
+			if is_instance_valid(prevHover) and prevHover.has_method("laser_input"):
 				prevHover.laser_input({
 					'hovering': false,
 					'pressed': false,
@@ -61,7 +61,7 @@ func _physics_process(delta):
 				})
 	else:
 		vis.hide()
-		if prevHover and prevHover.has_method("laser_input"):
+		if is_instance_valid(prevHover) and prevHover.has_method("laser_input"):
 			prevHover.laser_input({
 				'hovering': false,
 				'pressed': false,
@@ -130,7 +130,7 @@ func release():
 				'action': 'click',
 				'index': int(leftside)
 				})
-	elif prevHover:
+	elif is_instance_valid(prevHover):
 		if prevHover.has_method("laser_input"):
 			pressed = false
 			prevHover.laser_input({

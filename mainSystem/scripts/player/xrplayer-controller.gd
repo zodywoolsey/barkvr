@@ -169,7 +169,7 @@ func _input(event):
 					LocalGlobals.player_state = LocalGlobals.PLAYER_STATE_PLAYING
 					LocalGlobals.emit_signal("playerreleaseuifocus")
 			elif event.keycode == KEY_ESCAPE:
-				LocalGlobals.player_state == LocalGlobals.PLAYER_STATE_PAUSED
+				LocalGlobals.player_state = LocalGlobals.PLAYER_STATE_PAUSED
 				LocalGlobals.emit_signal("playerreleaseuifocus")
 				Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	if event is InputEventMouseButton:
@@ -212,6 +212,12 @@ func _input(event):
 		
 
 func flat_movement():
+	
+	var joy_look_vector = Input.get_vector('lookleft','lookright','lookdown','lookup')
+	if joy_look_vector.length()>.1:
+		rotate_y(-joy_look_vector.x*MOUSE_SPEED)
+		xr_camera_3d.rotate_x(joy_look_vector.y*MOUSE_SPEED)
+	
 	if Input.is_action_just_pressed("click"):
 		if righthand.ui_ray.is_colliding():
 			righthand.ui_ray.click()

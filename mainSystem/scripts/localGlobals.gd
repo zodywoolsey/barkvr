@@ -3,7 +3,7 @@ extends Node
 var editor_refs : Dictionary = {}
 var interface : XRInterface
 var webxr_interface
-var vr_supported = false
+var vr_supported = true
 
 var local_uis:Array = []
 
@@ -28,6 +28,7 @@ signal clear_gizmos
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	vr_supported = ProjectSettings.get_setting('xr/openxr/enabled', false)
 	get_viewport().gui_focus_changed.connect(func(node):
 		print(node)
 		)
@@ -37,6 +38,11 @@ func _ready():
 	get_tree().get_first_node_in_group("localworldroot").add_child(load('res://mainSystem/scenes/player/xrplayer.tscn').instantiate())
 	if OS.get_name() == "Android":
 		OS.request_permissions()
+
+func _input(event):
+	if event is InputEventAction:
+		if event.is_action("ui_cancel"):
+			playerreleaseuifocus.emit()
 
 #	discord_sdk.app_id = 1137953671842377778
 #	print("Discord working: " + str(discord_sdk.get_is_discord_working()))

@@ -13,6 +13,7 @@ extends XRController3D
 @onready var lefthand = %lefthand
 var otherhand : XRController3D
 
+
 var prevHover : Node
 var grabAreaBodies : Array = []
 var grabbed :Dictionary
@@ -118,7 +119,7 @@ func buttonReleased(name):
 		ui_ray.release()
 		if grab_parent.get_child_count()>0:
 			for item in grab_parent.get_children():
-				if item.has_method('primary'):
+				if is_instance_valid(item) and item.has_method('primary'):
 					item.primary(false)
 		if grabjoint.node_b and get_node(grabjoint.node_b).has_method('primary'):
 			get_node(grabjoint.node_b).primary(false)
@@ -214,5 +215,4 @@ func isgrabbed(node):
 	for i in grab_parent.get_children():
 		if i == node:
 			return true
-			break
 	
