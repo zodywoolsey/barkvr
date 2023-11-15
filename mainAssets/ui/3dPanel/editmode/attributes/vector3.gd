@@ -1,3 +1,4 @@
+@tool
 class_name Vector3_Attribute
 extends Control
 

@@ -1,3 +1,4 @@
+@tool
 extends Control
 
 # todo 	for optimization create a system where fields appended (ex: Vector3_Attribute)
@@ -65,8 +66,8 @@ func _ready():
 		var world_root = get_tree().get_first_node_in_group("localworldroot")
 		if world_root and target:
 			var thread = Thread.new()
-#			thread.start(_export_node.bind(tmp))
-			_export_node(target)
+			thread.start(_export_node.bind(target))
+#			_export_node(target)
 #			var tmp:PackedScene = PackedScene.new()
 #			assert(tmp.pack(target)==OK)
 #			var err = ResourceSaver.save(tmp,'user://objects/'+target.name+'.res')

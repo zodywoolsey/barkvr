@@ -132,7 +132,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 follow_focus = true
-scroll_vertical = 50
 metadata/_edit_use_anchors_ = true
 
 [node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer"]
@@ -143,5 +142,21 @@ size_flags_vertical = 3
 alignment = 1
 
 [node name="vector3" parent="ScrollContainer/VBoxContainer" instance=ExtResource("2_1nsm8")]
+layout_mode = 2
+size_flags_horizontal = 1
+
+[node name="vector4" parent="ScrollContainer/VBoxContainer" instance=ExtResource("2_1nsm8")]
+layout_mode = 2
+size_flags_horizontal = 1
+
+[node name="vector5" parent="ScrollContainer/VBoxContainer" instance=ExtResource("2_1nsm8")]
+layout_mode = 2
+size_flags_horizontal = 1
+
+[node name="vector6" parent="ScrollContainer/VBoxContainer" instance=ExtResource("2_1nsm8")]
+layout_mode = 2
+size_flags_horizontal = 1
+
+[node name="vector7" parent="ScrollContainer/VBoxContainer" instance=ExtResource("2_1nsm8")]
 layout_mode = 2
 size_flags_horizontal = 1
