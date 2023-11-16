@@ -19,14 +19,6 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.keycode == KEY_ESCAPE:
 		object_name.release_focus()
 
-func _check_loaded(path: String) -> void:
-	if ResourceLoader.load_threaded_get_status(path) == ResourceLoader.THREAD_LOAD_IN_PROGRESS:
-		print('not loaded yet')
-		get_tree().create_timer(1).timeout.connect(_check_loaded.bind(path))
-	else:
-		var err := ResourceLoader.load_threaded_get(path)
-		get_tree().get_first_node_in_group('localworldroot').add_child(err.instantiate())
-
 func _item_selected(i: int, _pos: Vector2, _button_mask: int) -> void:
 	var text := item_list.get_item_text(i)
 	print(text)
@@ -43,10 +35,7 @@ func _load_requested() -> void:
 		match extension:
 			"res", "tres", "scn", "tscn":
 				print("Loading scene.")
-#				Journaling.net_propogate_node(tmp)
 				Journaling.import_asset("res", object_path)
-#				ResourceLoader.load_threaded_request(object_path, '', true)
-#				get_tree().create_timer(1).timeout.connect(_check_loaded.bind(object_path))
 			"bark":
 				print("Loading var.")
 				var tmp = object_file.get_var(true)
