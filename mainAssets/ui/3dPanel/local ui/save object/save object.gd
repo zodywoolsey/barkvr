@@ -28,6 +28,10 @@ func _ready():
 				get_tree().get_first_node_in_group('localworldroot').add_child(BarkHelpers.var_to_node(tmp))
 		)
 
+func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventKey and event.keycode == KEY_ESCAPE:
+		object_name.release_focus()
+
 func _check_loaded(path:String):
 	if ResourceLoader.load_threaded_get_status(path) == ResourceLoader.THREAD_LOAD_IN_PROGRESS:
 		print('not loaded yet')
