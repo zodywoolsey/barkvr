@@ -36,6 +36,8 @@ func _load_requested() -> void:
 			"res", "tres", "scn", "tscn":
 				print("Loading scene.")
 				Journaling.import_asset("res", object_path)
+			"glb", "gltf":
+				Journaling.import_asset("glb", object_path)
 			"bark":
 				print("Loading var.")
 				var tmp = object_file.get_var(true)
