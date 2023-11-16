@@ -90,7 +90,8 @@ func import_asset(type:String, asset_to_import, asset_name:='', recieved:=false,
 	check_root()
 	if asset_name.is_empty():
 		asset_name = str(Time.get_unix_time_from_system())
-	elif (type == 'glb' or type == 'vrm') and asset_to_import and asset_to_import is PackedByteArray:
+
+	if (type == 'glb' or type == 'vrm') and asset_to_import and asset_to_import is PackedByteArray:
 		var thread = Thread.new()
 		thread.start(_import_glb.bind(asset_to_import,asset_name,recieved,data))
 #		_import_glb(asset_to_import, asset_name, recieved, data)
