@@ -202,3 +202,16 @@ func rejoin_thread_when_finished(thread:Thread) -> void:
 				get_tree().create_timer(1).timeout.connect(rejoin_thread_when_finished.bind(thread))
 				return
 		thread.wait_to_finish()
+
+## Accept an incoming network message and handle it appropriately.
+func receive(action: Dictionary) -> void:
+	match action.action_name:
+		"net_propogate_node":
+			var parent: String = action.get('parent', '')
+			net_propogate_node(action.node_string, parent, '', true)
+		"set_property":
+			set_property(action.target, action.prop_name, action.value, true)
+		"import_asset":
+			import_asset(action.type, action.asset_to_import, '', true)
+		"delete_node":
+			delete_node(action.target, true)

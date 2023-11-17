@@ -163,23 +163,7 @@ func poll():
 									pack = PackedByteArray()
 								if data and data is Array:
 									for action in data:
-										match action.action_name:
-											"net_propogate_node":
-												if action.has('parent'):
-													Journaling.call_deferred('net_propogate_node',action.node_string,action.parent)
-												else:
-													Journaling.call_deferred('net_propogate_node',
-														action.node_string,
-														'',
-														true
-														)
-											"set_property":
-												Journaling.call_deferred('set_property',action.target,action.prop_name,action.value,true)
-											"import_asset":
-												Notifyvr.send_notification('importing asset')
-												Journaling.call_deferred('import_asset',action.type, action.asset_to_import, '', true)
-											"delete_node":
-												Journaling.call_deferred('delete_node',action.target)
+										Journaling.receive.call_deferred(action)
 							# Send all new journal events to the other users
 							journal_timer = 0.0
 							if current_actions.size() >0:
