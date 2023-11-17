@@ -117,12 +117,20 @@ func import_asset(
 			_import_image(asset_name, content)
 	# Send message to peers.
 	if !recieved:
-		actions.append({
-			'action_name': 'import_asset',
-			'type': type,
-			'asset_to_import': asset_to_import,
-			'asset_name': asset_name
-		})
+		if type == "res":
+			actions.append({
+				'action_name': 'import_asset',
+				'type': type,
+				'asset_to_import': content,
+				'asset_name': asset_name
+			})
+		else:
+			actions.append({
+				'action_name': 'import_asset',
+				'type': type,
+				'asset_to_import': asset_to_import,
+				'asset_name': asset_name
+			})
 
 func _check_loaded(path: String) -> void:
 	match ResourceLoader.load_threaded_get_status(path):
