@@ -1,51 +1,59 @@
 extends Control
 
-@onready var object_name = $HBoxContainer/VBoxContainer/name
-@onready var load = $HBoxContainer/VBoxContainer/load
-@onready var item_list = $HBoxContainer/ItemList
+@onready var object_name: LineEdit = \
+	$HBoxContainer/VBoxContainer/name
 
+@onready var load: Button = \
+	$HBoxContainer/VBoxContainer/load
 
+@onready var item_list: ItemList = \
+	$HBoxContainer/ItemList
 
-func _ready():
+func _ready() -> void:
 	init_object_list()
-	item_list.item_clicked.connect(func(i, pos, button_mask):
-		print(item_list.get_item_text(i))
-		object_name.text = item_list.get_item_text(i)
-		)
-	load.pressed.connect(func():
-		var object_file = FileAccess.open("user://objects/"+object_name.text, FileAccess.READ_WRITE)
-		if object_file:
-			if object_name.text.ends_with(".res") or object_name.text.ends_with(".tres") or object_name.text.ends_with(".scn") or object_name.text.ends_with(".tscn"):
-				print('started loading')
-	#			Journaling.net_propogate_node(tmp)
-				Journaling.import_asset('res','user://objects/'+object_name.text)
-#				ResourceLoader.load_threaded_request('user://objects/'+object_name.text,'',true)
-#				get_tree().create_timer(1).timeout.connect(_check_loaded.bind('user://objects/'+object_name.text))
-			elif object_name.text.ends_with('.bark'):
-				print('loading')
+	item_list.item_clicked.connect(_item_selected)
+	load.pressed.connect(_load_requested)
+
+func _unhandled_input(event: InputEvent) -> void:
+	# If escape key pressed, remove focus from text input.
+	if event is InputEventKey and event.keycode == KEY_ESCAPE:
+		object_name.release_focus()
+
+func _item_selected(i: int, _pos: Vector2, _button_mask: int) -> void:
+	var text := item_list.get_item_text(i)
+	print(text)
+	object_name.text = text
+
+func _load_requested() -> void:
+	var object_path := "user://objects/" + object_name.text
+	var object_file := FileAccess.open(object_path, FileAccess.READ_WRITE)
+	if object_file:
+		# Get file extension.
+		var extension := ""
+		if object_path.contains("."):
+			extension = object_path.rsplit(".", true, 1)[1]
+		match extension:
+			"res", "tres", "scn", "tscn":
+				print("Loading scene.")
+				Journaling.import_asset("res", object_path)
+			"glb", "gltf":
+				Journaling.import_asset("glb", object_path)
+			"jpg", "jpeg", "png", "bmp", "tga", "webp":
+				Journaling.import_asset("image", object_path)
+			"bark":
+				print("Loading var.")
 				var tmp = object_file.get_var(true)
-				print('got var: \n'+tmp)
+				print('got var:\n' + tmp)
 				get_tree().get_first_node_in_group('localworldroot').add_child(BarkHelpers.var_to_node(tmp))
-		)
 
-func _check_loaded(path:String):
-	if ResourceLoader.load_threaded_get_status(path) == ResourceLoader.THREAD_LOAD_IN_PROGRESS:
-		print('not loaded yet')
-		get_tree().create_timer(1).timeout.connect(_check_loaded.bind(path))
-	else:
-		var err = ResourceLoader.load_threaded_get(path)
-		get_tree().get_first_node_in_group('localworldroot').add_child(err.instantiate())
-
-func init_object_list():
-	var dir = DirAccess.open("user://")
-	if !dir.dir_exists("./objects"):
-		dir.make_dir("./objects")
+## Repeatedly refresh object list with objects in user folder.
+func init_object_list() -> void:
+	var dir := DirAccess.open("user://")
+	dir.make_dir("./objects")
 	dir.change_dir("./objects")
-	var files = dir.get_files()
+	var files := dir.get_files()
 	for i in item_list.item_count:
 		files.remove_at(files.find(item_list.get_item_text(i)))
 	for world in files:
 		item_list.add_item(world)
-	get_tree().create_timer(1).timeout.connect(func():
-		init_object_list()
-		)
+	get_tree().create_timer(1).timeout.connect(init_object_list)
