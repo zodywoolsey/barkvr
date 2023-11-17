@@ -7,26 +7,24 @@ var registered_actions: PackedStringArray = [
 
 const vrm_import_extension = preload("res://addons/vrm/vrm_extension.gd")
 
-var actions := []
+var actions: Array[Dictionary] = []
 
 var root: Node
 
-signal rejoin_thread(thread: Thread)
+func _ready() -> void:
+	_get_root()
 
-func _ready():
-	root = get_tree().get_first_node_in_group('localworldroot')
-	rejoin_thread.connect(func(thread: Thread) -> void:
-		print('finished thread')
-		thread.wait_to_finish())
-
-func get_actions():
+func get_actions() -> Array[Dictionary]:
 	var tmp := actions.duplicate()
 	actions.clear()
 	return tmp
 
-func check_root():
+func check_root() -> void:
 	if !is_instance_valid(root):
-		root = get_tree().get_first_node_in_group('localworldroot')
+		_get_root()
+
+func _get_root() -> void:
+	root = get_tree().get_first_node_in_group('localworldroot')
 
 func set_parent(target: NodePath, new_parent: NodePath) -> void:
 	check_root()

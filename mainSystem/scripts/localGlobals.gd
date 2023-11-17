@@ -22,40 +22,23 @@ static var WORLD_STATE_EDITING := 0
 static var WORLD_STATE_PLAYING := 1
 static var WORLD_STATE_VIEWING := 2
 
-signal playerinit(isvr:bool)
+signal playerinit(isvr: bool)
 signal playerreleaseuifocus
 signal clear_gizmos
 
 # Called when the node enters the scene tree for the first time.
-func _ready():
+func _ready() -> void:
 	vr_supported = ProjectSettings.get_setting('xr/openxr/enabled', false)
 	get_viewport().gui_focus_changed.connect(func(node):
-		print(node)
-		)
-	Vector.user_logged_in.connect(func():
-		discord_login_status = 'logged in'
-		)
-	get_tree().get_first_node_in_group("localworldroot").add_child(load('res://mainSystem/scenes/player/xrplayer.tscn').instantiate())
+		print(node))
+	Vector.user_logged_in.connect(func() -> void:
+		discord_login_status = 'logged in')
+	Journaling.check_root()
+	Journaling.root.add_child(load('res://mainSystem/scenes/player/xrplayer.tscn').instantiate())
 	if OS.get_name() == "Android":
 		OS.request_permissions()
 
-func _input(event):
+func _input(event: InputEvent) -> void:
 	if event is InputEventAction:
 		if event.is_action("ui_cancel"):
 			playerreleaseuifocus.emit()
-
-#	discord_sdk.app_id = 1137953671842377778
-#	print("Discord working: " + str(discord_sdk.get_is_discord_working()))
-#	print(discord_sdk.get_current_user())
-#	discord_sdk.details = discord_world
-#	discord_sdk.state = discord_login_status
-#	discord_sdk.large_image = "game"
-#	discord_sdk.start_timestamp = int(Time.get_unix_time_from_system())
-#	get_tree().create_timer(1).timeout.connect(_update_discord)
-#
-#
-#func _update_discord():
-#	discord_sdk.details = "in: "+discord_world
-#	discord_sdk.state = discord_login_status
-#	discord_sdk.refresh() 
-#	get_tree().create_timer(1).timeout.connect(_update_discord)
