@@ -38,6 +38,8 @@ func _load_requested() -> void:
 				Journaling.import_asset("res", object_path)
 			"glb", "gltf":
 				Journaling.import_asset("glb", object_path)
+			"jpg", "jpeg", "png", "bmp", "tga", "webp":
+				Journaling.import_asset("image", object_path)
 			"bark":
 				print("Loading var.")
 				var tmp = object_file.get_var(true)

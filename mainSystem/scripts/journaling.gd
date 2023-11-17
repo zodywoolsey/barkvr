@@ -94,7 +94,11 @@ func import_asset(
 	check_root()
 	# Generate an asset name if not given.
 	if asset_name.is_empty():
-		asset_name = str(Time.get_unix_time_from_system())
+		# If we have a string path for the asset import, use that instead.
+		if asset_to_import is String:
+			asset_name = asset_to_import.split('/')[-1]
+		else:
+			asset_name = str(Time.get_unix_time_from_system())
 	# Get asset content if needed.
 	var content := PackedByteArray()
 	if type != "res":
@@ -190,6 +194,8 @@ func _import_image(asset_name: String, content: PackedByteArray) -> void:
 		err = img.load_tga_from_buffer(content)
 	elif asset_name.ends_with('.webp'):
 		err = img.load_webp_from_buffer(content)
+	else:
+		return
 
 	if err != OK:
 		return
@@ -201,7 +207,7 @@ func _import_image(asset_name: String, content: PackedByteArray) -> void:
 	root.add_child(panel)
 	panel.name = asset_name
 	panel.set_viewport_scene(rect)
-	panel.position.y = 2.0
+	panel.position.y = 1.0
 
 func rejoin_thread_when_finished(thread: Thread) -> void:
 	if thread and thread.is_started() and thread.is_alive():
