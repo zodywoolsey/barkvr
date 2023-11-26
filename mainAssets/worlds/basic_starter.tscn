@@ -33,13 +33,13 @@ func _ready():
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_csaaw"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_2ok1k"]
-size = Vector3(100, 0.25, 100)
+size = Vector3(1000, 0.25, 1000)
 subdivide_width = 32
 subdivide_height = 32
 subdivide_depth = 32
 
-[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_o3pat"]
-points = PackedVector3Array(-50, -0.125, -50, -50, -0.125, 50, -50, 0.125, -50, 50, -0.125, -50, -50, 0.125, 50, 50, -0.125, 49.9902, 49.9902, 0.125, -50, 50, 0.125, 49.9902)
+[sub_resource type="BoxShape3D" id="BoxShape3D_43yoo"]
+size = Vector3(1000, 0.25, 1000)
 
 [node name="basic starter" type="Node3D"]
 
@@ -48,7 +48,6 @@ environment = SubResource("Environment_n00cx")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(-0.865617, -0.417461, 0.276465, -0.267145, 0.852051, 0.450158, -0.423486, 0.315808, -0.849073, 0, 1.72518, 0)
-shadow_enabled = true
 
 [node name="floor boundary" type="Area3D" parent="."]
 script = SubResource("GDScript_cwteg")
@@ -66,4 +65,4 @@ material_override = ExtResource("2_xwerc")
 mesh = SubResource("BoxMesh_2ok1k")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
-shape = SubResource("ConvexPolygonShape3D_o3pat")
+shape = SubResource("BoxShape3D_43yoo")

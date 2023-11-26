@@ -53,7 +53,7 @@ text = "Enter VR"
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 
 [node name="playerSpawnLocation" parent="localworldroot" instance=ExtResource("6_diugs")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.25067, 0.0923181, 0.0461358)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.103354, 0.0923181, -436.532)
 
 [node name="basic starter" parent="localworldroot" instance=ExtResource("4_hmjqc")]
 
@@ -74,9 +74,6 @@ stream = SubResource("AudioStreamGenerator_f6fry")
 autoplay = true
 script = ExtResource("11_oevc4")
 
-[node name="vreditor" parent="." instance=ExtResource("8_wf33i")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -4.5628, 1.95409, 0.987727)
-
 [node name="save_load_object" parent="." instance=ExtResource("6_307b8")]
 transform = Transform3D(0.537432, -0.843307, 0, 0, 0, -1, 0.843307, 0.537432, 0, 0.168378, 2, 1.44429)
 _auto_load_ui = ExtResource("7_squu5")
@@ -92,5 +89,8 @@ transform = Transform3D(0.707107, 0.707107, 0, 3.09086e-08, -3.09086e-08, -1, -0
 script = ExtResource("10_rgd75")
 _auto_load_ui = ExtResource("11_hv61c")
 transparent = false
+
+[node name="vreditor" parent="." instance=ExtResource("8_wf33i")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -437.798)
 
 [connection signal="pressed" from="StartXR/EnterWebXR/EnterVRButton" to="StartXR" method="_on_enter_webxr_button_pressed" flags=18]

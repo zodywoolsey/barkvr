@@ -148,6 +148,7 @@ func _check_loaded(path: String) -> void:
 				root.add_child(node)
 
 func _import_glb(content: PackedByteArray, asset_name := '', data := {}) -> void:
+	Thread.set_thread_safety_checks_enabled(false)
 	var doc := GLTFDocument.new()
 	var state := GLTFState.new()
 	var base_path := ''
@@ -155,10 +156,19 @@ func _import_glb(content: PackedByteArray, asset_name := '', data := {}) -> void
 		base_path = data.base_path
 	var err := doc.append_from_buffer(content, base_path, state)
 	if err == OK:
+		for mesh in state.get_meshes():
+#			print('mesh: '+str(mesh.mesh))
+#			print('surfaces: '+str(mesh.mesh.get_surface_count()))
+			if mesh.mesh.get_surface_lod_count(0) == 0:
+#				print('generating lod')
+				mesh.mesh.generate_lods(25,60,[])
+			
 		var scene := doc.generate_scene(state)
 		if root:
 			asset_name += str(Time.get_unix_time_from_system())
 		scene.name = asset_name
+#		if scene is Node3D:
+#			scene.scale = Vector3(.1,.1,.1)
 		root.call_deferred('add_child', scene)
 	else:
 		Notifyvr.send_notification("error importing gltf document")
@@ -203,10 +213,12 @@ func _import_image(asset_name: String, content: PackedByteArray) -> void:
 	var rect := TextureRect.new()
 	var tex := ImageTexture.create_from_image(img)
 	rect.texture = tex
+	rect.stretch_mode = TextureRect.STRETCH_SCALE
 	var panel := preload('res://addons/Panel3D/Panel3D.tscn').instantiate()
 	root.add_child(panel)
 	panel.name = asset_name
 	panel.set_viewport_scene(rect)
+	panel.viewport.size = tex.get_size()
 	panel.position.y = 1.0
 
 func rejoin_thread_when_finished(thread: Thread) -> void:

@@ -5,13 +5,13 @@ var tree:Dictionary = {}
 func add_item(text:String,metadata:Variant,replace:String=''):
 	if replace and tree.has(replace):
 		tree[replace]['name'] = text
-		tree[replace]['tree_item'].set_text(0,text)
-		tree[replace]['tree_item'].set_metadata(0, metadata)
+		tree[replace]['tree_item'].call_deferred("set_text",0,text)
+		tree[replace]['tree_item'].call_deferred("set_metadata",0, metadata)
 		tree[replace]['tree_item'].visible = true
 	elif tree.has(text):
 		tree[replace]['name'] = text
-		tree[replace]['tree_item'].set_text(0,text)
-		tree[replace]['tree_item'].set_metadata(0, metadata)
+		tree[replace]['tree_item'].call_deferred("set_text",0,text)
+		tree[replace]['tree_item'].call_deferred("set_metadata",0, metadata)
 		tree[replace]['tree_item'].visible = true
 	elif metadata and metadata.has('state'):
 		var roomdict = {
@@ -57,6 +57,7 @@ func add_item(text:String,metadata:Variant,replace:String=''):
 					tree[item_id].tree_item = create_item(tree[metadata.parent.get_instance_id()].tree_item)
 				else:
 					tree[item_id].tree_item = create_item()
+				tree[item_id].tree_item.collapsed = true
 				tree[item_id].tree_item.set_text(0,text)
 				tree[item_id].tree_item.set_metadata(0,metadata)
 
