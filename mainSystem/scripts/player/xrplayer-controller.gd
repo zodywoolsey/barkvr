@@ -237,6 +237,15 @@ func flat_movement():
 			grab_point = xr_camera_3d.to_local(camray.get_collision_point())
 		else:
 			grab_point = xr_camera_3d.to_local(xr_camera_3d.project_position(get_viewport().size/2.0, 10.0))
+	if Input.is_action_just_pressed("desktop_secondary"):
+		if LocalGlobals.editor_refs.has('vreditor'):
+			LocalGlobals.editor_refs.mainpanel.global_position = righthand.hand_menu_point.global_position
+			LocalGlobals.editor_refs.mainpanel.global_rotation = righthand.hand_menu_point.global_rotation
+			LocalGlobals.editor_refs.mainpanel.global_rotation.x += deg_to_rad(90.0)
+		else:
+			var vreditor = load("res://mainAssets/ui/3dPanel/editmode/vreditor.tscn").instantiate()
+			get_tree().get_first_node_in_group("localroot").add_child(vreditor)
+			vreditor.global_position = righthand.hand_menu_point.global_position
 	righthand.look_at(xr_camera_3d.to_global(grab_point))
 	
 	if LocalGlobals.player_state == LocalGlobals.PLAYER_STATE_PLAYING:

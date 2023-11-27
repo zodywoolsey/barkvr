@@ -57,7 +57,7 @@ func _ready():
 			target.get_parent().add_child(target.duplicate())
 		)
 	delete.pressed.connect(func():
-		if target:
+		if target and is_instance_valid(target):
 			target.queue_free()
 			target = null
 			clear_fields()
@@ -76,7 +76,9 @@ func _ready():
 		)
 	objectname.text_changed.connect(func(new_text:String):
 		if target:
+			print(target)
 			target.name = new_text
+			print(target)
 		)
 	objectname.focus_entered.connect(func():
 		is_field_focused = true
@@ -87,6 +89,7 @@ func _ready():
 
 
 func _export_node(target:Node) -> bool:
+	Thread.set_thread_safety_checks_enabled(false)
 	var dir = DirAccess.open("user://")
 	if !dir.dir_exists("./objects"):
 		dir.make_dir("./objects")

@@ -1,12 +1,12 @@
 extends Node3D
 
-@onready var inspector:Panel3D = $inspector
+@onready var inspector:Panel3D = %inspector
 var scene_inspector_scene = load("res://mainAssets/ui/3dPanel/editmode/sceneinspector.tscn")
 var scene_inspector
-@onready var attributes:Panel3D = $attributes
+@onready var attributes:Panel3D = %attributes
 var attributes_scene = load("res://mainAssets/ui/3dPanel/editmode/attributes.tscn")
 var attributes_ui
-@onready var gdscript:Panel3D = $script
+@onready var gdscript:Panel3D = %script
 var gdscript_scene = load("res://mainAssets/ui/3dPanel/editmode/gdscriptpanel.tscn")
 var gdscript_ui
 

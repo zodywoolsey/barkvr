@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://ctwckofb07cfw"]
+[gd_scene load_steps=14 format=3 uid="uid://ctwckofb07cfw"]
 
 [ext_resource type="Script" path="res://mainSystem/scripts/init.gd" id="1_gkt54"]
 [ext_resource type="Script" path="res://mainSystem/scripts/startxr.gd" id="2_3r3cq"]
@@ -13,8 +13,6 @@
 [ext_resource type="Script" path="res://mainSystem/scripts/mic_playback.gd" id="11_oevc4"]
 
 [sub_resource type="AudioStreamMicrophone" id="AudioStreamMicrophone_ve6pm"]
-
-[sub_resource type="BoxMesh" id="BoxMesh_1mer8"]
 
 [sub_resource type="AudioStreamGenerator" id="AudioStreamGenerator_f6fry"]
 mix_rate = 44800.0
@@ -53,13 +51,9 @@ text = "Enter VR"
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 
 [node name="playerSpawnLocation" parent="localworldroot" instance=ExtResource("6_diugs")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.103354, 0.0923181, -436.532)
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -2.76036, 0.0923181, 2.56459)
 
 [node name="basic starter" parent="localworldroot" instance=ExtResource("4_hmjqc")]
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="localworldroot"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 1, -2)
-mesh = SubResource("BoxMesh_1mer8")
 
 [node name="save_load_object2" parent="localworldroot" instance=ExtResource("6_307b8")]
 transform = Transform3D(0.537432, -0.843307, 0, 0, 0, -1, 0.843307, 0.537432, 0, -0.906486, 1, -0.242324)
@@ -91,6 +85,6 @@ _auto_load_ui = ExtResource("11_hv61c")
 transparent = false
 
 [node name="vreditor" parent="." instance=ExtResource("8_wf33i")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -437.798)
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -4.35778, 2, 1.29859)
 
-[connection signal="pressed" from="StartXR/EnterWebXR/EnterVRButton" to="StartXR" method="_on_enter_webxr_button_pressed" flags=18]
+[connection signal="pressed" from="StartXR/EnterWebXR/EnterVRButton" to="StartXR" method="_on_enter_webxr_button_pressed"]

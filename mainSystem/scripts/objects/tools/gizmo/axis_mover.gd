@@ -45,8 +45,8 @@ func _set_colliders(is_drag:bool=false):
 			if is_drag:
 				zcol.disabled = true
 				ycol.disabled = true
-				xcol.shape.size.x = 1000
-				xcol.shape.size.y = 1000
+				xcol.shape.size.x = 100000
+				xcol.shape.size.y = 100000
 			else:
 				zcol.disabled = false
 				ycol.disabled = false
@@ -56,8 +56,8 @@ func _set_colliders(is_drag:bool=false):
 			if is_drag:
 				zcol.disabled = true
 				xcol.disabled = true
-				ycol.shape.size.x = 1000
-				ycol.shape.size.y = 1000
+				ycol.shape.size.x = 100000
+				ycol.shape.size.y = 100000
 			else:
 				zcol.disabled = false
 				xcol.disabled = false
@@ -67,8 +67,8 @@ func _set_colliders(is_drag:bool=false):
 			if is_drag:
 				xcol.disabled = true
 				ycol.disabled = true
-				zcol.shape.size.x = 1000
-				zcol.shape.size.y = 1000
+				zcol.shape.size.x = 100000
+				zcol.shape.size.y = 100000
 			else:
 				xcol.disabled = false
 				ycol.disabled = false

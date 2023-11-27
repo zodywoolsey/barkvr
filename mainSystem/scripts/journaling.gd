@@ -156,12 +156,12 @@ func _import_glb(content: PackedByteArray, asset_name := '', data := {}) -> void
 		base_path = data.base_path
 	var err := doc.append_from_buffer(content, base_path, state)
 	if err == OK:
-		for mesh in state.get_meshes():
-#			print('mesh: '+str(mesh.mesh))
-#			print('surfaces: '+str(mesh.mesh.get_surface_count()))
-			if mesh.mesh.get_surface_lod_count(0) == 0:
-#				print('generating lod')
-				mesh.mesh.generate_lods(25,60,[])
+#		for mesh in state.get_meshes():
+##			print('mesh: '+str(mesh.mesh))
+##			print('surfaces: '+str(mesh.mesh.get_surface_count()))
+#			if mesh.mesh.get_surface_lod_count(0) == 0:
+##				print('generating lod')
+#				mesh.mesh.generate_lods(25,60,[])
 			
 		var scene := doc.generate_scene(state)
 		if root:

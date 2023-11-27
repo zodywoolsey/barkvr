@@ -4,15 +4,16 @@ extends Control
 @onready var tree_root : TreeItem = tree.create_item()
 signal selected(item)
 
-@onready var thread = Thread.new()
-@onready var tree_check_semaphore = Semaphore.new()
-
 func _ready():
 	tree.item_selected.connect(func():
+		await get_tree().process_frame
 		selected.emit(tree.get_selected().get_metadata(0).node)
 		LocalGlobals.clear_gizmos.emit()
 		var giz = load("res://mainSystem/scenes/objects/tools/gizmo/gizmo.tscn").instantiate()
 		var node = tree.get_selected().get_metadata(0).node
+		if !is_instance_valid(node):
+			tree.check_children()
+			return
 		if node is Node3D:
 			get_tree().get_first_node_in_group('localworldroot').add_child(giz)
 			giz.global_position = node.global_position
@@ -21,22 +22,36 @@ func _ready():
 	gui_input.connect(func(event):
 		pass
 		)
-	get_tree().tree_changed.connect(func():
-		tree_check_semaphore.post()
+	var root = get_tree().get_first_node_in_group('localworldroot')
+	tree.add_item(root.name,{
+		'node':root
+	})
+	_check_tree_for_updates()
+	get_tree().node_added.connect(func(node:Node):
+		await get_tree().process_frame
+		if root:
+			if is_instance_valid(node) and root.is_ancestor_of(node):
+				tree.add_item(node.name, {
+					'node':node,
+					'parent':node.get_parent()
+				})
 		)
-	thread.start(_check_tree_for_updates)
-
-func _exit_tree():
-	Journaling.rejoin_thread_when_finished(thread)
+	get_tree().node_renamed.connect(func(node:Node):
+		print('node renamed')
+		await get_tree().process_frame
+		if root:
+			if is_instance_valid(node):
+				tree.update_item(node)
+		)
+	get_tree().node_removed.connect(func(node:Node):
+		tree.remove_item(node)
+		)
 
 func _check_tree_for_updates():
-	Thread.set_thread_safety_checks_enabled(false)
-	while true:
-		tree_check_semaphore.wait()
-		var root = get_tree().get_first_node_in_group('localworldroot')
-		if is_instance_valid(root):
-			setRoot(root)
-			tree.check_children()
+	var root = get_tree().get_first_node_in_group('localworldroot')
+	if is_instance_valid(root):
+		setRoot(root)
+		tree.check_children()
 
 func init():
 #	tree.clear()
