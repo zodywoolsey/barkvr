@@ -1,7 +1,7 @@
 class_name Network_Handler
 extends Node
 
-var peers : Array = []
+var peers : Array[Dictionary] = []
 
 var packs : Array[PackedByteArray] = [PackedByteArray()]
 
@@ -175,7 +175,7 @@ func poll():
 									})
 								else:
 									var parts:int = bytes_to_send.size()/packet_size
-									for i in range(bytes_to_send.size()/packet_size):
+									for i:int in range(bytes_to_send.size()/packet_size):
 										var pack_dict = {}
 										if i < parts-1: 
 											pack_dict['pos'] = i

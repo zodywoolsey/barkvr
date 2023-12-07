@@ -23,7 +23,6 @@ config/windows_native_icon="res://assets/barkvrcorgi.ico"
 
 [audio]
 
-driver/enable_input=true
 driver/mix_rate=48000
 
 [autoload]
@@ -193,10 +192,9 @@ common/physics_jitter_fix=0.0
 
 textures/vram_compression/import_s3tc_bptc=true
 textures/vram_compression/import_etc2_astc=true
-scaling_3d/fsr_sharpness=1.0
 
 [xr]
 
-openxr/foveation_level=0
-openxr/startup_alert=false
+openxr/enabled=true
+openxr/extensions/eye_gaze_interaction=true
 shaders/enabled=true

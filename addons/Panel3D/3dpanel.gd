@@ -40,7 +40,7 @@ func _init():
 	viewport.own_world_3d = true
 	viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	mesh = MeshInstance3D.new()
-	mesh.mesh = PlaneMesh.new()
+	mesh.mesh = QuadMesh.new()
 	colshape = CollisionShape3D.new()
 	colshape.shape = BoxShape3D.new()
 	material = StandardMaterial3D.new()
@@ -101,7 +101,7 @@ func _process(delta):
 	plugin_stuff()
 	mesh.mesh.size.x = .0005*viewport.size.x
 	mesh.mesh.size.y = .0005*viewport.size.y
-	colshape.shape.size = Vector3(mesh.mesh.size.x,.001,mesh.mesh.size.y)
+	colshape.shape.size = Vector3(mesh.mesh.size.x,mesh.mesh.size.y,.001)
 
 func laser_input(data:Dictionary):
 	var event
@@ -128,7 +128,7 @@ func laser_input(data:Dictionary):
 	var quad_size = mesh.mesh.size
 	# Convert GLOBAL collision point from to be in local space of the panel
 	var mouse_pos3D = to_local(data.position) # data.position must be global
-	var mouse_pos2D = Vector2(mouse_pos3D.x, mouse_pos3D.z)
+	var mouse_pos2D = Vector2(mouse_pos3D.x, -mouse_pos3D.y)
 	# Translate the 2D mouse position to the center of the quad
 	#	by adding half of the quad size to both x and y coordinates.
 	mouse_pos2D.x += quad_size.x / 2
@@ -150,7 +150,7 @@ func laser_input(data:Dictionary):
 
 func set_viewport_scene(node):
 	# Clears the current nodes from within the viewport first
-	for child in viewport.get_children():
+	for child:Node in viewport.get_children():
 		child.queue_free()
 	# Adds a child node to the viewport and sets it as the UI
 	#	Then, gets the texture of the viewport.
@@ -170,7 +170,7 @@ func plugin_stuff():
 			if _auto_load_ui:
 				set_viewport_scene(_auto_load_ui.instantiate())
 			else:
-				for child in viewport.get_children():
+				for child:Node in viewport.get_children():
 					child.queue_free()
 		if transparent != prev_vals.transparent:
 			prev_vals.transparent = transparent

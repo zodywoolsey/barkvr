@@ -1,105 +1,17 @@
-[gd_scene load_steps=8 format=3 uid="uid://c5xqckkutm44a"]
+[gd_scene load_steps=7 format=3 uid="uid://c5xqckkutm44a"]
 
 [ext_resource type="PackedScene" uid="uid://bp7s8m7jegpy1" path="res://addons/renik_test/gdscript/sample_models/godette.glb" id="1_hi3e7"]
 [ext_resource type="Script" path="res://addons/renik_test/gdscript/renik.gd" id="2_eba7d"]
 [ext_resource type="Script" path="res://addons/renik_test/gdscript/renik_placement.gd" id="3_lrlos"]
-[ext_resource type="Script" path="res://addons/renik_test/gdscript/renik_placement_gait.gd" id="4_ipr1b"]
 
 [sub_resource type="Resource" id="Resource_y0btc"]
 resource_name = "ForwardGait"
-script = ExtResource("4_ipr1b")
-speed_scalar_min = 1.0
-speed_scalar_max = 0.5
-ground_time = 5.0
-lift_time_base = 10.0
-lift_time_scalar = 5.0
-apex_in_time_base = 10.0
-apex_in_time_scalar = 5.0
-apex_out_time_base = 5.0
-apex_out_time_scalar = 5.0
-drop_time_base = 5.0
-drop_time_scalar = 0.0
-tip_toe_distance_scalar = 1.5708
-tip_toe_speed_scalar = 0.785398
-tip_toe_angle_max = 1.0472
-lift_vertical = 0.0
-lift_vertical_scalar = 0.4
-lift_horizontal_scalar = 0.7
-lift_angle = 1.5708
-apex_vertical = 0.0
-apex_vertical_scalar = 0.1
-apex_angle = 0.392699
-drop_vertical = 0.0
-drop_vertical_scalar = 0.05
-drop_horizontal_scalar = 0.25
-drop_angle = -0.392699
-contact_point_ease = 0.05
-contact_point_ease_scalar = 0.4
-scaling_ease = 0.85
 
 [sub_resource type="Resource" id="Resource_n5clt"]
 resource_name = "BackwardGait"
-script = ExtResource("4_ipr1b")
-speed_scalar_min = 0.5
-speed_scalar_max = 0.75
-ground_time = 5.0
-lift_time_base = 5.0
-lift_time_scalar = 5.0
-apex_in_time_base = 10.0
-apex_in_time_scalar = 5.0
-apex_out_time_base = 10.0
-apex_out_time_scalar = 5.0
-drop_time_base = 5.0
-drop_time_scalar = 5.0
-tip_toe_distance_scalar = 0.0
-tip_toe_speed_scalar = 0.0
-tip_toe_angle_max = 0.0
-lift_vertical = 0.025
-lift_vertical_scalar = 0.1
-lift_horizontal_scalar = 0.33
-lift_angle = -0.392699
-apex_vertical = 0.1
-apex_vertical_scalar = 0.1
-apex_angle = 0.392699
-drop_vertical = 0.0
-drop_vertical_scalar = 0.1
-drop_horizontal_scalar = 0.25
-drop_angle = 0.392699
-contact_point_ease = 0.1
-contact_point_ease_scalar = 0.4
-scaling_ease = 0.85
 
 [sub_resource type="Resource" id="Resource_6m2kb"]
 resource_name = "SidewaysGait"
-script = ExtResource("4_ipr1b")
-speed_scalar_min = 0.75
-speed_scalar_max = 0.75
-ground_time = 10.0
-lift_time_base = 5.0
-lift_time_scalar = 5.0
-apex_in_time_base = 10.0
-apex_in_time_scalar = 5.0
-apex_out_time_base = 10.0
-apex_out_time_scalar = 5.0
-drop_time_base = 5.0
-drop_time_scalar = 5.0
-tip_toe_distance_scalar = 0.0
-tip_toe_speed_scalar = 0.0
-tip_toe_angle_max = 0.0
-lift_vertical = 0.05
-lift_vertical_scalar = 0.05
-lift_horizontal_scalar = 0.2
-lift_angle = 0.0
-apex_vertical = 0.01
-apex_vertical_scalar = 0.1
-apex_angle = 0.392699
-drop_vertical = 0.01
-drop_vertical_scalar = 0.05
-drop_horizontal_scalar = 0.25
-drop_angle = 0.0
-contact_point_ease = 0.1
-contact_point_ease_scalar = 0.4
-scaling_ease = 0.85
 
 [node name="test_rig" type="Node3D"]
 

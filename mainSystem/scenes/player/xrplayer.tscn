@@ -219,6 +219,7 @@ transform = Transform3D(-4.37114e-09, -4.37114e-09, 0.1, -4.37114e-09, -0.1, -4.
 script = ExtResource("8_n4qtp")
 
 [node name="XRAnchor3D" type="XRAnchor3D" parent="CharacterBody3D/xrplayer"]
+tracker = &"/user/eyes_ext"
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterBody3D/xrplayer/XRAnchor3D"]
 mesh = SubResource("BoxMesh_kgbb2")

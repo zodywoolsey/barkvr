@@ -35,8 +35,8 @@ func _ready() -> void:
 		discord_login_status = 'logged in')
 	Journaling.check_root()
 	Journaling.root.add_child(load('res://mainSystem/scenes/player/xrplayer.tscn').instantiate())
-	if OS.get_name() == "Android":
-		OS.request_permissions()
+	#if OS.get_name() == "Android":
+		#OS.request_permissions()
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventAction:

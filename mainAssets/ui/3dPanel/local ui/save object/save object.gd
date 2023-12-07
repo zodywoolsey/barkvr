@@ -12,7 +12,11 @@ extends Control
 func _ready() -> void:
 	init_object_list()
 	item_list.item_clicked.connect(_item_selected)
-	load.pressed.connect(_load_requested)
+	load.pressed.connect(func():
+		var thread = Thread.new()
+		thread.start(_load_requested.bind("user://objects/" + object_name.text))
+		Journaling.rejoin_thread_when_finished(thread)
+		)
 
 func _unhandled_input(event: InputEvent) -> void:
 	# If escape key pressed, remove focus from text input.
@@ -24,8 +28,7 @@ func _item_selected(i: int, _pos: Vector2, _button_mask: int) -> void:
 	print(text)
 	object_name.text = text
 
-func _load_requested() -> void:
-	var object_path := "user://objects/" + object_name.text
+func _load_requested(object_path:String) -> void:
 	var object_file := FileAccess.open(object_path, FileAccess.READ_WRITE)
 	if object_file:
 		# Get file extension.
@@ -37,13 +40,14 @@ func _load_requested() -> void:
 				print("Loading scene.")
 				Journaling.import_asset("res", object_path)
 			"glb", "gltf":
+				print('loading gltf')
 				Journaling.import_asset("glb", object_path)
 			"jpg", "jpeg", "png", "bmp", "tga", "webp":
 				Journaling.import_asset("image", object_path)
 			"bark":
 				print("Loading var.")
 				var tmp = object_file.get_var(true)
-				print('got var:\n' + tmp)
+				print('got var:\n' + str(tmp))
 				get_tree().get_first_node_in_group('localworldroot').add_child(BarkHelpers.var_to_node(tmp))
 
 ## Repeatedly refresh object list with objects in user folder.

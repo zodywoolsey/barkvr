@@ -3,30 +3,27 @@
 [ext_resource type="Script" path="res://mainAssets/ui/3dPanel/editmode/vreditor.gd" id="1_8pitw"]
 [ext_resource type="Script" path="res://addons/Panel3D/3dpanel.gd" id="2_tnd62"]
 
-[node name="vreditor" type="Node3D"]
+[node name="inspector" type="StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, -1.06581e-14, 0, 1.06581e-14, 1, 0, 0, 0)
+collision_layer = 4
+collision_mask = 4
+script = ExtResource("2_tnd62")
+transparent = false
+metadata/grabbable = true
+
+[node name="vreditor" type="Node" parent="."]
 script = ExtResource("1_8pitw")
 
-[node name="inspector" type="StaticBody3D" parent="."]
-unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
+[node name="script" type="StaticBody3D" parent="."]
+transform = Transform3D(0.707107, -8.9407e-08, 0.707107, 5.96046e-08, 1, 8.74228e-08, -0.707107, 2.98023e-08, 0.707107, -0.442787, -2.4232e-15, 0.18931)
 collision_layer = 4
 collision_mask = 4
 script = ExtResource("2_tnd62")
 transparent = false
 metadata/grabbable = true
 
-[node name="script" type="StaticBody3D" parent="inspector"]
-unique_name_in_owner = true
-transform = Transform3D(0.707107, 0.707107, 9.27258e-08, -0.707107, 0.707107, 1.28028e-08, -5.65142e-08, -7.462e-08, 1, -0.442787, 0.18931, -8.275e-09)
-collision_layer = 4
-collision_mask = 4
-script = ExtResource("2_tnd62")
-transparent = false
-metadata/grabbable = true
-
-[node name="attributes" type="StaticBody3D" parent="inspector"]
-unique_name_in_owner = true
-transform = Transform3D(0.707107, -0.707107, 0, 0.707107, 0.707107, 4.37114e-08, -3.09086e-08, -3.09086e-08, 1, 0.445292, 0.181695, -7.94214e-09)
+[node name="attributes" type="StaticBody3D" parent="."]
+transform = Transform3D(0.707107, 0, -0.707107, 7.53645e-15, 1, 4.37114e-08, 0.707107, -1.06581e-14, 0.707107, 0.445292, -7.28004e-16, 0.181695)
 collision_layer = 4
 collision_mask = 4
 script = ExtResource("2_tnd62")

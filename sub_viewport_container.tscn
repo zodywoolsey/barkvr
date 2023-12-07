@@ -1,6 +1,4 @@
-[gd_scene load_steps=2 format=3 uid="uid://s1cg8bjjfp7d"]
-
-[ext_resource type="VideoStream" path="res://assets/video/music test.mp4" id="1_uagwy"]
+[gd_scene format=3 uid="uid://s1cg8bjjfp7d"]
 
 [node name="Control" type="Control"]
 layout_mode = 3
@@ -17,6 +15,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-stream = ExtResource("1_uagwy")
+stream = null
 volume_db = -80.0
 autoplay = true

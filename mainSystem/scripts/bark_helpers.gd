@@ -1,53 +1,71 @@
 extends Node
 
 func node_to_var(node:Node, type:String='', cust_name:String=''):
-	var dict:Dictionary = {}
-	if type:
-		dict['asset_type'] = type
-	else:
-		dict['asset_type'] = node.get_class()
-	if cust_name:
-		dict['name'] = cust_name
-	else:
-		dict['name'] = node.name
-	dict['node'] = Array(var_to_bytes_with_objects(node))
-#	dict['node'] = var_to_str(node)
-	## prop list will be in the format of:
-	##		name, class_name, type, hint, hint_string, usage
-	dict['properties'] = node.get_property_list()
-	dict['groups'] = PackedStringArray()
-	for group in node.get_groups():
-		if !group.begins_with("_"):
-			dict.groups.append(group)
+	var out: Dictionary = {}
 	if node.get_child_count() > 0:
-		var children : Array = []
-		for i in node.get_children():
-			print('added child')
-			children.append(node_to_var(i))
-		dict['children']=children
-	return dict
+		var children := Array()
+		for child in node.get_children():
+			children.append(node_to_var(child))
+		out.children = children
+	#out.node = var_to_str(node)
+	out.node = var_to_bytes_with_objects(node)
+	return out
+####OLD:
+	#var dict:Dictionary = {}
+	#if type:
+		#dict['asset_type'] = type
+	#else:
+		#dict['asset_type'] = node.get_class()
+	#if cust_name:
+		#dict['name'] = cust_name
+	#else:
+		#dict['name'] = node.name
+	#dict['node'] = Array(var_to_bytes_with_objects(node))
+##	dict['node'] = var_to_str(node)
+	### prop list will be in the format of:
+	###		name, class_name, type, hint, hint_string, usage
+	#dict['properties'] = node.get_property_list()
+	#dict['groups'] = PackedStringArray()
+	#for group in node.get_groups():
+		#if !group.begins_with("_"):
+			#dict.groups.append(group)
+	#if node.get_child_count() > 0:
+		#var children : Array = []
+		#for i in node.get_children():
+			#print('added child')
+			#children.append(node_to_var(i))
+		#dict['children']=children
+	#return dict
 
 func var_to_node(item:String='', dict:Dictionary={}):
-	var j = JSON.new()
-	if dict.is_empty() and !item.is_empty():
-#		print(item)
-		var err = j.parse(item)
-		if err == OK:
-			dict = j.data
-		else:
-			print("Error parsing imported json: "+str(j.get_error_message()))
-	if !dict.is_empty():
-		var node :Node = bytes_to_var_with_objects(dict.node)
-#		var node :Node = str_to_var(dict.node)
-		if dict.has('groups') and dict['groups'].size()>0:
-			for group in dict.groups:
-				node.add_to_group(group)
+	var node:Node
+	if dict.has('node'):
+		node = bytes_to_var_with_objects(dict.node)
 		if dict.has('children'):
 			for child in dict.children:
-				node.add_child(var_to_node('',child))
-		if dict.has('name'):
-			node.name = dict.name
-		return node
+				node.add_child(var_to_node(child))
+	return node
+####OLD:
+	#var j = JSON.new()
+	#if dict.is_empty() and !item.is_empty():
+##		print(item)
+		#var err = j.parse(item)
+		#if err == OK:
+			#dict = j.data
+		#else:
+			#print("Error parsing imported json: "+str(j.get_error_message()))
+	#if !dict.is_empty():
+		#var node :Node = bytes_to_var_with_objects(dict.node)
+##		var node :Node = str_to_var(dict.node)
+		#if dict.has('groups') and dict['groups'].size()>0:
+			#for group in dict.groups:
+				#node.add_to_group(group)
+		#if dict.has('children'):
+			#for child in dict.children:
+				#node.add_child(var_to_node('',child))
+		#if dict.has('name'):
+			#node.name = dict.name
+		#return node
 
 
 func normalize_float32_array(array:PackedFloat32Array):

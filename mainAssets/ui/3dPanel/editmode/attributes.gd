@@ -67,6 +67,7 @@ func _ready():
 		if world_root and target:
 			var thread = Thread.new()
 			thread.start(_export_node.bind(target))
+			Journaling.rejoin_thread_when_finished(thread)
 #			_export_node(target)
 #			var tmp:PackedScene = PackedScene.new()
 #			assert(tmp.pack(target)==OK)
@@ -90,11 +91,18 @@ func _ready():
 
 func _export_node(target:Node) -> bool:
 	Thread.set_thread_safety_checks_enabled(false)
+	print('start export')
 	var dir = DirAccess.open("user://")
 	if !dir.dir_exists("./objects"):
 		dir.make_dir("./objects")
-	var object_file = FileAccess.open("user://objects/"+target.name+".bark", FileAccess.WRITE)
-	var tmpjson = BarkHelpers.node_to_var(target,'',target.name)
-	tmpjson = JSON.stringify(tmpjson)
-	object_file.store_var(tmpjson)
+	#var object_file = FileAccess.open("user://objects/"+target.name+".gltf", FileAccess.WRITE)
+	var gltf = GLTFDocument.new()
+	var gltf_state = GLTFState.new()
+	gltf.append_from_scene(target,gltf_state)
+	gltf.write_to_filesystem(gltf_state,"user://objects/"+target.name+".glb")
+	#object_file.store_buffer(gltf.generate_buffer(gltf_state))
+	#var tmpjson = BarkHelpers.node_to_var(target,'',target.name)
+	#tmpjson = JSON.stringify(tmpjson)
+	#object_file.store_var(tmpjson)
+	print('exported node')
 	return true

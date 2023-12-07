@@ -210,16 +210,13 @@ func _import_image(asset_name: String, content: PackedByteArray) -> void:
 	if err != OK:
 		return
 
-	var rect := TextureRect.new()
 	var tex := ImageTexture.create_from_image(img)
-	rect.texture = tex
-	rect.stretch_mode = TextureRect.STRETCH_SCALE
-	var panel := preload('res://addons/Panel3D/Panel3D.tscn').instantiate()
-	root.add_child(panel)
-	panel.name = asset_name
-	panel.set_viewport_scene(rect)
-	panel.viewport.size = tex.get_size()
-	panel.position.y = 1.0
+	var plane := MeshInstance3D.new()
+	var tmpmesh = PlaneMesh.new()
+	tmpmesh.orientation = PlaneMesh.FACE_Z
+	root.add_child(plane)
+	plane.name = asset_name
+	plane.position.y = 1.0
 
 func rejoin_thread_when_finished(thread: Thread) -> void:
 	if thread and thread.is_started() and thread.is_alive():

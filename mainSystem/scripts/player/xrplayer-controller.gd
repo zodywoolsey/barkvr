@@ -187,9 +187,9 @@ func _input(event):
 			}
 		if event.pressed:
 #			Notifyvr.send_notification("double tapped")
-			if righthand.gizmoray.is_colliding():
-				righthand.gizmoray.click()
-			elif righthand.ui_ray.is_colliding():
+			#if righthand.gizmoray.is_colliding():
+				#righthand.gizmoray.click()
+			if righthand.ui_ray.is_colliding():
 				righthand.ui_ray.click()
 			elif righthand.world_ray.is_colliding():
 				righthand.world_ray.click()
