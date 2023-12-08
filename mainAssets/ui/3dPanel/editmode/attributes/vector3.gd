@@ -40,10 +40,11 @@ func _process(delta):
 	var rect = get_global_rect()
 	if v_box_container.visible and !(rect.end.y > scrollparentrect.position.y and rect.position.y < scrollparentrect.end.y):
 		v_box_container.visible = false
-	elif !v_box_container.visible and (rect.end.y > scrollparentrect.position.y and rect.position.y < scrollparentrect.end.y):
-		v_box_container.show()
-	if v_box_container.visible:
-		update_fields()
+	elif (rect.end.y > scrollparentrect.position.y and rect.position.y < scrollparentrect.end.y):
+		if !v_box_container.visible:
+			v_box_container.visible = true
+		else:
+			update_fields()
 
 func update_fields():
 	if target and !property_name.is_empty() and !_is_editing and is_instance_valid(target) and !_check_focus():

@@ -51,7 +51,7 @@ export/convert_text_resources_to_binary=false
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/Godot-MToon-Shader/plugin.cfg", "res://addons/Panel3D/plugin.cfg", "res://addons/Todo_Manager/plugin.cfg", "res://addons/contextmenu/plugin.cfg", "res://addons/unidot/plugin.cfg", "res://addons/vrm/plugin.cfg")
+enabled=PackedStringArray("res://addons/Godot-MToon-Shader/plugin.cfg", "res://addons/Panel3D/plugin.cfg", "res://addons/Todo_Manager/plugin.cfg", "res://addons/contextmenu/plugin.cfg", "res://addons/godotopenxrvendors/plugin.cfg", "res://addons/unidot/plugin.cfg", "res://addons/vrm/plugin.cfg")
 
 [gui]
 
@@ -196,5 +196,7 @@ textures/vram_compression/import_etc2_astc=true
 [xr]
 
 openxr/enabled=true
+openxr/foveation_level=2
+openxr/foveation_dynamic=true
 openxr/extensions/eye_gaze_interaction=true
 shaders/enabled=true
