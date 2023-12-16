@@ -16,7 +16,7 @@ var hover = false
 func _ready():
 	label_3d.text = text
 
-func _process(delta):
+func _physics_process(delta):
 	var tmp = mesh_instance_3d.mesh.surface_get_material(0)
 	tmp.albedo_color.a = lerpf(tmp.albedo_color.a, alpha, .1)
 
@@ -24,7 +24,7 @@ func laser_input(data:Dictionary):
 	match data.action:
 		"click":
 			if itemToSpawn:
-				for i in range(100):
+				for i in range(1):
 					var tmp = load(itemToSpawn).instantiate()
 					get_tree().get_first_node_in_group("localworldroot").add_child(tmp)
 					tmp.global_position = global_position

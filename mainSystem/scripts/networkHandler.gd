@@ -105,7 +105,7 @@ func got_turn_server(data):
 func reset():
 	peers = []
 
-func _process(delta):
+func _physics_process(delta):
 	var player = get_tree().get_first_node_in_group('player')
 	if player:
 		packetdict.user_pos.pos = player.global_position

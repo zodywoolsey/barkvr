@@ -108,6 +108,14 @@ func _init():
 	heightmap_max_layers = heightmap_max_layers
 	heightmap_scale = heightmap_scale
 
+func _ready():
+	viewport.gui_focus_changed.connect(func(node):
+		print('focus')
+		LocalGlobals.player_state = LocalGlobals.PLAYER_STATE_TYPING
+		)
+	LocalGlobals.playerreleaseuifocus.connect(func():
+		viewport.gui_release_focus()
+		)
 
 func laser_input(data:Dictionary):
 	var event

@@ -164,14 +164,15 @@ func _input(event):
 			xr_camera_3d.rotate_x(-event.relative.y*(MOUSE_SPEED/100))
 	if event is InputEventKey:
 		if event.pressed:
-			if (event.keycode == KEY_ENTER or event.keycode == KEY_KP_ENTER):
+			if event.keycode == KEY_ESCAPE:
 				if LocalGlobals.player_state == LocalGlobals.PLAYER_STATE_TYPING:
 					LocalGlobals.player_state = LocalGlobals.PLAYER_STATE_PLAYING
 					LocalGlobals.emit_signal("playerreleaseuifocus")
-			elif event.keycode == KEY_ESCAPE:
-				LocalGlobals.player_state = LocalGlobals.PLAYER_STATE_PAUSED
-				LocalGlobals.emit_signal("playerreleaseuifocus")
-				Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+					Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+				else:
+					LocalGlobals.player_state = LocalGlobals.PLAYER_STATE_PAUSED
+					LocalGlobals.emit_signal("playerreleaseuifocus")
+					Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	if event is InputEventMouseButton:
 		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT and !LocalGlobals.vr_supported:
 			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
@@ -237,11 +238,11 @@ func flat_movement():
 			grab_point = xr_camera_3d.to_local(camray.get_collision_point())
 		else:
 			grab_point = xr_camera_3d.to_local(xr_camera_3d.project_position(get_viewport().size/2.0, 10.0))
-	if Input.is_action_just_pressed("desktop_secondary"):
+	if Input.is_action_just_pressed("desktop_secondary") and LocalGlobals.player_state == LocalGlobals.PLAYER_STATE_PLAYING:
 		if LocalGlobals.editor_refs.has('vreditor'):
 			LocalGlobals.editor_refs.mainpanel.global_position = righthand.hand_menu_point.global_position
 			LocalGlobals.editor_refs.mainpanel.global_rotation = righthand.hand_menu_point.global_rotation
-			LocalGlobals.editor_refs.mainpanel.global_rotation.x += deg_to_rad(90.0)
+			#LocalGlobals.editor_refs.mainpanel.global_rotation.x += deg_to_rad(90.0)
 		else:
 			var vreditor = load("res://mainAssets/ui/3dPanel/editmode/vreditor.tscn").instantiate()
 			get_tree().get_first_node_in_group("localroot").add_child(vreditor)

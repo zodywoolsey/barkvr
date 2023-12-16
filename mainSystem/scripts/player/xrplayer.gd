@@ -10,8 +10,3 @@ func _ready():
 		get_viewport().use_xr = true
 	else:
 		pass
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
-	pass

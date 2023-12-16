@@ -9,7 +9,7 @@ var cursor_size_factor = 50.0
 
 var target := Vector3()
 
-func _process(delta):
+func _physics_process(delta):
 	if get_tree().get_first_node_in_group("player"):
 		var dist = target.distance_to(get_tree().get_first_node_in_group("playerCamera").global_position)
 		pointer.scale = Vector3(1,1,1)*dist/cursor_size_factor

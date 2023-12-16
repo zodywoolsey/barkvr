@@ -50,15 +50,14 @@ func _ready():
 #				world_ray.enabled = false
 		)
 
-func _process(delta):
+
+func _physics_process(delta):
 	if visible:
 		if buttons.has('by_button') and LocalGlobals.world_state:
 			if buttons['by_button']:
 				contexttimer += delta
 			else:
 				contexttimer = 0
-
-func _physics_process(delta):
 	for item in grabbed.values():
 		if self == righthand:
 			item.node.global_transform = righthand.global_transform * item.offset

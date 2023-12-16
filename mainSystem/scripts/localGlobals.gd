@@ -29,16 +29,11 @@ signal clear_gizmos
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	vr_supported = ProjectSettings.get_setting('xr/openxr/enabled', false)
-	get_viewport().gui_focus_changed.connect(func(node):
-		print(node))
 	Vector.user_logged_in.connect(func() -> void:
-		discord_login_status = 'logged in')
+		discord_login_status = 'logged in'
+	)
 	Journaling.check_root()
-	Journaling.root.add_child(load('res://mainSystem/scenes/player/xrplayer.tscn').instantiate())
+	get_tree().get_first_node_in_group('localroot').add_child(load('res://mainSystem/scenes/player/xrplayer.tscn').instantiate())
 	#if OS.get_name() == "Android":
 		#OS.request_permissions()
 
-func _input(event: InputEvent) -> void:
-	if event is InputEventAction:
-		if event.is_action("ui_cancel"):
-			playerreleaseuifocus.emit()
