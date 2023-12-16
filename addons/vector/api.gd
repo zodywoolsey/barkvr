@@ -193,7 +193,7 @@ func post_login(home_server:String='', headers:Array=[], address:String='', devi
 	home_server+"_matrix/client/v3/login",
 	headers,
 	HTTPClient.METHOD_POST,
-	str(bodyDict)
+	JSON.stringify(bodyDict)
 	)
 	
 ## POST /_matrix/client/v3/refresh
@@ -226,7 +226,7 @@ func post_refresh(base_url:String='', headers:Array=[], refresh_token:String='')
 	base_url+"_matrix/client/v3/refresh",
 	headers,
 	HTTPClient.METHOD_POST,
-	str(bodyDict)
+	JSON.stringify(bodyDict)
 	)
 
 ## POST /_matrix/client/v3/logout
@@ -314,7 +314,7 @@ func post_account_deactivate(base_url:String='', headers:Array=[], auth:Dictiona
 	base_url+"_matrix/client/v3/account/deactivate",
 	headers,
 	HTTPClient.METHOD_POST,
-	str(bodyDict)
+	JSON.stringify(bodyDict)
 	)
 
 ## POST /_matrix/client/v3/account/password
@@ -352,7 +352,7 @@ func post_account_password(base_url:String='', headers:Array=[], auth:Dictionary
 	base_url+"_matrix/client/v3/account/password",
 	headers,
 	HTTPClient.METHOD_POST,
-	str(bodyDict)
+	JSON.stringify(bodyDict)
 	)
 
 ## POST /_matrix/client/v3/account/password/email/requestToken
@@ -394,7 +394,7 @@ func post_account_password_email_requestToken(base_url:String='', headers:Array=
 	base_url+"_matrix/client/v3/account/password",
 	headers,
 	HTTPClient.METHOD_POST,
-	str(bodyDict)
+	JSON.stringify(bodyDict)
 	)
 
 ## POST /_matrix/client/v3/account/password/msisdn/requestToken
@@ -438,7 +438,7 @@ func post_account_password_msisdn_requestToken(base_url:String='', headers:Array
 	base_url+"_matrix/client/v3/account/password",
 	headers,
 	HTTPClient.METHOD_POST,
-	str(bodyDict)
+	JSON.stringify(bodyDict)
 	)
 
 ## POST /_matrix/client/v3/register
@@ -490,7 +490,7 @@ func post_register(base_url:String='', headers:Array=[], kind:String='user', aut
 	base_url+"_matrix/client/v3/register"+qp,
 	headers,
 	HTTPClient.METHOD_POST,
-	str(bodyDict)
+	JSON.stringify(bodyDict)
 	)
 
 ## GET /_matrix/client/v3/register/available
@@ -563,7 +563,7 @@ func post_register_email_requesttoken(base_url:String='', headers:Array=[], clie
 	base_url+"_matrix/client/v3/register/email/requestToken",
 	headers,
 	HTTPClient.METHOD_POST,
-	str(bodyDict)
+	JSON.stringify(bodyDict)
 	)
 
 ## POST /_matrix/client/v3/register/msisdn/requestToken
@@ -607,7 +607,7 @@ func post_register_msisdn_requesttoken(base_url:String='', headers:Array=[], cli
 	base_url+"_matrix/client/v3/register/msisdn/requestToken",
 	headers,
 	HTTPClient.METHOD_POST,
-	str(bodyDict)
+	JSON.stringify(bodyDict)
 	)
 
 ## GET /_matrix/client/v3/rooms/{roomId}/messages [br][br]
@@ -696,7 +696,7 @@ func put_room_state(base_url:String='', headers:Array=[], room_id:String='', eve
 	base_url+"_matrix/client/v3/rooms/"+room_id+"/state/"+event_type+"/"+state_key,
 	headers,
 	HTTPClient.METHOD_PUT,
-	str(bodyDict)
+	JSON.stringify(bodyDict)
 	)
 
 ## /_matrix/client/v3/rooms/{roomId}/send/{eventType}/{txnId}
@@ -729,7 +729,7 @@ func put_room_send(base_url:String='', headers:Array=[], room_id:String='', even
 	base_url+"_matrix/client/v3/rooms/"+room_id+"/send/"+event_type+"/"+txn_id,
 	headers,
 	HTTPClient.METHOD_PUT,
-	str(bodyDict)
+	JSON.stringify(bodyDict)
 	)
 
 ## /_matrix/client/v3/voip/turnServer
