@@ -186,7 +186,9 @@ limits/message_queue/max_size_mb=128
 
 [physics]
 
+3d/run_on_separate_thread=true
 common/physics_jitter_fix=0.0
+3d/physics_engine="JoltPhysics3D"
 
 [rendering]
 
@@ -195,7 +197,6 @@ textures/vram_compression/import_etc2_astc=true
 
 [xr]
 
-openxr/enabled=true
 openxr/foveation_level=2
 openxr/foveation_dynamic=true
 openxr/extensions/eye_gaze_interaction=true

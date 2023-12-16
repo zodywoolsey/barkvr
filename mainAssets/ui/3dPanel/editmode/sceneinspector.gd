@@ -5,6 +5,7 @@ extends Control
 signal selected(item)
 
 func _ready():
+	print('ready')
 	tree.item_selected.connect(func():
 		await get_tree().process_frame
 		selected.emit(tree.get_selected().get_metadata(0).node)
@@ -18,9 +19,6 @@ func _ready():
 			get_tree().get_first_node_in_group('localworldroot').add_child(giz)
 			giz.global_position = node.global_position
 			giz.target = node
-		)
-	gui_input.connect(func(event):
-		pass
 		)
 	var root = get_tree().get_first_node_in_group('localworldroot')
 	tree.add_item(root.name,{

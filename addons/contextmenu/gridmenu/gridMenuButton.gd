@@ -24,9 +24,10 @@ func laser_input(data:Dictionary):
 	match data.action:
 		"click":
 			if itemToSpawn:
-				var tmp = load(itemToSpawn).instantiate()
-				get_tree().get_first_node_in_group("localworldroot").add_child(tmp)
-				tmp.global_position = global_position
+				for i in range(100):
+					var tmp = load(itemToSpawn).instantiate()
+					get_tree().get_first_node_in_group("localworldroot").add_child(tmp)
+					tmp.global_position = global_position
 			if label_3d.text == "set root":
 				if LocalGlobals.editor_refs.has('inspector'):
 					LocalGlobals.editor_refs.inspector.setRoot(get_tree().get_first_node_in_group('localworldroot'))

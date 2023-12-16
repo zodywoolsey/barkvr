@@ -1,4 +1,4 @@
-@icon("res://addons/vector/vector.gd")
+@icon("res://addons/vector/logo.svg")
 ## Matrix api handler (must be added as an autoload script named "Vector")
 
 class_name vector

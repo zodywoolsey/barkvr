@@ -1,22 +1,16 @@
 extends Node
 
 @onready var inspector:Panel3D = $".."
-var scene_inspector_scene = load("res://mainAssets/ui/3dPanel/editmode/sceneinspector.tscn")
 var scene_inspector
 @onready var attributes:Panel3D = $"../attributes"
-var attributes_scene = load("res://mainAssets/ui/3dPanel/editmode/attributes.tscn")
 var attributes_ui
 @onready var gdscript:Panel3D = $"../script"
-var gdscript_scene = load("res://mainAssets/ui/3dPanel/editmode/gdscriptpanel.tscn")
 var gdscript_ui
 
 func _ready():
-	scene_inspector = scene_inspector_scene.instantiate()
-	inspector.set_viewport_scene(scene_inspector)
-	attributes_ui = attributes_scene.instantiate()
-	attributes.set_viewport_scene(attributes_ui)
-	gdscript_ui = gdscript_scene.instantiate()
-	gdscript.set_viewport_scene(gdscript_ui)
+	scene_inspector = inspector.ui
+	attributes_ui = attributes.ui
+	gdscript_ui = gdscript.ui
 	scene_inspector.selected.connect(func(item):
 		if is_instance_valid(item):
 			if attributes_ui and item:

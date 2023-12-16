@@ -60,9 +60,11 @@ current = true
 far = 99999.0
 
 [node name="camray" type="RayCast3D" parent="CharacterBody3D/xrplayer/XrCamera3d"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.13393)
 visible = false
 target_position = Vector3(0, 0, -1000)
 collision_mask = 65535
+hit_back_faces = false
 
 [node name="Node3D" type="Node3D" parent="CharacterBody3D/xrplayer/XrCamera3d" groups=["notificationparent"]]
 transform = Transform3D(0.075, 0, 0, 0, 0.075, 0, 0, 0, 0.075, -0.0929923, -0.0845834, -0.183947)

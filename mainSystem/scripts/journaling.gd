@@ -5,8 +5,6 @@ var registered_actions: PackedStringArray = [
 	'set_parent'
 ]
 
-const vrm_import_extension = preload("res://addons/vrm/vrm_extension.gd")
-
 var actions: Array[Dictionary] = []
 
 var root: Node
