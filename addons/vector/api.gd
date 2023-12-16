@@ -819,8 +819,8 @@ func login_username_password(homeserver:String,username:String,password:String):
 		)
 	var loginDict = {
 		"type": "m.login.password",
-		"password": password,
-		"user": username,
+		"password": str(password),
+		"user": str(username),
 		"device_id": OS.get_unique_id(),
 		"initial_device_display_name": "barkvr"
 		}
@@ -830,7 +830,7 @@ func login_username_password(homeserver:String,username:String,password:String):
 		"https://"+homeserver+"/_matrix/client/v3/login",
 		Vector.headers,
 		HTTPClient.METHOD_POST,
-		str(loginDict)
+		JSON.stringify(loginDict)
 		)
 	assert(response == OK)
 	await client.request_completed

@@ -43,6 +43,7 @@ func _ready():
 		if msgJson:
 			if msgJson.has('errcode'):
 				Notifyvr.send_notification(msgJson.error)
+				print(msgJson)
 				if msgJson.has('retry_after_ms'):
 					Notifyvr.send_notification("Please try again after: "+str(msgJson.retry_after_ms/1000)+" seconds")
 				return
