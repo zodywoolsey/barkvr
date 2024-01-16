@@ -28,4 +28,4 @@ func set_target(item):
 		if script and !script.source_code.is_empty():
 			code_edit.text = script.source_code
 		else:
-			code_edit.text = "extends "+str(target.get_class())+"\n\nfunc _ready():\n	pass\n\nfunc _process(delta:float):\n	pass"
+			code_edit.text = "extends "+str(target.get_class())+"\n\nfunc _init():\n	pass\n\nfunc _process(delta:float):\n	pass"

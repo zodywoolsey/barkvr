@@ -10,7 +10,7 @@ func _ready():
 		Vector.readUserDict()
 		)
 	Vector.got_joined_rooms.connect(func():
-		# print(Vector.joinedRooms)
+		print(Vector.joinedRooms)
 		add_items(Vector.joinedRooms)
 		)
 	Vector.user_logged_in.connect(func():
@@ -22,6 +22,7 @@ func _ready():
 		login.hide()
 		)
 	Vector.got_room_state.connect(func(data):
+		print(data)
 		if data.response_code and data.response_code == 200:
 			var name
 			var avatar

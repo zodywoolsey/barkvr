@@ -77,7 +77,7 @@ func _init():
 	viewport_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	viewport = SubViewport.new()
 	viewport.own_world_3d = true
-	viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	#viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	mesh = MeshInstance3D.new()
 	mesh.mesh = QuadMesh.new()
 	colshape = CollisionShape3D.new()

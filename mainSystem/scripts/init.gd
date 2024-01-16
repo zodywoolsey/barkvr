@@ -37,6 +37,3 @@ func _input(event):
 		if event.keycode == KEY_F8:
 			var tmp = MeshInstance3D.new()
 			tmp.mesh = BoxMesh.new()
-			
-
-

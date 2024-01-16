@@ -15,12 +15,12 @@ func _ready():
 			get_selected().visible = false
 		)
 	join_button.pressed.connect(func():
+		NetworkHandler.reset()
 		Vector.send_room_event(
 			target_room,
 			'bark.session.request',
 			{}
 		)
-		NetworkHandler.reset()
 		)
 
 

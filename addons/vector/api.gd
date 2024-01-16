@@ -895,6 +895,7 @@ func get_room_state(room_id:String):
 	client.use_threads = false
 	Vector.requestParent.add_child(client)
 	client.request_completed.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
+		assert(result == OK)
 		got_room_state.emit(result,response_code,headers,body)
 		client.queue_free()
 		)
@@ -904,6 +905,7 @@ func get_room_state(room_id:String):
 		Vector.headers,
 		HTTPClient.METHOD_GET
 		)
+	assert(res == OK)
 	
 ## Gets a list of message and state events for a room. It uses pagination query parameters to paginate history in the room.
 ## Url: /_matrix/client/v3/rooms/{roomId}/messages

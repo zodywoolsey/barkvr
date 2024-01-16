@@ -13,15 +13,8 @@ func _ready() -> void:
 	init_object_list()
 	item_list.item_clicked.connect(_item_selected)
 	load.pressed.connect(func():
-		var thread = Thread.new()
-		thread.start(_load_requested.bind("user://objects/" + object_name.text))
-		Journaling.rejoin_thread_when_finished(thread)
+		_load_requested("user://objects/" + object_name.text)
 		)
-
-func _unhandled_input(event: InputEvent) -> void:
-	# If escape key pressed, remove focus from text input.
-	if event is InputEventKey and event.keycode == KEY_ESCAPE:
-		object_name.release_focus()
 
 func _item_selected(i: int, _pos: Vector2, _button_mask: int) -> void:
 	var text := item_list.get_item_text(i)
@@ -52,6 +45,7 @@ func _load_requested(object_path:String) -> void:
 
 ## Repeatedly refresh object list with objects in user folder.
 func init_object_list() -> void:
+	print('test')
 	var dir := DirAccess.open("user://")
 	dir.make_dir("./objects")
 	dir.change_dir("./objects")

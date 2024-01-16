@@ -1,12 +1,10 @@
-[gd_scene load_steps=19 format=3 uid="uid://ctwckofb07cfw"]
+[gd_scene load_steps=17 format=3 uid="uid://ctwckofb07cfw"]
 
 [ext_resource type="Script" path="res://mainSystem/scripts/init.gd" id="1_gkt54"]
 [ext_resource type="Script" path="res://mainSystem/scripts/startxr.gd" id="2_3r3cq"]
 [ext_resource type="PackedScene" uid="uid://br1vh8in0e65o" path="res://mainAssets/worlds/basic_starter.tscn" id="4_hmjqc"]
-[ext_resource type="PackedScene" uid="uid://2o2f8tknq7me" path="res://addons/Panel3D/Panel3D.tscn" id="6_307b8"]
 [ext_resource type="PackedScene" uid="uid://dckbok0o553v7" path="res://mainSystem/scenes/objects/worldObjects/playerSpawnLocation.tscn" id="6_diugs"]
 [ext_resource type="Script" path="res://mainAssets/objects/visualizers/slider vis/SliderVis.gd" id="7_hywkc"]
-[ext_resource type="PackedScene" uid="uid://by5nu2jf4d1cv" path="res://mainAssets/ui/3dPanel/local ui/save object/save object.tscn" id="7_squu5"]
 [ext_resource type="PackedScene" uid="uid://b3sbt3oft3cxg" path="res://mainAssets/ui/3dPanel/editmode/vreditor.tscn" id="8_wf33i"]
 [ext_resource type="PackedScene" uid="uid://i3pxsgqnbjly" path="res://mainAssets/ui/3dPanel/local ui/login/matrix.tscn" id="10_j6yjr"]
 [ext_resource type="Script" path="res://addons/Panel3D/3dpanel.gd" id="10_rgd75"]
@@ -66,10 +64,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -2.76036, 0.0923181, 2.56459)
 
 [node name="basic starter" parent="localworldroot" instance=ExtResource("4_hmjqc")]
-
-[node name="save_load_object2" parent="localworldroot" instance=ExtResource("6_307b8")]
-transform = Transform3D(0.537432, 3.46918e-08, -0.843307, -7.45058e-09, 1, 0, 0.843307, -4.47035e-08, 0.537432, -0.906486, 1, -0.242324)
-_auto_load_ui = ExtResource("7_squu5")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="localworldroot"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.578043, 4)
@@ -156,14 +150,11 @@ stream = SubResource("AudioStreamGenerator_f6fry")
 autoplay = true
 script = ExtResource("11_oevc4")
 
-[node name="save_load_object" parent="." instance=ExtResource("6_307b8")]
-transform = Transform3D(0.537432, 1.49012e-08, -0.843307, 2.98023e-08, 1, 4.37114e-08, 0.843307, -2.98023e-08, 0.537432, 0.168378, 2, 1.44429)
-_auto_load_ui = ExtResource("7_squu5")
-
 [node name="matrix" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, -1.06581e-14, 0, 1.06581e-14, 1, -2.48848, 2, -0.367195)
 script = ExtResource("10_rgd75")
 _auto_load_ui = ExtResource("10_j6yjr")
+transparent = false
 viewport_size = Vector2i(1984, 1024)
 
 [node name="settings" type="StaticBody3D" parent="."]
