@@ -18,7 +18,7 @@ For those eager to follow BarkVR's progress, the "dev" branch offers a glimpse i
 
 In our mission to reshape virtual reality, we're incorporating groundbreaking technologies like the Matrix messaging API and IPFS for our storage solution, unlocking endless possibilities within BarkVR.
 
-Join us, valued patrons, as we embark on this journey of creation and discovery. Together, let's shape a future where creativity knows no bounds and dreams come true.
+Join us, valued supporters, as we embark on this journey of creation and discovery. Together, let's shape a future where creativity knows no bounds and dreams come true.
 
 Dare to dream, dare to create, dare to be a part of something truly extraordinary BarkVR.
 
