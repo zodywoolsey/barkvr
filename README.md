@@ -1,6 +1,7 @@
-Welcome, dear supporters, to a world where imagination thrives and creativity flourishes! As game designers, programmers, gamers, and artists, we set forth on an exciting venture to reshape virtual reality with our project: BarkVR.
+<div align="center">
+  <h3><strong>BarkVR</strong></h3>
+</div>
 
-## About BarkVR:
 BarkVR represents innovation and collaboration in action. It's more than just a project; it's a testament to our collective ingenuity. 
 At its core, BarkVR is an open-source and decentralized social XR creativity tool, built upon the solid foundation of Godot 4.x.
 
