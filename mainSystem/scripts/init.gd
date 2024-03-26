@@ -46,10 +46,10 @@ func _input(event):
 @export var global_origin: Node3D
 
 # Function to contain origin shift logic
-func shift_origin() -> void:
+#func shift_origin() -> void:
 	# Shift everything by the offset of the global player controller
-	global_origin.global_transform.origin -= player.global_transform.origin
-	print("World shifted to " + str(global_origin.global_transform.origin))
+	#global_origin.global_transform.origin -= player.global_transform.origin
+	#print("World shifted to " + str(global_origin.global_transform.origin))
 
 # switching this process to a _physics_process makes physics work but the player controller vibrates
 # setting the process to _process makes the player controller not vibrate when in useing moving origin 
@@ -57,8 +57,8 @@ func shift_origin() -> void:
 # we currently use threshold to shift the world and at 0 its set to be a moving origin 
 # setting it higher will make the orgin move less and dosent vibrate player controller
 
-func _physics_process(delta: float) -> void:
+#func _physics_process(delta: float) -> void:
 	#Check distance of world from global player controller and shift if greater than threshold
-	if player.global_transform.origin.length() > threshold && player != null:
-		print(name)
-		shift_origin()
+	#if player.global_transform.origin.length() > threshold && player != null:
+		#print(name)
+		#shift_origin()
