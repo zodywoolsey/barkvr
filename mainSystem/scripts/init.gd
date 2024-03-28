@@ -37,28 +37,3 @@ func _input(event):
 		if event.keycode == KEY_F8:
 			var tmp = MeshInstance3D.new()
 			tmp.mesh = BoxMesh.new()
-			
-
-@export var threshold = 0
-# Reference to global player controller
-@onready var player: Node3D = get_node("/root/main/playercontainer/CharacterBody3D")
-# Reference to global origin
-@export var global_origin: Node3D
-
-# Function to contain origin shift logic
-#func shift_origin() -> void:
-	# Shift everything by the offset of the global player controller
-	#global_origin.global_transform.origin -= player.global_transform.origin
-	#print("World shifted to " + str(global_origin.global_transform.origin))
-
-# switching this process to a _physics_process makes physics work but the player controller vibrates
-# setting the process to _process makes the player controller not vibrate when in useing moving origin 
-# but when updating the origin the physics pauses untill the origin is finished updating
-# we currently use threshold to shift the world and at 0 its set to be a moving origin 
-# setting it higher will make the orgin move less and dosent vibrate player controller
-
-#func _physics_process(delta: float) -> void:
-	#Check distance of world from global player controller and shift if greater than threshold
-	#if player.global_transform.origin.length() > threshold && player != null:
-		#print(name)
-		#shift_origin()

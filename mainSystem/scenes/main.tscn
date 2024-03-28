@@ -27,9 +27,8 @@ size = Vector3(0.1, 0.3, 0.3)
 [sub_resource type="AudioStreamGenerator" id="AudioStreamGenerator_f6fry"]
 mix_rate = 44800.0
 
-[node name="main" type="Node3D" node_paths=PackedStringArray("global_origin") groups=["localroot"]]
+[node name="main" type="Node3D" groups=["localroot"]]
 script = ExtResource("1_gkt54")
-global_origin = NodePath(".")
 
 [node name="RequestParent" type="Node" parent="." groups=["requestParent"]]
 
