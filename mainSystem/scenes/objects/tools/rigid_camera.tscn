@@ -1,24 +1,21 @@
-[gd_scene load_steps=4 format=3 uid="uid://bep6kkkjrdy4k"]
+[gd_scene load_steps=3 format=3 uid="uid://bep6kkkjrdy4k"]
 
 [ext_resource type="PackedScene" uid="uid://bay38na2jeq1o" path="res://mainSystem/scenes/objects/tools/placeable_camera.tscn" id="1_e5kha"]
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_pydgp"]
-size = Vector3(0.1, 0.1, 0.1)
-
-[sub_resource type="BoxMesh" id="BoxMesh_6fop7"]
-size = Vector3(0.1, 0.1, 0.1)
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_mat3h"]
+height = 0.161532
+radius = 0.157517
 
 [node name="RigidBody3d" type="RigidBody3D"]
 mass = 100.0
 gravity_scale = 0.0
 contact_monitor = true
+linear_damp = 1.0
+angular_damp = 1.0
 metadata/grabbable = true
 
 [node name="CollisionShape3d" type="CollisionShape3D" parent="."]
-shape = SubResource("BoxShape3D_pydgp")
-
-[node name="MeshInstance3d" type="MeshInstance3D" parent="."]
-visible = false
-mesh = SubResource("BoxMesh_6fop7")
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, -0.0951622)
+shape = SubResource("CylinderShape3D_mat3h")
 
 [node name="placeableCamera" parent="." instance=ExtResource("1_e5kha")]

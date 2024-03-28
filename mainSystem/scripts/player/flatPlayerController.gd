@@ -18,8 +18,8 @@ var selected : Array = []
 
 var lookdrag : Dictionary = {}
 #{'index': -1,'relative': Vector2(),'velocity': Vector2()}
-
-func _process(delta):
+	
+func _physics_process(delta):
 	if ui_ray.is_colliding():
 		world_ray.enabled = false
 	else:
@@ -27,8 +27,6 @@ func _process(delta):
 	if Input.is_action_just_pressed("click"):
 		world_ray.click()
 		ui_ray.click()
-
-func _physics_process(delta):
 	# Add the gravity.
 	if not is_on_floor():
 		velocity.y -= gravity * delta

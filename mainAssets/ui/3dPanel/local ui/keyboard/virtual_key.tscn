@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://cv26go3omuyya"]
+
+[ext_resource type="Script" path="res://mainAssets/ui/3dPanel/local ui/keyboard/virtual_key.gd" id="1"]
+
+[node name="VirtualKey" type="Button"]
+offset_right = 30.0
+offset_bottom = 25.0
+focus_mode = 0
+focus_mode = 0
+script = ExtResource("1")

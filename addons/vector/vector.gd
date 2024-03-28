@@ -1,4 +1,4 @@
-@icon("res://addons/vector/vector.gd")
+@icon("res://addons/vector/logo.svg")
 ## Matrix api handler (must be added as an autoload script named "Vector")
 
 class_name vector
@@ -30,53 +30,112 @@ signal got_joined_rooms
 signal got_room_state(data)
 signal update_room(data)
 signal synced(data)
+signal got_turn_server(data)
+signal got_room_messages(data)
 
-@onready var requestParent = get_tree().get_first_node_in_group("requestParent")
+var requestParent:Node
 
 func _ready():
-	api.user_logged_in.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
+	requestParent = get_tree().get_first_node_in_group('requestParent')
+	api.user_logged_in.connect(func(result:int,response_code:int,header:PackedStringArray,body:PackedByteArray):
 		var msg = body.get_string_from_ascii()
 		var msgJson : Dictionary = JSON.parse_string(msg)
-		if msgJson.has('errcode'):
-			Notifyvr.sendNotification(msgJson.error)
-			if msgJson.has('retry_after_ms'):
-				Notifyvr.sendNotification("Please try again after: "+str(msgJson.retry_after_ms/1000)+" seconds")
-			return null
-		userToken = msgJson.access_token
-		base_url = msgJson.well_known["m.homeserver"].base_url
-		userData['login'] = msgJson
-		userData['login']['home_server'] = home_server
-		saveUserDict()
-		if userToken != "":
-			headers.push_back("Authorization: Bearer {0}".format([userToken]))
-			print(headers)
-			user_logged_in.emit()
-			return true
+		if msgJson:
+			if msgJson.has('errcode'):
+				Notifyvr.send_notification(msgJson.error)
+				print(msgJson)
+				if msgJson.has('retry_after_ms'):
+					Notifyvr.send_notification("Please try again after: "+str(msgJson.retry_after_ms/1000)+" seconds")
+				return
+			if msgJson.has('access_token') and msgJson.has('well_known'):
+				userToken = msgJson.access_token
+				base_url = msgJson.well_known["m.homeserver"].base_url
+				userData['login'] = msgJson
+				userData['login']['home_server'] = home_server
+				saveUserDict()
+				if userToken != "":
+					headers.push_back("Authorization: Bearer {0}".format([userToken]))
+					print(headers)
+					user_logged_in.emit()
+					print('logged in')
+					get_turn_server()
+			else:
+				print('Some error occurred')
 		else:
-			return false
-		)
+			print('couldn\'t parse json\nbody:',msg)
+	)
 	api.got_joined_rooms.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 		var msg = body.get_string_from_ascii()
 		var msgJson = JSON.parse_string(msg)
 		joinedRooms = msgJson['joined_rooms']
 		userData['joined_rooms'] = msgJson['joined_rooms']
 		saveUserDict()
+		print('got joined rooms')
 		got_joined_rooms.emit()
 		)
 	api.got_room_state.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 		var msg = body.get_string_from_ascii()
 		var msgJson = JSON.parse_string(msg)
-		got_room_state.emit(msgJson)
-		)
+		got_room_state.emit({
+			"result_code": result,
+			"response_code": response_code,
+			"headers": headers,
+			"body": msgJson
+		})
+	)
+	api.got_room_messages.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
+		var msg = body.get_string_from_ascii()
+		var msgJson = JSON.parse_string(msg)
+		if result == 0:
+			got_room_messages.emit({
+				"result_code": result,
+				"response_code": response_code,
+				"headers": headers,
+				"body": msgJson
+			})
+		else:
+			print("error getting messages")
+	)
 	api.synced.connect(func(result:int,response_code:int,header:PackedStringArray,body:PackedByteArray):
 		var msg = body.get_string_from_ascii()
 		var msgJson = JSON.parse_string(msg)
-		if msgJson.has('next_batch'):
-			next_batch = msgJson.next_batch
-			userData['next_batch'] = next_batch
-			saveUserDict()
 		synced.emit(msgJson)
+	)
+	api.got_turn_server.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
+		var msg = body.get_string_from_ascii()
+		var msgJson = JSON.parse_string(msg)
+		print('got turn server: ',msgJson)
+		got_turn_server.emit(msgJson)
+	)
+	api.placed_room_send.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
+		pass
+	)
+
+func send_room_state_event(room_id:String, event_type:String, state_key:String, body:Dictionary):
+	api.put_room_state(
+		base_url,
+		headers,
+		room_id,
+		event_type,
+		state_key,
+		body
 		)
+
+func send_room_event(room_id:String, event_type:String, body:Dictionary):
+	api.put_room_send(
+		base_url,
+		headers,
+		room_id,
+		event_type,
+		str( str( OS.get_unique_id(),Time.get_unix_time_from_system() ).hash()),
+		body
+		)
+
+func get_turn_server():
+	api.get_turn_server(base_url,headers)
+
+func get_room_messages(room_id:String):
+	api.get_room_messages(base_url,headers,room_id,'b','','',10)
 
 func connect_to_homeserver(homeServer:String = ""):
 	var homeserverurl = "https://{0}".format([
@@ -122,10 +181,11 @@ func saveUserDict():
 	var toStore = var_to_bytes(userData)
 	toStore.reverse()
 	file.store_var(toStore)
+	file.close()
 
 func readUserDict():
 	var file = FileAccess.open("user://user.data",FileAccess.READ)
-	if file.file_exists("user://user.data"):
+	if file:
 		var read = file.get_var()
 		read.reverse()
 		userData = bytes_to_var(read)
@@ -140,19 +200,9 @@ func readUserDict():
 				next_batch = userData.next_batch
 			if userData.has('joined_rooms'):
 				joinedRooms = userData.joined_rooms
+			user_logged_in.emit()
 			return true
 	return false
-
-func refresh_token(token:String):
-	var res
-	if client.get_status() == HTTPClient.STATUS_CONNECTED:
-		res = client.request(HTTPClient.METHOD_POST, "/_matrix/client/v3/refresh",headers,str({
-			"refresh_token": token
-		}))
-		var msg = await readRequestBytes()
-		var refreshedToken = JSON.parse_string(msg)
-	else:
-		printerr("Vector client not initialized yet")
 
 func sync():
 	var reqData = {}

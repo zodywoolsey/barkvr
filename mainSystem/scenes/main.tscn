@@ -1,71 +1,170 @@
-[gd_scene load_steps=10 format=3 uid="uid://ctwckofb07cfw"]
+[gd_scene load_steps=17 format=3 uid="uid://ctwckofb07cfw"]
 
-[ext_resource type="Material" uid="uid://dum7xrf8gdl7k" path="res://addons/kenney_prototype_textures/materials/dark01Triplanar.material" id="1_rkkx6"]
-[ext_resource type="PackedScene" uid="uid://dckbok0o553v7" path="res://mainSystem/scenes/objects/worldObjects/playerSpawnLocation.tscn" id="6_to5vo"]
-[ext_resource type="PackedScene" uid="uid://b3sbt3oft3cxg" path="res://mainAssets/ui/3dPanel/editmode/vreditor.tscn" id="7_a0mdm"]
+[ext_resource type="Script" path="res://mainSystem/scripts/init.gd" id="1_gkt54"]
+[ext_resource type="Script" path="res://mainSystem/scripts/startxr.gd" id="2_3r3cq"]
+[ext_resource type="PackedScene" uid="uid://br1vh8in0e65o" path="res://mainAssets/worlds/basic_starter.tscn" id="4_hmjqc"]
+[ext_resource type="PackedScene" uid="uid://dckbok0o553v7" path="res://mainSystem/scenes/objects/worldObjects/playerSpawnLocation.tscn" id="6_diugs"]
+[ext_resource type="Script" path="res://mainAssets/objects/visualizers/slider vis/SliderVis.gd" id="7_hywkc"]
+[ext_resource type="PackedScene" uid="uid://b3sbt3oft3cxg" path="res://mainAssets/ui/3dPanel/editmode/vreditor.tscn" id="8_wf33i"]
+[ext_resource type="PackedScene" uid="uid://i3pxsgqnbjly" path="res://mainAssets/ui/3dPanel/local ui/login/matrix.tscn" id="10_j6yjr"]
+[ext_resource type="Script" path="res://addons/Panel3D/3dpanel.gd" id="10_rgd75"]
+[ext_resource type="PackedScene" uid="uid://pnqmxgn13qw2" path="res://mainAssets/ui/3dPanel/local ui/settings/settings.tscn" id="11_hv61c"]
+[ext_resource type="Script" path="res://mainSystem/scripts/mic_playback.gd" id="11_oevc4"]
 
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_3royi"]
-sky_top_color = Color(0.494118, 0.772549, 1, 1)
-sky_horizon_color = Color(0, 0, 0, 1)
-sky_energy_multiplier = 0.12
-ground_bottom_color = Color(0, 0, 0, 1)
-ground_horizon_color = Color(0, 0, 0, 1)
+[sub_resource type="AudioStreamMicrophone" id="AudioStreamMicrophone_ve6pm"]
 
-[sub_resource type="Sky" id="Sky_sd3km"]
-sky_material = SubResource("ProceduralSkyMaterial_3royi")
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_56k7y"]
 
-[sub_resource type="Environment" id="Environment_n00cx"]
-background_mode = 2
-sky = SubResource("Sky_sd3km")
-tonemap_mode = 2
-volumetric_fog_density = 0.2198
-volumetric_fog_albedo = Color(0.6, 0.466667, 1, 1)
-volumetric_fog_emission = Color(0.6, 0.466667, 1, 1)
-volumetric_fog_emission_energy = 0.03
-adjustment_brightness = 1.5
+[sub_resource type="BoxMesh" id="BoxMesh_iy0f7"]
+size = Vector3(0.01, 0.2, 0.2)
 
-[sub_resource type="GDScript" id="GDScript_cwteg"]
-script/source = "extends Area3D
+[sub_resource type="BoxShape3D" id="BoxShape3D_y67n3"]
+size = Vector3(0.1, 0.3, 0.3)
 
-func _ready():
-	body_entered.connect(func(body):
-		if body.is_in_group('player'):
-			body.global_position = Vector3(0,5,0)
-		)
-"
+[sub_resource type="BoxMesh" id="BoxMesh_t32me"]
+size = Vector3(0.1, 0.3, 0.3)
 
-[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_csaaw"]
+[sub_resource type="AudioStreamGenerator" id="AudioStreamGenerator_f6fry"]
+mix_rate = 44800.0
 
-[node name="main" type="Node3D" groups=["localroot"]]
+[node name="main" type="Node3D" node_paths=PackedStringArray("global_origin") groups=["localroot"]]
+script = ExtResource("1_gkt54")
+global_origin = NodePath(".")
+
+[node name="RequestParent" type="Node" parent="." groups=["requestParent"]]
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." groups=["microphone"]]
+stream = SubResource("AudioStreamMicrophone_ve6pm")
+autoplay = true
+bus = &"mic"
+
+[node name="StartXR" type="Node" parent="."]
+script = ExtResource("2_3r3cq")
+
+[node name="EnterWebXR" type="CanvasLayer" parent="StartXR"]
+visible = false
+
+[node name="EnterVRButton" type="Button" parent="StartXR/EnterWebXR"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -132.0
+offset_top = -52.5
+offset_right = 132.0
+offset_bottom = 52.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "Enter VR"
 
 [node name="localworldroot" type="Node3D" parent="." groups=["localworldroot"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="localworldroot"]
-environment = SubResource("Environment_n00cx")
+[node name="playerSpawnLocation" parent="localworldroot" instance=ExtResource("6_diugs")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -2.76036, 0.0923181, 2.56459)
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="localworldroot"]
-transform = Transform3D(-0.865617, -0.417461, 0.276465, -0.267145, 0.852051, 0.450158, -0.423486, 0.315808, -0.849073, 0, 1.72518, 0)
-light_energy = 0.112
-shadow_enabled = true
+[node name="basic starter" parent="localworldroot" instance=ExtResource("4_hmjqc")]
 
+[node name="StaticBody3D" type="StaticBody3D" parent="localworldroot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.578043, 4)
 
-[node name="vreditor" parent="localworldroot" instance=ExtResource("7_a0mdm")]
-transform = Transform3D(1, 0, 0, 0, 0.998359, -0.0572678, 0, 0.0572678, 0.998359, -0.0996146, 1.03694, -1.40078)
+[node name="SliderJoint3D" type="JoltSliderJoint3D" parent="localworldroot/StaticBody3D"]
+limit_enabled = true
+limit_upper = 1.0
+limit_lower = -1.0
+limit_spring_enabled = true
+limit_spring_frequency = 1.0
+motor_enabled = true
+motor_target_velocity = 1.0
+motor_max_force = 1.0
+node_a = NodePath("..")
+node_b = NodePath("../RigidBody3D")
 
-[node name="playerSpawnLocation" parent="localworldroot" instance=ExtResource("6_to5vo")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.21053, 0.146511, 0)
+[node name="SliderVis" type="Node3D" parent="localworldroot/StaticBody3D/SliderJoint3D"]
+script = ExtResource("7_hywkc")
 
-[node name="floor boundary" type="Area3D" parent="localworldroot"]
-script = SubResource("GDScript_cwteg")
+[node name="low" type="MeshInstance3D" parent="localworldroot/StaticBody3D/SliderJoint3D/SliderVis"]
+visible = false
+material_overlay = SubResource("StandardMaterial3D_56k7y")
+mesh = SubResource("BoxMesh_iy0f7")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="localworldroot/floor boundary"]
-transform = Transform3D(-0.99981, -0.0194942, 1.70423e-09, -0.0194942, 0.99981, -8.74062e-08, 0, -8.74228e-08, -1, 0, -10.7255, -0.307133)
-shape = SubResource("WorldBoundaryShape3D_csaaw")
+[node name="high" type="MeshInstance3D" parent="localworldroot/StaticBody3D/SliderJoint3D/SliderVis"]
+visible = false
+material_overlay = SubResource("StandardMaterial3D_56k7y")
+mesh = SubResource("BoxMesh_iy0f7")
 
-[node name="CSGBox3D" type="CSGBox3D" parent="localworldroot"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
-material_override = ExtResource("1_rkkx6")
-use_collision = true
-collision_layer = 9
-collision_mask = 9
-size = Vector3(100, 1, 100)
+[node name="RigidBody3D" type="RigidBody3D" parent="localworldroot/StaticBody3D"]
+collision_layer = 3
+collision_mask = 3
+freeze_mode = 1
+continuous_cd = true
+linear_damp_mode = 1
+metadata/grabbable = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="localworldroot/StaticBody3D/RigidBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, 0.0999999, 0)
+shape = SubResource("BoxShape3D_y67n3")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="localworldroot/StaticBody3D/RigidBody3D/CollisionShape3D"]
+mesh = SubResource("BoxMesh_t32me")
+skeleton = NodePath("../..")
+
+[node name="CollisionShape3D4" type="CollisionShape3D" parent="localworldroot/StaticBody3D/RigidBody3D"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.1, 0.0999999, -0.2)
+shape = SubResource("BoxShape3D_y67n3")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="localworldroot/StaticBody3D/RigidBody3D/CollisionShape3D4"]
+mesh = SubResource("BoxMesh_t32me")
+skeleton = NodePath("../..")
+
+[node name="CollisionShape3D5" type="CollisionShape3D" parent="localworldroot/StaticBody3D/RigidBody3D"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.1, 0.0999999, 0.2)
+shape = SubResource("BoxShape3D_y67n3")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="localworldroot/StaticBody3D/RigidBody3D/CollisionShape3D5"]
+mesh = SubResource("BoxMesh_t32me")
+skeleton = NodePath("../..")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="localworldroot/StaticBody3D/RigidBody3D"]
+transform = Transform3D(-4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0, 1, 0.1, -1.19209e-07, 0)
+shape = SubResource("BoxShape3D_y67n3")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="localworldroot/StaticBody3D/RigidBody3D/CollisionShape3D2"]
+mesh = SubResource("BoxMesh_t32me")
+skeleton = NodePath("../..")
+
+[node name="CollisionShape3D3" type="CollisionShape3D" parent="localworldroot/StaticBody3D/RigidBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0999999, 0.0999999, 0)
+shape = SubResource("BoxShape3D_y67n3")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="localworldroot/StaticBody3D/RigidBody3D/CollisionShape3D3"]
+mesh = SubResource("BoxMesh_t32me")
+skeleton = NodePath("../..")
+
+[node name="Label" type="Label" parent="." groups=["connectionlabel"]]
+offset_right = 40.0
+offset_bottom = 23.0
+
+[node name="AudioStreamPlayer2" type="AudioStreamPlayer" parent="." groups=["mic_playback"]]
+stream = SubResource("AudioStreamGenerator_f6fry")
+autoplay = true
+script = ExtResource("11_oevc4")
+
+[node name="matrix" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, -1.06581e-14, 0, 1.06581e-14, 1, -2.48848, 2, -0.367195)
+script = ExtResource("10_rgd75")
+_auto_load_ui = ExtResource("10_j6yjr")
+transparent = false
+viewport_size = Vector2i(1984, 1024)
+
+[node name="settings" type="StaticBody3D" parent="."]
+transform = Transform3D(0.707107, -1.30385e-08, 0.707107, 0, 1, -4.47035e-08, -0.707107, 4.47035e-08, 0.707107, -3.73758, 2, 0)
+script = ExtResource("10_rgd75")
+_auto_load_ui = ExtResource("11_hv61c")
+transparent = false
+
+[node name="vreditor" parent="." instance=ExtResource("8_wf33i")]
+transform = Transform3D(-4.37114e-08, 1.06581e-14, 1, 0, 1, -1.06581e-14, -1, -4.6588e-22, -4.37114e-08, -4, 2, 2)
+
+[connection signal="pressed" from="StartXR/EnterWebXR/EnterVRButton" to="StartXR" method="_on_enter_webxr_button_pressed"]

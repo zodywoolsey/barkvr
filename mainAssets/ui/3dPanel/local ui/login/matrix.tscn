@@ -1,0 +1,194 @@
+[gd_scene load_steps=9 format=3 uid="uid://i3pxsgqnbjly"]
+
+[ext_resource type="Script" path="res://mainAssets/ui/3dPanel/local ui/login/loginbutton.gd" id="1_18njo"]
+[ext_resource type="Theme" uid="uid://b7mxq6cclub5f" path="res://mainAssets/ui/default_theme.tres" id="1_eqeii"]
+[ext_resource type="Script" path="res://mainAssets/ui/3dPanel/local ui/login/matrix.gd" id="1_ptvo5"]
+[ext_resource type="Script" path="res://mainAssets/ui/3dPanel/local ui/login/roomlist.gd" id="4_f325r"]
+[ext_resource type="Texture2D" uid="uid://bhoipad8j50fr" path="res://assets/icons/vr-headset.svg" id="4_keerj"]
+[ext_resource type="Script" path="res://mainAssets/ui/3dPanel/local ui/login/messages.gd" id="4_ydkch"]
+[ext_resource type="PackedScene" uid="uid://drvs5pgtp63nx" path="res://mainAssets/ui/3dPanel/local ui/login/message.tscn" id="5_8wc7f"]
+[ext_resource type="Script" path="res://mainAssets/ui/3dPanel/local ui/login/SendMessage.gd" id="5_wc8jy"]
+
+[node name="matrix" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_eqeii")
+script = ExtResource("1_ptvo5")
+
+[node name="login" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="login"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="login/VBoxContainer"]
+layout_mode = 2
+text = "homeserver"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="homeserver" type="LineEdit" parent="login/VBoxContainer"]
+layout_mode = 2
+text = "matrix.pupper.dev"
+placeholder_text = "enter your homeserver url"
+alignment = 1
+
+[node name="Label2" type="Label" parent="login/VBoxContainer"]
+layout_mode = 2
+text = "username"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="uname" type="LineEdit" parent="login/VBoxContainer"]
+layout_mode = 2
+placeholder_text = "username"
+alignment = 1
+
+[node name="Label3" type="Label" parent="login/VBoxContainer"]
+layout_mode = 2
+text = "password"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="pword" type="LineEdit" parent="login/VBoxContainer"]
+layout_mode = 2
+placeholder_text = "password"
+alignment = 1
+secret = true
+
+[node name="Button" type="Button" parent="login/VBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+text = "log in"
+script = ExtResource("1_18njo")
+
+[node name="Button" type="Button" parent="login"]
+layout_mode = 0
+offset_right = 217.0
+offset_bottom = 31.0
+focus_mode = 0
+text = "login using existing session"
+
+[node name="chat" type="Control" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HBoxContainer" type="HSplitContainer" parent="chat"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/autohide = 0
+split_offset = -120
+
+[node name="ItemList" type="Tree" parent="chat/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+allow_reselect = true
+allow_search = false
+hide_root = true
+script = ExtResource("4_f325r")
+
+[node name="RoomSplitContainer" type="VSplitContainer" parent="chat/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+dragger_visibility = 2
+
+[node name="Panel" type="Panel" parent="chat/HBoxContainer/RoomSplitContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.0
+
+[node name="join button" type="Button" parent="chat/HBoxContainer/RoomSplitContainer/Panel"]
+z_index = 1
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -101.0
+offset_top = -20.0
+offset_right = -8.0
+offset_bottom = 20.0
+grow_horizontal = 0
+grow_vertical = 2
+focus_mode = 0
+text = "join"
+icon = ExtResource("4_keerj")
+clip_text = true
+expand_icon = true
+
+[node name="MessageSplitContainer" type="VSplitContainer" parent="chat/HBoxContainer/RoomSplitContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ScrollContainer" type="ScrollContainer" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+follow_focus = true
+
+[node name="Control" type="VBoxContainer" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 2
+script = ExtResource("4_ydkch")
+
+[node name="message" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
+layout_mode = 2
+size_flags_horizontal = 1
+leftside = false
+
+[node name="Control" type="Control" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.0
+
+[node name="TextEdit" type="TextEdit" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/Control"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 0.85
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 0
+size_flags_vertical = 3
+placeholder_text = "Type message to send here"
+scroll_fit_content_height = true
+
+[node name="Button" type="Button" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/Control"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.85
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+focus_mode = 0
+text = "send"
+script = ExtResource("5_wc8jy")

@@ -1,0 +1,37 @@
+[gd_scene load_steps=5 format=3 uid="uid://dnw1biowam8w"]
+
+[ext_resource type="Script" path="res://mainSystem/scenes/objects/toys/audio/synthcube/synthcube.gd" id="1_p4ec3"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_mrsjk"]
+size = Vector3(0.1, 0.1, 0.1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_mkjkt"]
+size = Vector3(0.1, 0.1, 0.1)
+
+[sub_resource type="AudioStreamGenerator" id="AudioStreamGenerator_x3tah"]
+mix_rate = 11025.0
+
+[node name="synthcube" type="RigidBody3D"]
+collision_layer = 3
+collision_mask = 3
+continuous_cd = true
+script = ExtResource("1_p4ec3")
+metadata/grabbable = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_mrsjk")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_mkjkt")
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer" parent="."]
+stream = SubResource("AudioStreamGenerator_x3tah")
+volume_db = -10.16
+pitch_scale = 0.8
+autoplay = true
+
+[node name="Label3D" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.172844, 0)
+
+[node name="Label3D2" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.172844, 0)

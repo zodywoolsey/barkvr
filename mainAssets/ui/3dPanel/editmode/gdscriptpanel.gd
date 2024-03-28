@@ -3,22 +3,29 @@ extends Control
 @onready var code_edit = $CodeEdit
 @onready var button = $Button
 
-var citem : Node
+var target : Node
 
 func _ready():
-	button.pressed.connect(func():
-		if citem:
-			var tmp = citem.get_script()
+	code_edit.text_changed.connect(func():
+		print("valid? ",is_instance_valid(target))
+		if target and is_instance_valid(target):
+			var tmp :GDScript = GDScript.new()
+			print("script: ",tmp)
 			tmp.source_code = code_edit.text
-			citem.set_script(tmp)
+			var result = tmp.reload()
+			var clas = tmp.get_class()
+			if result == OK:
+				target.set_script(tmp)
+				target.set_process(true)
+				target.set_physics_process(true)
 		)
 
 func set_target(item):
-	if item is Node:
+	if item:
 		var script = item.get_script()
-		if script:
+		print(typeof(script))
+		target = item
+		if script and !script.source_code.is_empty():
 			code_edit.text = script.source_code
-			citem = item
 		else:
-			code_edit.text = ""
-			citem = null
+			code_edit.text = "extends "+str(target.get_class())+"\n\nfunc _init():\n	pass\n\nfunc _process(delta:float):\n	pass"

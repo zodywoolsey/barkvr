@@ -1,0 +1,40 @@
+[gd_scene load_steps=2 format=3 uid="uid://cn1wel2bnigbf"]
+
+[ext_resource type="Script" path="res://mainAssets/ui/3dPanel/2d scenes/video.gd" id="1_isxg1"]
+
+[node name="videoContainer" type="VBoxContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_isxg1")
+
+[node name="AspectRatioContainer" type="AspectRatioContainer" parent="."]
+layout_mode = 2
+size_flags_vertical = 3
+ratio = 1.7
+
+[node name="video" type="VideoStreamPlayer" parent="AspectRatioContainer"]
+layout_mode = 2
+expand = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="play" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "play"
+
+[node name="pause" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "pause"
+
+[node name="restart" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "restart"

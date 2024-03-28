@@ -1,0 +1,46 @@
+[gd_scene load_steps=2 format=3 uid="uid://by5nu2jf4d1cv"]
+
+[ext_resource type="Script" path="res://mainAssets/ui/3dPanel/local ui/save object/save object.gd" id="1_50fbr"]
+
+[node name="save object" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_50fbr")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="Label" type="Label" parent="HBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "Save/Load Objects!"
+
+[node name="name" type="LineEdit" parent="HBoxContainer/VBoxContainer"]
+layout_mode = 2
+placeholder_text = "enter object name"
+alignment = 1
+expand_to_text_length = true
+
+[node name="load" type="Button" parent="HBoxContainer/VBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+text = "load"
+
+[node name="ItemList" type="ItemList" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+theme_override_font_sizes/font_size = 30

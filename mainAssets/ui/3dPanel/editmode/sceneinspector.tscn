@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://buiy5jgywujh8"]
+[gd_scene load_steps=3 format=3 uid="uid://buiy5jgywujh8"]
 
 [ext_resource type="Script" path="res://mainAssets/ui/3dPanel/editmode/sceneinspector.gd" id="1_apb1e"]
+[ext_resource type="Script" path="res://mainAssets/ui/3dPanel/local ui/login/hashed_tree_list.gd" id="2_k0xmv"]
 
 [node name="sceneinspector" type="Control"]
 layout_mode = 3
@@ -18,3 +19,9 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+focus_mode = 0
+allow_reselect = true
+allow_search = false
+hide_root = true
+scroll_horizontal_enabled = false
+script = ExtResource("2_k0xmv")

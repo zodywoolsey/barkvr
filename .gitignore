@@ -1,6 +1,9 @@
 # Godot 4+ specific ignores
 .godot/
 export/
-assetsNotForUpload/
-noUpload/
-android/build/
+android/build
+exports/
+temp_unityimp/
+assets/deleteme/
+*.tmp
+*.import

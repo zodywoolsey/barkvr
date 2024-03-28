@@ -1,0 +1,65 @@
+[gd_scene load_steps=7 format=3 uid="uid://cv4xa0o1xdag"]
+
+[ext_resource type="Script" path="res://mainAssets/worlds/GPUParticles3D.gd" id="1_six35"]
+
+[sub_resource type="Curve" id="Curve_v24mi"]
+min_value = -1.0
+_data = [Vector2(0, -1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_spfds"]
+width = 32
+curve = SubResource("Curve_v24mi")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_s41rh"]
+emission_shape = 3
+emission_box_extents = Vector3(1, 0, 1)
+angle_min = -720.0
+angle_max = 720.0
+spread = 180.0
+initial_velocity_max = 1.0
+gravity = Vector3(0, 0, 0)
+hue_variation_curve = SubResource("CurveTexture_spfds")
+turbulence_enabled = true
+turbulence_noise_strength = 5.0
+turbulence_influence_min = 0.01
+turbulence_influence_max = 0.01
+collision_mode = 1
+collision_friction = 0.0
+collision_bounce = 0.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_li4h8"]
+resource_local_to_scene = true
+transparency = 1
+cull_mode = 2
+albedo_color = Color(1, 0, 0.6, 1)
+emission_enabled = true
+emission = Color(0.6, 0, 1, 1)
+emission_energy_multiplier = 5.0
+disable_receive_shadows = true
+use_point_size = true
+
+[sub_resource type="QuadMesh" id="QuadMesh_3gk8i"]
+material = SubResource("StandardMaterial3D_li4h8")
+size = Vector2(0.02, 0.02)
+
+[node name="music" type="Node3D"]
+
+[node name="GPUParticles3D" type="GPUParticles3D" parent="."]
+extra_cull_margin = 16384.0
+ignore_occlusion_culling = true
+amount = 100000
+lifetime = 20.0
+speed_scale = 0.344691
+explosiveness = 0.1
+fixed_fps = 256
+interpolate = false
+visibility_aabb = AABB(-45.46, -40.3134, -60.2064, 90.9201, 80.6269, 120.413)
+transform_align = 2
+process_material = SubResource("ParticleProcessMaterial_s41rh")
+draw_pass_1 = SubResource("QuadMesh_3gk8i")
+script = ExtResource("1_six35")
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+volume_db = -21.895
+autoplay = true

@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://bmackcoarqct1"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_pydgp"]
+size = Vector3(0.1, 0.1, 0.1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_6fop7"]
+size = Vector3(0.1, 0.1, 0.1)
+
+[node name="RigidBody3d" type="StaticBody3D"]
+collision_layer = 11
+collision_mask = 11
+metadata/grabbable = true
+
+[node name="CollisionShape3d" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_pydgp")
+
+[node name="MeshInstance3d" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_6fop7")

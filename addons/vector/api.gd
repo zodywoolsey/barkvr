@@ -22,6 +22,10 @@ signal posted_register(result:int,response_code:int,headers:PackedStringArray,bo
 signal got_register_available(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray)
 signal posted_register_email_requesttoken(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray)
 signal posted_register_msisdn_requesttoken(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray)
+signal placed_room_state(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray)
+signal placed_room_send(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray)
+signal got_turn_server(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray)
+signal got_room_members(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray)
 
 signal user_logged_in(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray)
 signal got_joined_rooms(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray)
@@ -189,7 +193,7 @@ func post_login(home_server:String='', headers:Array=[], address:String='', devi
 	home_server+"_matrix/client/v3/login",
 	headers,
 	HTTPClient.METHOD_POST,
-	str(bodyDict)
+	JSON.stringify(bodyDict)
 	)
 	
 ## POST /_matrix/client/v3/refresh
@@ -222,7 +226,7 @@ func post_refresh(base_url:String='', headers:Array=[], refresh_token:String='')
 	base_url+"_matrix/client/v3/refresh",
 	headers,
 	HTTPClient.METHOD_POST,
-	str(bodyDict)
+	JSON.stringify(bodyDict)
 	)
 
 ## POST /_matrix/client/v3/logout
@@ -310,7 +314,7 @@ func post_account_deactivate(base_url:String='', headers:Array=[], auth:Dictiona
 	base_url+"_matrix/client/v3/account/deactivate",
 	headers,
 	HTTPClient.METHOD_POST,
-	str(bodyDict)
+	JSON.stringify(bodyDict)
 	)
 
 ## POST /_matrix/client/v3/account/password
@@ -348,7 +352,7 @@ func post_account_password(base_url:String='', headers:Array=[], auth:Dictionary
 	base_url+"_matrix/client/v3/account/password",
 	headers,
 	HTTPClient.METHOD_POST,
-	str(bodyDict)
+	JSON.stringify(bodyDict)
 	)
 
 ## POST /_matrix/client/v3/account/password/email/requestToken
@@ -390,7 +394,7 @@ func post_account_password_email_requestToken(base_url:String='', headers:Array=
 	base_url+"_matrix/client/v3/account/password",
 	headers,
 	HTTPClient.METHOD_POST,
-	str(bodyDict)
+	JSON.stringify(bodyDict)
 	)
 
 ## POST /_matrix/client/v3/account/password/msisdn/requestToken
@@ -434,7 +438,7 @@ func post_account_password_msisdn_requestToken(base_url:String='', headers:Array
 	base_url+"_matrix/client/v3/account/password",
 	headers,
 	HTTPClient.METHOD_POST,
-	str(bodyDict)
+	JSON.stringify(bodyDict)
 	)
 
 ## POST /_matrix/client/v3/register
@@ -486,7 +490,7 @@ func post_register(base_url:String='', headers:Array=[], kind:String='user', aut
 	base_url+"_matrix/client/v3/register"+qp,
 	headers,
 	HTTPClient.METHOD_POST,
-	str(bodyDict)
+	JSON.stringify(bodyDict)
 	)
 
 ## GET /_matrix/client/v3/register/available
@@ -559,7 +563,7 @@ func post_register_email_requesttoken(base_url:String='', headers:Array=[], clie
 	base_url+"_matrix/client/v3/register/email/requestToken",
 	headers,
 	HTTPClient.METHOD_POST,
-	str(bodyDict)
+	JSON.stringify(bodyDict)
 	)
 
 ## POST /_matrix/client/v3/register/msisdn/requestToken
@@ -603,60 +607,199 @@ func post_register_msisdn_requesttoken(base_url:String='', headers:Array=[], cli
 	base_url+"_matrix/client/v3/register/msisdn/requestToken",
 	headers,
 	HTTPClient.METHOD_POST,
-	str(bodyDict)
+	JSON.stringify(bodyDict)
 	)
 
-## GET /_matrix/client/v3/rooms/{roomId}/messages
-## accepts: {roomId:String:fp, dir:String:qp, filter:String:qp, from:String:qp, limit:int:qp, to:String:qp}
-## https://spec.matrix.org/v1.7/client-server-api/#get_matrixclientv3roomsroomidmessages
+## GET /_matrix/client/v3/rooms/{roomId}/messages [br][br]
+## *base_url: the url of the matrix homeserver to use [br]
+## *headers: an array of the headers to send with the request [br]
+## *roomId: string of the room id to get messages from [br]
+## *dir: direction. Options are f (chronological order) or b (reverse chronological order) starting at the "from" token if it's provided. [br]
+## filter: A JSON RoomEventFilter to filter returned events with. [br]
+## from: The token to start returning events from. [br]
+## limit: The maximum number of events to return. Default: 10. [br]
+## to: The token to stop returning events at. [br]
+## [url=https://spec.matrix.org/v1.7/client-server-api/#get_matrixclientv3roomsroomidmessages]matrix documentation page[/url]
 func get_room_messages(base_url:String='', headers:Array=[], roomId: String = '', dir: String = '', filter:String = '', from:String = '', limit:int = -99, to:String = ''):
-	assert(roomId=='',"get_room_messages: roomId is required")
+	assert(roomId!='',"get_room_messages: roomId is required")
 	if dir == '':
 		dir = 'b'
 	if headers.is_empty():
 		push_warning("get_room_messages: headers are required to be set for this call, due to authentication requirements")
 	var res
 	var client = HTTPRequest.new()
-	print("getting room_messages for: ",roomId)
+#	print("getting room_messages for: ",roomId)
 	client.use_threads = false
 	Vector.requestParent.add_child(client)
 	client.request_completed.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 		# if result == RESULT_SUCCESS, emit signal
 		if result == HTTPRequest.RESULT_SUCCESS:
-			got_room_messages.emit(result,response_code,headers,body)
+			emit_signal('got_room_messages',result,response_code,headers,body)
 		else:
 			print("error getting room_messages:\n	result: {0}\n	response_code: {1}\n".format([result,response_code]))
 		client.queue_free()
 		)
-	# build request body with provided info
-	var bodyDict = {}
+	# build query params
+	var qp = []
 	if dir!='':
-		bodyDict["dir"] = dir
+		qp.append("dir="+dir)
 	if filter!='':
-		bodyDict["filter"] = filter
+		qp.append("filter="+filter)
 	if from!='':
-		bodyDict["from"] = from
+		qp.append("from="+from)
 	if limit!=-99:
-		bodyDict["limit"] = limit
+		qp.append("limit="+str(limit))
 	if to!='':
-		bodyDict["to"] = to
+		qp.append("to="+to)
+	# construct qp string
+	var qpstring = ''
+	if qp.size()>0:qpstring+='?'
+	for i in qp.size():
+		if i != 0:
+			qpstring += '&'
+		qpstring+=qp[i]
 	# make request
 	res = client.request(
-	base_url+"_matrix/client/v3/rooms/"+roomId+"/messages",
+	base_url+"_matrix/client/v3/rooms/"+roomId+"/messages"+qpstring,
+	headers,
+	HTTPClient.METHOD_GET
+	)
+
+## /_matrix/client/v3/rooms/{roomId}/state/{eventType}/{stateKey}
+## accepts: {base_url:String:fp, headers:Array:fp, room_id:String:qp, event_type:String:qp, state_key:String:qp}
+## https://spec.matrix.org/v1.7/client-server-api/#put_matrixclientv3roomsroomidstateeventtypestatekey
+func put_room_state(base_url:String='', headers:Array=[], room_id:String='', event_type:String='', state_key:String='', bodyDict:Dictionary={}):
+	# check for required fields
+	assert(room_id!='',"put_room_state: room_id is required")
+	assert(event_type!='',"put_room_state: event_type is required")
+	assert(state_key!='',"put_room_state: state_key is required")
+	if headers.is_empty():
+		push_warning("put_room_state: headers are required to be set for this call, due to authentication requirements")
+	# check header array for auth header
+	assert(str(headers).contains("Authorization"),"put_room_state: headers must contain an Authorization header")
+	# build request body with provided info
+	var res
+	var client = HTTPRequest.new()
+	print("putting room_state for: ",room_id)
+	client.use_threads = false
+	Vector.requestParent.add_child(client)
+	client.request_completed.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
+		# if result == RESULT_SUCCESS, emit signal
+		if result == HTTPRequest.RESULT_SUCCESS:
+			placed_room_state.emit(result,response_code,headers,body)
+		else:
+			print("error putting room_state:\n	result: {0}\n	response_code: {1}\n".format([result,response_code]))
+		client.queue_free()
+		)
+	# make request
+	res = client.request(
+	base_url+"_matrix/client/v3/rooms/"+room_id+"/state/"+event_type+"/"+state_key,
+	headers,
+	HTTPClient.METHOD_PUT,
+	JSON.stringify(bodyDict)
+	)
+
+## /_matrix/client/v3/rooms/{roomId}/send/{eventType}/{txnId}
+## accepts: {base_url:String:fp, headers:Array:fp, room_id:String:qp, event_type:String:qp, txn_id:String:qp
+## https://spec.matrix.org/v1.7/client-server-api/#put_matrixclientv3roomsroomidsendeventtypetxnid
+func put_room_send(base_url:String='', headers:Array=[], room_id:String='', event_type:String='', txn_id:String='', bodyDict:Dictionary={}):
+	# check for required fields
+	assert(room_id!='',"put_room_send: room_id is required")
+	assert(event_type!='',"put_room_send: event_type is required")
+	assert(txn_id!='',"put_room_send: txn_id is required")
+	if headers.is_empty():
+		push_warning("put_room_send: headers are required to be set for this call, due to authentication requirements")
+	# check header array for auth header
+	assert(str(headers).contains("Authorization"),"put_room_send: headers must contain an Authorization header")
+	# build request body with provided info
+	var res
+	var client = HTTPRequest.new()
+	print("putting room_send for: ",room_id)
+	client.use_threads = false
+	Vector.requestParent.add_child(client)
+	client.request_completed.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
+		if result == HTTPRequest.RESULT_SUCCESS and response_code == 200:
+			placed_room_send.emit(result,response_code,headers,body)
+		else:
+			print("error putting room_send:\n	result: {0}\n	response_code: {1}\n".format([result,response_code]))
+		client.queue_free()
+		)
+	# make request
+	res = client.request(
+	base_url+"_matrix/client/v3/rooms/"+room_id+"/send/"+event_type+"/"+txn_id,
+	headers,
+	HTTPClient.METHOD_PUT,
+	JSON.stringify(bodyDict)
+	)
+
+## /_matrix/client/v3/voip/turnServer
+## accepts: {base_url:String:fp, headers:Array:fp}
+## https://spec.matrix.org/v1.7/client-server-api/#get_matrixclientv3voipturnserver
+func get_turn_server(base_url:String='', headers:Array=[]):
+	if headers.is_empty():
+		push_warning("get_turn_server: headers are required to be set for this call, due to authentication requirements")
+	var res
+	var client = HTTPRequest.new()
+	print("getting turn_server")
+	client.use_threads = false
+	Vector.requestParent.add_child(client)
+	client.request_completed.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
+		# if result == RESULT_SUCCESS, emit signal
+		if result == HTTPRequest.RESULT_SUCCESS:
+			got_turn_server.emit(result,response_code,headers,body)
+		else:
+			print("error getting turn_server:\n	result: {0}\n	response_code: {1}\n".format([result,response_code]))
+		client.queue_free()
+		)
+	# make request
+	res = client.request(
+	base_url+"_matrix/client/v3/voip/turnServer",
 	headers,
 	HTTPClient.METHOD_GET,
-	str(bodyDict)
+	'{}'
 	)
-	
 
-
-
-
-
-
-
-
-
+## /_matrix/client/v3/rooms/{roomId}/members
+## accepts: {base_url:String:fp, headers:Array:fp, room_id:String:qp, at:String:qp, membership:String:qp, not_membership:String:qp}
+## https://spec.matrix.org/v1.7/client-server-api/#get_matrixclientv3roomsroomidmembers
+func get_room_members(base_url:String='', headers:Array=[], room_id:String='', membership:String='', not_membership:String='', at:String=''):
+	# check for required fields
+	assert(room_id!='',"get_room_members: room_id is required")
+	if headers.is_empty():
+		push_warning("get_room_members: headers are required to be set for this call, due to authentication requirements")
+	# build query params
+	var qp = []
+	if at!='':
+		qp.append("at="+at)
+	if membership!='':
+		qp.append("membership="+membership)
+	if not_membership!='':
+		qp.append("not_membership="+not_membership)
+	# construct qp string
+	var qpstring = ''
+	if qp.size()>0:qpstring+='?'
+	for i in qp.size():
+		if i != 0:
+			qpstring += '&'
+		qpstring+=qp[i]
+	# make request
+	var res
+	var client = HTTPRequest.new()
+	print("getting room_members for: ",room_id)
+	client.use_threads = false
+	Vector.requestParent.add_child(client)
+	client.request_completed.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
+		if result == HTTPRequest.RESULT_SUCCESS:
+			got_room_members.emit(result,response_code,headers,body)
+		else:
+			print("error getting room_members:\n	result: {0}\n	response_code: {1}\n".format([result,response_code]))
+		client.queue_free()
+		)
+	res = client.request(
+	base_url+"_matrix/client/v3/rooms/"+room_id+"/members"+qpstring,
+	headers,
+	HTTPClient.METHOD_GET
+	)
 
 
 
@@ -676,10 +819,10 @@ func login_username_password(homeserver:String,username:String,password:String):
 		)
 	var loginDict = {
 		"type": "m.login.password",
-		"password": password,
-		"user": username,
+		"password": str(password),
+		"user": str(username),
 		"device_id": OS.get_unique_id(),
-		"initial_device_display_name": "bark"
+		"initial_device_display_name": "barkvr"
 		}
 	var response = await Vector.connect_to_homeserver(homeserver)
 	assert(response == OK)
@@ -687,9 +830,11 @@ func login_username_password(homeserver:String,username:String,password:String):
 		"https://"+homeserver+"/_matrix/client/v3/login",
 		Vector.headers,
 		HTTPClient.METHOD_POST,
-		str(loginDict)
+		JSON.stringify(loginDict)
 		)
 	assert(response == OK)
+	await client.request_completed
+	var stat = client.get_http_client_status()
 	assert(client.get_http_client_status()==0)
 
 func get_joined_rooms():
@@ -750,6 +895,7 @@ func get_room_state(room_id:String):
 	client.use_threads = false
 	Vector.requestParent.add_child(client)
 	client.request_completed.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
+		assert(result == OK)
 		got_room_state.emit(result,response_code,headers,body)
 		client.queue_free()
 		)
@@ -759,6 +905,7 @@ func get_room_state(room_id:String):
 		Vector.headers,
 		HTTPClient.METHOD_GET
 		)
+	assert(res == OK)
 	
 ## Gets a list of message and state events for a room. It uses pagination query parameters to paginate history in the room.
 ## Url: /_matrix/client/v3/rooms/{roomId}/messages

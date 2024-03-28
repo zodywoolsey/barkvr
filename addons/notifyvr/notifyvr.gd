@@ -2,7 +2,8 @@ extends Node
 
 var queuedmessages = []
 
-func send_notification(message:String):
+func send_notification(message):
+	message = str(message)
 	var lbl = Label3D.new()
 	lbl.text = message
 	lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
@@ -17,4 +18,9 @@ func _process(delta):
 				tmp.add_child(i)
 				tmp.move_child(i,0)
 				queuedmessages.erase(i)
+				var tmpsize = 0.0
+				for a in tmp.get_children():
+					tmpsize += a.get_aabb().size.y
+#					print(a)
+				i.position.y = tmpsize
 			

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 15 15" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;">
+    <g id="tablet.svg">
+        <g id="g2">
+            <g id="g1">
+                <clipPath id="_clip1">
+                    <rect x="0" y="0" width="15" height="15"/>
+                </clipPath>
+                <g clip-path="url(#_clip1)">
+                    <path id="path1" d="M6,11.5L9,11.5M2.5,14.5L12.5,14.5C13.052,14.5 13.5,14.052 13.5,13.5L13.5,1.5C13.5,0.948 13.052,0.5 12.5,0.5L2.5,0.5C1.948,0.5 1.5,0.948 1.5,1.5L1.5,13.5C1.5,14.052 1.948,14.5 2.5,14.5Z" style="fill:none;fill-rule:nonzero;stroke:white;stroke-width:1px;"/>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

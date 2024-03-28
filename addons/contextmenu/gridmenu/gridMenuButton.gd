@@ -14,33 +14,27 @@ var alpha = 0.1
 var hover = false
 
 func _ready():
-	mouse_entered.connect(laserHover.bind({
-		"hovering": true
-	}))
-	mouse_exited.connect(laserHover.bind({
-		"hovering": true
-	}))
 	label_3d.text = text
 
-func _process(delta):
+func _physics_process(delta):
 	var tmp = mesh_instance_3d.mesh.surface_get_material(0)
 	tmp.albedo_color.a = lerpf(tmp.albedo_color.a, alpha, .1)
 
-## called when the player laser hovers over the button
-## accepts a "data" Dictionary that should at least have a collision_point
-func laserHover(data:Dictionary):
-	if data.has('hovering') and data['hovering'] == true:
-		alpha = 0.25
-		hover = true
-	else:
-		alpha = 0.1
-		hover = false
-
-func laserClick(data:Dictionary):
-	if itemToSpawn:
-		var tmp = load(itemToSpawn).instantiate()
-		get_tree().root.add_child(tmp)
-		tmp.global_position = global_position
-	if label_3d.text == "set root":
-		if LocalGlobals.editor_refs.has('inspector'):
-			LocalGlobals.editor_refs.inspector.setRoot(get_tree().root)
+func laser_input(data:Dictionary):
+	match data.action:
+		"click":
+			if itemToSpawn:
+				for i in range(1):
+					var tmp = load(itemToSpawn).instantiate()
+					get_tree().get_first_node_in_group("localworldroot").add_child(tmp)
+					tmp.global_position = global_position
+			if label_3d.text == "set root":
+				if LocalGlobals.editor_refs.has('inspector'):
+					LocalGlobals.editor_refs.inspector.setRoot(get_tree().get_first_node_in_group('localworldroot'))
+		"hover":
+			if data.has('hovering') and data['hovering'] == true:
+				alpha = 0.25
+				hover = true
+			else:
+				alpha = 0.1
+				hover = false

@@ -1,84 +1,37 @@
-[gd_scene load_steps=10 format=3 uid="uid://b3sbt3oft3cxg"]
+[gd_scene load_steps=6 format=3 uid="uid://b3sbt3oft3cxg"]
 
 [ext_resource type="Script" path="res://mainAssets/ui/3dPanel/editmode/vreditor.gd" id="1_8pitw"]
-[ext_resource type="PackedScene" uid="uid://2o2f8tknq7me" path="res://mainAssets/ui/3dPanel/3dpanel.tscn" id="2_85jm4"]
+[ext_resource type="PackedScene" uid="uid://buiy5jgywujh8" path="res://mainAssets/ui/3dPanel/editmode/sceneinspector.tscn" id="2_sp2og"]
+[ext_resource type="Script" path="res://addons/Panel3D/3dpanel.gd" id="2_tnd62"]
+[ext_resource type="PackedScene" uid="uid://jqh6stt10ct5" path="res://mainAssets/ui/3dPanel/editmode/attributes.tscn" id="4_hhemb"]
+[ext_resource type="PackedScene" uid="uid://cw57xg0xewjcv" path="res://mainAssets/ui/3dPanel/editmode/gdscriptpanel.tscn" id="5_s3be6"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_syify"]
-resource_local_to_scene = true
-transparency = 2
-alpha_scissor_threshold = 0.5
-alpha_antialiasing_mode = 0
-cull_mode = 2
-shading_mode = 0
+[node name="inspector" type="StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, -1.06581e-14, 0, 1.06581e-14, 1, 0, 0, 0)
+collision_layer = 4
+collision_mask = 4
+script = ExtResource("2_tnd62")
+_auto_load_ui = ExtResource("2_sp2og")
+transparent = false
+metadata/grabbable = true
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_r7iej"]
-resource_local_to_scene = true
-material = SubResource("StandardMaterial3D_syify")
-size = Vector2(0.5, 0.5)
+[node name="script" type="StaticBody3D" parent="."]
+transform = Transform3D(0.707107, -8.9407e-08, 0.707107, 5.96046e-08, 1, 8.74228e-08, -0.707107, 2.98023e-08, 0.707107, -0.442787, -2.4232e-15, 0.18931)
+collision_layer = 4
+collision_mask = 4
+script = ExtResource("2_tnd62")
+_auto_load_ui = ExtResource("5_s3be6")
+transparent = false
+metadata/grabbable = true
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_s8pr1"]
-resource_local_to_scene = true
-transparency = 2
-alpha_scissor_threshold = 0.5
-alpha_antialiasing_mode = 0
-cull_mode = 2
-shading_mode = 0
+[node name="attributes" type="StaticBody3D" parent="."]
+transform = Transform3D(0.707107, 0, -0.707107, 7.53645e-15, 1, 4.37114e-08, 0.707107, -1.06581e-14, 0.707107, 0.445292, -7.28004e-16, 0.181695)
+collision_layer = 4
+collision_mask = 4
+script = ExtResource("2_tnd62")
+_auto_load_ui = ExtResource("4_hhemb")
+transparent = false
+metadata/grabbable = true
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_ujxtt"]
-resource_local_to_scene = true
-material = SubResource("StandardMaterial3D_s8pr1")
-size = Vector2(0.5, 0.5)
-
-[sub_resource type="ViewportTexture" id="ViewportTexture_l62ui"]
-viewport_path = NodePath("SubViewport")
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_56hc6"]
-resource_local_to_scene = true
-transparency = 2
-alpha_scissor_threshold = 0.5
-alpha_antialiasing_mode = 0
-cull_mode = 2
-shading_mode = 0
-albedo_texture = SubResource("ViewportTexture_l62ui")
-
-[sub_resource type="PlaneMesh" id="PlaneMesh_w5ls6"]
-resource_local_to_scene = true
-material = SubResource("StandardMaterial3D_56hc6")
-size = Vector2(0.5, 0.5)
-
-[node name="vreditor" type="Node3D"]
+[node name="vreditor" type="Node" parent="."]
 script = ExtResource("1_8pitw")
-
-[node name="inspector" parent="." instance=ExtResource("2_85jm4")]
-
-[node name="panel" parent="inspector" index="1"]
-mesh = SubResource("PlaneMesh_r7iej")
-
-[node name="attributes" parent="inspector" instance=ExtResource("2_85jm4")]
-transform = Transform3D(0.707107, -0.707107, 0, 0.707107, 0.707107, 0, 0, 0, 1, 0.445292, 0.181695, 0)
-
-[node name="panel" parent="inspector/attributes" index="1"]
-mesh = SubResource("PlaneMesh_ujxtt")
-skeleton = NodePath("../../..")
-
-[node name="SubViewportContainer" parent="inspector/attributes" index="3"]
-offset_left = 2772.0
-offset_top = 2234.0
-offset_right = 3796.0
-offset_bottom = 3258.0
-
-[node name="gdscript" parent="inspector" instance=ExtResource("2_85jm4")]
-transform = Transform3D(0.707107, 0.707107, 9.27258e-08, -0.707107, 0.707107, -3.09086e-08, -8.74228e-08, -4.37114e-08, 1, -0.442787, 0.18931, 0)
-
-[node name="panel" parent="inspector/gdscript" index="1"]
-mesh = SubResource("PlaneMesh_w5ls6")
-
-[node name="SubViewportContainer" parent="inspector/gdscript" index="3"]
-offset_left = -1592.0
-offset_top = 2038.0
-offset_right = -568.0
-offset_bottom = 3062.0
-
-[editable path="inspector"]
-[editable path="inspector/attributes"]
-[editable path="inspector/gdscript"]

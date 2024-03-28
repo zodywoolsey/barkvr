@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://2o2f8tknq7me"]
+
+[ext_resource type="Script" path="res://addons/Panel3D/3dpanel.gd" id="1_2klrp"]
+
+[node name="Panel3D" type="StaticBody3D"]
+collision_layer = 4
+collision_mask = 4
+script = ExtResource("1_2klrp")
+metadata/grabbable = true
