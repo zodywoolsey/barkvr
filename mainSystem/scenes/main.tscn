@@ -1,10 +1,9 @@
-[gd_scene load_steps=17 format=3 uid="uid://ctwckofb07cfw"]
+[gd_scene load_steps=12 format=3 uid="uid://ctwckofb07cfw"]
 
 [ext_resource type="Script" path="res://mainSystem/scripts/init.gd" id="1_gkt54"]
 [ext_resource type="Script" path="res://mainSystem/scripts/startxr.gd" id="2_3r3cq"]
 [ext_resource type="PackedScene" uid="uid://br1vh8in0e65o" path="res://mainAssets/worlds/basic_starter.tscn" id="4_hmjqc"]
 [ext_resource type="PackedScene" uid="uid://dckbok0o553v7" path="res://mainSystem/scenes/objects/worldObjects/playerSpawnLocation.tscn" id="6_diugs"]
-[ext_resource type="Script" path="res://mainAssets/objects/visualizers/slider vis/SliderVis.gd" id="7_hywkc"]
 [ext_resource type="PackedScene" uid="uid://b3sbt3oft3cxg" path="res://mainAssets/ui/3dPanel/editmode/vreditor.tscn" id="8_wf33i"]
 [ext_resource type="PackedScene" uid="uid://i3pxsgqnbjly" path="res://mainAssets/ui/3dPanel/local ui/login/matrix.tscn" id="10_j6yjr"]
 [ext_resource type="Script" path="res://addons/Panel3D/3dpanel.gd" id="10_rgd75"]
@@ -12,17 +11,6 @@
 [ext_resource type="Script" path="res://mainSystem/scripts/mic_playback.gd" id="11_oevc4"]
 
 [sub_resource type="AudioStreamMicrophone" id="AudioStreamMicrophone_ve6pm"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_56k7y"]
-
-[sub_resource type="BoxMesh" id="BoxMesh_iy0f7"]
-size = Vector3(0.01, 0.2, 0.2)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_y67n3"]
-size = Vector3(0.1, 0.3, 0.3)
-
-[sub_resource type="BoxMesh" id="BoxMesh_t32me"]
-size = Vector3(0.1, 0.3, 0.3)
 
 [sub_resource type="AudioStreamGenerator" id="AudioStreamGenerator_f6fry"]
 mix_rate = 44800.0
@@ -66,85 +54,11 @@ transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -2.760
 
 [node name="basic starter" parent="localworldroot" instance=ExtResource("4_hmjqc")]
 
-[node name="StaticBody3D" type="StaticBody3D" parent="localworldroot"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.578043, 4)
-
-[node name="SliderJoint3D" type="JoltSliderJoint3D" parent="localworldroot/StaticBody3D"]
-limit_enabled = true
-limit_upper = 1.0
-limit_lower = -1.0
-limit_spring_enabled = true
-limit_spring_frequency = 1.0
-motor_enabled = true
-motor_target_velocity = 1.0
-motor_max_force = 1.0
-node_a = NodePath("..")
-node_b = NodePath("../RigidBody3D")
-
-[node name="SliderVis" type="Node3D" parent="localworldroot/StaticBody3D/SliderJoint3D"]
-script = ExtResource("7_hywkc")
-
-[node name="low" type="MeshInstance3D" parent="localworldroot/StaticBody3D/SliderJoint3D/SliderVis"]
-visible = false
-material_overlay = SubResource("StandardMaterial3D_56k7y")
-mesh = SubResource("BoxMesh_iy0f7")
-
-[node name="high" type="MeshInstance3D" parent="localworldroot/StaticBody3D/SliderJoint3D/SliderVis"]
-visible = false
-material_overlay = SubResource("StandardMaterial3D_56k7y")
-mesh = SubResource("BoxMesh_iy0f7")
-
-[node name="RigidBody3D" type="RigidBody3D" parent="localworldroot/StaticBody3D"]
-collision_layer = 3
-collision_mask = 3
-freeze_mode = 1
-continuous_cd = true
-linear_damp_mode = 1
-metadata/grabbable = true
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="localworldroot/StaticBody3D/RigidBody3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, 0.0999999, 0)
-shape = SubResource("BoxShape3D_y67n3")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="localworldroot/StaticBody3D/RigidBody3D/CollisionShape3D"]
-mesh = SubResource("BoxMesh_t32me")
-skeleton = NodePath("../..")
-
-[node name="CollisionShape3D4" type="CollisionShape3D" parent="localworldroot/StaticBody3D/RigidBody3D"]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.1, 0.0999999, -0.2)
-shape = SubResource("BoxShape3D_y67n3")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="localworldroot/StaticBody3D/RigidBody3D/CollisionShape3D4"]
-mesh = SubResource("BoxMesh_t32me")
-skeleton = NodePath("../..")
-
-[node name="CollisionShape3D5" type="CollisionShape3D" parent="localworldroot/StaticBody3D/RigidBody3D"]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.1, 0.0999999, 0.2)
-shape = SubResource("BoxShape3D_y67n3")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="localworldroot/StaticBody3D/RigidBody3D/CollisionShape3D5"]
-mesh = SubResource("BoxMesh_t32me")
-skeleton = NodePath("../..")
-
-[node name="CollisionShape3D2" type="CollisionShape3D" parent="localworldroot/StaticBody3D/RigidBody3D"]
-transform = Transform3D(-4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0, 1, 0.1, -1.19209e-07, 0)
-shape = SubResource("BoxShape3D_y67n3")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="localworldroot/StaticBody3D/RigidBody3D/CollisionShape3D2"]
-mesh = SubResource("BoxMesh_t32me")
-skeleton = NodePath("../..")
-
-[node name="CollisionShape3D3" type="CollisionShape3D" parent="localworldroot/StaticBody3D/RigidBody3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0999999, 0.0999999, 0)
-shape = SubResource("BoxShape3D_y67n3")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="localworldroot/StaticBody3D/RigidBody3D/CollisionShape3D3"]
-mesh = SubResource("BoxMesh_t32me")
-skeleton = NodePath("../..")
-
 [node name="Label" type="Label" parent="." groups=["connectionlabel"]]
-offset_right = 40.0
-offset_bottom = 23.0
+top_level = true
+offset_right = 138.0
+offset_bottom = 34.0
+text = "test test test"
 
 [node name="AudioStreamPlayer2" type="AudioStreamPlayer" parent="." groups=["mic_playback"]]
 stream = SubResource("AudioStreamGenerator_f6fry")

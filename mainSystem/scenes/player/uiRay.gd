@@ -6,10 +6,13 @@ var pressed := false
 
 func _process(delta):
 	procrayvis()
-	if Input.is_action_just_released("scrollup"):
-		scrollup()
-	if Input.is_action_just_released("scrolldown"):
-		scrolldown()
+
+func _input(event):
+	if event is InputEventMouseButton:
+		if event.pressed and event.button_index==4:
+			scrollup()
+		elif event.pressed and event.button_index==5:
+			scrolldown()
 
 func _physics_process(delta):
 	if is_instance_valid(prevHover) and pressed and prevHover.has_method("laser_input"):
@@ -75,7 +78,7 @@ func _physics_process(delta):
 func scrollup():
 	if is_colliding():
 		var tmpcol = get_collider()
-		if tmpcol.get_collision_layer_value(3) and tmpcol.has_method("laser_input"):
+		if tmpcol.has_method("laser_input"):
 			tmpcol.laser_input({
 				"position": get_collision_point(),
 				"pressed": true,

@@ -71,10 +71,10 @@ var tex:ViewportTexture
 		material.heightmap_scale = heightmap_scale
 
 func _init():
-	viewport_container = SubViewportContainer.new()
-	viewport_container.visibility_layer = 0
-	viewport_container.light_mask = 0
-	viewport_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	#viewport_container = SubViewportContainer.new()
+	#viewport_container.visibility_layer = 0
+	#viewport_container.light_mask = 0
+	#viewport_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	viewport = SubViewport.new()
 	viewport.own_world_3d = true
 	#viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
@@ -84,8 +84,9 @@ func _init():
 	colshape.shape = BoxShape3D.new()
 	material = StandardMaterial3D.new()
 	mesh.mesh.surface_set_material(0,material)
-	add_child(viewport_container)
-	viewport_container.add_child(viewport,false,Node.INTERNAL_MODE_FRONT)
+	#add_child(viewport_container)
+	#viewport_container.add_child(viewport,false,Node.INTERNAL_MODE_FRONT)
+	add_child(viewport)
 	add_child(mesh,false,Node.INTERNAL_MODE_FRONT)
 	add_child(colshape,false,Node.INTERNAL_MODE_FRONT)
 	material.texture_repeat = false
@@ -135,6 +136,8 @@ func laser_input(data:Dictionary):
 		"custom":
 			# Use this to pass a different event type or add event strings below
 			event = data.event
+		_:
+			pass
 	# Set event pressed value (should be false if not explicitly changed)
 	if data.pressed and "pressed" in event:
 		event.pressed = data.pressed
@@ -159,8 +162,8 @@ func laser_input(data:Dictionary):
 	#	The bug causes the viewport to not consistently receive input events
 	viewport.handle_input_locally = true
 	# Push the event to the viewport
-	viewport.call_thread_safe("push_input",event,true)
-	viewport.handle_input_locally = false
+	viewport.push_input(event,true)
+	#viewport.handle_input_locally = false
 
 func set_viewport_scene(node):
 	# Clears the current nodes from within the viewport first
