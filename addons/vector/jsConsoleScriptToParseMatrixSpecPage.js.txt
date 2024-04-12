@@ -1,0 +1,27 @@
+api = {"endpoints": []};
+document.querySelectorAll(".http-api").forEach((e)=>{
+	endpoint = {"endpoint" :e.querySelector('.endpoint').innerText};
+	path_props = [];
+	e.querySelectorAll('.object-table').forEach((a)=>{
+		tmp_print = [];
+		if(a.caption){
+			endpoint[a.caption.innerText] = {}
+			a.childNodes[5].querySelectorAll(
+					'tr td:nth-child(-n + 3)').forEach((e)=>{
+				tmp_print.push(e.innerText);
+			})
+		}
+		tmp_values = []
+		for(i=0;i<tmp_print.length;i+=3){
+			tmp_values.push({"name":tmp_print[i],
+			"type":tmp_print[i+1],
+			"desc":tmp_print[i+2]})
+		}
+		if(a.caption){
+			endpoint[a.caption.innerText] = tmp_values
+		}
+	})
+	api.endpoints.push(endpoint)
+})
+// after running this, you'll wanna just type `api` in the console and then
+//  right click and copy object

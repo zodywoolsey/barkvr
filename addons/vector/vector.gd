@@ -20,6 +20,7 @@ var next_batch = ''
 var timeout = 3000
 var joinedRooms
 var userData : Dictionary = {}
+var uname : String
 
 # matrix enums
 const PRESENCE = {"offline":"offline","online":"online","unavailable":"unavailable"}
@@ -43,11 +44,12 @@ func _ready():
 		if msgJson:
 			if msgJson.has('errcode'):
 				Notifyvr.send_notification(msgJson.error)
-				print(msgJson)
+				#print(msgJson)
 				if msgJson.has('retry_after_ms'):
 					Notifyvr.send_notification("Please try again after: "+str(msgJson.retry_after_ms/1000)+" seconds")
 				return
 			if msgJson.has('access_token') and msgJson.has('well_known'):
+				uname = Vector.userData.login.user_id.split(':')[0].right(-1)
 				userToken = msgJson.access_token
 				base_url = msgJson.well_known["m.homeserver"].base_url
 				userData['login'] = msgJson
@@ -55,9 +57,9 @@ func _ready():
 				saveUserDict()
 				if userToken != "":
 					headers.push_back("Authorization: Bearer {0}".format([userToken]))
-					print(headers)
+					#print(headers)
 					user_logged_in.emit()
-					print('logged in')
+					#print('logged in')
 					get_turn_server()
 			else:
 				print('Some error occurred')
@@ -176,12 +178,17 @@ func readRequestBytes():
 	return msg
 
 func saveUserDict():
-	var file = FileAccess.open("user://user.data",FileAccess.WRITE)
+	var file = FileAccess.open("user://logins/"+uname+".data",FileAccess.WRITE)
 	userData["home_server"] = home_server
 	var toStore = var_to_bytes(userData)
 	toStore.reverse()
 	file.store_var(toStore)
 	file.close()
+
+func getExistingSessions() -> Array[String]:
+	var files = DirAccess.get_files_at("user://logins/")
+	print(files)
+	return files
 
 func readUserDict():
 	var file = FileAccess.open("user://user.data",FileAccess.READ)
