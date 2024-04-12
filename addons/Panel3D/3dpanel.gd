@@ -110,6 +110,13 @@ func _init():
 	heightmap_scale = heightmap_scale
 
 func _ready():
+#grab any non-mouse input from the window and pass it through directly to the
+# viewport this is necessary because removing the SubViewportContainer makes
+# it so inptus are not automatically passed to the SubViewport
+	get_tree().root.window_input.connect(func(event):
+		if !(event is InputEventMouse):
+			viewport.push_input(event)
+		)
 	viewport.gui_focus_changed.connect(func(node):
 		print('focus')
 		LocalGlobals.player_state = LocalGlobals.PLAYER_STATE_TYPING

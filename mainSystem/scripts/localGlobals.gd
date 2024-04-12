@@ -12,7 +12,12 @@ var keyboard:StaticBody3D
 var discord_world = 'loading'
 var discord_login_status = 'not logged in'
 
-@export_enum("PAUSED", "PLAYING", "TYPING") var player_state : int = 0
+@export_enum("PAUSED", "PLAYING", "TYPING") var player_state : int = 0:
+	set(value):
+		player_state = value
+		print(value)
+		if value != 2:
+			playerreleaseuifocus.emit()
 static var PLAYER_STATE_PAUSED := 0
 static var PLAYER_STATE_PLAYING:= 1
 static var PLAYER_STATE_TYPING := 2
