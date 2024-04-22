@@ -127,12 +127,12 @@ middleclick={
 ]
 }
 scrollup={
-"deadzone": 0.5,
+"deadzone": 0.0,
 "events": [Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"button_mask":8,"position":Vector2(138, 17),"global_position":Vector2(142, 60),"factor":1.0,"button_index":4,"canceled":false,"pressed":true,"double_click":false,"script":null)
 ]
 }
 scrolldown={
-"deadzone": 0.5,
+"deadzone": 0.0,
 "events": [Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"button_mask":16,"position":Vector2(119, 5),"global_position":Vector2(123, 48),"factor":1.0,"button_index":5,"canceled":false,"pressed":true,"double_click":false,"script":null)
 ]
 }
@@ -205,5 +205,6 @@ anti_aliasing/quality/msaa_3d=1
 
 openxr/foveation_level=3
 openxr/foveation_dynamic=true
+openxr/startup_alert=false
 openxr/extensions/eye_gaze_interaction=true
 shaders/enabled=true

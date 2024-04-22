@@ -6,7 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://12mm63qyglpf" path="res://mainSystem/scenes/player/handray.tscn" id="4_316iy"]
 [ext_resource type="Script" path="res://mainSystem/scenes/player/uiRay.gd" id="4_xffyd"]
 [ext_resource type="PackedScene" uid="uid://b2r6qi0effaiw" path="res://addons/contextmenu/gridmenu/gridmenubutton.tscn" id="5_d1mpu"]
-[ext_resource type="Texture2D" uid="uid://cm7tsng6rg8cs" path="res://mainAssets/ui/assets/wrist_menu/UI_mockup_trasparent.png" id="6_j5bbn"]
+[ext_resource type="Texture2D" uid="uid://cv146jvkb1tja" path="res://mainAssets/ui/assets/wrist_menu/UI_mockup_trasparent.png" id="6_j5bbn"]
 [ext_resource type="Script" path="res://mainSystem/scripts/player/notificationpositioner.gd" id="8_n4qtp"]
 [ext_resource type="PackedScene" uid="uid://cr02u36wo3sqp" path="res://addons/contextmenu/gridmenu/handmenu.tscn" id="9_opil0"]
 

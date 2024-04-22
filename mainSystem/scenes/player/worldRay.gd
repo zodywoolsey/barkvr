@@ -8,6 +8,13 @@ func _process(delta):
 	procrayvis()
 
 func _input(event):
+	if event is InputEventPanGesture:
+		if is_colliding() and prevHover is Panel3D:
+			prevHover.laser_input({
+				'action':'custom',
+				'position':get_collision_point(),
+				'event':event
+			})
 	if event is InputEventMouseButton:
 		if event.pressed and event.button_index==4:
 			scrollup()

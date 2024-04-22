@@ -67,6 +67,8 @@ script = ExtResource("11_oevc4")
 
 [node name="matrix" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, -1.06581e-14, 0, 1.06581e-14, 1, -2.48848, 2, -0.367195)
+collision_layer = 4
+collision_mask = 4
 script = ExtResource("10_rgd75")
 _auto_load_ui = ExtResource("10_j6yjr")
 transparent = false
@@ -74,6 +76,8 @@ viewport_size = Vector2i(1984, 1024)
 
 [node name="settings" type="StaticBody3D" parent="."]
 transform = Transform3D(0.707107, -1.30385e-08, 0.707107, 0, 1, -4.47035e-08, -0.707107, 4.47035e-08, 0.707107, -3.73758, 2, 0)
+collision_layer = 4
+collision_mask = 4
 script = ExtResource("10_rgd75")
 _auto_load_ui = ExtResource("11_hv61c")
 transparent = false

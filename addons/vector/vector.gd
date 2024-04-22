@@ -49,6 +49,9 @@ func _ready():
 					Notifyvr.send_notification("Please try again after: "+str(msgJson.retry_after_ms/1000)+" seconds")
 				return
 			if msgJson.has('access_token') and msgJson.has('well_known'):
+				if !Vector.userData.has("login"):
+					Vector.userData.login = {}
+				Vector.userData.login.user_id = msgJson.user_id
 				uname = Vector.userData.login.user_id.split(':')[0].right(-1)
 				userToken = msgJson.access_token
 				base_url = msgJson.well_known["m.homeserver"].base_url
@@ -178,6 +181,8 @@ func readRequestBytes():
 	return msg
 
 func saveUserDict():
+	if !DirAccess.dir_exists_absolute("user://logins"):
+		DirAccess.make_dir_absolute("user://logins")
 	var file = FileAccess.open("user://logins/"+uname+".data",FileAccess.WRITE)
 	userData["home_server"] = home_server
 	var toStore = var_to_bytes(userData)

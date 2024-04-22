@@ -76,6 +76,7 @@ func _init():
 	#viewport_container.light_mask = 0
 	#viewport_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	viewport = SubViewport.new()
+	viewport.gui_embed_subwindows = true
 	viewport.own_world_3d = true
 	#viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	mesh = MeshInstance3D.new()
@@ -114,7 +115,7 @@ func _ready():
 # viewport this is necessary because removing the SubViewportContainer makes
 # it so inptus are not automatically passed to the SubViewport
 	get_tree().root.window_input.connect(func(event):
-		if !(event is InputEventMouse):
+		if !(event is InputEventMouse or event is InputEventPanGesture):
 			viewport.push_input(event)
 		)
 	viewport.gui_focus_changed.connect(func(node):
@@ -146,7 +147,7 @@ func laser_input(data:Dictionary):
 		_:
 			pass
 	# Set event pressed value (should be false if not explicitly changed)
-	if data.pressed and "pressed" in event:
+	if data.has('pressed') and "pressed" in event:
 		event.pressed = data.pressed
 	# Get the size of the quad mesh we're rendering to
 	var quad_size = mesh.mesh.size
@@ -167,7 +168,7 @@ func laser_input(data:Dictionary):
 	event.position = mouse_pos2D
 	# Set the event to be handled locally (workaround for Godot 4.x bug)
 	#	The bug causes the viewport to not consistently receive input events
-	viewport.handle_input_locally = true
+	#viewport.handle_input_locally = true
 	# Push the event to the viewport
 	viewport.push_input(event,true)
 	#viewport.handle_input_locally = false
