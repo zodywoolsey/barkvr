@@ -1,31 +1,21 @@
+@tool
 class_name Line3D
 extends MeshInstance3D
 
-var mat : BaseMaterial3D
+# this tool was made by zodiepupper under the MIT license
 
 var amesh := ArrayMesh.new()
 var vertices := PackedVector3Array()
+var arrays := Array()
 
-var timer := 0.0
-var target := Vector3()
+@export var target := Vector3():
+	set(value):
+		target = value
+		vertices = [Vector3(),target]
+		arrays.clear()
+		arrays.resize(Mesh.ARRAY_MAX)
+		arrays[Mesh.ARRAY_VERTEX] = vertices
+		amesh.clear_surfaces()
+		amesh.add_surface_from_arrays(Mesh.PRIMITIVE_LINE_STRIP,arrays)
+		mesh = amesh
 
-func _init():
-	vertices.append(Vector3())
-	vertices.append(Vector3())
-	var arrays = []
-	arrays.resize(Mesh.ARRAY_MAX)
-	arrays[Mesh.ARRAY_VERTEX] = vertices
-	amesh.add_surface_from_arrays(Mesh.PRIMITIVE_LINE_STRIP,arrays)
-	mesh = amesh
-
-func _ready():
-	amesh
-
-func _process(delta):
-	timer+=delta
-	vertices[1] = to_local(target)
-	var arrays = []
-	arrays.resize(Mesh.ARRAY_MAX)
-	arrays[Mesh.ARRAY_VERTEX] = vertices
-	amesh.clear_surfaces()
-	amesh.add_surface_from_arrays(Mesh.PRIMITIVE_LINE_STRIP,arrays)
