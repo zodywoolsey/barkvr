@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://ctwckofb07cfw"]
+[gd_scene load_steps=14 format=3 uid="uid://ctwckofb07cfw"]
 
 [ext_resource type="Script" path="res://mainSystem/scripts/init.gd" id="1_gkt54"]
 [ext_resource type="Script" path="res://mainSystem/scripts/startxr.gd" id="2_3r3cq"]
@@ -7,8 +7,10 @@
 [ext_resource type="PackedScene" uid="uid://b3sbt3oft3cxg" path="res://mainAssets/ui/3dPanel/editmode/vreditor.tscn" id="8_wf33i"]
 [ext_resource type="PackedScene" uid="uid://i3pxsgqnbjly" path="res://mainAssets/ui/3dPanel/local ui/login/matrix.tscn" id="10_j6yjr"]
 [ext_resource type="Script" path="res://addons/Panel3D/3dpanel.gd" id="10_rgd75"]
+[ext_resource type="PackedScene" uid="uid://buumya863y7eb" path="res://testbutton.tscn" id="10_sqyiv"]
 [ext_resource type="PackedScene" uid="uid://pnqmxgn13qw2" path="res://mainAssets/ui/3dPanel/local ui/settings/settings.tscn" id="11_hv61c"]
 [ext_resource type="Script" path="res://mainSystem/scripts/mic_playback.gd" id="11_oevc4"]
+[ext_resource type="PackedScene" uid="uid://lauwp8okd1vh" path="res://mainAssets/ui/3dPanel/local ui/keyboard/virtual_keyboard_2d.tscn" id="11_t4d0r"]
 
 [sub_resource type="AudioStreamMicrophone" id="AudioStreamMicrophone_ve6pm"]
 
@@ -84,5 +86,23 @@ transparent = false
 
 [node name="vreditor" parent="." instance=ExtResource("8_wf33i")]
 transform = Transform3D(-4.37114e-08, 1.06581e-14, 1, 0, 1, -1.06581e-14, -1, -4.6588e-22, -4.37114e-08, -4, 2, 2)
+
+[node name="Panel3D" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.36171, 1.79982, 0)
+collision_layer = 4
+collision_mask = 4
+script = ExtResource("10_rgd75")
+_auto_load_ui = ExtResource("10_sqyiv")
+transparent = false
+viewport_size = Vector2i(244, 84)
+metadata/grabbable = true
+
+[node name="Panel3D2" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.4736, 1.7588, 0)
+collision_layer = 4
+collision_mask = 4
+script = ExtResource("10_rgd75")
+_auto_load_ui = ExtResource("11_t4d0r")
+viewport_size = Vector2i(1164, 474)
 
 [connection signal="pressed" from="StartXR/EnterWebXR/EnterVRButton" to="StartXR" method="_on_enter_webxr_button_pressed"]

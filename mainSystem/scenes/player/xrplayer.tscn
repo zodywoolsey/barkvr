@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://r68jre2w5k33"]
+[gd_scene load_steps=23 format=3 uid="uid://r68jre2w5k33"]
 
 [ext_resource type="Script" path="res://mainSystem/scripts/player/xrplayer-controller.gd" id="1_iwrfe"]
 [ext_resource type="Script" path="res://mainSystem/scripts/player/hand.gd" id="2_npgyv"]
@@ -7,8 +7,29 @@
 [ext_resource type="Script" path="res://mainSystem/scenes/player/uiRay.gd" id="4_xffyd"]
 [ext_resource type="PackedScene" uid="uid://b2r6qi0effaiw" path="res://addons/contextmenu/gridmenu/gridmenubutton.tscn" id="5_d1mpu"]
 [ext_resource type="Texture2D" uid="uid://cv146jvkb1tja" path="res://mainAssets/ui/assets/wrist_menu/UI_mockup_trasparent.png" id="6_j5bbn"]
+[ext_resource type="Script" path="res://mainSystem/scenes/objects/tools/Line3D.gd" id="7_vo2nf"]
 [ext_resource type="Script" path="res://mainSystem/scripts/player/notificationpositioner.gd" id="8_n4qtp"]
 [ext_resource type="PackedScene" uid="uid://cr02u36wo3sqp" path="res://addons/contextmenu/gridmenu/handmenu.tscn" id="9_opil0"]
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_mxvib"]
+_surfaces = [{
+"aabb": AABB(0, 0, 0, 1e-05, 0.1, 1e-05),
+"format": 34359738369,
+"primitive": 2,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 2,
+"vertex_data": PackedByteArray(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 204, 204, 61, 0, 0, 0, 0)
+}]
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_8a8bk"]
+_surfaces = [{
+"aabb": AABB(0, 0, 0, 1e-05, 0.1, 1e-05),
+"format": 34359738369,
+"primitive": 2,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 2,
+"vertex_data": PackedByteArray(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 204, 204, 61, 0, 0, 0, 0)
+}]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_1q63w"]
 radius = 0.1
@@ -37,6 +58,26 @@ script/source = "extends Label3D
 #func _process(delta):
 	#text = str(1/delta)
 "
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_q7p1k"]
+_surfaces = [{
+"aabb": AABB(0, 0, 0, 1e-05, 0.1, 1e-05),
+"format": 34359738369,
+"primitive": 2,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 2,
+"vertex_data": PackedByteArray(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 204, 204, 61, 0, 0, 0, 0)
+}]
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_6v8e4"]
+_surfaces = [{
+"aabb": AABB(0, 0, 0, 1e-05, 0.1, 1e-05),
+"format": 34359738369,
+"primitive": 2,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 2,
+"vertex_data": PackedByteArray(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 204, 204, 61, 0, 0, 0, 0)
+}]
 
 [sub_resource type="BoxMesh" id="BoxMesh_kgbb2"]
 size = Vector3(0.1, 0.1, 0.1)
@@ -91,8 +132,18 @@ debug_shape_custom_color = Color(0, 0, 0, 0.109804)
 debug_shape_thickness = 1
 script = ExtResource("3_n5c2i")
 
+[node name="Line3D" type="MeshInstance3D" parent="CharacterBody3D/xrplayer/righthand/handproxy/worldRay"]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
+mesh = SubResource("ArrayMesh_mxvib")
+skeleton = NodePath("../..")
+script = ExtResource("7_vo2nf")
+
 [node name="uiRay" parent="CharacterBody3D/xrplayer/righthand/handproxy" instance=ExtResource("4_316iy")]
 collision_mask = 260
+
+[node name="Line3D" type="MeshInstance3D" parent="CharacterBody3D/xrplayer/righthand/handproxy/uiRay"]
+mesh = SubResource("ArrayMesh_8a8bk")
+script = ExtResource("7_vo2nf")
 
 [node name="grabArea" type="Area3D" parent="CharacterBody3D/xrplayer/righthand/handproxy"]
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0.05, 0, 4.37114e-09)
@@ -174,6 +225,11 @@ debug_shape_thickness = 1
 script = ExtResource("3_n5c2i")
 leftside = true
 
+[node name="Line3D" type="MeshInstance3D" parent="CharacterBody3D/xrplayer/lefthand/handproxy/worldRay"]
+mesh = SubResource("ArrayMesh_q7p1k")
+skeleton = NodePath("../../..")
+script = ExtResource("7_vo2nf")
+
 [node name="uiRay" type="RayCast3D" parent="CharacterBody3D/xrplayer/lefthand/handproxy"]
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, 0, 0)
 target_position = Vector3(0, 0, -1000)
@@ -182,6 +238,10 @@ debug_shape_custom_color = Color(0, 0, 0, 0.109804)
 debug_shape_thickness = 1
 script = ExtResource("4_xffyd")
 leftside = true
+
+[node name="Line3D" type="MeshInstance3D" parent="CharacterBody3D/xrplayer/lefthand/handproxy/uiRay"]
+mesh = SubResource("ArrayMesh_6v8e4")
+script = ExtResource("7_vo2nf")
 
 [node name="grabArea" type="Area3D" parent="CharacterBody3D/xrplayer/lefthand/handproxy"]
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -0.05, 0, -4.37114e-09)

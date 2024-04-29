@@ -3,7 +3,7 @@
 class_name Panel3D
 extends StaticBody3D
 var viewport : SubViewport
-var viewport_container : SubViewportContainer
+var viewport_container : NoInputPropagationSubViewportContainer
 var mesh : MeshInstance3D
 var colshape : CollisionShape3D
 var material : StandardMaterial3D
@@ -71,14 +71,14 @@ var tex:ViewportTexture
 		material.heightmap_scale = heightmap_scale
 
 func _init():
-	#viewport_container = SubViewportContainer.new()
+	#viewport_container = NoInputPropagationSubViewportContainer.new()
 	#viewport_container.visibility_layer = 0
 	#viewport_container.light_mask = 0
 	#viewport_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	viewport = SubViewport.new()
 	viewport.gui_embed_subwindows = true
 	viewport.own_world_3d = true
-	#viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	mesh = MeshInstance3D.new()
 	mesh.mesh = QuadMesh.new()
 	colshape = CollisionShape3D.new()
@@ -86,10 +86,10 @@ func _init():
 	material = StandardMaterial3D.new()
 	mesh.mesh.surface_set_material(0,material)
 	#add_child(viewport_container)
-	#viewport_container.add_child(viewport,false,Node.INTERNAL_MODE_FRONT)
-	add_child(viewport)
-	add_child(mesh,false,Node.INTERNAL_MODE_FRONT)
-	add_child(colshape,false,Node.INTERNAL_MODE_FRONT)
+	#viewport_container.add_child(viewport)
+	add_child(viewport,false,INTERNAL_MODE_FRONT)
+	add_child(mesh,false,INTERNAL_MODE_FRONT)
+	add_child(colshape,false,INTERNAL_MODE_FRONT)
 	material.texture_repeat = false
 	material.albedo_texture = viewport.get_texture()
 	material.metallic_specular = 0.0
@@ -109,6 +109,7 @@ func _init():
 	heightmap_min_layers = heightmap_min_layers
 	heightmap_max_layers = heightmap_max_layers
 	heightmap_scale = heightmap_scale
+	viewport.handle_input_locally = true
 
 func _ready():
 #grab any non-mouse input from the window and pass it through directly to the
@@ -168,7 +169,7 @@ func laser_input(data:Dictionary):
 	event.position = mouse_pos2D
 	# Set the event to be handled locally (workaround for Godot 4.x bug)
 	#	The bug causes the viewport to not consistently receive input events
-	#viewport.handle_input_locally = true
+	viewport.handle_input_locally = true
 	# Push the event to the viewport
 	viewport.push_input(event,true)
 	#viewport.handle_input_locally = false

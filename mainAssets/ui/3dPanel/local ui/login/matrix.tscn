@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://i3pxsgqnbjly"]
+[gd_scene load_steps=10 format=3 uid="uid://i3pxsgqnbjly"]
 
 [ext_resource type="Script" path="res://mainAssets/ui/3dPanel/local ui/login/loginbutton.gd" id="1_18njo"]
 [ext_resource type="Theme" uid="uid://b7mxq6cclub5f" path="res://mainAssets/ui/default_theme.tres" id="1_eqeii"]
@@ -8,6 +8,23 @@
 [ext_resource type="Script" path="res://mainAssets/ui/3dPanel/local ui/login/messages.gd" id="4_ydkch"]
 [ext_resource type="PackedScene" uid="uid://drvs5pgtp63nx" path="res://mainAssets/ui/3dPanel/local ui/login/message.tscn" id="5_8wc7f"]
 [ext_resource type="Script" path="res://mainAssets/ui/3dPanel/local ui/login/SendMessage.gd" id="5_wc8jy"]
+
+[sub_resource type="GDScript" id="GDScript_2qa45"]
+script/source = "extends LineEdit
+
+func _ready():
+	focus_entered.connect(func():
+		grab_focus()
+		get_window()
+		DisplayServer.virtual_keyboard_show(\"\")
+		print(\"keyboard\")
+		print(DisplayServer.virtual_keyboard_get_height())
+		)
+
+
+func _process(delta):
+	print(focus_mode)
+"
 
 [node name="matrix" type="Control"]
 layout_mode = 3
@@ -58,6 +75,7 @@ vertical_alignment = 1
 layout_mode = 2
 placeholder_text = "username"
 alignment = 1
+script = SubResource("GDScript_2qa45")
 
 [node name="Label3" type="Label" parent="login/VBoxContainer"]
 layout_mode = 2

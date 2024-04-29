@@ -7,11 +7,18 @@ extends MeshInstance3D
 var amesh := ArrayMesh.new()
 var vertices := PackedVector3Array()
 var arrays := Array()
+var spline := Curve3D.new()
 
-@export var target := Vector3():
+@export var target := Vector3(0.0,.1,0.0)
+
+var current_pos := Vector3():
 	set(value):
-		target = value
-		vertices = [Vector3(),target]
+		current_pos = value
+		spline.clear_points()
+		spline.add_point(Vector3())
+		spline.add_point(current_pos, (target-current_pos) )
+		spline.bake_interval = .1
+		vertices = spline.get_baked_points()
 		arrays.clear()
 		arrays.resize(Mesh.ARRAY_MAX)
 		arrays[Mesh.ARRAY_VERTEX] = vertices
@@ -19,3 +26,9 @@ var arrays := Array()
 		amesh.add_surface_from_arrays(Mesh.PRIMITIVE_LINE_STRIP,arrays)
 		mesh = amesh
 
+func _process(delta):
+	current_pos = Vector3(
+		lerpf(current_pos.x,target.x,.1),
+		lerpf(current_pos.y,target.y,.1),
+		lerpf(current_pos.z,target.z,.1)
+	)

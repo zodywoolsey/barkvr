@@ -1,11 +1,14 @@
 extends rayvisscript
 
 @onready var grab_parent = $"../grabParent"
+@onready var line_3d = $Line3D
 var prevHover
 var pressed := false
+var otherray : rayvisscript
 
 func _process(delta):
 	procrayvis()
+	line_3d.target = target_position
 
 func _input(event):
 	if event is InputEventPanGesture:
@@ -24,6 +27,7 @@ func _input(event):
 func _physics_process(delta):
 	if is_colliding():
 		vis.show()
+		line_3d.show()
 		var tmpcol = get_collider()
 		if tmpcol.has_method("laser_input"):
 			if prevHover and prevHover != tmpcol:

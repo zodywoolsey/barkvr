@@ -49,7 +49,7 @@ func _ready():
 	else:
 		global_position = Vector3(0,4,0)
 	righthand.connect("button_pressed",func(name):
-		Notifyvr.send_notification(name)
+		#Notifyvr.send_notification(name)
 		if name == "ax_button":
 			rightaxbtn = true
 		)
@@ -195,7 +195,7 @@ func _input(event):
 			elif righthand.world_ray.is_colliding():
 				righthand.world_ray.click()
 			await get_tree().process_frame
-			righthand.ui_ray.isrelease = true
+			righthand.ui_ray.release()
 		if !lookdrag.is_empty() and event.index == lookdrag.index and event.pressed == false:
 			lookdrag = {}
 	if event is InputEventScreenDrag:

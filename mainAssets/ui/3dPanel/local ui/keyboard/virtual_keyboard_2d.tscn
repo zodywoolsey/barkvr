@@ -19,7 +19,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(2.0515, 2.0515)
 color = Color(0.12549, 0.12549, 0.12549, 0.752941)
 
 [node name="Standard" type="Control" parent="Background"]
@@ -27,6 +26,7 @@ layout_mode = 1
 anchors_preset = 0
 offset_right = 390.0
 offset_bottom = 145.0
+scale = Vector2(2.82, 2.82)
 
 [node name="VirtualKey1" parent="Background/Standard" instance=ExtResource("2")]
 layout_mode = 0
@@ -184,6 +184,7 @@ scan_code_text = "Enter"
 
 [node name="LowerCase" type="Node2D" parent="Background"]
 position = Vector2(0, 30)
+scale = Vector2(2.82, 2.82)
 
 [node name="VirtualKeyLowerQ" parent="Background/LowerCase" instance=ExtResource("2")]
 text = "q"
@@ -400,6 +401,7 @@ unicode = 109
 [node name="UpperCase" type="Node2D" parent="Background"]
 visible = false
 position = Vector2(0, 30)
+scale = Vector2(2.82, 2.82)
 
 [node name="VirtualKeyUpperQ" parent="Background/UpperCase" instance=ExtResource("2")]
 text = "Q"
@@ -642,6 +644,7 @@ shift_modifier = true
 [node name="Alternate" type="Node2D" parent="Background"]
 visible = false
 position = Vector2(0, 30)
+scale = Vector2(2.82, 2.82)
 
 [node name="VirtualKeyPlus" parent="Background/Alternate" instance=ExtResource("2")]
 text = "+"
