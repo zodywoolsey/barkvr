@@ -3,7 +3,7 @@
 class_name Panel3D
 extends StaticBody3D
 var viewport : SubViewport
-var viewport_container : NoInputPropagationSubViewportContainer
+var viewport_container : SubViewportContainer
 var mesh : MeshInstance3D
 var colshape : CollisionShape3D
 var material : StandardMaterial3D
@@ -71,7 +71,7 @@ var tex:ViewportTexture
 		material.heightmap_scale = heightmap_scale
 
 func _init():
-	#viewport_container = NoInputPropagationSubViewportContainer.new()
+	#viewport_container = SubViewportContainer.new()
 	#viewport_container.visibility_layer = 0
 	#viewport_container.light_mask = 0
 	#viewport_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -133,7 +133,6 @@ func laser_input(data:Dictionary):
 	# Setup event
 	match data.action:
 		"hover":
-			return null
 			event = InputEventMouseMotion.new()
 		"scrollup":
 			event = InputEventMouseButton.new()

@@ -70,19 +70,19 @@ func _ready():
 			rightStick = value
 		)
 	lefthand.connect("button_pressed",func(name):
-#		print("pressed: "+name)
+		#print("pressed: "+name)
 		pass
 		if name == "ax_button":
 			leftaxbtn = true
 		)
 	lefthand.connect("button_released",func(name):
-#		print("released: "+name)
+		#print("released: "+name)
 		pass
 		if name == "ax_button":
 			leftaxbtn = false
 		)
 	lefthand.input_float_changed.connect(func(name:String,value:float):
-#		print('value {0}, {1}'.format([name,value]))
+		#print('value {0}, {1}'.format([name,value]))
 		pass
 		)
 	lefthand.input_vector2_changed.connect(func(name:String,value):

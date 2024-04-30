@@ -203,6 +203,7 @@ anti_aliasing/quality/msaa_3d=1
 
 [xr]
 
+openxr/enabled=true
 openxr/foveation_level=3
 openxr/foveation_dynamic=true
 openxr/startup_alert=false

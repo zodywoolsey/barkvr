@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://ctwckofb07cfw"]
+[gd_scene load_steps=16 format=3 uid="uid://ctwckofb07cfw"]
 
 [ext_resource type="Script" path="res://mainSystem/scripts/init.gd" id="1_gkt54"]
 [ext_resource type="Script" path="res://mainSystem/scripts/startxr.gd" id="2_3r3cq"]
@@ -8,7 +8,6 @@
 [ext_resource type="PackedScene" uid="uid://i3pxsgqnbjly" path="res://mainAssets/ui/3dPanel/local ui/login/matrix.tscn" id="10_j6yjr"]
 [ext_resource type="Script" path="res://mainSystem/scenes/objects/tools/Line3D.gd" id="10_qgu7r"]
 [ext_resource type="Script" path="res://addons/Panel3D/3dpanel.gd" id="10_rgd75"]
-[ext_resource type="PackedScene" uid="uid://buumya863y7eb" path="res://testbutton.tscn" id="10_sqyiv"]
 [ext_resource type="PackedScene" uid="uid://pnqmxgn13qw2" path="res://mainAssets/ui/3dPanel/local ui/settings/settings.tscn" id="11_hv61c"]
 [ext_resource type="Script" path="res://mainSystem/scripts/mic_playback.gd" id="11_oevc4"]
 [ext_resource type="PackedScene" uid="uid://lauwp8okd1vh" path="res://mainAssets/ui/3dPanel/local ui/keyboard/virtual_keyboard_2d.tscn" id="11_t4d0r"]
@@ -24,14 +23,14 @@ emission_enabled = true
 emission = Color(1, 0, 0, 1)
 emission_energy_multiplier = 16.0
 
-[sub_resource type="ArrayMesh" id="ArrayMesh_2otay"]
+[sub_resource type="ArrayMesh" id="ArrayMesh_wmsrc"]
 _surfaces = [{
 "aabb": AABB(0, 0, 0, 1e-05, 0.13, 0.095),
 "format": 34359738369,
 "primitive": 2,
 "uv_scale": Vector4(0, 0, 0, 0),
-"vertex_count": 2,
-"vertex_data": PackedByteArray(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 184, 30, 5, 62, 92, 143, 194, 61)
+"vertex_count": 3,
+"vertex_data": PackedByteArray(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 183, 30, 133, 61, 91, 143, 66, 61, 0, 0, 0, 0, 180, 30, 5, 62, 88, 143, 194, 61)
 }]
 
 [node name="main" type="Node3D" node_paths=PackedStringArray("global_origin") groups=["localroot"]]
@@ -109,7 +108,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.36171, 1.79982, 0)
 collision_layer = 4
 collision_mask = 4
 script = ExtResource("10_rgd75")
-_auto_load_ui = ExtResource("10_sqyiv")
+_auto_load_ui = null
 transparent = false
 viewport_size = Vector2i(244, 84)
 metadata/grabbable = true
@@ -125,7 +124,7 @@ viewport_size = Vector2i(1164, 474)
 [node name="Line3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.09958, 0)
 material_override = SubResource("StandardMaterial3D_pkk2i")
-mesh = SubResource("ArrayMesh_2otay")
+mesh = SubResource("ArrayMesh_wmsrc")
 script = ExtResource("10_qgu7r")
 target = Vector3(0, 0.13, 0.095)
 
