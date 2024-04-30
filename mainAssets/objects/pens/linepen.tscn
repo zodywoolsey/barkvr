@@ -1,0 +1,32 @@
+[gd_scene load_steps=5 format=3 uid="uid://dj84bcm2jv1wq"]
+
+[ext_resource type="Script" path="res://mainAssets/objects/pens/linepen.gd" id="1_2tj5s"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wt71q"]
+size = Vector3(0.025, 0.025, 0.1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_k0mlv"]
+size = Vector3(0.025, 0.025, 0.1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_bprp7"]
+top_radius = 0.0
+bottom_radius = 0.01
+height = 0.05
+
+[node name="Linepen" type="Area3D"]
+script = ExtResource("1_2tj5s")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_wt71q")
+
+[node name="bodymesh" type="MeshInstance3D" parent="CollisionShape3D"]
+mesh = SubResource("BoxMesh_k0mlv")
+skeleton = NodePath("../..")
+
+[node name="tipmesh" type="MeshInstance3D" parent="CollisionShape3D"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, -0.0771175)
+mesh = SubResource("CylinderMesh_bprp7")
+skeleton = NodePath("../..")
+
+[node name="tippoint" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.102333)

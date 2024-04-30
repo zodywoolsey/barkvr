@@ -39,10 +39,29 @@ func _ready():
 	connect("button_pressed",buttonPressed)
 	connect("button_released",buttonReleased)
 	input_float_changed.connect(func(name:String,value:float):
-		if name == "grip" and value > .5 and !grabbing:
-			grip()
-		elif name == "grip" and value < .5:
-			grabbing = false
+		if (XRServer.get_tracker(tracker).profile).ends_with("index_controller"):
+			match name:
+				"grip_force":
+					if value > .1 and !grabbing:
+						trigger_haptic_pulse("haptic",100.0,.5,.1,0.0)
+						trigger_haptic_pulse("haptic",200.0,.5,.1,0.1)
+						trigger_haptic_pulse("haptic",300.0,.5,.1,0.2)
+						trigger_haptic_pulse("haptic",400.0,.5,.1,0.3)
+						trigger_haptic_pulse("haptic",500.0,.5,.1,0.4)
+						trigger_haptic_pulse("haptic",400.0,.5,.1,0.5)
+						trigger_haptic_pulse("haptic",300.0,.5,.1,0.6)
+						trigger_haptic_pulse("haptic",200.0,.5,.1,0.7)
+						trigger_haptic_pulse("haptic",100.0,.5,.1,0.8)
+						grip()
+				"grip":
+					if value < 1.0:
+						grabbing = false
+		else:
+			if name == "grip":
+				if value > .5 and !grabbing:
+					grip()
+			elif name == "grip" and value < .5:
+				grabbing = false
 #		if name == "trigger":
 #			if value > .3:
 #				world_ray.enabled = true
@@ -105,6 +124,8 @@ func buttonPressed(name):
 		for item in grabbed.values():
 			if item.has_method('primary'):
 				item.primary(true)
+			if item.has('trigger_pressed'):
+				item.trigger_pressed = true
 		if grabjoint.node_b and get_node(grabjoint.node_b).has_method('primary'):
 			get_node(grabjoint.node_b).primary(true)
 
@@ -118,8 +139,11 @@ func buttonReleased(name):
 		ui_ray.release()
 		if grab_parent.get_child_count()>0:
 			for item in grab_parent.get_children():
-				if is_instance_valid(item) and item.has_method('primary'):
-					item.primary(false)
+				if is_instance_valid(item):
+					if item.has_method('primary'):
+						item.primary(false)
+					if item.has('trigger_pressed'):
+						item.trigger_pressed = false
 		if grabjoint.node_b and get_node(grabjoint.node_b).has_method('primary'):
 			get_node(grabjoint.node_b).primary(false)
 		rayBody = null

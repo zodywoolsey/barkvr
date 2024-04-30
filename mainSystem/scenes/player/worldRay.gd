@@ -6,6 +6,8 @@ var prevHover
 var pressed := false
 var otherray : rayvisscript
 
+var last_pos := Vector3()
+
 func _process(delta):
 	procrayvis()
 	line_3d.target = target_position

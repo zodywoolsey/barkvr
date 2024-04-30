@@ -23,7 +23,7 @@ emission_enabled = true
 emission = Color(1, 0, 0, 1)
 emission_energy_multiplier = 16.0
 
-[sub_resource type="ArrayMesh" id="ArrayMesh_wmsrc"]
+[sub_resource type="ArrayMesh" id="ArrayMesh_sksmm"]
 _surfaces = [{
 "aabb": AABB(0, 0, 0, 1e-05, 0.13, 0.095),
 "format": 34359738369,
@@ -103,16 +103,6 @@ transparent = false
 [node name="vreditor" parent="." instance=ExtResource("8_wf33i")]
 transform = Transform3D(-4.37114e-08, 1.06581e-14, 1, 0, 1, -1.06581e-14, -1, -4.6588e-22, -4.37114e-08, -4, 2, 2)
 
-[node name="Panel3D" type="StaticBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.36171, 1.79982, 0)
-collision_layer = 4
-collision_mask = 4
-script = ExtResource("10_rgd75")
-_auto_load_ui = null
-transparent = false
-viewport_size = Vector2i(244, 84)
-metadata/grabbable = true
-
 [node name="Panel3D2" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.4736, 1.7588, 0)
 collision_layer = 4
@@ -124,7 +114,7 @@ viewport_size = Vector2i(1164, 474)
 [node name="Line3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.09958, 0)
 material_override = SubResource("StandardMaterial3D_pkk2i")
-mesh = SubResource("ArrayMesh_wmsrc")
+mesh = SubResource("ArrayMesh_sksmm")
 script = ExtResource("10_qgu7r")
 target = Vector3(0, 0.13, 0.095)
 
