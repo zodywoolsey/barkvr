@@ -114,31 +114,31 @@ func _physics_process(delta):
 			velocity.y = JUMP_VELOCITY
 		
 	if LocalGlobals.vr_supported || OS.get_name() == "Android":
-		LocalGlobals.player_state = LocalGlobals.PLAYER_STATE_PLAYING
-		if LocalGlobals.player_state == LocalGlobals.PLAYER_STATE_PLAYING:
-			xrplayer.position.x = -xr_camera_3d.position.x
-			xrplayer.position.z = -xr_camera_3d.position.z
-			position.x += (transform.basis*(xr_camera_3d.position-camPrevPos)).x
-			position.z += (transform.basis*(xr_camera_3d.position-camPrevPos)).z
-			playercamoffset.global_position.x -= (transform.basis*(xr_camera_3d.position-camPrevPos)).x
-			playercamoffset.global_position.z -= (transform.basis*(xr_camera_3d.position-camPrevPos)).z
-			camPrevPos = xr_camera_3d.position
-			transform = transform.rotated_local(Vector3.UP,-rightStick.x*delta)
-			xrplayer.position = xrplayer.position.rotated(Vector3.UP,rightStick.x*delta)
-			
-			var input_dir = leftStick
-			var direction = ((xr_camera_3d.transform.basis*transform.basis) * Vector3(input_dir.x, 0, -input_dir.y))
-			if direction:
-				velocity.x = direction.x * SPEED
-				velocity.z = direction.z * SPEED
-			else:
-				velocity.x = move_toward(velocity.x, 0, SPEED)
-				velocity.z = move_toward(velocity.z, 0, SPEED)
-			if xr_camera_3d.position.y > 0.01:
-				collision_shape_3d.shape.height = xr_camera_3d.position.y
-			else:
-				collision_shape_3d.shape.height = 0.1
-	#		collision_shape_3d.position = xr_camera_3d.position.y/2.0
+		#LocalGlobals.player_state = LocalGlobals.PLAYER_STATE_PLAYING
+		#if LocalGlobals.player_state == LocalGlobals.PLAYER_STATE_PLAYING:
+		xrplayer.position.x = -xr_camera_3d.position.x
+		xrplayer.position.z = -xr_camera_3d.position.z
+		position.x += (transform.basis*(xr_camera_3d.position-camPrevPos)).x
+		position.z += (transform.basis*(xr_camera_3d.position-camPrevPos)).z
+		playercamoffset.global_position.x -= (transform.basis*(xr_camera_3d.position-camPrevPos)).x
+		playercamoffset.global_position.z -= (transform.basis*(xr_camera_3d.position-camPrevPos)).z
+		camPrevPos = xr_camera_3d.position
+		transform = transform.rotated_local(Vector3.UP,-rightStick.x*delta)
+		xrplayer.position = xrplayer.position.rotated(Vector3.UP,rightStick.x*delta)
+		
+		var input_dir = leftStick
+		var direction = ((xr_camera_3d.transform.basis*transform.basis) * Vector3(input_dir.x, 0, -input_dir.y))
+		if direction:
+			velocity.x = direction.x * SPEED
+			velocity.z = direction.z * SPEED
+		else:
+			velocity.x = move_toward(velocity.x, 0, SPEED)
+			velocity.z = move_toward(velocity.z, 0, SPEED)
+		if xr_camera_3d.position.y > 0.01:
+			collision_shape_3d.shape.height = xr_camera_3d.position.y
+		else:
+			collision_shape_3d.shape.height = 0.1
+#		collision_shape_3d.position = xr_camera_3d.position.y/2.0
 	else:
 		flat_movement()
 	

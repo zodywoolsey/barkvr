@@ -90,6 +90,7 @@ func _init():
 	add_child(viewport,false,INTERNAL_MODE_FRONT)
 	add_child(mesh,false,INTERNAL_MODE_FRONT)
 	add_child(colshape,false,INTERNAL_MODE_FRONT)
+	add_child(colshape,false,Node.INTERNAL_MODE_FRONT)
 	material.texture_repeat = false
 	material.albedo_texture = viewport.get_texture()
 	material.metallic_specular = 0.0
@@ -116,11 +117,11 @@ func _ready():
 # viewport this is necessary because removing the SubViewportContainer makes
 # it so inptus are not automatically passed to the SubViewport
 	get_tree().root.window_input.connect(func(event):
+		#viewport.push_input(event, true)
 		if !(event is InputEventMouse or event is InputEventPanGesture):
 			viewport.push_input(event)
 		)
 	viewport.gui_focus_changed.connect(func(node):
-		print('focus')
 		LocalGlobals.player_state = LocalGlobals.PLAYER_STATE_TYPING
 		)
 	LocalGlobals.playerreleaseuifocus.connect(func():
@@ -132,6 +133,7 @@ func laser_input(data:Dictionary):
 	# Setup event
 	match data.action:
 		"hover":
+			return null
 			event = InputEventMouseMotion.new()
 		"scrollup":
 			event = InputEventMouseButton.new()

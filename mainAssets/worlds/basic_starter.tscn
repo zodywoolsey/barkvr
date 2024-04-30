@@ -15,6 +15,7 @@ background_mode = 2
 background_energy_multiplier = 0.6
 sky = SubResource("Sky_sd3km")
 tonemap_mode = 3
+glow_enabled = true
 volumetric_fog_density = 0.2198
 volumetric_fog_albedo = Color(0.6, 0.466667, 1, 1)
 volumetric_fog_emission = Color(0.6, 0.466667, 1, 1)

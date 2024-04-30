@@ -15,7 +15,8 @@ var discord_login_status = 'not logged in'
 @export_enum("PAUSED", "PLAYING", "TYPING") var player_state : int = 0:
 	set(value):
 		player_state = value
-		if value != 2:
+		#print(value)
+		if value != 2 and !vr_supported:
 			playerreleaseuifocus.emit()
 static var PLAYER_STATE_PAUSED := 0
 static var PLAYER_STATE_PLAYING:= 1
