@@ -44,24 +44,18 @@ func _ready():
 				"grip_force":
 					if value > .1 and !grabbing:
 						trigger_haptic_pulse("haptic",100.0,.5,.1,0.0)
-						trigger_haptic_pulse("haptic",200.0,.5,.1,0.1)
-						trigger_haptic_pulse("haptic",300.0,.5,.1,0.2)
-						trigger_haptic_pulse("haptic",400.0,.5,.1,0.3)
-						trigger_haptic_pulse("haptic",500.0,.5,.1,0.4)
-						trigger_haptic_pulse("haptic",400.0,.5,.1,0.5)
-						trigger_haptic_pulse("haptic",300.0,.5,.1,0.6)
-						trigger_haptic_pulse("haptic",200.0,.5,.1,0.7)
-						trigger_haptic_pulse("haptic",100.0,.5,.1,0.8)
 						grip()
 				"grip":
 					if value < 1.0:
 						grabbing = false
 		else:
-			if name == "grip":
-				if value > .5 and !grabbing:
-					grip()
-			elif name == "grip" and value < .5:
-				grabbing = false
+			match name:
+				"grip":
+					if value > .75 and !grabbing:
+						trigger_haptic_pulse("haptic",100.0,.5,.1,0.0)
+						grip()
+					elif value < .5:
+						grabbing = false
 #		if name == "trigger":
 #			if value > .3:
 #				world_ray.enabled = true
