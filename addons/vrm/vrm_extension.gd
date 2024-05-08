@@ -14,7 +14,6 @@ const vrm_utils = preload("./vrm_utils.gd")
 
 var vrm_meta: Resource = null
 
-
 enum DebugMode {
 	None = 0,
 	Normal = 1,
@@ -69,14 +68,17 @@ func _process_khr_material(orig_mat: StandardMaterial3D, gltf_mat_props: Diction
 	return orig_mat
 
 
-func _vrm_get_texture_info(gltf_images: Array, vrm_mat_props: Dictionary, unity_tex_name: String) -> Dictionary:
+func _vrm_get_texture_info(gstate: GLTFState, vrm_mat_props: Dictionary, unity_tex_name: String) -> Dictionary:
+	var gltf_images: Array = gstate.get_images()
+	var gltf_textures: Array = gstate.get_textures()
 	var texture_info: Dictionary = {}
 	texture_info["tex"] = null
 	texture_info["offset"] = Vector3(0.0, 0.0, 0.0)
 	texture_info["scale"] = Vector3(1.0, 1.0, 1.0)
 	if vrm_mat_props["textureProperties"].has(unity_tex_name):
 		var mainTexId: int = vrm_mat_props["textureProperties"][unity_tex_name]
-		var mainTexImage: Texture2D = gltf_images[mainTexId]
+		var mainTexImageId = gltf_textures[mainTexId].src_image
+		var mainTexImage: Texture2D = gltf_images[mainTexImageId]
 		texture_info["tex"] = mainTexImage
 	if vrm_mat_props["vectorProperties"].has(unity_tex_name):
 		var offsetScale: Array = vrm_mat_props["vectorProperties"][unity_tex_name]
@@ -89,7 +91,10 @@ func _vrm_get_float(vrm_mat_props: Dictionary, key: String, def: float) -> float
 	return vrm_mat_props["floatProperties"].get(key, def)
 
 
-func _process_vrm_material(orig_mat: Material, gltf_images: Array, vrm_mat_props: Dictionary) -> Material:
+func _process_vrm_material(orig_mat: Material, gstate: GLTFState, vrm_mat_props: Dictionary) -> Material:
+	var gltf_images: Array = gstate.get_images()
+	var gltf_textures: Array = gstate.get_textures()
+
 	var vrm_shader_name: String = vrm_mat_props["shader"]
 	if vrm_shader_name == "VRM_USE_GLTFSHADER":
 		return orig_mat  # It's already correct!
@@ -98,7 +103,7 @@ func _process_vrm_material(orig_mat: Material, gltf_images: Array, vrm_mat_props
 		printerr("Unsupported legacy VRM shader " + vrm_shader_name + " on material " + str(orig_mat.resource_name))
 		return orig_mat
 
-	var maintex_info: Dictionary = _vrm_get_texture_info(gltf_images, vrm_mat_props, "_MainTex")
+	var maintex_info: Dictionary = _vrm_get_texture_info(gstate, vrm_mat_props, "_MainTex")
 
 	if vrm_shader_name == "VRM/UnlitTransparentZWrite" or vrm_shader_name == "VRM/UnlitTransparent" or vrm_shader_name == "VRM/UnlitTexture" or vrm_shader_name == "VRM/UnlitCutout":
 		if maintex_info["tex"] != null:
@@ -182,7 +187,7 @@ func _process_vrm_material(orig_mat: Material, gltf_images: Array, vrm_mat_props
 		outline_mat.set_shader_parameter("_MainTex_ST", texture_repeat)
 
 	for param_name in ["_MainTex", "_ShadeTexture", "_BumpMap", "_RimTexture", "_SphereAdd", "_EmissionMap", "_OutlineWidthTexture", "_UvAnimMaskTexture"]:
-		var tex_info: Dictionary = _vrm_get_texture_info(gltf_images, vrm_mat_props, param_name)
+		var tex_info: Dictionary = _vrm_get_texture_info(gstate, vrm_mat_props, param_name)
 		if tex_info.get("tex", null) != null:
 			new_mat.set_shader_parameter(param_name, tex_info["tex"])
 			if outline_mat != null:
@@ -259,7 +264,7 @@ func _update_materials(vrm_extension: Dictionary, gstate: GLTFState) -> void:
 			continue
 		var newmat: Material = _process_khr_material(oldmat, gstate.json["materials"][i])
 		var vrm_mat_props: Dictionary = vrm_extension["materialProperties"][i]
-		newmat = _process_vrm_material(newmat, images, vrm_mat_props)
+		newmat = _process_vrm_material(newmat, gstate, vrm_mat_props)
 		spatial_to_shader_mat[oldmat] = newmat
 		spatial_to_shader_mat[newmat] = newmat
 		# print("Replacing shader " + str(oldmat) + "/" + str(oldmat.resource_name) + " with " + str(newmat) + "/" + str(newmat.resource_name))
@@ -354,7 +359,11 @@ func _first_person_head_hiding(vrm_extension: Dictionary, gstate: GLTFState, hum
 						if head_relative_bones.has(parent_node.bone_name):
 							flag = "ThirdPersonOnly"
 				else:
-					head_hidden_mesh = vrm_utils._generate_hide_bone_mesh(mesh, node.skin, head_relative_bones)
+					var blend_shape_names: Dictionary = vrm_utils._extract_blendshape_names(gstate.json)
+					if node_idx in blend_shape_names.keys():
+						head_hidden_mesh = vrm_utils._generate_hide_bone_mesh(mesh, node.skin, head_relative_bones, blend_shape_names[node_idx])
+					else:
+						head_hidden_mesh = vrm_utils._generate_hide_bone_mesh(mesh, node.skin, head_relative_bones, [])
 					if head_hidden_mesh == null:
 						flag = "ThirdPersonOnly"
 					if head_hidden_mesh == mesh:
@@ -831,11 +840,11 @@ func _parse_secondary_node(secondary_node: Node, vrm_extension: Dictionary, gsta
 			spring_bone.collider_groups = spring_collider_groups
 			for bone_name in chain:
 				spring_bone.joint_nodes.push_back(bone_name)  # end bone will be named ""
-				spring_bone.stiffness_force.push_back(stiffness_force)
-				spring_bone.gravity_power.push_back(gravity_power)
-				spring_bone.gravity_dir.push_back(gravity_dir)
-				spring_bone.drag_force.push_back(drag_force)
-				spring_bone.hit_radius.push_back(hit_radius)
+			spring_bone.stiffness_scale = stiffness_force
+			spring_bone.gravity_scale = gravity_power
+			spring_bone.gravity_dir_default = gravity_dir
+			spring_bone.drag_force_scale = drag_force
+			spring_bone.hit_radius_scale = hit_radius
 
 			if not comment.is_empty():
 				spring_bone.resource_name = comment.split("\n")[0]
@@ -847,7 +856,6 @@ func _parse_secondary_node(secondary_node: Node, vrm_extension: Dictionary, gsta
 	secondary_node.set_script(vrm_secondary)
 	secondary_node.set("skeleton", skeleton_path)
 	secondary_node.set("spring_bones", spring_bones)
-	secondary_node.set("collider_groups", collider_groups)
 
 
 func _add_joints_recursive(new_joints_set: Dictionary, gltf_nodes: Array, bone: int, include_child_meshes: bool = false) -> void:
@@ -954,7 +962,8 @@ func _import_post(gstate: GLTFState, node: Node) -> Error:
 
 	if is_vrm_0:
 		# VRM 0.0 has models facing backwards due to a spec error (flipped z instead of x)
-		vrm_utils.rotate_scene_180(root_node)
+		var blend_shape_names: Dictionary = vrm_utils._extract_blendshape_names(gltf_json)
+		vrm_utils.rotate_scene_180(root_node, blend_shape_names)
 
 	var do_retarget = true
 

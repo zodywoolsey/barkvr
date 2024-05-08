@@ -16,14 +16,17 @@ func _ready():
 		dir.make_dir('./worlds')
 	get_window().files_dropped.connect(func(files):
 		var filename:String
+		var file := FileAccess.open(files[0],FileAccess.READ)
+		if !file:
+			print('failed to open import file')
 		if OS.get_name() == "Windows" or OS.get_name() == "UWP":
 			filename = files[0].split('\\')[-1]
 		else:
 			filename = files[0].split('/')[-1]
 		if files[0].contains('.gltf') or files[0].contains('.glb'):
-			Journaling.import_asset('glb', FileAccess.get_file_as_bytes(files[0]), filename, false, {"base_path":files[0]})
+			Journaling.import_asset('glb', files[0], filename, false, {"base_path":files[0]})
 		elif files[0].contains('.vrm'):
-			Journaling.import_asset('vrm',FileAccess.get_file_as_bytes(files[0]), filename)
+			Journaling.import_asset('vrm',files[0], filename)
 		elif files[0].ends_with('.res') or files[0].ends_with('.tres') or files[0].ends_with('.scn') or files[0].ends_with('.tscn'):
 			Journaling.import_asset('res',files[0], filename)
 		elif files[0].ends_with('.zip') or files[0].ends_with('.pck'):

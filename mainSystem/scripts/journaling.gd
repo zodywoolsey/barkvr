@@ -109,8 +109,9 @@ func import_asset(
 	match type:
 		"glb", "vrm":
 			var thread := Thread.new()
-			thread.start(_import_glb.bind(content, asset_name, data))
+			thread.start(_import_glb.bind(asset_to_import, asset_name, data))
 			rejoin_thread_when_finished(thread)
+			#_import_res(asset_name, asset_to_import)
 		"res":
 			# TODO scenes and resources can't easily be sent to peers because of
 			# possible dependencies in other files.
@@ -145,21 +146,29 @@ func _check_loaded(path: String) -> void:
 				node.position.y = 2.0
 				root.add_child(node)
 
-func _import_glb(content: PackedByteArray, asset_name := '', data := {}) -> void:
+func _import_glb(content: Variant, asset_name := '', data := {}) -> void:
 	Thread.set_thread_safety_checks_enabled(false)
 	var doc := GLTFDocument.new()
+	doc.register_gltf_document_extension(preload("res://addons/vrm/vrm_extension.gd").new(), true)
 	var state := GLTFState.new()
 	var base_path := ''
 	if 'base_path' in data:
 		base_path = data.base_path
-	var err := doc.append_from_buffer(content, base_path, state)
+	var err:int
+	if content is PackedByteArray:
+		err = doc.append_from_buffer(content, base_path, state)
+	elif content is String:
+		err = doc.append_from_file(content, state)
 	if err == OK:
-#		for mesh in state.get_meshes():
-##			print('mesh: '+str(mesh.mesh))
-##			print('surfaces: '+str(mesh.mesh.get_surface_count()))
-#			if mesh.mesh.get_surface_lod_count(0) == 0:
+		for node in state.nodes:
+			print(node)
+		#for mesh in state.get_meshes():
+			#print('mesh: '+str(mesh.mesh))
+			
+#			print('surfaces: '+str(mesh.mesh.get_surface_count()))
+			#if mesh.mesh.get_surface_lod_count(0) == 0:
 ##				print('generating lod')
-#				mesh.mesh.generate_lods(25,60,[])
+				#mesh.mesh.generate_lods(25,60,[])
 			
 		var scene := doc.generate_scene(state)
 		if root:
@@ -168,6 +177,7 @@ func _import_glb(content: PackedByteArray, asset_name := '', data := {}) -> void
 #		if scene is Node3D:
 #			scene.scale = Vector3(.1,.1,.1)
 		root.call_deferred('add_child', scene)
+		#root.add_child(scene)
 	else:
 		Notifyvr.send_notification("error importing gltf document")
 

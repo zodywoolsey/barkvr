@@ -9,6 +9,7 @@ extends Control
 @onready var export = $titlebar/HBoxContainer/HBoxContainer/export
 @onready var dupbtn = $titlebar/HBoxContainer/HBoxContainer3/dupbtn
 @onready var delete = $titlebar/HBoxContainer/HBoxContainer2/delete
+@onready var active = $titlebar/HBoxContainer2/active/HBoxContainer/CheckButton
 
 @onready var objectname = $titlebar/HBoxContainer/Panel/objectname
 
@@ -61,6 +62,10 @@ func _ready():
 			target.queue_free()
 			target = null
 			clear_fields()
+		)
+	active.pressed.connect(func():
+		if target and is_instance_valid(target):
+			target
 		)
 	export.pressed.connect(func():
 		var world_root = get_tree().get_first_node_in_group("localworldroot")

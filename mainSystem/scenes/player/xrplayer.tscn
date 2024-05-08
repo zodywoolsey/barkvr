@@ -11,7 +11,7 @@
 [ext_resource type="Script" path="res://mainSystem/scripts/player/notificationpositioner.gd" id="8_n4qtp"]
 [ext_resource type="PackedScene" uid="uid://cr02u36wo3sqp" path="res://addons/contextmenu/gridmenu/handmenu.tscn" id="9_opil0"]
 
-[sub_resource type="ArrayMesh" id="ArrayMesh_oxc2w"]
+[sub_resource type="ArrayMesh" id="ArrayMesh_j8gkx"]
 _surfaces = [{
 "aabb": AABB(0, 0, 0, 1e-05, 0.1, 1e-05),
 "format": 34359738369,
@@ -21,7 +21,7 @@ _surfaces = [{
 "vertex_data": PackedByteArray(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 204, 204, 61, 0, 0, 0, 0)
 }]
 
-[sub_resource type="ArrayMesh" id="ArrayMesh_78l7o"]
+[sub_resource type="ArrayMesh" id="ArrayMesh_bep7f"]
 _surfaces = [{
 "aabb": AABB(0, 0, 0, 1e-05, 0.1, 1e-05),
 "format": 34359738369,
@@ -59,7 +59,7 @@ script/source = "extends Label3D
 	#text = str(1/delta)
 "
 
-[sub_resource type="ArrayMesh" id="ArrayMesh_d7rvs"]
+[sub_resource type="ArrayMesh" id="ArrayMesh_0biw8"]
 _surfaces = [{
 "aabb": AABB(0, 0, 0, 1e-05, 0.1, 1e-05),
 "format": 34359738369,
@@ -69,7 +69,7 @@ _surfaces = [{
 "vertex_data": PackedByteArray(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 204, 204, 61, 0, 0, 0, 0)
 }]
 
-[sub_resource type="ArrayMesh" id="ArrayMesh_86a53"]
+[sub_resource type="ArrayMesh" id="ArrayMesh_5jwwi"]
 _surfaces = [{
 "aabb": AABB(0, 0, 0, 1e-05, 0.1, 1e-05),
 "format": 34359738369,
@@ -134,7 +134,7 @@ script = ExtResource("3_n5c2i")
 
 [node name="Line3D" type="MeshInstance3D" parent="CharacterBody3D/xrplayer/righthand/handproxy/worldRay"]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
-mesh = SubResource("ArrayMesh_oxc2w")
+mesh = SubResource("ArrayMesh_j8gkx")
 skeleton = NodePath("../..")
 script = ExtResource("7_vo2nf")
 
@@ -142,7 +142,7 @@ script = ExtResource("7_vo2nf")
 collision_mask = 260
 
 [node name="Line3D" type="MeshInstance3D" parent="CharacterBody3D/xrplayer/righthand/handproxy/uiRay"]
-mesh = SubResource("ArrayMesh_78l7o")
+mesh = SubResource("ArrayMesh_bep7f")
 script = ExtResource("7_vo2nf")
 
 [node name="grabArea" type="Area3D" parent="CharacterBody3D/xrplayer/righthand/handproxy"]
@@ -226,7 +226,7 @@ script = ExtResource("3_n5c2i")
 leftside = true
 
 [node name="Line3D" type="MeshInstance3D" parent="CharacterBody3D/xrplayer/lefthand/handproxy/worldRay"]
-mesh = SubResource("ArrayMesh_d7rvs")
+mesh = SubResource("ArrayMesh_0biw8")
 skeleton = NodePath("../../..")
 script = ExtResource("7_vo2nf")
 
@@ -240,7 +240,7 @@ script = ExtResource("4_xffyd")
 leftside = true
 
 [node name="Line3D" type="MeshInstance3D" parent="CharacterBody3D/xrplayer/lefthand/handproxy/uiRay"]
-mesh = SubResource("ArrayMesh_86a53")
+mesh = SubResource("ArrayMesh_5jwwi")
 script = ExtResource("7_vo2nf")
 
 [node name="grabArea" type="Area3D" parent="CharacterBody3D/xrplayer/lefthand/handproxy"]

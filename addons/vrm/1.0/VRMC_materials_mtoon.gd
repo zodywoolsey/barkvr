@@ -122,6 +122,8 @@ func _export_preflight(state: GLTFState, root: Node) -> Error:
 	meshes = root.find_children("*", "MeshInstance3D")
 	for meshx in meshes:
 		var mesh: MeshInstance3D = meshx
+		if mesh.mesh == null:
+			continue
 		for m in range(mesh.mesh.get_surface_count()):
 			var mat: Material = mesh.get_surface_override_material(m)
 			if mat == null:
@@ -161,6 +163,14 @@ func _to_gltf_color(c: Variant):
 	return [c.r, c.g, c.b]
 
 
+func _cm_to_m(m: float) -> float:
+	return m / 100.0
+
+
+func _m_to_cm(cm: float) -> float:
+	return cm * 100.0
+
+
 func _export_mtoon_texture(texture_index, vrm_mat_props, key):
 	if texture_index >= 0:
 		vrm_mat_props[key] = {"index": texture_index}
@@ -169,6 +179,9 @@ func _export_mtoon_texture(texture_index, vrm_mat_props, key):
 func _export_mtoon_properties(standard: StandardMaterial3D, mat_props: Dictionary, texture_to_index: Dictionary):
 	if "extensions" not in mat_props:
 		mat_props["extensions"] = {}
+	if not standard.has_meta("mtoon_material"):
+		# Not a toon material. Ignore
+		return
 	var new_mat: ShaderMaterial = standard.get_meta("mtoon_material")
 	var vrm_mat_props: Dictionary = {}
 	mat_props["extensions"]["VRMC_materials_mtoon"] = vrm_mat_props
@@ -176,8 +189,11 @@ func _export_mtoon_properties(standard: StandardMaterial3D, mat_props: Dictionar
 	vrm_mat_props["specVersion"] = "1.0"
 	if standard.get_meta("has_zwrite"):
 		vrm_mat_props["transparentWithZWrite"] = true
+
+	var outline_width: float = new_mat.get_shader_parameter("_OutlineWidth")
 	if new_mat.get_shader_parameter("_OutlineWidthMode") == 1:
 		vrm_mat_props["outlineWidthMode"] = "worldCoordinates"
+		outline_width = _cm_to_m(outline_width)
 	if new_mat.get_shader_parameter("_OutlineWidthMode") == 2:
 		vrm_mat_props["outlineWidthMode"] = "screenCoordinates"
 	if standard.get_meta("has_cull_off"):
@@ -202,7 +218,7 @@ func _export_mtoon_properties(standard: StandardMaterial3D, mat_props: Dictionar
 	vrm_mat_props["rimLightingMixFactor"] = new_mat.get_shader_parameter("_RimLightingMix")
 	vrm_mat_props["parametricRimFresnelPowerFactor"] = new_mat.get_shader_parameter("_RimFresnelPower")
 	vrm_mat_props["parametricRimLiftFactor"] = new_mat.get_shader_parameter("_RimLift")
-	vrm_mat_props["outlineWidthFactor"] = new_mat.get_shader_parameter("_OutlineWidth")
+	vrm_mat_props["outlineWidthFactor"] = outline_width
 	vrm_mat_props["outlineLightingMixFactor"] = new_mat.get_shader_parameter("_OutlineLightingMix")
 	vrm_mat_props["uvAnimationScrollXSpeedFactor"] = new_mat.get_shader_parameter("_UvAnimScrollX")
 	vrm_mat_props["uvAnimationScrollYSpeedFactor"] = new_mat.get_shader_parameter("_UvAnimScrollY")
@@ -217,11 +233,11 @@ func _export_mtoon_properties(standard: StandardMaterial3D, mat_props: Dictionar
 		else:
 			delta_render_queue = clampi(delta_render_queue, -9, 0)
 		# render_priority only makes sense for transparent materials.
-		vrm_mat_props["renderQueueOffsetNumbers"] = delta_render_queue
+		vrm_mat_props["renderQueueOffsetNumber"] = delta_render_queue
 
 
 func _export_post(state: GLTFState) -> Error:
-	var texdic: Dictionary = state.get_meta("texture_dictionary")
+	var texdic = state.get_meta("texture_dictionary")
 	var texture_to_gltf_image_idx: Dictionary = {}
 	var gltf_image_idx_to_first_gltf_texture_idx: Dictionary = {}
 	var json = state.json
@@ -233,18 +249,19 @@ func _export_post(state: GLTFState) -> Error:
 		texture_to_gltf_image_idx[gltf_images[i]] = i
 
 	var texture_to_index: Dictionary = {}  # Texture to index in the textures array, not images array
-	for texture_idx in texdic:
-		texture_to_index[texdic[texture_idx]] = texture_idx
-		gltf_tex[texture_idx].src_image = texture_to_gltf_image_idx[texdic[texture_idx]]
-		json["textures"][texture_idx]["source"] = texture_to_gltf_image_idx[texdic[texture_idx]]
+	if typeof(texdic) == TYPE_DICTIONARY:
+		for texture_idx in texdic:
+			texture_to_index[texdic[texture_idx]] = texture_idx
+			gltf_tex[texture_idx].src_image = texture_to_gltf_image_idx[texdic[texture_idx]]
+			json["textures"][texture_idx]["source"] = texture_to_gltf_image_idx[texdic[texture_idx]]
 
-	# Use the first matched index instead of the extra one we created.
-	for texture_idx in range(len(gltf_tex)):
-		if not gltf_image_idx_to_first_gltf_texture_idx.has(gltf_tex[texture_idx].src_image):
-			gltf_image_idx_to_first_gltf_texture_idx[gltf_tex[texture_idx].src_image] = texture_idx
-			if texdic.has(texture_idx):
-				texture_to_index[texdic[texture_idx]] = texture_idx
-	state.textures = gltf_tex
+		# Use the first matched index instead of the extra one we created.
+		for texture_idx in range(len(gltf_tex)):
+			if not gltf_image_idx_to_first_gltf_texture_idx.has(gltf_tex[texture_idx].src_image):
+				gltf_image_idx_to_first_gltf_texture_idx[gltf_tex[texture_idx].src_image] = texture_idx
+				if texdic.has(texture_idx):
+					texture_to_index[texdic[texture_idx]] = texture_idx
+		state.textures = gltf_tex
 
 	var gltf_materials: Array[Material] = state.materials
 	for i in range(len(gltf_materials)):
@@ -256,14 +273,17 @@ func _export_post(state: GLTFState) -> Error:
 	return OK
 
 
-func _vrm_get_texture_info(gltf_images: Array, vrm_mat_props: Dictionary, unity_tex_name: String) -> Dictionary:
+func _vrm_get_texture_info(gstate: GLTFState, vrm_mat_props: Dictionary, unity_tex_name: String) -> Dictionary:
+	var gltf_images: Array = gstate.get_images()
+	var gltf_textures: Array = gstate.get_textures()
 	var texture_info: Dictionary = {}
 	texture_info["tex"] = null
 	texture_info["offset"] = Vector3(0.0, 0.0, 0.0)
 	texture_info["scale"] = Vector3(1.0, 1.0, 1.0)
 	if vrm_mat_props["textureProperties"].has(unity_tex_name):
 		var mainTexId: int = vrm_mat_props["textureProperties"][unity_tex_name]
-		var mainTexImage: Texture2D = gltf_images[mainTexId]
+		var mainTexImageId = gltf_textures[mainTexId].src_image
+		var mainTexImage: Texture2D = gltf_images[mainTexImageId]
 		texture_info["tex"] = mainTexImage
 	if vrm_mat_props["vectorProperties"].has(unity_tex_name):
 		var offsetScale: Array = vrm_mat_props["vectorProperties"][unity_tex_name]
@@ -389,11 +409,16 @@ func _process_vrm_material(orig_mat: Material, gltf_images: Array[Texture2D], gl
 	_assign_property(new_mat, "_MainTex_ST", texture_repeat)
 
 	var outline_width_idx: float = 0
+	var outline_width: float = vrm_mat_props.get("outlineWidthFactor", 0.0)
+
 	if outline_width_mode == "worldCoordinates":
 		outline_width_idx = 1
-	if outline_width_mode == "screenCoordinates":
+		outline_width = _m_to_cm(outline_width)
+	elif outline_width_mode == "screenCoordinates":
 		outline_width_idx = 2
+
 	_assign_property(new_mat, "_OutlineWidthMode", outline_width_idx)
+	_assign_property(new_mat, "_OutlineWidth", outline_width)
 
 	#"_ReceiveShadowRate": ["Shadow Receive", "Texture (R) * Rate. White is Default. Black attenuates shadows."],
 	#"_LightColorAttenuation": ["Light Color Atten", "Light Color Attenuation"],
@@ -413,7 +438,6 @@ func _process_vrm_material(orig_mat: Material, gltf_images: Array[Texture2D], gl
 	_assign_property(new_mat, "_RimLightingMix", vrm_mat_props.get("rimLightingMixFactor", 0.0))
 	_assign_property(new_mat, "_RimFresnelPower", vrm_mat_props.get("parametricRimFresnelPowerFactor", 1.0))
 	_assign_property(new_mat, "_RimLift", vrm_mat_props.get("parametricRimLiftFactor", 0.0))
-	_assign_property(new_mat, "_OutlineWidth", vrm_mat_props.get("outlineWidthFactor", 0.0))
 	_assign_property(new_mat, "_OutlineColorMode", 1.0)  # MixedLighting always. FixedColor if outlineLightingMixFactor==0
 	_assign_property(new_mat, "_OutlineLightingMix", vrm_mat_props.get("outlineLightingMixFactor", 1.0))
 	_assign_property(new_mat, "_UvAnimScrollX", vrm_mat_props.get("uvAnimationScrollXSpeedFactor", 0.0))
@@ -421,11 +445,11 @@ func _process_vrm_material(orig_mat: Material, gltf_images: Array[Texture2D], gl
 	_assign_property(new_mat, "_UvAnimRotation", vrm_mat_props.get("uvAnimationRotationSpeedFactor", 0.0))
 
 	if alpha_mode == "BLEND":
-		var delta_render_queue = vrm_mat_props.get("renderQueueOffsetNumbers", 0)
+		var delta_render_queue = vrm_mat_props.get("renderQueueOffsetNumber", 0)
 		if vrm_mat_props.get("transparentWithZWrite", false) == true:
-			# renderQueueOffsetNumbers range for this case is 0 to +9
+			# renderQueueOffsetNumber range for this case is 0 to +9
 			# must be rendered before transparentWithZWrite==false
-			# transparentWithZWrite==false has renderQueueOffsetNumbers between -9 and 0
+			# transparentWithZWrite==false has renderQueueOffsetNumber between -9 and 0
 			# so we need these to be below that.
 			delta_render_queue -= 19
 		# render_priority only makes sense for transparent materials.
