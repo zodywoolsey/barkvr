@@ -31,14 +31,13 @@ layout_mode = 2
 size_flags_horizontal = 3
 color = Color(0, 0, 0, 1)
 
-[node name="objectname" type="LineEdit" parent="titlebar/HBoxContainer/Panel"]
+[node name="targetname" type="LineEdit" parent="titlebar/HBoxContainer/Panel"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-focus_mode = 0
 flat = true
 
 [node name="HBoxContainer" type="HBoxContainer" parent="titlebar/HBoxContainer"]

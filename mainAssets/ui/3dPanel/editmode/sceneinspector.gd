@@ -1,21 +1,21 @@
 extends Control
-@onready var tree : Tree = $Tree
+@onready var tree : hashed_tree_list = $Tree
 
 @onready var tree_root : TreeItem = tree.create_item()
 signal selected(item)
 
 func _ready():
-	print('ready')
+	print(tree.get_class())
 	tree.item_selected.connect(func():
 		await get_tree().process_frame
 		selected.emit(tree.get_selected().get_metadata(0).node)
 		LocalGlobals.clear_gizmos.emit()
-		var giz = load("res://mainSystem/scenes/objects/tools/gizmo/gizmo.tscn").instantiate()
 		var node = tree.get_selected().get_metadata(0).node
 		if !is_instance_valid(node):
 			tree.check_children()
 			return
 		if node is Node3D:
+			var giz = load("res://mainSystem/scenes/objects/tools/gizmo/gizmo.tscn").instantiate()
 			get_tree().get_first_node_in_group('localworldroot').add_child(giz)
 			giz.global_position = node.global_position
 			giz.target = node

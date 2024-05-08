@@ -10,8 +10,7 @@ extends Control
 @onready var dupbtn = $titlebar/HBoxContainer/HBoxContainer3/dupbtn
 @onready var delete = $titlebar/HBoxContainer/HBoxContainer2/delete
 @onready var active = $titlebar/HBoxContainer2/active/HBoxContainer/CheckButton
-
-@onready var objectname = $titlebar/HBoxContainer/Panel/objectname
+@onready var targetname = $titlebar/HBoxContainer/Panel/targetname
 
 @onready var v_box_container = $ScrollContainer/VBoxContainer
 
@@ -28,7 +27,14 @@ func _input(event):
 #		update_fields()
 
 func set_target(node):
-	if node:
+	if node and node is Node:
+		targetname.text = node.name
+		if "visible" in node:
+			active.disabled = false
+			active.button_pressed = node.visible
+		else:
+			active.button_pressed = true
+			active.disabled = true
 		for child in v_box_container.get_children():
 			child.queue_free()
 		target = node
@@ -46,11 +52,11 @@ func set_target(node):
 
 func update_fields():
 	if target and is_instance_valid(target):
-		objectname.text = target.name
+		targetname.text = target.name
 
 func clear_fields():
 	if target:
-		objectname.text = target.name
+		targetname.text = target.name
 
 func _ready():
 	dupbtn.pressed.connect(func():
@@ -65,7 +71,7 @@ func _ready():
 		)
 	active.pressed.connect(func():
 		if target and is_instance_valid(target):
-			target
+			target.visible = active.button_pressed
 		)
 	export.pressed.connect(func():
 		var world_root = get_tree().get_first_node_in_group("localworldroot")
@@ -80,16 +86,14 @@ func _ready():
 #			print(err)
 #			OS.shell_open(OS.get_user_data_dir())
 		)
-	objectname.text_changed.connect(func(new_text:String):
+	targetname.text_changed.connect(func(new_text:String):
 		if target:
-			print(target)
 			target.name = new_text
-			print(target)
 		)
-	objectname.focus_entered.connect(func():
+	targetname.focus_entered.connect(func():
 		is_field_focused = true
 		)
-	objectname.focus_exited.connect(func():
+	targetname.focus_exited.connect(func():
 		is_field_focused = false
 		)
 
