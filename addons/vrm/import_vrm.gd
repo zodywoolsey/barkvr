@@ -5,7 +5,6 @@ const gltf_document_extension_class = preload("./vrm_extension.gd")
 
 const SAVE_DEBUG_GLTFSTATE_RES: bool = false
 
-
 func _get_importer_name() -> String:
 	return "Godot-VRM"
 

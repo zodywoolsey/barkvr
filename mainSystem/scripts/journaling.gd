@@ -146,40 +146,89 @@ func _check_loaded(path: String) -> void:
 				node.position.y = 2.0
 				root.add_child(node)
 
+
+const gltf_document_extension_class = preload("res://addons/vrm/vrm_extension.gd")
+const SAVE_DEBUG_GLTFSTATE_RES: bool = false
+
+#COPIED FROM https://github.com/godotengine/godot/blob/c4279fe3e0b27d0f40857c00eece7324a967285f/modules/gltf/gltf_document.cpp#L62
+# BECAUSE THIS SHIT IS NOT LOCATED ANYWHERE SENSIBLE IN THE ENGINE!!!!
+#define GLTF_IMPORT_GENERATE_TANGENT_ARRAYS 8
+#define GLTF_IMPORT_USE_NAMED_SKIN_BINDS 16
+#define GLTF_IMPORT_DISCARD_MESHES_AND_MATERIALS 32
+#define GLTF_IMPORT_FORCE_DISABLE_MESH_COMPRESSION 64
+
 func _import_glb(content: Variant, asset_name := '', data := {}) -> void:
 	Thread.set_thread_safety_checks_enabled(false)
-	var doc := GLTFDocument.new()
-	doc.register_gltf_document_extension(preload("res://addons/vrm/vrm_extension.gd").new(), true)
-	var state := GLTFState.new()
-	var base_path := ''
-	if 'base_path' in data:
-		base_path = data.base_path
-	var err:int
-	if content is PackedByteArray:
-		err = doc.append_from_buffer(content, base_path, state)
-	elif content is String:
-		err = doc.append_from_file(content, state)
-	if err == OK:
-		for node in state.nodes:
-			print(node)
+	var logging_prefix := asset_name+" : "
+	print("Import VRM: " + asset_name + " ----------------------")
+	var gltf: GLTFDocument = GLTFDocument.new()
+	var flags =\
+		EditorSceneFormatImporter.IMPORT_USE_NAMED_SKIN_BINDS+\
+		EditorSceneFormatImporter.IMPORT_GENERATE_TANGENT_ARRAYS
+	var vrm_extension: GLTFDocumentExtension = gltf_document_extension_class.new()
+	gltf.register_gltf_document_extension(vrm_extension, true)
+	var state: GLTFState = GLTFState.new()
+	# HANDLE_BINARY_EMBED_AS_BASISU crashes on some files in 4.0 and 4.1
+	state.handle_binary_image = GLTFState.HANDLE_BINARY_EMBED_AS_UNCOMPRESSED  # GLTFState.HANDLE_BINARY_EXTRACT_TEXTURES
+	var err = gltf.append_from_file(content, state, flags)
+	if err != OK:
+		gltf.unregister_gltf_document_extension(vrm_extension)
+		return
+	for mesh in state.meshes:
+			print(logging_prefix+'generating lods')
+			mesh.mesh.generate_lods(25,60,[])
+		
+	var generated_scene = gltf.generate_scene(state)
+	if SAVE_DEBUG_GLTFSTATE_RES and content != "":
+		if !ResourceLoader.exists(content + ".res"):
+			state.take_over_path(content + ".res")
+			ResourceSaver.save(state, content + ".res")
+	gltf.unregister_gltf_document_extension(vrm_extension)
+	#return generated_scene
+	root.call_deferred('add_child', generated_scene)
+	
+	# OLD IMPORT CODE
+	#TODO: remove old import code
+	#print(logging_prefix+"loading gltf/glb/vrm of ")
+	#var doc := GLTFDocument.new()
+	#doc.register_gltf_document_extension(LocalGlobals.VRMC_node_constraint_inst)
+	#doc.register_gltf_document_extension(LocalGlobals.VRMC_vrm_inst)
+	#doc.register_gltf_document_extension(LocalGlobals.VRMC_springBone_inst)
+	#doc.register_gltf_document_extension(LocalGlobals.VRMC_materials_hdr_emissiveMultiplier_inst)
+	#doc.register_gltf_document_extension(LocalGlobals.VRMC_materials_mtoon_inst)
+	#var state := GLTFState.new()
+	#var base_path := ''
+	#if 'base_path' in data:
+		#base_path = data.base_path
+	#var err:int
+	#if content is PackedByteArray:
+		#err = doc.append_from_buffer(content, base_path, state)
+	#elif content is String:
+		#err = doc.append_from_file(content, state)
+	#if err == OK:
+		#for node in state.nodes:
+			#var scene_node := state.get_scene_node(0)
+		##var scene := Node
+		#print(logging_prefix+"loading meshes")
 		#for mesh in state.get_meshes():
-			#print('mesh: '+str(mesh.mesh))
-			
-#			print('surfaces: '+str(mesh.mesh.get_surface_count()))
+			#print(logging_prefix+'mesh: '+str(mesh.mesh))
+			#
+			#print(logging_prefix+'surfaces: '+str(mesh.mesh.get_surface_count()))
 			#if mesh.mesh.get_surface_lod_count(0) == 0:
-##				print('generating lod')
+				#print(logging_prefix+'generating lod')
 				#mesh.mesh.generate_lods(25,60,[])
-			
-		var scene := doc.generate_scene(state)
-		if root:
-			asset_name += str(Time.get_unix_time_from_system())
-		scene.name = asset_name
-#		if scene is Node3D:
-#			scene.scale = Vector3(.1,.1,.1)
-		root.call_deferred('add_child', scene)
-		#root.add_child(scene)
-	else:
-		Notifyvr.send_notification("error importing gltf document")
+			#
+		#var scene := doc.generate_scene(state)
+		#
+		#if root:
+			#asset_name += str(Time.get_unix_time_from_system())
+		#scene.name = asset_name
+##		if scene is Node3D:
+##			scene.scale = Vector3(.1,.1,.1)
+		#root.call_deferred('add_child', scene)
+		##root.add_child(scene)
+	#else:
+		#Notifyvr.send_notification("error importing gltf document")
 
 ## Imports a Godot resource.
 func _import_res(asset_name: String, asset_to_import: Variant) -> void:
@@ -220,11 +269,31 @@ func _import_image(asset_name: String, content: PackedByteArray) -> void:
 
 	var tex := ImageTexture.create_from_image(img)
 	var plane := MeshInstance3D.new()
-	var tmpmesh = PlaneMesh.new()
+	var tmpmesh := PlaneMesh.new()
+	tmpmesh.size = tex.get_size()*.001
+	var tmpmat := StandardMaterial3D.new()
+	
+	var tmpbody := StaticBody3D.new()
+	tmpbody.set_meta("grabbable",true)
+	var tmpcol := CollisionShape3D.new()
+	var tmpcolshape := BoxShape3D.new()
+	tmpcolshape.size.x = (tex.get_size()*.001).x
+	tmpcolshape.size.y = (tex.get_size()*.001).y
+	tmpcolshape.size.z = .001
+	tmpcol.shape = tmpcolshape
+	tmpbody.add_child(tmpcol)
+	tmpbody.collision_layer = 2
+	tmpbody.collision_mask = 2
+	
+	tmpmat.albedo_texture = tex
+	tmpmat.shading_mode = tmpmat.SHADING_MODE_UNSHADED
+	tmpmesh.material = tmpmat
 	tmpmesh.orientation = PlaneMesh.FACE_Z
-	root.add_child(plane)
-	plane.name = asset_name
-	plane.position.y = 1.0
+	plane.mesh = tmpmesh
+	tmpbody.add_child(plane)
+	root.add_child(tmpbody)
+	tmpbody.name = asset_name
+	tmpbody.position.y = 1.0
 
 func rejoin_thread_when_finished(thread: Thread) -> void:
 	if thread and thread.is_started() and thread.is_alive():

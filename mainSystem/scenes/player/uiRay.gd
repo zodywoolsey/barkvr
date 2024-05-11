@@ -8,7 +8,7 @@ func _process(delta):
 	procrayvis()
 
 func _input(event):
-	if event is InputEventPanGesture:
+	if event is InputEventGesture:
 		if is_colliding() and prevHover is Panel3D:
 			prevHover.laser_input({
 				'action':'custom',

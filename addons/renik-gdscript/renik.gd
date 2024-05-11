@@ -88,53 +88,35 @@ func update_skeleton():
 		limb_leg_left.update(skeleton)
 		limb_leg_right.update(skeleton)
 
-## Toggles whether the preview should update in the editor
 @export var live_preview: bool
 
 @export_group("Armature", "armature_")
 
 var skeleton: Skeleton3D
 
-## Path to the target Skeleton3D for IK calculations
 @export_node_path("Skeleton3D") var armature_skeleton_path: NodePath:
 	set(value):
 		armature_skeleton_path = value
 		update_skeleton()
 
-## Name of head bone
 @export var armature_head: String = "Head"
 
-@export_subgroup("Arms")
-## Name of left hand bone
 @export var armature_left_hand: String = "LeftHand"
-## Name of left lower arm bone
 @export var armature_left_lower_arm: String = "LeftLowerArm"
-## Name of left upper arm bone
 @export var armature_left_upper_arm: String = "LeftUpperArm"
 
-## Name of right hand bone
 @export var armature_right_hand: String = "RightHand"
-## Name of right lower arm bone
 @export var armature_right_lower_arm: String = "RightLowerArm"
-## Name of right upper bone
 @export var armature_right_upper_arm: String = "RightUpperArm"
 
-@export_subgroup('Legs')
-## Name of hip bone
 @export var armature_hip: String = "Hips"
 
-## Name of left foot bone
 @export var armature_left_foot: String = "LeftFoot"
-## Name of left lower leg bone
 @export var armature_left_lower_leg: String = "LeftLowerLeg"
-## Name of left upper leg bone
 @export var armature_left_upper_leg: String = "LeftUpperLeg"
 
-## Name of right foot bone
 @export var armature_right_foot: String = "RightFoot"
-## Name of right lower leg bone
 @export var armature_right_lower_leg: String = "RightLowerLeg"
-## Name of right upper leg bone
 @export var armature_right_upper_leg: String = "RightUpperLeg"
 
 const left_shoulder_enabled: bool = true # Seems to be broken if disabled
@@ -143,7 +125,6 @@ const right_shoulder_enabled: bool = true # Seems to be broken if disabled
 @export_group("Targets")
 
 var head_target_spatial: Node3D
-## Node to track for head position
 @export_node_path("Node3D") var armature_head_target: NodePath:
 	set(value):
 		armature_head_target = value
@@ -151,7 +132,6 @@ var head_target_spatial: Node3D
 			head_target_spatial = get_node_or_null(armature_head_target) as Node3D
 
 var hand_left_target_spatial: Node3D
-## Node to track for left hand position
 @export_node_path("Node3D") var armature_left_hand_target: NodePath:
 	set(value):
 		armature_left_hand_target = value
@@ -159,7 +139,6 @@ var hand_left_target_spatial: Node3D
 			hand_left_target_spatial = get_node_or_null(armature_left_hand_target) as Node3D
 
 var hand_right_target_spatial: Node3D
-## Node to track for right hand position
 @export_node_path("Node3D") var armature_right_hand_target: NodePath:
 	set(value):
 		armature_right_hand_target = value
@@ -167,7 +146,6 @@ var hand_right_target_spatial: Node3D
 			hand_right_target_spatial = get_node_or_null(armature_right_hand_target) as Node3D
 
 var hip_target_spatial: Node3D
-## Node to track for hips position
 @export_node_path("Node3D") var armature_hip_target: NodePath:
 	set(value):
 		armature_hip_target = value
@@ -175,7 +153,6 @@ var hip_target_spatial: Node3D
 			hip_target_spatial = get_node_or_null(armature_hip_target) as Node3D
 
 var foot_left_target_spatial: Node3D
-## Node to track for left foot position
 @export_node_path("Node3D") var armature_left_foot_target: NodePath:
 	set(value):
 		armature_left_foot_target = value
@@ -183,7 +160,6 @@ var foot_left_target_spatial: Node3D
 			foot_left_target_spatial = get_node_or_null(armature_left_foot_target) as Node3D
 
 var foot_right_target_spatial: Node3D
-## Node to track for right foot position
 @export_node_path("Node3D") var armature_right_foot_target: NodePath:
 	set(value):
 		armature_right_foot_target = value

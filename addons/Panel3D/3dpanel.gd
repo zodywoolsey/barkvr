@@ -118,7 +118,7 @@ func _ready():
 # it so inptus are not automatically passed to the SubViewport
 	get_tree().root.window_input.connect(func(event):
 		#viewport.push_input(event, true)
-		if !(event is InputEventMouse or event is InputEventPanGesture):
+		if (event is InputEventKey):
 			viewport.push_input(event)
 		)
 	viewport.gui_focus_changed.connect(func(node):

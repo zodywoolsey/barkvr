@@ -1,10 +1,9 @@
 extends Node3D
 
 @onready var start_xr = $StartXR
-const gltf_document_extension_class = preload("res://addons/vrm/vrm_extension.gd")
 
 func _ready():
-	GLTFDocument.register_gltf_document_extension(preload("res://addons/vrm/vrm_extension.gd").new(), true)
+	#GLTFDocument.register_gltf_document_extension(VRMC_vrm_animation_inst)
 #	print(ProjectSettings.get_global_class_list())
 	get_viewport().canvas_cull_mask
 	var dir = DirAccess.open('user://')
@@ -15,25 +14,26 @@ func _ready():
 	if !dir.dir_exists('./worlds'):
 		dir.make_dir('./worlds')
 	get_window().files_dropped.connect(func(files):
-		var filename:String
-		var file := FileAccess.open(files[0],FileAccess.READ)
-		if !file:
-			print('failed to open import file')
-		if OS.get_name() == "Windows" or OS.get_name() == "UWP":
-			filename = files[0].split('\\')[-1]
-		else:
-			filename = files[0].split('/')[-1]
-		if files[0].contains('.gltf') or files[0].contains('.glb'):
-			Journaling.import_asset('glb', files[0], filename, false, {"base_path":files[0]})
-		elif files[0].contains('.vrm'):
-			Journaling.import_asset('vrm',files[0], filename)
-		elif files[0].ends_with('.res') or files[0].ends_with('.tres') or files[0].ends_with('.scn') or files[0].ends_with('.tscn'):
-			Journaling.import_asset('res',files[0], filename)
-		elif files[0].ends_with('.zip') or files[0].ends_with('.pck'):
-			Journaling.import_asset('pck', files[0], filename)
-		elif files[0].ends_with('png') or files[0].ends_with('jpg') or files[0].ends_with('jpeg'):
-			Journaling.import_asset('image', FileAccess.get_file_as_bytes(files[0]), filename)
-		)
+		for dropped in files:
+			var filename:String
+			var file := FileAccess.open(dropped,FileAccess.READ)
+			if !file:
+				print('failed to open import file')
+			if OS.get_name() == "Windows" or OS.get_name() == "UWP":
+				filename = dropped.split('\\')[-1]
+			else:
+				filename = dropped.split('/')[-1]
+			if dropped.contains('.gltf') or dropped.contains('.glb'):
+				Journaling.import_asset('glb', dropped, filename, false, {"base_path":dropped})
+			elif dropped.contains('.vrm'):
+				Journaling.import_asset('vrm',dropped, filename)
+			elif dropped.ends_with('.res') or dropped.ends_with('.tres') or dropped.ends_with('.scn') or dropped.ends_with('.tscn'):
+				Journaling.import_asset('res',dropped, filename)
+			elif dropped.ends_with('.zip') or dropped.ends_with('.pck'):
+				Journaling.import_asset('pck', dropped, filename)
+			elif dropped.ends_with('png') or dropped.ends_with('jpg') or dropped.ends_with('jpeg'):
+				Journaling.import_asset('image', FileAccess.get_file_as_bytes(dropped), filename)
+			)
 
 func _input(event):
 	if event is InputEventKey:
