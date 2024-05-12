@@ -14,26 +14,35 @@ func _ready():
 	if !dir.dir_exists('./worlds'):
 		dir.make_dir('./worlds')
 	get_window().files_dropped.connect(func(files):
-		for dropped in files:
-			var filename:String
-			var file := FileAccess.open(dropped,FileAccess.READ)
-			if !file:
-				print('failed to open import file')
-			if OS.get_name() == "Windows" or OS.get_name() == "UWP":
-				filename = dropped.split('\\')[-1]
-			else:
-				filename = dropped.split('/')[-1]
-			if dropped.contains('.gltf') or dropped.contains('.glb'):
-				Journaling.import_asset('glb', dropped, filename, false, {"base_path":dropped})
-			elif dropped.contains('.vrm'):
-				Journaling.import_asset('vrm',dropped, filename)
-			elif dropped.ends_with('.res') or dropped.ends_with('.tres') or dropped.ends_with('.scn') or dropped.ends_with('.tscn'):
-				Journaling.import_asset('res',dropped, filename)
-			elif dropped.ends_with('.zip') or dropped.ends_with('.pck'):
-				Journaling.import_asset('pck', dropped, filename)
-			elif dropped.ends_with('png') or dropped.ends_with('jpg') or dropped.ends_with('jpeg'):
-				Journaling.import_asset('image', FileAccess.get_file_as_bytes(dropped), filename)
-			)
+		var thread := Thread.new()
+		thread.start(func():
+			Thread.set_thread_safety_checks_enabled(false)
+			for dropped in files:
+				var filename:String
+				var file := FileAccess.open(dropped,FileAccess.READ)
+				if !file:
+					print('failed to open import file')
+					continue
+				if OS.get_name() == "Windows" or OS.get_name() == "UWP":
+					filename = dropped.split('\\')[-1]
+				else:
+					filename = dropped.split('/')[-1]
+				if dropped.contains('.gltf') or dropped.contains('.glb'):
+					Journaling.import_asset('glb', dropped, filename, false, {"base_path":dropped})
+				elif dropped.contains('.vrm'):
+					Journaling.import_asset('vrm',dropped, filename)
+				elif dropped.ends_with('.res') or dropped.ends_with('.tres') or dropped.ends_with('.scn') or dropped.ends_with('.tscn'):
+					Journaling.import_asset('res',dropped, filename)
+				#elif dropped.ends_with('.zip') or dropped.ends_with('.pck'):
+				elif dropped.ends_with('.pck'):
+					Journaling.import_asset('pck', dropped, filename)
+				elif dropped.ends_with('png') or dropped.ends_with('jpg') or dropped.ends_with('jpeg'):
+					Journaling.import_asset('image', FileAccess.get_file_as_bytes(dropped), filename)
+				else:
+					Journaling.import_asset('file', FileAccess.get_file_as_bytes(dropped), filename)
+		)# end of thread func
+		Journaling.rejoin_thread_when_finished(thread)
+	)# end of files dropped
 
 func _input(event):
 	if event is InputEventKey:

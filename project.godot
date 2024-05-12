@@ -41,10 +41,6 @@ webrtc_config/turn_servers=PackedStringArray()
 webrtc_config/turn_password=""
 webrtc_config/turn_username=""
 
-[display]
-
-window/vsync/vsync_mode=0
-
 [editor]
 
 export/convert_text_resources_to_binary=false

@@ -61,7 +61,9 @@ func clear_fields():
 func _ready():
 	dupbtn.pressed.connect(func():
 		if target:
-			target.get_parent().add_child(target.duplicate())
+			var tmp :Node=target.duplicate()
+			target.get_parent().add_child(tmp)
+			tmp.name = target.name
 		)
 	delete.pressed.connect(func():
 		if target and is_instance_valid(target):

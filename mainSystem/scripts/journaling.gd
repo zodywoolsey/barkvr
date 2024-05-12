@@ -108,16 +108,21 @@ func import_asset(
 	# TODO pck support
 	match type:
 		"glb", "vrm":
-			var thread := Thread.new()
-			thread.start(_import_glb.bind(asset_to_import, asset_name, data))
-			rejoin_thread_when_finished(thread)
-			#_import_res(asset_name, asset_to_import)
+			#var thread := Thread.new()
+			#thread.start(_import_glb.bind(asset_to_import, asset_name, data))
+			#rejoin_thread_when_finished(thread)
+			_import_glb(asset_to_import, asset_name, data)
 		"res":
 			# TODO scenes and resources can't easily be sent to peers because of
 			# possible dependencies in other files.
 			_import_res(asset_name, asset_to_import)
 		"image":
 			_import_image(asset_name, content)
+		"file":
+			#var thread := Thread.new()
+			#thread.start(_import_file.bind(asset_name,content))
+			#rejoin_thread_when_finished(thread)
+			_import_file(asset_name, content)
 	# Send message to peers.
 	if !recieved:
 		if type == "res":
@@ -157,7 +162,7 @@ const SAVE_DEBUG_GLTFSTATE_RES: bool = false
 #define GLTF_IMPORT_DISCARD_MESHES_AND_MATERIALS 32
 #define GLTF_IMPORT_FORCE_DISABLE_MESH_COMPRESSION 64
 
-func _import_glb(content: Variant, asset_name := '', data := {}) -> void:
+func _import_glb(content: Variant, asset_name := '', data := {}, position:Vector3=Vector3(0,0,0)) -> void:
 	Thread.set_thread_safety_checks_enabled(false)
 	var logging_prefix := asset_name+" : "
 	print("Import VRM: " + asset_name + " ----------------------")
@@ -175,8 +180,9 @@ func _import_glb(content: Variant, asset_name := '', data := {}) -> void:
 		gltf.unregister_gltf_document_extension(vrm_extension)
 		return
 	for mesh in state.meshes:
-			print(logging_prefix+'generating lods')
-			mesh.mesh.generate_lods(25,60,[])
+			if mesh.mesh.get_surface_lod_count(0) == 0:
+				print(logging_prefix+'generating lods')
+				mesh.mesh.generate_lods(25,60,[])
 		
 	var generated_scene = gltf.generate_scene(state)
 	if SAVE_DEBUG_GLTFSTATE_RES and content != "":
@@ -231,7 +237,7 @@ func _import_glb(content: Variant, asset_name := '', data := {}) -> void:
 		#Notifyvr.send_notification("error importing gltf document")
 
 ## Imports a Godot resource.
-func _import_res(asset_name: String, asset_to_import: Variant) -> void:
+func _import_res(asset_name: String, asset_to_import: Variant, position:Vector3=Vector3(0,0,0)) -> void:
 	# If asset to import is not a path, create a path.
 	# Note that this may mean assets might not load for peers.
 	if asset_to_import is PackedByteArray:
@@ -247,7 +253,7 @@ func _import_res(asset_name: String, asset_to_import: Variant) -> void:
 	_check_loaded.call_deferred(asset_to_import)
 
 ## Imports an image.
-func _import_image(asset_name: String, content: PackedByteArray) -> void:
+func _import_image(asset_name: String, content: PackedByteArray, position:Vector3=Vector3(0,0,0)) -> void:
 	var img := Image.new()
 	var err: Error
 
@@ -291,7 +297,54 @@ func _import_image(asset_name: String, content: PackedByteArray) -> void:
 	tmpmesh.orientation = PlaneMesh.FACE_Z
 	plane.mesh = tmpmesh
 	tmpbody.add_child(plane)
-	root.add_child(tmpbody)
+	#root.add_child(tmpbody)
+	root.call_deferred("add_child",tmpbody)
+	tmpbody.name = asset_name
+	tmpbody.position.y = 1.0
+	
+## Imports a file.
+func _import_file(asset_name: String, content: PackedByteArray, position:Vector3=Vector3(0,0,0) ) -> void:
+
+	var tex := NoiseTexture2D.new()
+	var noise := FastNoiseLite.new()
+	noise.seed = randf()
+	tex.height = 100
+	tex.width = 100
+	tex.noise = noise
+	var plane := MeshInstance3D.new()
+	#var tmpmesh := PlaneMesh.new()
+	var tmpmesh := TextMesh.new()
+	tmpmesh.text = asset_name
+	tmpmesh.autowrap_mode = TextServer.AUTOWRAP_WORD
+	tmpmesh.font_size = 4
+	tmpmesh.depth = .01
+	#tmpmesh.size = tex.get_size()*.001
+	var tmpmat := StandardMaterial3D.new()
+	
+	var tmpbody := StaticBody3D.new()
+	tmpbody.set_meta("grabbable",true)
+	var tmpcol := CollisionShape3D.new()
+	var tmpcolshape := BoxShape3D.new()
+	#tmpcolshape.size.x = (tex.get_size()*.001).x
+	#tmpcolshape.size.y = (tex.get_size()*.001).y
+	tmpcolshape.size = tmpmesh.get_aabb().size
+	
+	#tmpcolshape.size.z = .001
+	tmpcol.shape = tmpcolshape
+	tmpbody.add_child(tmpcol)
+	tmpbody.collision_layer = 2
+	tmpbody.collision_mask = 2
+	
+	tmpmat.albedo_texture = tex
+	tmpmat.shading_mode = tmpmat.SHADING_MODE_UNSHADED
+	tmpmesh.material = tmpmat
+	#tmpmesh.orientation = PlaneMesh.FACE_Z
+	plane.mesh = tmpmesh
+	tmpbody.add_child(plane)
+	tmpbody.set_meta("file_bytes",content.compress())
+	print(tmpbody.get_meta("file_bytes"))
+	#root.add_child(tmpbody)
+	root.call_deferred("add_child",tmpbody)
 	tmpbody.name = asset_name
 	tmpbody.position.y = 1.0
 

@@ -19,6 +19,7 @@ func _ready():
 			get_tree().get_first_node_in_group('localworldroot').add_child(giz)
 			giz.global_position = node.global_position
 			giz.target = node
+			giz.name = "gizmo"
 		)
 	var root = get_tree().get_first_node_in_group('localworldroot')
 	tree.add_item(root.name,{

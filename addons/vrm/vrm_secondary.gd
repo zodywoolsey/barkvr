@@ -8,7 +8,7 @@ const collider_group_class = preload("./vrm_collider_group.gd")
 
 
 @export_category("Springbone Settings")
-@export var update_secondary_fixed: bool = false:
+@export var update_secondary_fixed: bool = true:
 	set(value):
 		update_secondary_fixed = value
 		if is_child_of_vrm:
