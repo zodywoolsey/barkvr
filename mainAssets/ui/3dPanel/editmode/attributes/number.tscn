@@ -1,8 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://dkaactpqyjgjn"]
+[gd_scene load_steps=2 format=3 uid="uid://cbmgba1q1d8q5"]
 
-[ext_resource type="Script" path="res://mainAssets/ui/3dPanel/editmode/attributes/vector2.gd" id="1_cs5e4"]
+[ext_resource type="Script" path="res://mainAssets/ui/3dPanel/editmode/attributes/number.gd" id="1_b15ae"]
 
-[node name="vector2" type="Control"]
+[node name="number" type="Control"]
 custom_minimum_size = Vector2(0, 200)
 layout_mode = 3
 anchors_preset = 15
@@ -13,7 +13,7 @@ grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 size_flags_stretch_ratio = 2.0
-script = ExtResource("1_cs5e4")
+script = ExtResource("1_b15ae")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 1
@@ -44,30 +44,26 @@ vertical_alignment = 1
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="x" type="HBoxContainer" parent="VBoxContainer/position"]
+[node name="v" type="HBoxContainer" parent="VBoxContainer/position"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="ColorRect" type="ColorRect" parent="VBoxContainer/position/x"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_stretch_ratio = 0.1
-color = Color(1, 0, 0, 1)
-
-[node name="xval" type="LineEdit" parent="VBoxContainer/position/x"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="y" type="HBoxContainer" parent="VBoxContainer/position"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="ColorRect" type="ColorRect" parent="VBoxContainer/position/y"]
+[node name="Panel2" type="Panel" parent="VBoxContainer/position/v"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.1
-color = Color(0, 1, 0, 1)
 
-[node name="yval" type="LineEdit" parent="VBoxContainer/position/y"]
+[node name="Label" type="Label" parent="VBoxContainer/position/v/Panel2"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "float:"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="val" type="LineEdit" parent="VBoxContainer/position/v"]
 layout_mode = 2
 size_flags_horizontal = 3

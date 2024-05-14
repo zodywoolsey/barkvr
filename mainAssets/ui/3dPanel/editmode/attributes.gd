@@ -1,7 +1,7 @@
 @tool
 extends Control
 
-# todo 	for optimization create a system where fields appended (ex: Vector3_Attribute)
+#TODO 	for optimization create a system where fields appended (ex: Vector3_Attribute)
 #			register the values they need updated with the parent manager so
 #			that they can be updated in batches by the parent attr panel
 #			with optional self update for user simplicity reasons.
@@ -16,6 +16,9 @@ extends Control
 
 var vector_3_field = preload("res://mainAssets/ui/3dPanel/editmode/attributes/vector3.tscn")
 var vector_2_field = preload("res://mainAssets/ui/3dPanel/editmode/attributes/vector2.tscn")
+var number_field = preload("res://mainAssets/ui/3dPanel/editmode/attributes/number.tscn")
+var bool_field = preload("res://mainAssets/ui/3dPanel/editmode/attributes/bool.tscn")
+var enum_field = preload("res://mainAssets/ui/3dPanel/editmode/attributes/enum.tscn")
 var is_field_focused = false
 var target : Node = null
 
@@ -40,11 +43,32 @@ func set_target(node):
 		target = node
 		for prop in target.get_property_list():
 			match prop.type:
-				9:
+				TYPE_BOOL:
+					var tmp :Bool_Attribute = bool_field.instantiate()
+					v_box_container.add_child(tmp)
+					tmp.set_data(prop.name, target, prop.name)
+				TYPE_FLOAT:
+					var tmp :Number_Attribute = number_field.instantiate()
+					tmp.type = 0
+					v_box_container.add_child(tmp)
+					tmp.set_data(prop.name, target, prop.name)
+				TYPE_INT:
+					print(prop)
+					match prop.hint:
+						0:
+							var tmp :Number_Attribute = number_field.instantiate()
+							tmp.type = 1
+							v_box_container.add_child(tmp)
+							tmp.set_data(prop.name, target, prop.name)
+						2:
+							var tmp :Enum_Attribute = enum_field.instantiate()
+							v_box_container.add_child(tmp)
+							tmp.set_data(prop.name, target, prop.name, prop)
+				TYPE_VECTOR3:
 					var tmp :Vector3_Attribute = vector_3_field.instantiate()
 					v_box_container.add_child(tmp)
 					tmp.set_data(prop.name, target, prop.name)
-				5:
+				TYPE_VECTOR2:
 					var tmp :Vector2_Attribute = vector_2_field.instantiate()
 					v_box_container.add_child(tmp)
 					tmp.set_data(prop.name, target, prop.name)

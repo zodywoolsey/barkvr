@@ -111,18 +111,30 @@ func import_asset(
 			#var thread := Thread.new()
 			#thread.start(_import_glb.bind(asset_to_import, asset_name, data))
 			#rejoin_thread_when_finished(thread)
-			_import_glb(asset_to_import, asset_name, data)
+			if "position" in data:
+				_import_glb(asset_to_import, asset_name, data, data.position)
+			else:
+				_import_glb(asset_to_import, asset_name, data)
 		"res":
 			# TODO scenes and resources can't easily be sent to peers because of
 			# possible dependencies in other files.
-			_import_res(asset_name, asset_to_import)
+			if "position" in data:
+				_import_res(asset_name, asset_to_import, data.position)
+			else:
+				_import_res(asset_name, asset_to_import)
 		"image":
-			_import_image(asset_name, content)
+			if "position" in data:
+				_import_image(asset_name, content, data.position)
+			else:
+				_import_image(asset_name, content)
 		"file":
 			#var thread := Thread.new()
 			#thread.start(_import_file.bind(asset_name,content))
 			#rejoin_thread_when_finished(thread)
-			_import_file(asset_name, content)
+			if "position" in data:
+				_import_file(asset_name, content, data.position)
+			else:
+				_import_file(asset_name, content)
 	# Send message to peers.
 	if !recieved:
 		if type == "res":
@@ -190,8 +202,25 @@ func _import_glb(content: Variant, asset_name := '', data := {}, position:Vector
 			state.take_over_path(content + ".res")
 			ResourceSaver.save(state, content + ".res")
 	gltf.unregister_gltf_document_extension(vrm_extension)
-	#return generated_scene
-	root.call_deferred('add_child', generated_scene)
+	
+	# add IK stuff if VRM
+	if asset_name.ends_with(".vrm"):
+		var quickreniksetup :Node3D = load("res://addons/renik-gdscript/quick_renik_setup.tscn").instantiate()
+		generated_scene.add_child(quickreniksetup)
+		var skele :Skeleton3D=null
+		for i in generated_scene.get_children():
+			if skele:
+				break
+			if i is Skeleton3D:
+				skele = i
+			elif i.get_child_count() > 0:
+				for a in i.get_children():
+					if a is Skeleton3D:
+						skele = a
+		if skele:
+			quickreniksetup.armature_skeleton_path = quickreniksetup.get_path_to(skele)
+	
+	_post_import.call_deferred(root, generated_scene, asset_name, position, false)
 	
 	# OLD IMPORT CODE
 	#TODO: remove old import code
@@ -276,35 +305,34 @@ func _import_image(asset_name: String, content: PackedByteArray, position:Vector
 	var tex := ImageTexture.create_from_image(img)
 	var plane := MeshInstance3D.new()
 	var tmpmesh := PlaneMesh.new()
-	tmpmesh.size = tex.get_size()*.001
 	var tmpmat := StandardMaterial3D.new()
+	tmpmesh.size.y = 1.0
+	tmpmesh.size.x = ((tex.get_size()).x/(tex.get_size()).y)
+	tmpmat.albedo_texture = tex
+	tmpmat.cull_mode = BaseMaterial3D.CULL_DISABLED
+	tmpmat.shading_mode = tmpmat.SHADING_MODE_UNSHADED
+	tmpmesh.material = tmpmat
+	tmpmesh.orientation = PlaneMesh.FACE_Z
+	plane.mesh = tmpmesh
 	
 	var tmpbody := StaticBody3D.new()
 	tmpbody.set_meta("grabbable",true)
 	var tmpcol := CollisionShape3D.new()
 	var tmpcolshape := BoxShape3D.new()
-	tmpcolshape.size.x = (tex.get_size()*.001).x
-	tmpcolshape.size.y = (tex.get_size()*.001).y
+	tmpcolshape.size.y = 1.0
+	tmpcolshape.size.x = ((tex.get_size()).x/(tex.get_size()).y)
 	tmpcolshape.size.z = .001
 	tmpcol.shape = tmpcolshape
 	tmpbody.add_child(tmpcol)
 	tmpbody.collision_layer = 2
 	tmpbody.collision_mask = 2
 	
-	tmpmat.albedo_texture = tex
-	tmpmat.shading_mode = tmpmat.SHADING_MODE_UNSHADED
-	tmpmesh.material = tmpmat
-	tmpmesh.orientation = PlaneMesh.FACE_Z
-	plane.mesh = tmpmesh
 	tmpbody.add_child(plane)
-	#root.add_child(tmpbody)
-	root.call_deferred("add_child",tmpbody)
-	tmpbody.name = asset_name
-	tmpbody.position.y = 1.0
-	
+	_post_import.call_deferred(root, tmpbody, asset_name, position, true)
+
+
 ## Imports a file.
 func _import_file(asset_name: String, content: PackedByteArray, position:Vector3=Vector3(0,0,0) ) -> void:
-
 	var tex := NoiseTexture2D.new()
 	var noise := FastNoiseLite.new()
 	noise.seed = randf()
@@ -342,11 +370,7 @@ func _import_file(asset_name: String, content: PackedByteArray, position:Vector3
 	plane.mesh = tmpmesh
 	tmpbody.add_child(plane)
 	tmpbody.set_meta("file_bytes",content.compress())
-	print(tmpbody.get_meta("file_bytes"))
-	#root.add_child(tmpbody)
-	root.call_deferred("add_child",tmpbody)
-	tmpbody.name = asset_name
-	tmpbody.position.y = 1.0
+	_post_import.call_deferred(root, tmpbody, asset_name, position, true)
 
 func rejoin_thread_when_finished(thread: Thread) -> void:
 	if thread and thread.is_started() and thread.is_alive():
@@ -366,3 +390,9 @@ func receive(action: Dictionary) -> void:
 			import_asset(action.type, action.asset_to_import, '', true)
 		"delete_node":
 			delete_node(action.target, true)
+
+func _post_import(root:Node,node_to_add:Node,node_name:String,position:Vector3=Vector3(),lookatuser:bool=false):
+	root.add_child(node_to_add)
+	node_to_add.look_at(get_viewport().get_camera_3d().global_position)
+	node_to_add.global_position = position
+	node_to_add.name = node_name

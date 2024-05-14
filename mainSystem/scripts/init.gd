@@ -17,7 +17,10 @@ func _ready():
 		var thread := Thread.new()
 		thread.start(func():
 			Thread.set_thread_safety_checks_enabled(false)
+			var import_position :Vector3= get_viewport().get_camera_3d().to_global(Vector3(0,0,-2.0))
+			var offset := -1.0
 			for dropped in files:
+				offset += 1.0
 				var filename:String
 				var file := FileAccess.open(dropped,FileAccess.READ)
 				if !file:
@@ -28,18 +31,18 @@ func _ready():
 				else:
 					filename = dropped.split('/')[-1]
 				if dropped.contains('.gltf') or dropped.contains('.glb'):
-					Journaling.import_asset('glb', dropped, filename, false, {"base_path":dropped})
+					Journaling.import_asset('glb', dropped, filename, false, {"base_path":dropped, "position":import_position+Vector3(0,0,offset)})
 				elif dropped.contains('.vrm'):
-					Journaling.import_asset('vrm',dropped, filename)
+					Journaling.import_asset('vrm',dropped, filename, false, {"position":import_position+Vector3(0,0,offset)})
 				elif dropped.ends_with('.res') or dropped.ends_with('.tres') or dropped.ends_with('.scn') or dropped.ends_with('.tscn'):
-					Journaling.import_asset('res',dropped, filename)
+					Journaling.import_asset('res',dropped, filename, false, {"position":import_position+Vector3(0,0,offset)})
 				#elif dropped.ends_with('.zip') or dropped.ends_with('.pck'):
 				elif dropped.ends_with('.pck'):
-					Journaling.import_asset('pck', dropped, filename)
-				elif dropped.ends_with('png') or dropped.ends_with('jpg') or dropped.ends_with('jpeg'):
-					Journaling.import_asset('image', FileAccess.get_file_as_bytes(dropped), filename)
+					Journaling.import_asset('pck', dropped, filename, false, {"position":import_position+Vector3(0,0,offset)})
+				elif dropped.ends_with('.png') or dropped.ends_with('.jpg') or dropped.ends_with('.jpeg'):
+					Journaling.import_asset('image', FileAccess.get_file_as_bytes(dropped), filename, false, {"position":import_position+Vector3(0,0,offset)})
 				else:
-					Journaling.import_asset('file', FileAccess.get_file_as_bytes(dropped), filename)
+					Journaling.import_asset('file', FileAccess.get_file_as_bytes(dropped), filename, false, {"position":import_position+Vector3(0,0,offset)})
 		)# end of thread func
 		Journaling.rejoin_thread_when_finished(thread)
 	)# end of files dropped
