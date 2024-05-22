@@ -6,8 +6,10 @@ BarkVR is an open-source and decentralized social XR creativity tool, built upon
 
 ## Status:
 The project is still in the very early stages. Please feel free to support the project however you wish, or not at all.
+
 [Patreon](https://www.patreon.com/pupperdev)
-[Ko-Fi](https://ko-fi.com/zodiepupper). 
+
+[Ko-Fi](https://ko-fi.com/zodiepupper)
 
 ## Core Focus:
 - Accessibility: Making BarkVR welcoming to everyone, regardless of background or ability.
