@@ -54,6 +54,8 @@ enabled=PackedStringArray("res://addons/Godot-MToon-Shader/plugin.cfg", "res://a
 theme/default_theme_scale=1.5
 theme/custom="res://mainAssets/ui/default_theme.tres"
 theme/custom_font="res://assets/font/OpenSans-VariableFont_wdth,wght.ttf"
+theme/default_font_multichannel_signed_distance_field=true
+theme/default_font_generate_mipmaps=true
 
 [input]
 
@@ -193,6 +195,7 @@ common/physics_jitter_fix=0.0
 
 [rendering]
 
+textures/canvas_textures/default_texture_filter=2
 textures/vram_compression/import_s3tc_bptc=true
 textures/vram_compression/import_etc2_astc=true
 anti_aliasing/quality/msaa_3d=1

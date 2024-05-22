@@ -1,6 +1,7 @@
-[gd_scene load_steps=7 format=3 uid="uid://ben6x4qpiovfq"]
+[gd_scene load_steps=11 format=3 uid="uid://ben6x4qpiovfq"]
 
 [ext_resource type="Script" path="res://mainAssets/ui/3dui/loading_halo.gd" id="1_t6gg2"]
+[ext_resource type="Script" path="res://mainAssets/ui/3dui/quadbackpanel.gd" id="2_8b88k"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7xpd5"]
 cull_mode = 1
@@ -40,49 +41,60 @@ _data = {
 "rotate": SubResource("Animation_sgnvc")
 }
 
+[sub_resource type="GDScript" id="GDScript_hwtf5"]
+script/source = "extends Node3D
+
+func _process(delta):
+	var last_rotation:=rotation
+	look_at(get_viewport().get_camera_3d().global_position)
+	rotation.x = lerp_angle(last_rotation.x,rotation.x,.1)
+	rotation.y = lerp_angle(last_rotation.y,rotation.y,.1)
+	rotation.z = lerp_angle(last_rotation.z,rotation.z,.1)
+"
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ge66c"]
+shading_mode = 0
+albedo_color = Color(0, 0, 0, 1)
+
+[sub_resource type="QuadMesh" id="QuadMesh_0fmfj"]
+material = SubResource("StandardMaterial3D_ge66c")
+size = Vector2(0.18377, 0.130074)
+
 [node name="loading halo" type="Node3D"]
 script = ExtResource("1_t6gg2")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.358049, 0.20672, 0.508027, -0.3275, 0.567247, 0, -0.439965, -0.254014, 0.41344, 0, 0, 0)
+transform = Transform3D(-0.557424, -0.32183, 0.12136, -0.3275, 0.567247, 0, -0.105101, -0.0606804, -0.643658, 0, 0, 0)
 mesh = SubResource("TorusMesh_gbg2y")
 skeleton = NodePath("../..")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="MeshInstance3D"]
+libraries = {
+"": SubResource("AnimationLibrary_dtajc")
+}
 speed_scale = 0.5
-libraries = {
-"": SubResource("AnimationLibrary_dtajc")
-}
-
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.556886, 0.321519, -0.124608, -0.3275, 0.567247, 0, 0.107913, 0.0623039, 0.643038, 0, 0, 0)
-mesh = SubResource("TorusMesh_gbg2y")
-skeleton = NodePath("../..")
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="MeshInstance3D2"]
-speed_scale = 0.6
-libraries = {
-"": SubResource("AnimationLibrary_dtajc")
-}
 
 [node name="MeshInstance3D3" type="MeshInstance3D" parent="."]
-transform = Transform3D(-0.218801, -0.126325, 0.604312, -0.3275, 0.567247, 0, -0.52335, -0.302156, -0.25265, 0, 0, 0)
+transform = Transform3D(-0.097418, -0.0562444, 0.645269, -0.3275, 0.567247, 0, -0.558818, -0.322635, -0.112489, 0, 0, 0)
 mesh = SubResource("TorusMesh_gbg2y")
 skeleton = NodePath("../..")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="MeshInstance3D3"]
+libraries = {
+"": SubResource("AnimationLibrary_dtajc")
+}
 speed_scale = 0.4
-libraries = {
-"": SubResource("AnimationLibrary_dtajc")
-}
 
-[node name="MeshInstance3D4" type="MeshInstance3D" parent="."]
-transform = Transform3D(-0.564651, -0.326002, 0.0625888, -0.3275, 0.567247, 0, -0.0542034, -0.0312944, -0.652003, 0, 0, 0)
-mesh = SubResource("TorusMesh_gbg2y")
-skeleton = NodePath("../..")
+[node name="textparent" type="Node3D" parent="."]
+script = SubResource("GDScript_hwtf5")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="MeshInstance3D4"]
-speed_scale = 0.3
-libraries = {
-"": SubResource("AnimationLibrary_dtajc")
-}
+[node name="Label3D" type="Label3D" parent="textparent"]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, 0, -0.438506)
+pixel_size = 0.0014
+text = "loading:
+dafd"
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="textparent/Label3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.001277)
+mesh = SubResource("QuadMesh_0fmfj")
+script = ExtResource("2_8b88k")

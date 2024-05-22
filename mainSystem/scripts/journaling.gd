@@ -393,6 +393,7 @@ func receive(action: Dictionary) -> void:
 
 func _post_import(root:Node,node_to_add:Node,node_name:String,position:Vector3=Vector3(),lookatuser:bool=false):
 	root.add_child(node_to_add)
-	node_to_add.look_at(get_viewport().get_camera_3d().global_position)
+	if lookatuser and node_to_add is Node3D:
+		node_to_add.look_at_from_position(position,get_viewport().get_camera_3d().global_position)
 	node_to_add.global_position = position
 	node_to_add.name = node_name

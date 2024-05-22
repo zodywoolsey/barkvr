@@ -91,14 +91,13 @@ _data = {
 }
 
 [node name="crossed halos" type="Node3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 script = ExtResource("1_1jddo")
 
 [node name="purp" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, -0.15, 0, 0)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="purp"]
-transform = Transform3D(0.645049, 0.11374, 0, -0.11374, 0.64505, 0, 0, 0, 0.655, 0, 0, 0)
+transform = Transform3D(-0.536459, -0.0945923, 0.363716, -0.11374, 0.64505, 0, -0.35819, -0.0631587, -0.544734, 0, 0, 0)
 mesh = SubResource("TorusMesh_gbg2y")
 skeleton = NodePath("../../..")
 
@@ -106,18 +105,18 @@ skeleton = NodePath("../../..")
 transform = Transform3D(1, 0, 0, 0, 0.866025, -0.5, 0, 0.5, 0.866026, 0.15, 0, 0)
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="red"]
-transform = Transform3D(0.645048, -0.11374, 0, 0.113739, 0.645049, 0, 0, 0, 0.655, 0, 0, 0)
+transform = Transform3D(-0.536458, 0.0945922, 0.363716, 0.113739, 0.645049, 0, -0.35819, 0.0631586, -0.544734, 0, 0, 0)
 mesh = SubResource("TorusMesh_mfhch")
 skeleton = NodePath("../../..")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-speed_scale = 0.2
 libraries = {
 "": SubResource("AnimationLibrary_gg8he")
 }
+speed_scale = 0.2
 
 [node name="AnimationPlayer2" type="AnimationPlayer" parent="."]
-speed_scale = 0.1
 libraries = {
 "": SubResource("AnimationLibrary_rep1s")
 }
+speed_scale = 0.1

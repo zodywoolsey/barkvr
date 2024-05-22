@@ -4,7 +4,7 @@ extends Node3D
 @onready var z = $z
 @export var target:Node
 
-var size_factor = 10.0
+var size_factor = 7.5
 
 func _ready():
 	LocalGlobals.clear_gizmos.connect(func():

@@ -28,6 +28,8 @@ signal created_offer(data:Dictionary)
 signal created_answer(data:Dictionary)
 signal finished_candidates(data:Dictionary)
 
+var close_requested := false
+
 @onready var prev_time:float = Time.get_unix_time_from_system()
 
 var thread = Thread.new()
@@ -89,6 +91,10 @@ func _ready():
 	Vector.got_turn_server.connect(got_turn_server)
 	Vector.user_logged_in.connect(user_logged_in)
 	thread.start(poll)
+	get_window().close_requested.connect(func():
+		close_requested = true
+		thread.wait_to_finish()
+		)
 
 func user_logged_in():
 		uname = Vector.userData.login.user_id.split(':')[0].right(-1)
@@ -122,7 +128,7 @@ func _physics_process(delta):
 		peer.channels_ready = tmp
 
 func poll():
-	while true:
+	while !close_requested:
 		var delta = Time.get_ticks_msec()-prev_time
 		prev_time = Time.get_ticks_msec()
 		chat_timer += delta
