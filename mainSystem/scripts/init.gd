@@ -14,22 +14,26 @@ func _ready():
 	if !dir.dir_exists('./worlds'):
 		dir.make_dir('./worlds')
 	get_window().files_dropped.connect(func(files:PackedStringArray):
+		var loader :LoadingHalo= load("res://mainAssets/ui/3dui/loading_halo.tscn").instantiate()
 		var import_position :Vector3= get_viewport().get_camera_3d().to_global(Vector3(0,0,-2.0))
 		var thread := Thread.new()
 		thread.start(func():
 			Thread.set_thread_safety_checks_enabled(false)
 			var offset := -1.0
+			var iteration :int= 0
 			for dropped in files:
+				iteration += 1
 				offset += 1.0
 				var filename:String
-				var file := FileAccess.open(dropped,FileAccess.READ)
-				if !file:
-					print('failed to open import file')
-					continue
 				if OS.get_name() == "Windows" or OS.get_name() == "UWP":
 					filename = dropped.split('\\')[-1]
 				else:
 					filename = dropped.split('/')[-1]
+				loader.text = filename + " (" + str(iteration) + "of" + str(files.size()) + ")"
+				var file := FileAccess.open(dropped,FileAccess.READ)
+				if !file:
+					print('failed to open import file')
+					continue
 				if dropped.contains('.gltf') or dropped.contains('.glb'):
 					Journaling.import_asset('glb', dropped, filename, false, {"base_path":dropped, "position":import_position+Vector3(0,0,offset)})
 				elif dropped.contains('.vrm'):
@@ -45,17 +49,11 @@ func _ready():
 					Journaling.import_asset('file', FileAccess.get_file_as_bytes(dropped), filename, false, {"position":import_position+Vector3(0,0,offset)})
 		)# end of thread func
 		Journaling.rejoin_thread_when_finished(thread)
-		var loader :LoadingHalo= load("res://mainAssets/ui/3dui/loading_halo.tscn").instantiate()
 		get_tree().get_first_node_in_group("localworldroot").add_child(loader)
+		if loader.text.is_empty():
+			loader.text = "nothing?"
 		loader.set_wait_for_thread(thread)
 		loader.global_position = import_position
-		if files.size() > 1:
-			loader.text = "multiple files"
-		else:
-			if OS.get_name() == "Windows" or OS.get_name() == "UWP":
-				loader.text = files[0].split('\\')[-1]
-			else:
-				loader.text = files[0].split('/')[-1]
 	)# end of files dropped
 
 func _input(event):

@@ -7,8 +7,7 @@ func _init():
 	mesh.material.shading_mode = 0
 	mesh.material.cull_mode = 2
 
-func detect_size():
-	var parent = get_parent()
-	if parent is VisualInstance3D:
-		mesh.size.x = parent.get_aabb().size.x
-		mesh.size.y = parent.get_aabb().size.y
+func detect_size(target:VisualInstance3D):
+	if target is VisualInstance3D:
+		mesh.size.x = target.get_aabb().size.x
+		mesh.size.y = target.get_aabb().size.y

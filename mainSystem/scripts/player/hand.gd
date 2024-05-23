@@ -72,6 +72,22 @@ func _physics_process(delta):
 			else:
 				contexttimer = 0
 	for item in grabbed.values():
+		if Input.is_action_just_pressed("scrollup"):
+			if Input.is_physical_key_pressed(KEY_SHIFT):
+				print(item.offset.basis)
+				item.offset.basis.x *= 1.1
+				item.offset.basis.y *= 1.1
+				item.offset.basis.z *= 1.1
+			else:
+				item.offset.origin *= 1.1
+		if Input.is_action_just_pressed("scrolldown"):
+			if Input.is_physical_key_pressed(KEY_SHIFT):
+				print(item.offset.basis)
+				item.offset.basis.x *= .9
+				item.offset.basis.y *= .9
+				item.offset.basis.z *= .9
+			else:
+				item.offset.origin *= .9
 		if self == righthand:
 			item.node.global_transform = righthand.global_transform * item.offset
 		else:

@@ -57,6 +57,7 @@ shading_mode = 0
 albedo_color = Color(0, 0, 0, 1)
 
 [sub_resource type="QuadMesh" id="QuadMesh_0fmfj"]
+resource_local_to_scene = true
 material = SubResource("StandardMaterial3D_ge66c")
 size = Vector2(0.18377, 0.130074)
 
@@ -64,7 +65,7 @@ size = Vector2(0.18377, 0.130074)
 script = ExtResource("1_t6gg2")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-transform = Transform3D(-0.557424, -0.32183, 0.12136, -0.3275, 0.567247, 0, -0.105101, -0.0606804, -0.643658, 0, 0, 0)
+transform = Transform3D(0.546607, 0.315585, 0.175076, -0.3275, 0.567247, 0, -0.15162, -0.0875382, 0.631167, 0, 0, 0)
 mesh = SubResource("TorusMesh_gbg2y")
 skeleton = NodePath("../..")
 
@@ -75,7 +76,7 @@ libraries = {
 speed_scale = 0.5
 
 [node name="MeshInstance3D3" type="MeshInstance3D" parent="."]
-transform = Transform3D(-0.097418, -0.0562444, 0.645269, -0.3275, 0.567247, 0, -0.558818, -0.322635, -0.112489, 0, 0, 0)
+transform = Transform3D(-0.0512788, -0.0296059, -0.652318, -0.3275, 0.567247, 0, 0.564924, 0.326159, -0.0592118, 0, 0, 0)
 mesh = SubResource("TorusMesh_gbg2y")
 skeleton = NodePath("../..")
 
@@ -94,7 +95,8 @@ pixel_size = 0.0014
 text = "loading:
 dafd"
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="textparent/Label3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.001277)
+[node name="MeshInstance3D" type="MeshInstance3D" parent="textparent"]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -1.11639e-10, 0, -0.437229)
 mesh = SubResource("QuadMesh_0fmfj")
+skeleton = NodePath("../Label3D")
 script = ExtResource("2_8b88k")

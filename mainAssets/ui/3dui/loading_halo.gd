@@ -6,13 +6,20 @@ extends Node3D
 @onready var halo2 = $MeshInstance3D3
 
 @onready var label_3d = $textparent/Label3D
-@onready var mesh_instance_3d = $textparent/Label3D/MeshInstance3D
+@onready var mesh_instance_3d = $textparent/MeshInstance3D
+
+var isloading := true
 
 var text : String = "":
 	set(value):
 		text = value
-		label_3d.text = "loading:\n"+str(value)
-		mesh_instance_3d.detect_size()
+		if isloading:
+			label_3d.text = "loading:\n"+str(value)
+		else:
+			label_3d.text = str(value)
+		create_tween().tween_callback(func():
+			mesh_instance_3d.detect_size(label_3d)
+			).set_delay(.01)
 
 func _ready():
 	animation_player.play("rotate")
@@ -36,10 +43,12 @@ func _wait_for_thread_and_remove_loader(thread:Thread):
 	_exit()
 
 func _exit():
+	isloading = false
+	text = "done!"
 	var tween := create_tween()
 	animation_player.pause()
 	animation_player3.pause()
-	tween.tween_property(halo1,"rotation_degrees",Vector3(),.5).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SPRING)
-	tween.parallel().tween_property(halo2,"rotation_degrees",Vector3(),.5).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SPRING)
+	tween.tween_property(halo1,"rotation_degrees",Vector3(),1.0).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SPRING)
+	tween.parallel().tween_property(halo2,"rotation_degrees",Vector3(),1.0).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SPRING)
 	tween.tween_property(self,"scale",Vector3(),.5).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_BACK)
 	tween.tween_callback(queue_free)
