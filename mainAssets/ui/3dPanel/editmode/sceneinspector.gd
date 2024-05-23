@@ -5,7 +5,7 @@ extends Control
 signal selected(item)
 
 func _ready():
-	print(tree.get_class())
+	#print(tree.get_class())
 	tree.item_selected.connect(func():
 		await get_tree().process_frame
 		selected.emit(tree.get_selected().get_metadata(0).node)
@@ -36,7 +36,7 @@ func _ready():
 				})
 		)
 	get_tree().node_renamed.connect(func(node:Node):
-		print('node renamed')
+		#print('node renamed')
 		await get_tree().process_frame
 		if root:
 			if is_instance_valid(node):

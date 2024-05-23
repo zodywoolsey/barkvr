@@ -10,11 +10,12 @@ var property_name:String = ''
 
 func _ready():
 	val.toggled.connect(func(on):
-		if on:
-			val.text = "true"
-		else:
-			val.text = "false"
-		target[property_name] = on
+		if is_instance_valid(target):
+			if on:
+				val.text = "true"
+			else:
+				val.text = "false"
+			target[property_name] = on
 		)
 
 func _process(delta):

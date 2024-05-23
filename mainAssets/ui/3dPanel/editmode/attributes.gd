@@ -53,7 +53,7 @@ func set_target(node):
 					v_box_container.add_child(tmp)
 					tmp.set_data(prop.name, target, prop.name)
 				TYPE_INT:
-					print(prop)
+					#print(prop)
 					match prop.hint:
 						0:
 							var tmp :Number_Attribute = number_field.instantiate()

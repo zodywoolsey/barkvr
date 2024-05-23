@@ -11,7 +11,6 @@ var property_name:String = ''
 var last_val := ""
 @export_enum("float","int") var type = 0:
 	set(val):
-		print('set value to: ',val)
 		type = val
 		if type_label:
 			if val == 0:
