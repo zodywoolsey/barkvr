@@ -2,12 +2,14 @@
   <h3><strong>BarkVR</strong></h3>
 </div>
 
-BarkVR represents innovation and collaboration in action. It's more than just a project; it's a testament to our collective ingenuity. 
-At its core, BarkVR is an open-source and decentralized social XR creativity tool, built upon the solid foundation of Godot 4.x.
+BarkVR is an open-source and decentralized social XR creativity tool, built upon the solid foundation of Godot 4.x.
 
 ## Status:
-Our journey is just beginning, and each step forward reflects our steadfast commitment. We humbly invite your support, whether in spirit or through platforms like [Patreon](https://www.patreon.com/pupperdev), and [Ko-Fi](https://ko-fi.com/Manage/). 
-For those eager to follow BarkVR's progress, the "dev" branch offers a glimpse into our ongoing efforts. Here, amidst active development, we refine our creation daily, inching closer to our vision.
+The project is still in the very early stages. Please feel free to support the project however you wish, or not at all.
+
+[Patreon](https://www.patreon.com/pupperdev)
+
+[Ko-Fi](https://ko-fi.com/zodiepupper)
 
 ## Core Focus:
 - Accessibility: Making BarkVR welcoming to everyone, regardless of background or ability.
@@ -17,10 +19,9 @@ For those eager to follow BarkVR's progress, the "dev" branch offers a glimpse i
 - VR FOSS: Leading the charge in open-source VR for limitless innovation.
 - Social VR: Creating a space where connections thrive beyond physical limits, fostering shared experiences and boundless imagination.
 
-In our mission to reshape virtual reality, we're incorporating groundbreaking technologies like the Matrix messaging API and IPFS for our storage solution, unlocking endless possibilities within BarkVR.
+We're working to incorporate technologies like the Matrix messaging API for user managment and IPFS for our storage solution.
+This means the whole platform is completely open and capable of being run/hosted without any reliance on the maintainers.
 
-Join us, valued supporters, as we embark on this journey of creation and discovery. Together, let's shape a future where creativity knows no bounds and dreams come true.
-
-Dare to dream, dare to create, dare to be a part of something truly extraordinary BarkVR.
+For those eager to follow BarkVR's progress, the "dev" branch is where the latest changes are. Main will eventually be reserved for tagged releases.
 
 ### For latest, look at the "dev" branch!
