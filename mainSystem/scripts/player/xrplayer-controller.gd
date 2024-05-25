@@ -1,6 +1,5 @@
 extends CharacterBody3D
 
-
 #controllers:
 @onready var righthand = %righthand
 @onready var lefthand = %lefthand
@@ -23,6 +22,12 @@ var camPrevPos : Vector3 = Vector3()
 const SPEED = 5.0
 const JUMP_VELOCITY = 4.5
 
+var flymode := true
+var noclip := false:
+	set(value):
+		noclip = value
+		collision_shape_3d.disabled = value
+
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 
@@ -37,7 +42,6 @@ var lookdrag : Dictionary = {} #{'index': -1,'relative': Vector2(),'velocity': V
 @export var touchsticklook := false
 var grab_point := Vector3()
 
-
 func _ready():
 	if !LocalGlobals.vr_supported:
 		xr_camera_3d.position.y = .9
@@ -48,53 +52,67 @@ func _ready():
 		global_position = spawnLoc.global_position
 	else:
 		global_position = Vector3(0,4,0)
-	righthand.connect("button_pressed",func(name):
+	righthand.connect("button_pressed",func(input_name):
 		#Notifyvr.send_notification(name)
-		if name == "ax_button":
+		if input_name == "ax_button":
 			rightaxbtn = true
 		)
-	righthand.connect("button_released",func(name):
+	righthand.connect("button_released",func(input_name):
 #		print("released: "+name)
 		pass
-		if name == "ax_button":
+		if input_name == "ax_button":
 			rightaxbtn = false
 		)
-	righthand.input_float_changed.connect(func(name:String,value:float):
-#		print('value {0}, {1}'.format([name,value]))
-		pass
-		)
-	righthand.input_vector2_changed.connect(func(name:String,value):
+	#righthand.input_float_changed.connect(func(input_name:String,value:float):
+##		print('value {0}, {1}'.format([name,value]))
+		#pass
+		#)
+	righthand.input_vector2_changed.connect(func(input_name:String,value):
 #		print('axis {0}, {1}'.format([name,value]))
 		pass
-		if name == "primary":
+		if input_name == "primary":
 			rightStick = value
 		)
-	lefthand.connect("button_pressed",func(name):
+	lefthand.connect("button_pressed",func(input_name):
 		#print("pressed: "+name)
 		pass
-		if name == "ax_button":
+		if input_name == "ax_button":
 			leftaxbtn = true
 		)
-	lefthand.connect("button_released",func(name):
+	lefthand.connect("button_released",func(input_name):
 		#print("released: "+name)
 		pass
-		if name == "ax_button":
+		if input_name == "ax_button":
 			leftaxbtn = false
 		)
-	lefthand.input_float_changed.connect(func(name:String,value:float):
-		#print('value {0}, {1}'.format([name,value]))
-		pass
-		)
-	lefthand.input_vector2_changed.connect(func(name:String,value):
+	#lefthand.input_float_changed.connect(func(name:String,value:float):
+		##print('value {0}, {1}'.format([name,value]))
+		#pass
+		#)
+	lefthand.input_vector2_changed.connect(func(input_name:String,value):
 #		print('axis {0}, {1}'.format([name,value]))
 		pass
-		if name == "primary":
+		if input_name == "primary":
 			leftStick = value
 		)
 
 func _physics_process(delta):
+	if !righthand:
+		righthand = %righthand
+	if !lefthand:
+		lefthand = %lefthand
+	if !xr_camera_3d:
+		xr_camera_3d = $xrplayer/XrCamera3d
+	if !xrplayer:
+		xrplayer = $xrplayer
+	if !playercamoffset:
+		playercamoffset = $playercamoffset
+	if !camray:
+		camray = $xrplayer/XrCamera3d/camray
+	if !collision_shape_3d:
+		collision_shape_3d = %CollisionShape3D
 	# Add the gravity.
-	if not is_on_floor():
+	if not is_on_floor() and not flymode:
 		velocity.y -= gravity * delta
 	
 	# Flat mode toggle
@@ -105,14 +123,6 @@ func _physics_process(delta):
 			righthand.position = Vector3(.2,.6,-.2)
 #			lefthand.hide()
 
-	# Handle Jump.
-	if LocalGlobals.vr_supported:
-		if rightaxbtn and is_on_floor():
-			velocity.y = JUMP_VELOCITY
-	else:
-		if Input.is_action_just_pressed("jump") and is_on_floor() and LocalGlobals.player_state == LocalGlobals.PLAYER_STATE_PLAYING:
-			velocity.y = JUMP_VELOCITY
-		
 	if LocalGlobals.vr_supported || OS.get_name() == "Android":
 		#LocalGlobals.player_state = LocalGlobals.PLAYER_STATE_PLAYING
 		#if LocalGlobals.player_state == LocalGlobals.PLAYER_STATE_PLAYING:
@@ -141,6 +151,16 @@ func _physics_process(delta):
 #		collision_shape_3d.position = xr_camera_3d.position.y/2.0
 	else:
 		flat_movement()
+	
+	# Handle Jump.
+	if LocalGlobals.vr_supported:
+		if rightaxbtn and (is_on_floor() or flymode):
+			velocity.y = JUMP_VELOCITY
+	else:
+		if (Input.is_action_just_pressed("jump") or (flymode and Input.is_action_pressed("jump"))) and (is_on_floor() or flymode) and LocalGlobals.player_state == LocalGlobals.PLAYER_STATE_PLAYING:
+			velocity.y = JUMP_VELOCITY
+		
+	
 	
 	move_and_slide()
 
@@ -251,13 +271,19 @@ func flat_movement():
 	
 	if LocalGlobals.player_state == LocalGlobals.PLAYER_STATE_PLAYING:
 		var input_dir = Input.get_vector("left", "right", "up", "down")
-		var direction = (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
+		var direction = (transform.basis * Vector3(input_dir.x, 0.0, input_dir.y)).normalized()
+		if flymode:
+			direction.y = (xr_camera_3d.basis * Vector3(input_dir.x, 0.0, input_dir.y)).normalized().y
 		if direction:
 			velocity.x = direction.x * SPEED
 			velocity.z = direction.z * SPEED
+			if flymode:
+				velocity.y = direction.y * SPEED
 		else:
 			velocity.x = move_toward(velocity.x, 0, SPEED)
 			velocity.z = move_toward(velocity.z, 0, SPEED)
+			if flymode:
+				velocity.y = move_toward(velocity.y, 0, SPEED)
 	
 	if lookdrag:
 		if touchsticklook:

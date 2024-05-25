@@ -1,17 +1,117 @@
-[gd_scene load_steps=13 format=3 uid="uid://ctwckofb07cfw"]
+[gd_scene load_steps=20 format=3 uid="uid://ctwckofb07cfw"]
 
 [ext_resource type="Script" path="res://mainSystem/scripts/init.gd" id="1_gkt54"]
 [ext_resource type="Script" path="res://mainSystem/scripts/startxr.gd" id="2_3r3cq"]
 [ext_resource type="PackedScene" uid="uid://br1vh8in0e65o" path="res://mainAssets/worlds/basic_starter.tscn" id="4_hmjqc"]
+[ext_resource type="PackedScene" uid="uid://c5xqckkutm44a" path="res://addons/renik-gdscript/godette_test_rig.tscn" id="5_fp7fu"]
 [ext_resource type="PackedScene" uid="uid://dckbok0o553v7" path="res://mainSystem/scenes/objects/worldObjects/playerSpawnLocation.tscn" id="6_diugs"]
+[ext_resource type="Script" path="res://addons/renik-gdscript/renik_placement_gait.gd" id="6_kr2oq"]
 [ext_resource type="PackedScene" uid="uid://b3sbt3oft3cxg" path="res://mainAssets/ui/3dPanel/editmode/vreditor.tscn" id="8_wf33i"]
 [ext_resource type="PackedScene" uid="uid://i3pxsgqnbjly" path="res://mainAssets/ui/3dPanel/local ui/login/matrix.tscn" id="10_j6yjr"]
 [ext_resource type="Script" path="res://addons/Panel3D/3dpanel.gd" id="10_rgd75"]
 [ext_resource type="PackedScene" uid="uid://pnqmxgn13qw2" path="res://mainAssets/ui/3dPanel/local ui/settings/settings.tscn" id="11_hv61c"]
 [ext_resource type="Script" path="res://mainSystem/scripts/mic_playback.gd" id="11_oevc4"]
 [ext_resource type="PackedScene" uid="uid://lauwp8okd1vh" path="res://mainAssets/ui/3dPanel/local ui/keyboard/virtual_keyboard_2d.tscn" id="11_t4d0r"]
+[ext_resource type="PackedScene" uid="uid://r68jre2w5k33" path="res://mainSystem/scenes/player/xrplayer.tscn" id="12_iaq1i"]
+[ext_resource type="PackedScene" uid="uid://d0wvfw354l2i5" path="res://mainAssets/ui/3dui/loading halo demo.tscn" id="14_4djxc"]
 
 [sub_resource type="AudioStreamMicrophone" id="AudioStreamMicrophone_ve6pm"]
+
+[sub_resource type="Resource" id="Resource_75t0f"]
+resource_name = "ForwardGait"
+script = ExtResource("6_kr2oq")
+speed_scalar_min = 1.0
+speed_scalar_max = 0.5
+ground_time = 5.0
+lift_time_base = 10.0
+lift_time_scalar = 5.0
+apex_in_time_base = 10.0
+apex_in_time_scalar = 5.0
+apex_out_time_base = 5.0
+apex_out_time_scalar = 5.0
+drop_time_base = 5.0
+drop_time_scalar = 0.0
+tip_toe_distance_scalar = 1.5708
+tip_toe_speed_scalar = 0.785398
+tip_toe_angle_max = 1.0472
+lift_vertical = 0.0
+lift_vertical_scalar = 0.4
+lift_horizontal_scalar = 0.7
+lift_angle = 1.5708
+apex_vertical = 0.0
+apex_vertical_scalar = 0.1
+apex_angle = 0.392699
+drop_vertical = 0.0
+drop_vertical_scalar = 0.05
+drop_horizontal_scalar = 0.25
+drop_angle = -0.392699
+contact_point_ease = 0.05
+contact_point_ease_scalar = 0.4
+scaling_ease = 0.85
+
+[sub_resource type="Resource" id="Resource_vjly3"]
+resource_name = "BackwardGait"
+script = ExtResource("6_kr2oq")
+speed_scalar_min = 0.5
+speed_scalar_max = 0.75
+ground_time = 5.0
+lift_time_base = 5.0
+lift_time_scalar = 5.0
+apex_in_time_base = 10.0
+apex_in_time_scalar = 5.0
+apex_out_time_base = 10.0
+apex_out_time_scalar = 5.0
+drop_time_base = 5.0
+drop_time_scalar = 5.0
+tip_toe_distance_scalar = 0.0
+tip_toe_speed_scalar = 0.0
+tip_toe_angle_max = 0.0
+lift_vertical = 0.025
+lift_vertical_scalar = 0.1
+lift_horizontal_scalar = 0.33
+lift_angle = -0.392699
+apex_vertical = 0.1
+apex_vertical_scalar = 0.1
+apex_angle = 0.392699
+drop_vertical = 0.0
+drop_vertical_scalar = 0.1
+drop_horizontal_scalar = 0.25
+drop_angle = 0.392699
+contact_point_ease = 0.1
+contact_point_ease_scalar = 0.4
+scaling_ease = 0.85
+
+[sub_resource type="Resource" id="Resource_wupib"]
+resource_name = "SidewaysGait"
+script = ExtResource("6_kr2oq")
+speed_scalar_min = 0.75
+speed_scalar_max = 0.75
+ground_time = 10.0
+lift_time_base = 5.0
+lift_time_scalar = 5.0
+apex_in_time_base = 10.0
+apex_in_time_scalar = 5.0
+apex_out_time_base = 10.0
+apex_out_time_scalar = 5.0
+drop_time_base = 5.0
+drop_time_scalar = 5.0
+tip_toe_distance_scalar = 0.0
+tip_toe_speed_scalar = 0.0
+tip_toe_angle_max = 0.0
+lift_vertical = 0.05
+lift_vertical_scalar = 0.05
+lift_horizontal_scalar = 0.2
+lift_angle = 0.0
+apex_vertical = 0.01
+apex_vertical_scalar = 0.1
+apex_angle = 0.392699
+drop_vertical = 0.01
+drop_vertical_scalar = 0.05
+drop_horizontal_scalar = 0.25
+drop_angle = 0.0
+contact_point_ease = 0.1
+contact_point_ease_scalar = 0.4
+scaling_ease = 0.85
 
 [sub_resource type="AudioStreamGenerator" id="AudioStreamGenerator_f6fry"]
 mix_rate = 44800.0
@@ -55,11 +155,64 @@ transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -2.760
 
 [node name="basic starter" parent="localworldroot" instance=ExtResource("4_hmjqc")]
 
-[node name="Label" type="Label" parent="." groups=["connectionlabel"]]
-top_level = true
-offset_right = 138.0
-offset_bottom = 34.0
-text = "test test test"
+[node name="test_rig" parent="localworldroot" instance=ExtResource("5_fp7fu")]
+
+[node name="Skeleton3D" parent="localworldroot/test_rig/Godette_vrm_v4" index="0"]
+bones/1/position = Vector3(-0.0744837, 0.599575, 0.0795286)
+bones/1/rotation = Quaternion(0.0790139, 2.28529e-09, 1.81137e-10, 0.996873)
+bones/2/rotation = Quaternion(-0.089768, -3.20728e-09, -2.89079e-10, 0.995963)
+bones/3/rotation = Quaternion(0.295985, -1.45835e-09, 8.93122e-10, 0.955193)
+bones/4/rotation = Quaternion(0.591379, 4.55679e-09, -1.20019e-09, 0.806394)
+bones/5/rotation = Quaternion(-0.797091, -3.40927e-09, -2.38312e-09, 0.60386)
+bones/25/rotation = Quaternion(-0.41744, -0.567961, -0.58666, 0.398741)
+bones/26/rotation = Quaternion(-0.189774, 0.271197, -0.679583, 0.65468)
+bones/27/rotation = Quaternion(0.337674, 0.289077, 0.46411, 0.766167)
+bones/28/rotation = Quaternion(0.328296, 0.387714, -0.189248, 0.840288)
+bones/41/rotation = Quaternion(-0.419905, 0.56774, 0.576376, 0.411269)
+bones/42/rotation = Quaternion(-0.0595596, -0.319801, 0.636827, 0.699022)
+bones/43/rotation = Quaternion(0.170434, -0.337112, -0.430178, 0.819912)
+bones/44/rotation = Quaternion(0.3184, -0.370471, 0.183749, 0.853)
+bones/61/rotation = Quaternion(-5.27029e-09, 0.551055, 0.834469, 6.4571e-09)
+bones/62/rotation = Quaternion(-8.98486e-07, 0.76573, -0.643162, 1.05412e-06)
+bones/63/rotation = Quaternion(1.14979e-06, -0.557449, 0.830211, 7.6131e-07)
+bones/65/rotation = Quaternion(3.2329e-09, 0.551055, 0.834469, -9.45241e-09)
+bones/66/rotation = Quaternion(9.01818e-07, 0.765731, -0.643162, -1.05015e-06)
+bones/67/rotation = Quaternion(-1.14615e-06, -0.557449, 0.830211, -7.55722e-07)
+
+[node name="RenIKFootPlacement" parent="localworldroot/test_rig/LogicContainer" index="1"]
+forward_gait = SubResource("Resource_75t0f")
+backward_gait = SubResource("Resource_vjly3")
+sideways_gait = SubResource("Resource_wupib")
+left_hip_offset = Vector3(0.109996, -0.149882, -0.047796)
+right_hip_offset = Vector3(-0.109996, -0.149882, -0.047796)
+
+[node name="Head" parent="localworldroot/test_rig/LogicContainer/Targets" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0744837, 1.83522, 0.227675)
+
+[node name="Hips" parent="localworldroot/test_rig/LogicContainer/Targets" index="1"]
+transform = Transform3D(1, 0, 0, 0, 0.987514, -0.157534, 0, 0.157534, 0.987514, -0.0744837, 1.59957, 0.0795286)
+
+[node name="LeftHand" parent="localworldroot/test_rig/LogicContainer/Targets" index="2"]
+transform = Transform3D(0.24135, -0.551465, -0.798522, -0.947172, -0.312962, -0.0701449, -0.211225, 0.773267, -0.597865, 0.0122693, 1.64577, 0.349984)
+
+[node name="RightHand" parent="localworldroot/test_rig/LogicContainer/Targets" index="3"]
+transform = Transform3D(0.526686, 0.373112, 0.763799, 0.781623, -0.565782, -0.262595, 0.334166, 0.735308, -0.589622, -0.20387, 1.64577, 0.377963)
+
+[node name="LeftFoot" parent="localworldroot/test_rig/LogicContainer/Targets" index="4"]
+transform = Transform3D(-1, 0, 0, 0, 0, 1, 0, 1, 0, 0.0355119, 1.14661, 0.127795)
+
+[node name="RightFoot" parent="localworldroot/test_rig/LogicContainer/Targets" index="5"]
+transform = Transform3D(-1, 0, 0, 0, 0, 1, 0, 1, 0, -0.184479, 1.14661, 0.127795)
+
+[node name="StaticBody3D" parent="localworldroot/test_rig" index="2"]
+visible = false
+
+[node name="CollisionShape3D" parent="localworldroot/test_rig/StaticBody3D" index="0"]
+disabled = true
+
+[node name="CSGBox3D" parent="localworldroot/test_rig" index="3"]
+visible = false
+use_collision = false
 
 [node name="AudioStreamPlayer2" type="AudioStreamPlayer" parent="." groups=["mic_playback"]]
 stream = SubResource("AudioStreamGenerator_f6fry")
@@ -94,4 +247,13 @@ script = ExtResource("10_rgd75")
 _auto_load_ui = ExtResource("11_t4d0r")
 viewport_size = Vector2i(1164, 474)
 
+[node name="playercontainer" parent="." instance=ExtResource("12_iaq1i")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.08992, 1.91664, 2.46325)
+
+[node name="LoadingHaloDemo" parent="." instance=ExtResource("14_4djxc")]
+transform = Transform3D(0.507117, 0, 0.861877, 0, 1, 0, -0.861877, 0, 0.507117, -3.43624, 2.01349, 0.734058)
+
 [connection signal="pressed" from="StartXR/EnterWebXR/EnterVRButton" to="StartXR" method="_on_enter_webxr_button_pressed"]
+
+[editable path="localworldroot/test_rig"]
+[editable path="localworldroot/test_rig/Godette_vrm_v4"]

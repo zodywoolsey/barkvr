@@ -1,6 +1,6 @@
 extends Node
 
-func node_to_var(node:Node, type:String='', cust_name:String=''):
+func node_to_var(node:Node, _type:String='', _cust_name:String=''):
 	var out: Dictionary = {}
 	if node.get_child_count() > 0:
 		var children := Array()
@@ -37,7 +37,7 @@ func node_to_var(node:Node, type:String='', cust_name:String=''):
 		#dict['children']=children
 	#return dict
 
-func var_to_node(item:String='', dict:Dictionary={}):
+func var_to_node(_item:String='', dict:Dictionary={}):
 	var node:Node
 	if dict.has('node'):
 		node = bytes_to_var_with_objects(dict.node)

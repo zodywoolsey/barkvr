@@ -5,7 +5,7 @@
 [ext_resource type="Script" path="res://addons/renik-gdscript/renik_placement.gd" id="2_6e7rw"]
 [ext_resource type="Script" path="res://addons/renik-gdscript/renik_placement_gait.gd" id="3_rnvnt"]
 
-[sub_resource type="Resource" id="Resource_r537q"]
+[sub_resource type="Resource" id="Resource_rm8ye"]
 resource_name = "ForwardGait"
 script = ExtResource("3_rnvnt")
 speed_scalar_min = 1.0
@@ -37,7 +37,7 @@ contact_point_ease = 0.05
 contact_point_ease_scalar = 0.4
 scaling_ease = 0.85
 
-[sub_resource type="Resource" id="Resource_5y243"]
+[sub_resource type="Resource" id="Resource_xqsix"]
 resource_name = "BackwardGait"
 script = ExtResource("3_rnvnt")
 speed_scalar_min = 0.5
@@ -69,7 +69,7 @@ contact_point_ease = 0.1
 contact_point_ease_scalar = 0.4
 scaling_ease = 0.85
 
-[sub_resource type="Resource" id="Resource_7ivmf"]
+[sub_resource type="Resource" id="Resource_w6hrw"]
 resource_name = "SidewaysGait"
 script = ExtResource("3_rnvnt")
 speed_scalar_min = 0.75
@@ -141,9 +141,9 @@ torso_spine_twist = 1.0
 [node name="RenIKFootPlacement" type="Node3D" parent="."]
 transform = Transform3D(1, 1.11759e-08, 0, -6.70552e-08, 1, 0, -7.45058e-09, 0, 1, 0, 0, 0)
 script = ExtResource("2_6e7rw")
-forward_gait = SubResource("Resource_r537q")
-backward_gait = SubResource("Resource_5y243")
-sideways_gait = SubResource("Resource_7ivmf")
+forward_gait = SubResource("Resource_rm8ye")
+backward_gait = SubResource("Resource_xqsix")
+sideways_gait = SubResource("Resource_w6hrw")
 left_hip_offset = Vector3(0.109996, -0.149882, -0.047796)
 right_hip_offset = Vector3(-0.109996, -0.149882, -0.047796)
 live_preview = true
@@ -159,7 +159,7 @@ armature_right_foot_target = NodePath("../Targets/RightFoot")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.34462e-09, 0.940317, 0.0437589)
 
 [node name="Hips" type="Marker3D" parent="Targets"]
-transform = Transform3D(1, -1.60841e-09, 1.09816e-09, 1.61932e-09, 0.99995, -0.0100129, -1.082e-09, 0.0100129, 0.99995, -3.34462e-09, 0.940317, 0.0437589)
+transform = Transform3D(1, -1.60774e-09, 1.09775e-09, 1.61867e-09, 0.99995, -0.0100338, -1.08156e-09, 0.0100338, 0.99995, -3.34462e-09, 0.940317, 0.0437589)
 
 [node name="LeftHand" type="Marker3D" parent="Targets"]
 transform = Transform3D(-1.62921e-07, 1, -4.37114e-08, 0, -4.37114e-08, -1, -1, -1.62921e-07, 7.12149e-15, 0.454643, 0.8601, 0.00588896)
@@ -168,10 +168,10 @@ transform = Transform3D(-1.62921e-07, 1, -4.37114e-08, 0, -4.37114e-08, -1, -1, 
 transform = Transform3D(1.31134e-07, -1, 4.37114e-08, 0, -4.37114e-08, -1, 1, 1.31134e-07, -5.73206e-15, -0.454643, 0.8601, 0.00588913)
 
 [node name="LeftFoot" type="Marker3D" parent="Targets"]
-transform = Transform3D(-1, -1.304e-25, 8.71304e-26, 1.304e-25, -0.382684, 0.92388, -8.71304e-26, 0.92388, 0.382684, 0.098573, -1.19678, -0.000980269)
+transform = Transform3D(-1, -2.20092e-27, 1.47061e-27, 2.20092e-27, -0.382684, 0.92388, -1.47061e-27, 0.92388, 0.382684, 0.0992657, -1.19764, -0.0010324)
 
 [node name="RightFoot" type="Marker3D" parent="Targets"]
-transform = Transform3D(-1, -1.304e-25, 8.71304e-26, 1.304e-25, -0.382684, 0.92388, -8.71304e-26, 0.92388, 0.382684, -0.098573, -1.19678, -0.000980269)
+transform = Transform3D(-1, -2.20092e-27, 1.47061e-27, 2.20092e-27, -0.382684, 0.92388, -1.47061e-27, 0.92388, 0.382684, -0.0992657, -1.19764, -0.0010324)
 
 [node name="BoneAttachment3D" type="Node3D" parent="Targets"]
 transform = Transform3D(-1, 0, 0, 0, 0, 1, 0, 1, 0, 0.16152, 0.0643738, 0.00805585)

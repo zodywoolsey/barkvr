@@ -31,11 +31,11 @@ func set_wait_for_thread(thread:Thread=null):
 
 func set_wait_for_timer(seconds:float=1.0):
 	get_tree().create_timer(seconds,true,false,true).timeout.connect(func():
-		self.queue_free()
+		_exit()
 		)
 
 func _wait_for_thread_and_remove_loader(thread:Thread):
-	LocalGlobals
+	#LocalGlobals
 	if thread and thread.is_started() and thread.is_alive():
 		get_tree().create_timer(1).timeout.connect(_wait_for_thread_and_remove_loader.bind(thread))
 		return

@@ -18,7 +18,7 @@ func _ready():
 		target[property_name].y = float(new_text)
 		)
 
-func _process(delta):
+func _process(_delta):
 	if target and !property_name.is_empty() and !_is_editing and is_instance_valid(target) and !_check_focus():
 		xval.text = str(target[property_name].x)
 		yval.text = str(target[property_name].y)
@@ -34,7 +34,7 @@ func _check_focus():
 
 ## sets the name, field target node, and the property name for the field to look for
 ## name:String, new_target:Node, new_property_name:String
-func set_data(name:String, new_target:Node, new_property_name:String):
-	label.text = name
+func set_data(new_name:String, new_target:Node, new_property_name:String):
+	label.text = new_name
 	target = new_target
 	property_name = new_property_name

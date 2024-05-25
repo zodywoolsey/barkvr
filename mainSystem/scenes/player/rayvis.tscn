@@ -1,9 +1,9 @@
 [gd_scene load_steps=5 format=3 uid="uid://b5e67b4tlsvfs"]
 
 [ext_resource type="Script" path="res://mainSystem/scripts/player/rayvis.gd" id="1_6wvgr"]
-[ext_resource type="Texture2D" uid="uid://cr0wli5q0f2o0" path="res://mainAssets/ui/assets/rayvis_icons/pointing.svg" id="2_exe05"]
-[ext_resource type="Texture2D" uid="uid://dbmo2fb27mmgx" path="res://mainAssets/ui/assets/rayvis_icons/physics.svg" id="3_j7jdp"]
-[ext_resource type="Texture2D" uid="uid://uvjsq5djwc52" path="res://mainAssets/ui/assets/rayvis_icons/cursor.svg" id="4_3x516"]
+[ext_resource type="Texture2D" uid="uid://drxq6fs75fbvi" path="res://mainAssets/ui/assets/rayvis_icons/pointing.svg" id="2_exe05"]
+[ext_resource type="Texture2D" uid="uid://b75p6dv64ascf" path="res://mainAssets/ui/assets/rayvis_icons/physics.svg" id="3_j7jdp"]
+[ext_resource type="Texture2D" uid="uid://cmcp135fq84nn" path="res://mainAssets/ui/assets/rayvis_icons/cursor.svg" id="4_3x516"]
 
 [node name="rayvis" type="Node3D"]
 script = ExtResource("1_6wvgr")
@@ -15,6 +15,7 @@ sorting_offset = 99.0
 billboard = 1
 no_depth_test = true
 texture_filter = 0
+render_priority = 127
 texture = ExtResource("2_exe05")
 
 [node name="physics" type="Sprite3D" parent="."]
@@ -24,6 +25,7 @@ sorting_offset = 99.0
 billboard = 1
 no_depth_test = true
 texture_filter = 0
+render_priority = 127
 texture = ExtResource("3_j7jdp")
 
 [node name="cursor" type="Node3D" parent="."]
@@ -33,4 +35,5 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.403815, -0.976471, 0)
 sorting_offset = 99.0
 no_depth_test = true
 texture_filter = 0
+render_priority = 127
 texture = ExtResource("4_3x516")

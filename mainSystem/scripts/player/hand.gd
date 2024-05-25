@@ -75,19 +75,19 @@ func _physics_process(delta):
 		if Input.is_action_just_pressed("scrollup"):
 			if Input.is_physical_key_pressed(KEY_SHIFT):
 				print(item.offset.basis)
-				item.offset.basis.x *= 1.1
-				item.offset.basis.y *= 1.1
-				item.offset.basis.z *= 1.1
+				item.offset.basis.x *= Settings.grabbed_object_scale_factor
+				item.offset.basis.y *= Settings.grabbed_object_scale_factor
+				item.offset.basis.z *= Settings.grabbed_object_scale_factor
 			else:
-				item.offset.origin *= 1.1
+				item.offset.origin *= Settings.grabbed_object_scale_factor
 		if Input.is_action_just_pressed("scrolldown"):
 			if Input.is_physical_key_pressed(KEY_SHIFT):
 				print(item.offset.basis)
-				item.offset.basis.x *= .9
-				item.offset.basis.y *= .9
-				item.offset.basis.z *= .9
+				item.offset.basis.x *= 1.0/Settings.grabbed_object_scale_factor
+				item.offset.basis.y *= 1.0/Settings.grabbed_object_scale_factor
+				item.offset.basis.z *= 1.0/Settings.grabbed_object_scale_factor
 			else:
-				item.offset.origin *= .9
+				item.offset.origin *= 1.0/Settings.grabbed_object_scale_factor
 		if self == righthand:
 			item.node.global_transform = righthand.global_transform * item.offset
 		else:

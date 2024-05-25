@@ -33,6 +33,7 @@ Notifyvr="*res://addons/notifyvr/notifyvr.gd"
 Vector="*res://addons/vector/vector.gd"
 Journaling="*res://mainSystem/scripts/journaling.gd"
 BarkHelpers="*res://mainSystem/scripts/bark_helpers.gd"
+Settings="*res://mainSystem/scripts/settings.gd"
 
 [bark]
 
@@ -47,12 +48,12 @@ export/convert_text_resources_to_binary=false
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/Godot-MToon-Shader/plugin.cfg", "res://addons/Panel3D/plugin.cfg", "res://addons/Todo_Manager/plugin.cfg", "res://addons/anthonyec.camera_preview/plugin.cfg", "res://addons/contextmenu/plugin.cfg", "res://addons/unidot/plugin.cfg", "res://addons/vrm/plugin.cfg")
+enabled=PackedStringArray("res://addons/Godot-MToon-Shader/plugin.cfg", "res://addons/Panel3D/plugin.cfg", "res://addons/Todo_Manager/plugin.cfg", "res://addons/anthonyec.camera_preview/plugin.cfg", "res://addons/contextmenu/plugin.cfg", "res://addons/unidot_importer/plugin.cfg", "res://addons/vrm/plugin.cfg")
 
 [gui]
 
+common/text_edit_undo_stack_max_size=4096
 theme/default_theme_scale=1.5
-theme/custom="res://mainAssets/ui/default_theme.tres"
 theme/custom_font="res://assets/font/OpenSans-VariableFont_wdth,wght.ttf"
 theme/default_font_multichannel_signed_distance_field=true
 theme/default_font_generate_mipmaps=true

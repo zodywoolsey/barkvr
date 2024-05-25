@@ -1,4 +1,4 @@
-[gd_scene load_steps=2 format=3 uid="uid://pnqmxgn13qw2"]
+[gd_scene load_steps=3 format=3 uid="uid://pnqmxgn13qw2"]
 
 [sub_resource type="GDScript" id="GDScript_abd45"]
 script/source = "extends Control
@@ -7,6 +7,17 @@ script/source = "extends Control
 func _ready():
 	h_slider.value_changed.connect(func(value):
 		get_window().get_viewport().scaling_3d_scale = value
+		)
+"
+
+[sub_resource type="GDScript" id="GDScript_iyo8c"]
+script/source = "extends Control
+@onready var h_slider = $HSlider
+
+func _ready():
+	h_slider.value_changed.connect(func(value):
+		ThemeDB.fallback_base_scale = value
+		print(ThemeDB.fallback_base_scale)
 		)
 "
 
@@ -19,26 +30,53 @@ anchor_bottom = 0.9
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Control" type="Control" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="scaling3d" type="VBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
 script = SubResource("GDScript_abd45")
 
-[node name="HSlider" type="HSlider" parent="Control"]
-layout_mode = 1
-anchors_preset = 12
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = -24.0
-grow_horizontal = 2
-grow_vertical = 0
+[node name="Label" type="Label" parent="VBoxContainer/scaling3d"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "Scaling 3d:"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HSlider" type="HSlider" parent="VBoxContainer/scaling3d"]
+layout_mode = 2
+size_flags_vertical = 3
 min_value = 0.1
 max_value = 2.0
 step = 0.1
 value = 1.0
+ticks_on_borders = true
+
+[node name="guibasescale" type="VBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+script = SubResource("GDScript_iyo8c")
+
+[node name="Label" type="Label" parent="VBoxContainer/guibasescale"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "UI Scale:"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HSlider" type="HSlider" parent="VBoxContainer/guibasescale"]
+layout_mode = 2
+size_flags_vertical = 3
+min_value = 0.5
+max_value = 4.5
+step = 0.5
+value = 1.0
+tick_count = 9
 ticks_on_borders = true

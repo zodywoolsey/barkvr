@@ -13,7 +13,7 @@ func _ready():
 			print("script: ",tmp)
 			tmp.source_code = code_edit.text
 			var result = tmp.reload()
-			var clas = tmp.get_class()
+			#var clas = tmp.get_class()
 			if result == OK:
 				target.set_script(tmp)
 				target.set_process(true)

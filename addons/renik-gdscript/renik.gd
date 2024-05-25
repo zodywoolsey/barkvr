@@ -57,6 +57,8 @@ func _ready():
 	_is_ready = true
 	update_skeleton()
 	ready_init()
+	set_process_internal(true)
+	set_physics_process_internal(true)
 	head_target_spatial = get_node_or_null(armature_head_target) as Node3D
 	hand_left_target_spatial = get_node_or_null(armature_left_hand_target) as Node3D
 	hand_right_target_spatial = get_node_or_null(armature_right_hand_target) as Node3D
@@ -406,7 +408,6 @@ func _notification (p_what: int) -> void:
 		NOTIFICATION_INTERNAL_PROCESS:
 			if !Engine.is_editor_hint() || live_preview:
 				update_ik()
-
 
 func ready_init ():
 	# set the skeleton to the parent if we can

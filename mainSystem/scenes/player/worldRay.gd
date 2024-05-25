@@ -8,7 +8,7 @@ var otherray : rayvisscript
 
 var last_pos := Vector3()
 
-func _process(delta):
+func _process(_delta):
 	procrayvis()
 	line_3d.target = target_position
 
@@ -26,7 +26,7 @@ func _input(event):
 		elif event.pressed and event.button_index==5:
 			scrolldown()
 
-func _physics_process(delta):
+func _physics_process(_delta):
 	if is_colliding():
 		vis.show()
 		line_3d.show()

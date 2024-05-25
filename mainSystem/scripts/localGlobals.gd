@@ -50,7 +50,7 @@ func _ready() -> void:
 		discord_login_status = 'logged in'
 	)
 	Journaling.check_root()
-	get_tree().get_first_node_in_group('localroot').add_child(load('res://mainSystem/scenes/player/xrplayer.tscn').instantiate())
+	#get_tree().get_first_node_in_group('localroot').add_child(load('res://mainSystem/scenes/player/xrplayer.tscn').instantiate())
 	#if OS.get_name() == "Android":
 		#OS.request_permissions()
 

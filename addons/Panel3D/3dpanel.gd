@@ -90,7 +90,6 @@ func _init():
 	add_child(viewport,false,INTERNAL_MODE_FRONT)
 	add_child(mesh,false,INTERNAL_MODE_FRONT)
 	add_child(colshape,false,INTERNAL_MODE_FRONT)
-	add_child(colshape,false,Node.INTERNAL_MODE_FRONT)
 	material.texture_repeat = false
 	material.albedo_texture = viewport.get_texture()
 	material.metallic_specular = 0.0

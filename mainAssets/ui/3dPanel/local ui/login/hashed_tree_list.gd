@@ -5,16 +5,16 @@ var tree:Dictionary = {}
 func add_item(text:String,metadata:Variant,replace:String=''):
 	if replace and tree.has(replace):
 		return
-		tree[replace]['name'] = text
-		tree[replace]['tree_item'].set_text(0,text)
-		tree[replace]['tree_item'].set_metadata(0, metadata)
-		tree[replace]['tree_item'].visible = true
+		#tree[replace]['name'] = text
+		#tree[replace]['tree_item'].set_text(0,text)
+		#tree[replace]['tree_item'].set_metadata(0, metadata)
+		#tree[replace]['tree_item'].visible = true
 	elif tree.has(text):
 		return
-		tree[replace]['name'] = text
-		tree[replace]['tree_item'].set_text(0,text)
-		tree[replace]['tree_item'].set_metadata(0, metadata)
-		tree[replace]['tree_item'].visible = true
+		#tree[replace]['name'] = text
+		#tree[replace]['tree_item'].set_text(0,text)
+		#tree[replace]['tree_item'].set_metadata(0, metadata)
+		#tree[replace]['tree_item'].visible = true
 	elif metadata and metadata.has('state'):
 		var roomdict = {
 			"name": text,
@@ -64,9 +64,11 @@ func add_item(text:String,metadata:Variant,replace:String=''):
 						})
 					var parent_item :TreeItem = tree[metadata.parent.get_instance_id()].tree_item
 					tmp_tree_item = create_item(parent_item)
+					tmp_tree_item.add_button(0,load("res://assets/icons/teenyicons/solid/bin.svg"))
 					tree[item_id].tree_item = tmp_tree_item
 				else:
 					tree[item_id].tree_item = create_item()
+					tree[item_id].tree_item.add_button(0,load("res://assets/icons/teenyicons/solid/bin.svg"))
 				tree[item_id].tree_item.collapsed = true
 				tree[item_id].tree_item.set_text(0,text)
 				tree[item_id].tree_item.set_metadata(0,metadata)

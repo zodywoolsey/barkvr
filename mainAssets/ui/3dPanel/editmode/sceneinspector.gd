@@ -1,8 +1,11 @@
 extends Control
 @onready var tree : hashed_tree_list = $Tree
-
 @onready var tree_root : TreeItem = tree.create_item()
+
 signal selected(item)
+var root:Node
+
+var create_node := preload("res://mainAssets/ui/3dPanel/editmode/popup/add_node.tscn")
 
 func _ready():
 	#print(tree.get_class())
@@ -21,7 +24,8 @@ func _ready():
 			giz.target = node
 			giz.name = "gizmo"
 		)
-	var root = get_tree().get_first_node_in_group('localworldroot')
+	#var root = get_tree().get_first_node_in_group('localworldroot')
+	root = get_window()
 	tree.add_item(root.name,{
 		'node':root
 	})
@@ -47,7 +51,6 @@ func _ready():
 		)
 
 func _check_tree_for_updates():
-	var root = get_tree().get_first_node_in_group('localworldroot')
 	if is_instance_valid(root):
 		setRoot(root)
 		tree.check_children()

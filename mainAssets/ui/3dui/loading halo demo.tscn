@@ -1,0 +1,26 @@
+[gd_scene load_steps=3 format=3 uid="uid://d0wvfw354l2i5"]
+
+[ext_resource type="PackedScene" uid="uid://b2r6qi0effaiw" path="res://addons/contextmenu/gridmenu/gridmenubutton.tscn" id="1_2c1wk"]
+
+[sub_resource type="GDScript" id="GDScript_icupb"]
+script/source = "extends Node3D
+
+@onready var button :GridMenuButton = $StaticBody3D
+
+func _ready():
+	button.clicked.connect(func():
+		var tmp_loader :LoadingHalo= load(\"res://mainAssets/ui/3dui/loading_halo.tscn\").instantiate()
+		add_child(tmp_loader)
+		tmp_loader.position = button.position
+		tmp_loader.set_wait_for_timer(10.0)
+		tmp_loader.text = \"hello!\"
+		await get_tree().create_timer(.01).timeout
+	)
+"
+
+[node name="LoadingHaloDemo" type="Node3D"]
+script = SubResource("GDScript_icupb")
+
+[node name="StaticBody3D" parent="." instance=ExtResource("1_2c1wk")]
+text = "spawn loader"
+metadata/grabbable = true

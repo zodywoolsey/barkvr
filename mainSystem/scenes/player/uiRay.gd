@@ -4,7 +4,7 @@ extends rayvisscript
 var prevHover
 var pressed := false
 
-func _process(delta):
+func _process(_delta):
 	procrayvis()
 
 func _input(event):
@@ -21,7 +21,7 @@ func _input(event):
 		elif event.pressed and event.button_index==5:
 			scrolldown()
 
-func _physics_process(delta):
+func _physics_process(_delta):
 	if is_instance_valid(prevHover) and pressed and prevHover.has_method("laser_input"):
 		if is_colliding():
 			prevHover.laser_input({

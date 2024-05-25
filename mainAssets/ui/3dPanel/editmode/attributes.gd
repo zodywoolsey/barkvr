@@ -22,9 +22,6 @@ var enum_field = preload("res://mainAssets/ui/3dPanel/editmode/attributes/enum.t
 var is_field_focused = false
 var target : Node = null
 
-func _input(event):
-	pass
-
 #func _process(delta):
 #	if !is_field_focused:
 #		update_fields()
@@ -42,16 +39,19 @@ func set_target(node):
 			child.queue_free()
 		target = node
 		for prop in target.get_property_list():
+			var fieldname :String= prop.name
+			if prop.name.contains("bones/") and target is Skeleton3D:
+				fieldname = "bone: "+target.get_bone_name(int(prop.name.split("/")[1]))+" "+prop.name.split("/")[-1]
 			match prop.type:
 				TYPE_BOOL:
 					var tmp :Bool_Attribute = bool_field.instantiate()
 					v_box_container.add_child(tmp)
-					tmp.set_data(prop.name, target, prop.name)
+					tmp.set_data(fieldname, target, prop.name)
 				TYPE_FLOAT:
 					var tmp :Number_Attribute = number_field.instantiate()
 					tmp.type = 0
 					v_box_container.add_child(tmp)
-					tmp.set_data(prop.name, target, prop.name)
+					tmp.set_data(fieldname, target, prop.name)
 				TYPE_INT:
 					#print(prop)
 					match prop.hint:
@@ -59,19 +59,19 @@ func set_target(node):
 							var tmp :Number_Attribute = number_field.instantiate()
 							tmp.type = 1
 							v_box_container.add_child(tmp)
-							tmp.set_data(prop.name, target, prop.name)
+							tmp.set_data(fieldname, target, prop.name)
 						2:
 							var tmp :Enum_Attribute = enum_field.instantiate()
 							v_box_container.add_child(tmp)
-							tmp.set_data(prop.name, target, prop.name, prop)
+							tmp.set_data(fieldname, target, prop.name, prop)
 				TYPE_VECTOR3:
 					var tmp :Vector3_Attribute = vector_3_field.instantiate()
 					v_box_container.add_child(tmp)
-					tmp.set_data(prop.name, target, prop.name)
+					tmp.set_data(fieldname, target, prop.name)
 				TYPE_VECTOR2:
 					var tmp :Vector2_Attribute = vector_2_field.instantiate()
 					v_box_container.add_child(tmp)
-					tmp.set_data(prop.name, target, prop.name)
+					tmp.set_data(fieldname, target, prop.name)
 #		update_fields()
 
 func update_fields():
@@ -124,20 +124,30 @@ func _ready():
 		)
 
 
-func _export_node(target:Node) -> bool:
+func _export_node(tmp_target:Node):
 	Thread.set_thread_safety_checks_enabled(false)
 	print('start export')
-	var dir = DirAccess.open("user://")
-	if !dir.dir_exists("./objects"):
-		dir.make_dir("./objects")
-	#var object_file = FileAccess.open("user://objects/"+target.name+".gltf", FileAccess.WRITE)
-	var gltf = GLTFDocument.new()
-	var gltf_state = GLTFState.new()
-	gltf.append_from_scene(target,gltf_state)
-	gltf.write_to_filesystem(gltf_state,"user://objects/"+target.name+".glb")
-	#object_file.store_buffer(gltf.generate_buffer(gltf_state))
-	#var tmpjson = BarkHelpers.node_to_var(target,'',target.name)
-	#tmpjson = JSON.stringify(tmpjson)
-	#object_file.store_var(tmpjson)
-	print('exported node')
-	return true
+	var downpath :String=OS.get_system_dir(OS.SYSTEM_DIR_DOWNLOADS)
+	downpath += "/"
+	if OS.get_name() == "Windows" and DirAccess.dir_exists_absolute(downpath):
+		var packed := PackedScene.new()
+		Journaling.take_owner_of_node_and_all_children(tmp_target,tmp_target)
+		packed.pack(tmp_target)
+		print("save path: "+downpath+tmp_target.name+".res")
+		var err = ResourceSaver.save(packed, downpath+tmp_target.name+".res",ResourceSaver.FLAG_BUNDLE_RESOURCES+ResourceSaver.FLAG_COMPRESS)
+		print("export error: "+str(err))
+		
+		
+	#if !dir.dir_exists("./objects"):
+		#dir.make_dir("./objects")
+	##var object_file = FileAccess.open("user://objects/"+tmp_target.name+".gltf", FileAccess.WRITE)
+	#var gltf = GLTFDocument.new()
+	#var gltf_state = GLTFState.new()
+	#gltf.append_from_scene(tmp_target,gltf_state)
+	#gltf.write_to_filesystem(gltf_state,"user://objects/"+tmp_target.name+".glb")
+	##object_file.store_buffer(gltf.generate_buffer(gltf_state))
+	##var tmpjson = BarkHelpers.node_to_var(tmp_target,'',tmp_target.name)
+	##tmpjson = JSON.stringify(tmpjson)
+	##object_file.store_var(tmpjson)
+	#print('exported node')
+	#return true

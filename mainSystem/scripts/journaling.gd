@@ -59,6 +59,12 @@ func set_property(target: NodePath, prop_name: String, value: Variant, recieved 
 				'value': value
 			})
 
+func take_owner_of_node_and_all_children(node:Node,new_owner:Node):
+	set_property(root.get_path_to(node),"owner",new_owner)
+	if node.get_child_count() > 0:
+		for child in node.get_children():
+			take_owner_of_node_and_all_children(child, new_owner)
+
 func net_propagate_node(node_string: String, parent := ^'', node_name := '', recieved := false) -> void:
 	check_root()
 	if node_name.is_empty():
@@ -174,7 +180,7 @@ const SAVE_DEBUG_GLTFSTATE_RES: bool = false
 #define GLTF_IMPORT_DISCARD_MESHES_AND_MATERIALS 32
 #define GLTF_IMPORT_FORCE_DISABLE_MESH_COMPRESSION 64
 
-func _import_glb(content: Variant, asset_name := '', data := {}, position:Vector3=Vector3(0,0,0)) -> void:
+func _import_glb(content: Variant, asset_name := '', _data := {}, position:Vector3=Vector3(0,0,0)) -> void:
 	Thread.set_thread_safety_checks_enabled(false)
 	var logging_prefix := asset_name+" : "
 	print("Import VRM: " + asset_name + " ----------------------")
@@ -183,13 +189,13 @@ func _import_glb(content: Variant, asset_name := '', data := {}, position:Vector
 		EditorSceneFormatImporter.IMPORT_USE_NAMED_SKIN_BINDS+\
 		EditorSceneFormatImporter.IMPORT_GENERATE_TANGENT_ARRAYS
 	var vrm_extension: GLTFDocumentExtension = gltf_document_extension_class.new()
-	gltf.register_gltf_document_extension(vrm_extension, true)
+	GLTFDocument.register_gltf_document_extension(vrm_extension, true)
 	var state: GLTFState = GLTFState.new()
 	# HANDLE_BINARY_EMBED_AS_BASISU crashes on some files in 4.0 and 4.1
 	state.handle_binary_image = GLTFState.HANDLE_BINARY_EMBED_AS_UNCOMPRESSED  # GLTFState.HANDLE_BINARY_EXTRACT_TEXTURES
 	var err = gltf.append_from_file(content, state, flags)
 	if err != OK:
-		gltf.unregister_gltf_document_extension(vrm_extension)
+		GLTFDocument.unregister_gltf_document_extension(vrm_extension)
 		return
 	for mesh in state.meshes:
 			if mesh.mesh.get_surface_lod_count(0) == 0:
@@ -201,24 +207,7 @@ func _import_glb(content: Variant, asset_name := '', data := {}, position:Vector
 		if !ResourceLoader.exists(content + ".res"):
 			state.take_over_path(content + ".res")
 			ResourceSaver.save(state, content + ".res")
-	gltf.unregister_gltf_document_extension(vrm_extension)
-	
-	# add IK stuff if VRM
-	if asset_name.ends_with(".vrm"):
-		var quickreniksetup :Node3D = load("res://addons/renik-gdscript/quick_renik_setup.tscn").instantiate()
-		generated_scene.add_child(quickreniksetup)
-		var skele :Skeleton3D=null
-		for i in generated_scene.get_children():
-			if skele:
-				break
-			if i is Skeleton3D:
-				skele = i
-			elif i.get_child_count() > 0:
-				for a in i.get_children():
-					if a is Skeleton3D:
-						skele = a
-		if skele:
-			quickreniksetup.armature_skeleton_path = quickreniksetup.get_path_to(skele)
+	GLTFDocument.unregister_gltf_document_extension(vrm_extension)
 	
 	_post_import.call_deferred(root, generated_scene, asset_name, position, false)
 	
@@ -266,7 +255,7 @@ func _import_glb(content: Variant, asset_name := '', data := {}, position:Vector
 		#Notifyvr.send_notification("error importing gltf document")
 
 ## Imports a Godot resource.
-func _import_res(asset_name: String, asset_to_import: Variant, position:Vector3=Vector3(0,0,0)) -> void:
+func _import_res(_asset_name: String, asset_to_import: Variant, _position:Vector3=Vector3(0,0,0)) -> void:
 	# If asset to import is not a path, create a path.
 	# Note that this may mean assets might not load for peers.
 	if asset_to_import is PackedByteArray:
@@ -278,7 +267,7 @@ func _import_res(asset_name: String, asset_to_import: Variant, position:Vector3=
 		file.flush()
 		file.close()
 		asset_to_import = path
-	ResourceLoader.load_threaded_request(asset_to_import, '', true)
+	ResourceLoader.load_threaded_request(asset_to_import, '', true, ResourceLoader.CACHE_MODE_IGNORE)
 	_check_loaded.call_deferred(asset_to_import)
 
 ## Imports an image.
@@ -335,7 +324,7 @@ func _import_image(asset_name: String, content: PackedByteArray, position:Vector
 func _import_file(asset_name: String, content: PackedByteArray, position:Vector3=Vector3(0,0,0) ) -> void:
 	var tex := NoiseTexture2D.new()
 	var noise := FastNoiseLite.new()
-	noise.seed = randf()
+	noise.seed = randi()
 	tex.height = 100
 	tex.width = 100
 	tex.noise = noise
@@ -391,9 +380,29 @@ func receive(action: Dictionary) -> void:
 		"delete_node":
 			delete_node(action.target, true)
 
-func _post_import(root:Node,node_to_add:Node,node_name:String,position:Vector3=Vector3(),lookatuser:bool=false):
+func _post_import(_root_node:Node,node_to_add:Node,node_name:String,position:Vector3=Vector3(),lookatuser:bool=false):
+	check_root()
 	root.add_child(node_to_add)
 	if lookatuser and node_to_add is Node3D:
-		node_to_add.look_at_from_position(position,get_viewport().get_camera_3d().global_position)
+		node_to_add.look_at_from_position(position,get_viewport().get_camera_3d().global_position,Vector3.UP,true)
 	node_to_add.global_position = position
 	node_to_add.name = node_name
+	print(node_name)
+	# add IK stuff if VRM
+	if node_name.ends_with(".vrm"):
+		print('attempting ik')
+		var quickreniksetup :Node3D = load("res://addons/renik-gdscript/quick_renik_setup.tscn").instantiate()
+		node_to_add.add_child(quickreniksetup)
+		var skele :Skeleton3D=null
+		for i in node_to_add.get_children():
+			if skele:
+				break
+			if i is Skeleton3D:
+				skele = i
+			elif i.get_child_count() > 0:
+				for a in i.get_children():
+					if a is Skeleton3D:
+						skele = a
+		if skele:
+			print('found skele')
+			quickreniksetup.armature_skeleton = skele

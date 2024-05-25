@@ -111,12 +111,14 @@ func got_turn_server(data):
 func reset():
 	peers = []
 
-func _physics_process(delta):
+func _physics_process(_delta):
 	var player = get_tree().get_first_node_in_group('player')
 	if player:
 		packetdict.user_pos.pos = player.global_position
-		packetdict.user_pos.rhpos = player.righthand.global_position
-		packetdict.user_pos.lhpos = player.lefthand.global_position
+		if is_instance_valid(player.righthand):
+			packetdict.user_pos.rhpos = player.righthand.global_position
+		if is_instance_valid(player.lefthand):
+			packetdict.user_pos.lhpos = player.lefthand.global_position
 	if !thread.is_alive() and thread.is_started():
 		thread.wait_to_finish()
 		thread.start(poll)
@@ -173,15 +175,15 @@ func poll():
 							# Send all new journal events to the other users
 							journal_timer = 0.0
 							if current_actions.size() >0:
-								var bytes_to_send = var_to_bytes_with_objects(current_actions).compress(3)
+								bytes_to_send = var_to_bytes_with_objects(current_actions).compress(3)
 								if bytes_to_send.size() < packet_size:
 									chan.channel.put_var({
 										'pos': -1,
 										'bytes': bytes_to_send
 									})
 								else:
-									var parts:int = bytes_to_send.size()/packet_size
-									for i:int in range(bytes_to_send.size()/packet_size):
+									var parts:int = float(bytes_to_send.size())/packet_size
+									for i:int in range(float(bytes_to_send.size())/packet_size):
 										var pack_dict = {}
 										if i < parts-1: 
 											pack_dict['pos'] = i
@@ -191,6 +193,8 @@ func poll():
 											pack_dict['pos'] = -1
 				#							print('err: ',chan.put_var(pack_dict))
 										var err = chan.channel.put_var(pack_dict)
+										if err != OK:
+											print("Network handler, channel.put_var"+str(err))
 			else:
 				peers.erase(peer)
 

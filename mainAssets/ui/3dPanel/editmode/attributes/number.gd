@@ -36,7 +36,7 @@ func _ready():
 			val.caret_column = last_caret_pos
 		)
 
-func _process(delta):
+func _process(_delta):
 	if target and !property_name.is_empty() and !_is_editing and is_instance_valid(target) and !_check_focus():
 		val.text = str(target[property_name])
 	elif !is_instance_valid(target):
@@ -50,7 +50,7 @@ func _check_focus():
 
 ## sets the name, field target node, and the property name for the field to look for
 ## name:String, new_target:Node, new_property_name:String
-func set_data(name:String, new_target:Node, new_property_name:String):
-	label.text = name
+func set_data(new_name:String, new_target:Node, new_property_name:String):
+	label.text = new_name
 	target = new_target
 	property_name = new_property_name

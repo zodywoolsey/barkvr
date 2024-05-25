@@ -5,7 +5,7 @@ extends Node3D
 func _ready():
 	#GLTFDocument.register_gltf_document_extension(VRMC_vrm_animation_inst)
 #	print(ProjectSettings.get_global_class_list())
-	get_viewport().canvas_cull_mask
+	#get_viewport().canvas_cull_mask
 	var dir = DirAccess.open('user://')
 	if !dir.dir_exists('./tmp'):
 		dir.make_dir('./tmp')

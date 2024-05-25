@@ -65,7 +65,7 @@ size = Vector2(0.18377, 0.130074)
 script = ExtResource("1_t6gg2")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.546607, 0.315585, 0.175076, -0.3275, 0.567247, 0, -0.15162, -0.0875382, 0.631167, 0, 0, 0)
+transform = Transform3D(-0.565142, -0.326286, -0.0563538, -0.3275, 0.567247, 0, 0.0488038, 0.028177, -0.65257, 0, 0, 0)
 mesh = SubResource("TorusMesh_gbg2y")
 skeleton = NodePath("../..")
 
@@ -76,7 +76,7 @@ libraries = {
 speed_scale = 0.5
 
 [node name="MeshInstance3D3" type="MeshInstance3D" parent="."]
-transform = Transform3D(-0.0512788, -0.0296059, -0.652318, -0.3275, 0.567247, 0, 0.564924, 0.326159, -0.0592118, 0, 0, 0)
+transform = Transform3D(0.432359, 0.249623, 0.424004, -0.3275, 0.567247, 0, -0.367198, -0.212002, 0.499245, 0, 0, 0)
 mesh = SubResource("TorusMesh_gbg2y")
 skeleton = NodePath("../..")
 
@@ -92,11 +92,15 @@ script = SubResource("GDScript_hwtf5")
 [node name="Label3D" type="Label3D" parent="textparent"]
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, 0, -0.438506)
 pixel_size = 0.0014
+billboard = 1
+render_priority = 3
+outline_render_priority = 2
 text = "loading:
 dafd"
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="textparent"]
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -1.11639e-10, 0, -0.437229)
+visible = false
 mesh = SubResource("QuadMesh_0fmfj")
 skeleton = NodePath("../Label3D")
 script = ExtResource("2_8b88k")

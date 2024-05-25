@@ -26,7 +26,7 @@ var current_pos := Vector3():
 		amesh.add_surface_from_arrays(Mesh.PRIMITIVE_LINE_STRIP,arrays)
 		mesh = amesh
 
-func _process(delta):
+func _process(_delta):
 	current_pos = Vector3(
 		lerpf(current_pos.x,target.x,.1),
 		lerpf(current_pos.y,target.y,.1),

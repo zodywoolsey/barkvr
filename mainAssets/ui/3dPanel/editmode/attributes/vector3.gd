@@ -35,7 +35,7 @@ func _ready():
 			float(new_text))
 		)
 
-func _physics_process(delta):
+func _physics_process(_delta):
 	var scrollparentrect = get_parent_control().get_parent_control().get_global_rect()
 	var rect = get_global_rect()
 	if v_box_container.visible and !(rect.end.y > scrollparentrect.position.y and rect.position.y < scrollparentrect.end.y):
@@ -64,7 +64,7 @@ func _check_focus():
 
 ## sets the name, field target node, and the property name for the field to look for
 ## name:String, new_target:Node, new_property_name:String
-func set_data(name:String, new_target:Node, new_property_name:String):
-	label.text = name
+func set_data(new_name:String, new_target:Node, new_property_name:String):
+	label.text = new_name
 	target = new_target
 	property_name = new_property_name
