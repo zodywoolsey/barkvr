@@ -163,6 +163,7 @@ func _physics_process(delta):
 	
 	
 	move_and_slide()
+	camray.force_raycast_update()
 
 func _input(event):
 	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:

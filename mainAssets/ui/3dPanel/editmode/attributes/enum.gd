@@ -9,9 +9,12 @@ var _is_editing:bool = false
 var property_name:String = ''
 
 func _ready():
-	val.toggled.connect(func(on):
+	val.get_popup().hide_on_item_selection=false
+	val.get_popup().hide_on_checkable_item_selection=false
+	val.get_popup().hide_on_state_item_selection=false
+	val.item_selected.connect(func(index):
 		if is_instance_valid(target):
-			target[property_name] = on
+			target[property_name] = index
 		)
 
 func _process(_delta):
@@ -31,9 +34,10 @@ func _check_focus():
 ## name:String, new_target:Node, new_property_name:String
 func set_data(new_name:String, new_target:Node, new_property_name:String, prop_data:Dictionary):
 	label.text = new_name
-	target = new_target
 	property_name = new_property_name
-	val.selected = bool(target[property_name])
+	val.selected = bool(new_target[property_name])
 	var options :Array = prop_data.hint_string.split(',')
 	for i in options.size():
 		val.add_item(options[i], i)
+	target = new_target
+	name = new_name

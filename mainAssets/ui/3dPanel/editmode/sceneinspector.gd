@@ -10,7 +10,6 @@ var create_node := preload("res://mainAssets/ui/3dPanel/editmode/popup/add_node.
 func _ready():
 	#print(tree.get_class())
 	tree.item_selected.connect(func():
-		await get_tree().process_frame
 		selected.emit(tree.get_selected().get_metadata(0).node)
 		LocalGlobals.clear_gizmos.emit()
 		var node = tree.get_selected().get_metadata(0).node
