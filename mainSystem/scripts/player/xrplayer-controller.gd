@@ -19,11 +19,11 @@ var leftaxbtn :bool = false
 
 var camPrevPos : Vector3 = Vector3()
 
-const SPEED = 5.0
-const JUMP_VELOCITY = 4.5
+@export var SPEED := 5.0
+@export var JUMP_VELOCITY := 4.5
 
-var flymode := true
-var noclip := false:
+@export var flymode := true
+@export var noclip := false:
 	set(value):
 		noclip = value
 		collision_shape_3d.disabled = value

@@ -158,16 +158,15 @@ func import_asset(
 				'asset_name': asset_name
 			})
 
-func _check_loaded(path: String) -> void:
-	match ResourceLoader.load_threaded_get_status(path):
-		ResourceLoader.THREAD_LOAD_IN_PROGRESS:
-			_check_loaded.call_deferred(path)
-		ResourceLoader.THREAD_LOAD_LOADED:
-			var res := ResourceLoader.load_threaded_get(path)
-			if res != null:
-				var node = res.instantiate()
-				node.position.y = 2.0
-				root.add_child(node)
+func _check_loaded(path: String, asset_name:String, position:Vector3, last_time:float=0.0) -> void:
+	while ResourceLoader.load_threaded_get_status(path) == ResourceLoader.THREAD_LOAD_IN_PROGRESS:
+			pass
+			#get_tree().create_timer(1).timeout.connect(_check_loaded.bind(path, asset_name, position))
+	if ResourceLoader.THREAD_LOAD_LOADED:
+		var res := ResourceLoader.load_threaded_get(path)
+		if res != null:
+			var node = res.instantiate()
+			_post_import.call_deferred(root,node,asset_name,position)
 
 
 const gltf_document_extension_class = preload("res://addons/vrm/vrm_extension.gd")
@@ -255,7 +254,7 @@ func _import_glb(content: Variant, asset_name := '', _data := {}, position:Vecto
 		#Notifyvr.send_notification("error importing gltf document")
 
 ## Imports a Godot resource.
-func _import_res(_asset_name: String, asset_to_import: Variant, _position:Vector3=Vector3(0,0,0)) -> void:
+func _import_res(asset_name: String, asset_to_import: Variant, position:Vector3=Vector3(0,0,0)) -> void:
 	# If asset to import is not a path, create a path.
 	# Note that this may mean assets might not load for peers.
 	if asset_to_import is PackedByteArray:
@@ -268,7 +267,7 @@ func _import_res(_asset_name: String, asset_to_import: Variant, _position:Vector
 		file.close()
 		asset_to_import = path
 	ResourceLoader.load_threaded_request(asset_to_import, '', true, ResourceLoader.CACHE_MODE_IGNORE)
-	_check_loaded.call_deferred(asset_to_import)
+	_check_loaded(asset_to_import,asset_name,position)
 
 ## Imports an image.
 func _import_image(asset_name: String, content: PackedByteArray, position:Vector3=Vector3(0,0,0)) -> void:
