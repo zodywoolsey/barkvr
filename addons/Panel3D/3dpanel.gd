@@ -71,10 +71,6 @@ var tex:ViewportTexture
 		material.heightmap_scale = heightmap_scale
 
 func _init():
-	#viewport_container = SubViewportContainer.new()
-	#viewport_container.visibility_layer = 0
-	#viewport_container.light_mask = 0
-	#viewport_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	viewport = SubViewport.new()
 	viewport.gui_embed_subwindows = true
 	viewport.own_world_3d = true
@@ -147,6 +143,17 @@ func laser_input(data:Dictionary):
 			event = data.event
 		_:
 			pass
+	
+	if event is InputEventWithModifiers:
+		if Input.is_key_pressed(KEY_CTRL):
+			event.ctrl_pressed = true
+		if Input.is_key_pressed(KEY_ALT):
+			event.alt_pressed = true
+		if Input.is_key_pressed(KEY_META):
+			event.meta_pressed = true
+		if Input.is_key_pressed(KEY_SHIFT):
+			event.shift_pressed = true
+	
 	# Set event pressed value (should be false if not explicitly changed)
 	if data.has('pressed') and "pressed" in event:
 		event.pressed = data.pressed

@@ -17,7 +17,7 @@
 
 [sub_resource type="AudioStreamMicrophone" id="AudioStreamMicrophone_ve6pm"]
 
-[sub_resource type="Resource" id="Resource_75t0f"]
+[sub_resource type="Resource" id="Resource_cfnp7"]
 resource_name = "ForwardGait"
 script = ExtResource("6_kr2oq")
 speed_scalar_min = 1.0
@@ -49,7 +49,7 @@ contact_point_ease = 0.05
 contact_point_ease_scalar = 0.4
 scaling_ease = 0.85
 
-[sub_resource type="Resource" id="Resource_vjly3"]
+[sub_resource type="Resource" id="Resource_ajj7m"]
 resource_name = "BackwardGait"
 script = ExtResource("6_kr2oq")
 speed_scalar_min = 0.5
@@ -81,7 +81,7 @@ contact_point_ease = 0.1
 contact_point_ease_scalar = 0.4
 scaling_ease = 0.85
 
-[sub_resource type="Resource" id="Resource_wupib"]
+[sub_resource type="Resource" id="Resource_0e3vy"]
 resource_name = "SidewaysGait"
 script = ExtResource("6_kr2oq")
 speed_scalar_min = 0.75
@@ -180,9 +180,9 @@ bones/66/rotation = Quaternion(9.01818e-07, 0.765731, -0.643162, -1.05015e-06)
 bones/67/rotation = Quaternion(-1.14615e-06, -0.557449, 0.830211, -7.55722e-07)
 
 [node name="RenIKFootPlacement" parent="localworldroot/test_rig/LogicContainer" index="1"]
-forward_gait = SubResource("Resource_75t0f")
-backward_gait = SubResource("Resource_vjly3")
-sideways_gait = SubResource("Resource_wupib")
+forward_gait = SubResource("Resource_cfnp7")
+backward_gait = SubResource("Resource_ajj7m")
+sideways_gait = SubResource("Resource_0e3vy")
 left_hip_offset = Vector3(0.109996, -0.149882, -0.047796)
 right_hip_offset = Vector3(-0.109996, -0.149882, -0.047796)
 

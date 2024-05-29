@@ -3,6 +3,13 @@ extends Node3D
 @onready var ren_ik = $RenIK
 @onready var ren_ik_foot_placement = $RenIKFootPlacement
 
+@onready var head = $Targets/Head
+@onready var hips = $Targets/Hips
+@onready var left_hand = $Targets/LeftHand
+@onready var right_hand = $Targets/RightHand
+@onready var left_foot = $Targets/LeftFoot
+@onready var right_foot = $Targets/RightFoot
+
 @export var armature_skeleton: Node3D:
 	set(value):
 		armature_skeleton = value

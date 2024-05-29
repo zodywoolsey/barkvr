@@ -23,5 +23,5 @@ focus_mode = 0
 allow_reselect = true
 allow_search = false
 hide_root = true
-scroll_horizontal_enabled = false
+drop_mode_flags = 3
 script = ExtResource("2_k0xmv")

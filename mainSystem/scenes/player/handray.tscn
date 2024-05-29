@@ -1,9 +1,29 @@
-[gd_scene load_steps=2 format=3 uid="uid://12mm63qyglpf"]
+[gd_scene load_steps=5 format=3 uid="uid://12mm63qyglpf"]
 
-[ext_resource type="Script" path="res://mainSystem/scenes/player/uiRay.gd" id="1_2xn0p"]
+[ext_resource type="Script" path="res://mainSystem/scenes/player/interactionRay.gd" id="1_nnnux"]
+[ext_resource type="Script" path="res://mainSystem/scenes/objects/tools/Line3D.gd" id="2_hejn6"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6bpur"]
+shading_mode = 0
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_qvybh"]
+_surfaces = [{
+"aabb": AABB(0, 0, 0, 1e-05, 0.1, 1e-05),
+"format": 34359738369,
+"primitive": 2,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 2,
+"vertex_data": PackedByteArray(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 204, 204, 61, 0, 0, 0, 0)
+}]
 
 [node name="handray" type="RayCast3D"]
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, 0, 0)
 target_position = Vector3(0, 0, -1000)
 collision_mask = 4
-script = ExtResource("1_2xn0p")
+script = ExtResource("1_nnnux")
+
+[node name="Line3D" type="MeshInstance3D" parent="."]
+material_override = SubResource("StandardMaterial3D_6bpur")
+mesh = SubResource("ArrayMesh_qvybh")
+script = ExtResource("2_hejn6")
+iswobbly = false

@@ -1,4 +1,4 @@
-@tool
+#@tool
 class_name Line3D
 extends MeshInstance3D
 
@@ -9,14 +9,23 @@ var vertices := PackedVector3Array()
 var arrays := Array()
 var spline := Curve3D.new()
 
-@export var target := Vector3(0.0,.1,0.0)
+@export var iswobbly := true
+@export var istargetglobal := false
+@export var target := Vector3(0.0,.1,0.0):
+	set(value):
+		target = value
+		if !iswobbly:
+			current_pos = value
 
 var current_pos := Vector3():
 	set(value):
 		current_pos = value
 		spline.clear_points()
 		spline.add_point(Vector3())
-		spline.add_point(current_pos, (target-current_pos) )
+		if istargetglobal:
+			spline.add_point((current_pos), ((target)-(current_pos)) )
+		else:
+			spline.add_point(current_pos, (target-current_pos) )
 		spline.bake_interval = .1
 		vertices = spline.get_baked_points()
 		arrays.clear()
@@ -27,8 +36,9 @@ var current_pos := Vector3():
 		mesh = amesh
 
 func _process(_delta):
-	current_pos = Vector3(
-		lerpf(current_pos.x,target.x,.1),
-		lerpf(current_pos.y,target.y,.1),
-		lerpf(current_pos.z,target.z,.1)
-	)
+	if iswobbly:
+		current_pos = Vector3(
+			lerpf(current_pos.x,target.x,.1),
+			lerpf(current_pos.y,target.y,.1),
+			lerpf(current_pos.z,target.z,.1)
+		)

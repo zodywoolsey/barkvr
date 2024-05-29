@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=3 uid="uid://bexq572dbl6v4"]
 
 [ext_resource type="Script" path="res://mainSystem/scripts/player/flatPlayerController.gd" id="1_ss02e"]
-[ext_resource type="Script" path="res://mainSystem/scenes/player/worldRay.gd" id="2_hfws1"]
+[ext_resource type="Script" path="res://mainSystem/scenes/player/interactionRay.gd" id="2_hfws1"]
 [ext_resource type="Script" path="res://mainSystem/scenes/player/uiRay.gd" id="3_5fei5"]
 [ext_resource type="Script" path="res://mainSystem/scripts/player/notificationpositioner.gd" id="4_fu1br"]
 

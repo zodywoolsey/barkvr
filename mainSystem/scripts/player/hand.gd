@@ -63,7 +63,6 @@ func _ready():
 #				world_ray.enabled = false
 		)
 
-
 func _physics_process(delta):
 	if visible:
 		if buttons.has('by_button') and LocalGlobals.world_state:
@@ -109,6 +108,12 @@ func _notification(what):
 		else:
 			world_ray.enabled = false
 			ui_ray.enabled = false
+
+func update_raycasts():
+	ui_ray.force_raycast_update()
+	ui_ray.force_update_transform()
+	world_ray.force_raycast_update()
+	world_ray.force_update_transform()
 
 func grabBodyEntered(body):
 	if body.has_meta("grabbable"):

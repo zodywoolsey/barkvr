@@ -1,14 +1,19 @@
 extends rayvisscript
 
 @onready var grab_parent = $"../grabParent"
+@onready var line_3d = $Line3D
 var prevHover
 var pressed := false
+var otherray : rayvisscript
+
+var last_pos := Vector3()
 
 func _process(_delta):
 	procrayvis()
+	line_3d.target = target_position
 
 func _input(event):
-	if event is InputEventGesture:
+	if event is InputEventPanGesture:
 		if is_colliding() and prevHover is Panel3D:
 			prevHover.laser_input({
 				'action':'custom',
@@ -22,63 +27,49 @@ func _input(event):
 			scrolldown()
 
 func _physics_process(_delta):
-	if is_instance_valid(prevHover) and pressed and prevHover.has_method("laser_input"):
-		if is_colliding():
-			prevHover.laser_input({
-				'hovering': true,
-				'pressed': pressed,
-				"position": get_collision_point(),
-				"action": "hover",
-				'index': int(leftside)
-			})
-		else:
-			prevHover.laser_input({
-				'hovering': true,
-				'pressed': pressed,
-				"position": vispos,
-				"action": "hover",
-				'index': int(leftside)
-			})
-	elif is_colliding():
+	if is_colliding():
 		vis.show()
+		line_3d.show()
 		var tmpcol = get_collider()
 		if tmpcol.has_method("laser_input"):
-			if is_instance_valid(prevHover) and prevHover != tmpcol:
+			if prevHover and prevHover != tmpcol:
 				prevHover.laser_input({
 					'hovering': false,
-					'pressed': false,
+					'pressed': pressed,
 					'position': get_collision_point(),
-					"action": "hover",
-					'index': int(leftside)
+					"action": "hover"
 				})
 			else:
 				tmpcol.laser_input({
 					'hovering': true,
 					'pressed': pressed,
 					"position": get_collision_point(),
-					"action": "hover",
-					'index': int(leftside)
+					"action": "hover"
 				})
 			prevHover = tmpcol
 		else:
-			if is_instance_valid(prevHover) and prevHover.has_method("laser_input"):
+			if prevHover and prevHover.has_method("laser_input"):
 				prevHover.laser_input({
 					'hovering': false,
-					'pressed': false,
+					'pressed': pressed,
 					'position': get_collision_point(),
-					"action": "hover",
-					'index': int(leftside)
+					"action": "hover"
 				})
 	else:
 		vis.hide()
-		if is_instance_valid(prevHover) and prevHover.has_method("laser_input"):
+		if prevHover and prevHover.has_method("laser_input") and prevHover.has_method('laser_input'):
 			prevHover.laser_input({
 				'hovering': false,
-				'pressed': false,
+				'pressed': pressed,
 				'position': get_collision_point(),
-				'action': 'hover',
-				'index': int(leftside)
+				'action': 'hover'
 			})
+			if pressed and prevHover.has_method('laser_input'):
+				prevHover.laser_input({
+					"position": get_collision_point(),
+					"pressed": pressed,
+					'action': 'click'
+					})
 			prevHover = null
 #	print(currentAction)
 
@@ -106,14 +97,12 @@ func scrolldown():
 			tmpcol.laser_input({
 				"position": get_collision_point(),
 				"pressed": true,
-				"action": "scrolldown",
-				'index': int(leftside)
+				"action": "scrolldown"
 				})
 			tmpcol.laser_input({
 				"position": get_collision_point(),
 				"pressed": false,
-				"action": "scrolldown",
-				'index': int(leftside)
+				"action": "scrolldown"
 				})
 
 func click():
@@ -124,8 +113,7 @@ func click():
 			tmpcol.laser_input({
 				"position": get_collision_point(),
 				"pressed": pressed,
-				'action': 'click',
-				'index': int(leftside)
+				'action': 'click'
 				})
 	pressed = true
 
@@ -136,17 +124,15 @@ func release():
 			pressed = false
 			tmpcol.laser_input({
 				"position": get_collision_point(),
-				"pressed": false,
-				'action': 'click',
-				'index': int(leftside)
+				"pressed": pressed,
+				'action': 'click'
 				})
-	elif is_instance_valid(prevHover):
+	elif prevHover:
 		if prevHover.has_method("laser_input"):
 			pressed = false
 			prevHover.laser_input({
-				"position": vispos,
-				"pressed": false,
-				'action': 'click',
-				'index': int(leftside)
+				"position": get_collision_point(),
+				"pressed": pressed,
+				'action': 'click'
 				})
 	pressed = false

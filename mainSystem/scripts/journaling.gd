@@ -392,6 +392,12 @@ func _post_import(_root_node:Node,node_to_add:Node,node_name:String,position:Vec
 		print('attempting ik')
 		var quickreniksetup :Node3D = load("res://addons/renik-gdscript/quick_renik_setup.tscn").instantiate()
 		node_to_add.add_child(quickreniksetup)
+		quickreniksetup.head.global_position += quickreniksetup.global_position
+		quickreniksetup.hips.global_position += quickreniksetup.global_position
+		quickreniksetup.left_hand.global_position += quickreniksetup.global_position
+		quickreniksetup.right_hand.global_position += quickreniksetup.global_position
+		quickreniksetup.left_foot.global_position += quickreniksetup.global_position
+		quickreniksetup.right_foot.global_position += quickreniksetup.global_position
 		var skele :Skeleton3D=null
 		for i in node_to_add.get_children():
 			if skele:
