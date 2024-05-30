@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://cr02u36wo3sqp"]
+[gd_scene load_steps=6 format=3 uid="uid://cr02u36wo3sqp"]
 
 [ext_resource type="PackedScene" uid="uid://b2r6qi0effaiw" path="res://addons/contextmenu/gridmenu/gridmenubutton.tscn" id="1_1fmp6"]
 [ext_resource type="Script" path="res://addons/contextmenu/gridmenu/handmenu.gd" id="1_jd5nk"]
@@ -9,7 +9,6 @@ script/source = "extends Node
 func onclick():
 	print(get_tree().get_first_node_in_group(\"player\").flymode)
 	get_tree().get_first_node_in_group(\"player\").flymode = !get_tree().get_first_node_in_group(\"player\").flymode
-	queue_free()
 "
 
 [sub_resource type="GDScript" id="GDScript_ft12v"]
@@ -19,6 +18,13 @@ func onclick():
 	print(get_tree().get_first_node_in_group(\"player\").noclip)
 	get_tree().get_first_node_in_group(\"player\").noclip = !get_tree().get_first_node_in_group(\"player\").noclip
 	queue_free()
+"
+
+[sub_resource type="GDScript" id="GDScript_djyhs"]
+script/source = "extends Object
+
+func onclick():
+	print('clicked')
 "
 
 [node name="handmenu" type="Node3D"]
@@ -50,6 +56,8 @@ callscript = SubResource("GDScript_ft12v")
 
 [node name="StaticBody3D6" parent="." instance=ExtResource("1_1fmp6")]
 transform = Transform3D(-1, -8.74228e-08, 3.82137e-15, 0, -4.37114e-08, -1, 8.74228e-08, -1, 4.37114e-08, -0.1, 0, 8.74228e-09)
+text = "print when clicked"
+callscript = SubResource("GDScript_djyhs")
 
 [node name="StaticBody3D7" parent="." instance=ExtResource("1_1fmp6")]
 transform = Transform3D(-1, -8.74228e-08, 3.82137e-15, 0, -4.37114e-08, -1, 8.74228e-08, -1, 4.37114e-08, 0.1, -0.1, -8.74228e-09)

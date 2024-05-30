@@ -1,3 +1,4 @@
+class_name BarkHand
 extends XRController3D
 
 @onready var grabArea : Area3D = $handproxy/grabArea
@@ -92,22 +93,18 @@ func _physics_process(delta):
 		else:
 			item.node.global_transform = lefthand.global_transform * item.offset
 
-func _notification(what):
-	if what == NOTIFICATION_PROCESS:
-		if visible:
-			if isscalinggrabbedobject:
-				var ts = global_position.distance_to(otherhand.global_position)-scalinggrabbedstartdist
-				ts *= 4.0
-				scalinggrabbedobject.scale = scalinggrabbedstartscale+Vector3(ts,ts,ts)
-			if ui_ray.is_colliding():
-				world_ray.enabled = false
-				world_ray.hide()
-			else:
-				world_ray.enabled = true
-				world_ray.show()
-		else:
+func _process(delta):
+	if visible:
+		if isscalinggrabbedobject:
+			var ts = global_position.distance_to(otherhand.global_position)-scalinggrabbedstartdist
+			ts *= 4.0
+			scalinggrabbedobject.scale = scalinggrabbedstartscale+Vector3(ts,ts,ts)
+		if ui_ray.is_colliding():
 			world_ray.enabled = false
-			ui_ray.enabled = false
+			world_ray.hide()
+		else:
+			world_ray.enabled = true
+			world_ray.show()
 
 func update_raycasts():
 	ui_ray.force_raycast_update()

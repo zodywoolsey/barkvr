@@ -78,6 +78,18 @@ transform = Transform3D(0.075, 0, 0, 0, 0.075, 0, 0, 0, 0.075, -0.0929923, -0.08
 [node name="iktarget" type="Node3D" parent="CharacterBody3D/xrplayer/XrCamera3d"]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0.141187)
 
+[node name="worldRay" parent="CharacterBody3D/xrplayer/XrCamera3d" instance=ExtResource("4_316iy")]
+unique_name_in_owner = true
+visible = false
+enabled = false
+collision_mask = 3
+
+[node name="uiRay" parent="CharacterBody3D/xrplayer/XrCamera3d" instance=ExtResource("4_316iy")]
+unique_name_in_owner = true
+visible = false
+enabled = false
+collision_mask = 260
+
 [node name="righthand" type="XRController3D" parent="CharacterBody3D/xrplayer"]
 unique_name_in_owner = true
 tracker = &"right_hand"
@@ -90,7 +102,6 @@ transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, 0, 0)
 
 [node name="worldRay" parent="CharacterBody3D/xrplayer/righthand/handproxy" instance=ExtResource("4_316iy")]
-transform = Transform3D(1, 0, -1.74846e-07, 0, 1, 0, 1.74846e-07, 0, 1, 0, 0, 0)
 collision_mask = 3
 
 [node name="uiRay" parent="CharacterBody3D/xrplayer/righthand/handproxy" instance=ExtResource("4_316iy")]
@@ -165,11 +176,9 @@ script = ExtResource("2_npgyv")
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
 
 [node name="worldRay" parent="CharacterBody3D/xrplayer/lefthand/handproxy" instance=ExtResource("4_316iy")]
-transform = Transform3D(1, 0, -4.26326e-14, 0, 1, 0, 4.26326e-14, 0, 1, 0, 0, 0)
 collision_mask = 3
 
 [node name="uiRay" parent="CharacterBody3D/xrplayer/lefthand/handproxy" instance=ExtResource("4_316iy")]
-transform = Transform3D(1, 0, -2.13163e-14, 0, 1, 0, 2.13163e-14, 0, 1, 0, 0, 0)
 collision_mask = 260
 
 [node name="grabParent" type="Node3D" parent="CharacterBody3D/xrplayer/lefthand/handproxy"]

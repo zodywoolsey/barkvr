@@ -6,7 +6,7 @@
 [ext_resource type="Script" path="res://addons/renik-gdscript/renik_placement.gd" id="3_lrlos"]
 [ext_resource type="Script" path="res://addons/renik-gdscript/renik_placement_gait.gd" id="4_ipr1b"]
 
-[sub_resource type="Resource" id="Resource_wlkx0"]
+[sub_resource type="Resource" id="Resource_uo1ru"]
 resource_name = "ForwardGait"
 script = ExtResource("4_ipr1b")
 speed_scalar_min = 1.0
@@ -38,7 +38,7 @@ contact_point_ease = 0.05
 contact_point_ease_scalar = 0.4
 scaling_ease = 0.85
 
-[sub_resource type="Resource" id="Resource_u2dp3"]
+[sub_resource type="Resource" id="Resource_x1ous"]
 resource_name = "BackwardGait"
 script = ExtResource("4_ipr1b")
 speed_scalar_min = 0.5
@@ -70,7 +70,7 @@ contact_point_ease = 0.1
 contact_point_ease_scalar = 0.4
 scaling_ease = 0.85
 
-[sub_resource type="Resource" id="Resource_c1dn2"]
+[sub_resource type="Resource" id="Resource_tvnyr"]
 resource_name = "SidewaysGait"
 script = ExtResource("4_ipr1b")
 speed_scalar_min = 0.75
@@ -172,9 +172,9 @@ torso_spine_twist = 1.0
 [node name="RenIKFootPlacement" type="Node3D" parent="LogicContainer"]
 transform = Transform3D(1, 1.11759e-08, 0, -6.70552e-08, 1, 0, -7.45058e-09, 0, 1, 0, 0, 0)
 script = ExtResource("3_lrlos")
-forward_gait = SubResource("Resource_wlkx0")
-backward_gait = SubResource("Resource_u2dp3")
-sideways_gait = SubResource("Resource_c1dn2")
+forward_gait = SubResource("Resource_uo1ru")
+backward_gait = SubResource("Resource_x1ous")
+sideways_gait = SubResource("Resource_tvnyr")
 left_hip_offset = Vector3(0.109996, -0.149882, -0.047796)
 right_hip_offset = Vector3(-0.109996, -0.149882, -0.047796)
 live_preview = true

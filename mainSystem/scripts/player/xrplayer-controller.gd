@@ -1,13 +1,15 @@
 extends CharacterBody3D
 
 #controllers:
-@onready var righthand = %righthand
-@onready var lefthand = %lefthand
+@onready var righthand :BarkHand= %righthand
+@onready var lefthand :BarkHand= %lefthand
 @onready var xr_camera_3d = $xrplayer/XrCamera3d
 @onready var xrplayer = $xrplayer
 @onready var playercamoffset = $playercamoffset
 @onready var camray = $xrplayer/XrCamera3d/camray
 @onready var collision_shape_3d = %CollisionShape3D
+@onready var world_ray = %worldRay
+@onready var ui_ray = %uiRay
 
 #controller input vars:
 var rightStick :Vector2 = Vector2()
@@ -46,7 +48,8 @@ func _ready():
 	if !LocalGlobals.vr_supported:
 		xr_camera_3d.position.y = .9
 		righthand.position = Vector3(.2,.6,-.2)
-#		lefthand.hide()
+		lefthand.position = Vector3(-.2,.6,0.0)
+		lefthand.rotation_degrees = Vector3(-90.0,0,0)
 	var spawnLoc = get_tree().get_nodes_in_group("PlayerSpawnLocation").pick_random()
 	if spawnLoc:
 		global_position = spawnLoc.global_position
@@ -150,6 +153,7 @@ func _physics_process(delta):
 			collision_shape_3d.shape.height = 0.1
 #		collision_shape_3d.position = xr_camera_3d.position.y/2.0
 	else:
+		righthand
 		flat_movement()
 	
 	# Handle Jump.
@@ -233,7 +237,6 @@ func _input(event):
 		
 
 func flat_movement():
-	
 	var joy_look_vector = Input.get_vector('lookleft','lookright','lookdown','lookup')
 	if joy_look_vector.length()>.1:
 		rotate_y(-joy_look_vector.x*MOUSE_SPEED)

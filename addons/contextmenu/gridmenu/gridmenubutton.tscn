@@ -32,7 +32,7 @@ shape = SubResource("BoxShape3D_xwkcp")
 
 [node name="Label3D" type="Label3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
-sorting_offset = 91.0
+sorting_offset = 100.0
 pixel_size = 0.0005
 render_priority = 1
 outline_render_priority = 0

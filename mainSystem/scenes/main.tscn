@@ -17,7 +17,7 @@
 
 [sub_resource type="AudioStreamMicrophone" id="AudioStreamMicrophone_ve6pm"]
 
-[sub_resource type="Resource" id="Resource_cfnp7"]
+[sub_resource type="Resource" id="Resource_dj2uy"]
 resource_name = "ForwardGait"
 script = ExtResource("6_kr2oq")
 speed_scalar_min = 1.0
@@ -49,7 +49,7 @@ contact_point_ease = 0.05
 contact_point_ease_scalar = 0.4
 scaling_ease = 0.85
 
-[sub_resource type="Resource" id="Resource_ajj7m"]
+[sub_resource type="Resource" id="Resource_ghi8q"]
 resource_name = "BackwardGait"
 script = ExtResource("6_kr2oq")
 speed_scalar_min = 0.5
@@ -81,7 +81,7 @@ contact_point_ease = 0.1
 contact_point_ease_scalar = 0.4
 scaling_ease = 0.85
 
-[sub_resource type="Resource" id="Resource_0e3vy"]
+[sub_resource type="Resource" id="Resource_c0on3"]
 resource_name = "SidewaysGait"
 script = ExtResource("6_kr2oq")
 speed_scalar_min = 0.75
@@ -162,16 +162,16 @@ bones/1/position = Vector3(-0.0744837, 0.599575, 0.0795286)
 bones/1/rotation = Quaternion(0.0790139, 2.28529e-09, 1.81137e-10, 0.996873)
 bones/2/rotation = Quaternion(-0.089768, -3.20728e-09, -2.89079e-10, 0.995963)
 bones/3/rotation = Quaternion(0.295985, -1.45835e-09, 8.93122e-10, 0.955193)
-bones/4/rotation = Quaternion(0.591379, 4.55679e-09, -1.20019e-09, 0.806394)
-bones/5/rotation = Quaternion(-0.797091, -3.40927e-09, -2.38312e-09, 0.60386)
+bones/4/rotation = Quaternion(0.591379, 4.5568e-09, -1.20019e-09, 0.806394)
+bones/5/rotation = Quaternion(-0.79709, -3.40927e-09, -2.38312e-09, 0.60386)
 bones/25/rotation = Quaternion(-0.41744, -0.567961, -0.58666, 0.398741)
 bones/26/rotation = Quaternion(-0.189774, 0.271197, -0.679583, 0.65468)
 bones/27/rotation = Quaternion(0.337674, 0.289077, 0.46411, 0.766167)
 bones/28/rotation = Quaternion(0.328296, 0.387714, -0.189248, 0.840288)
 bones/41/rotation = Quaternion(-0.419905, 0.56774, 0.576376, 0.411269)
-bones/42/rotation = Quaternion(-0.0595596, -0.319801, 0.636827, 0.699022)
-bones/43/rotation = Quaternion(0.170434, -0.337112, -0.430178, 0.819912)
-bones/44/rotation = Quaternion(0.3184, -0.370471, 0.183749, 0.853)
+bones/42/rotation = Quaternion(-0.0595594, -0.319801, 0.636827, 0.699022)
+bones/43/rotation = Quaternion(0.170434, -0.337112, -0.430178, 0.819911)
+bones/44/rotation = Quaternion(0.318399, -0.370471, 0.18375, 0.853)
 bones/61/rotation = Quaternion(-5.27029e-09, 0.551055, 0.834469, 6.4571e-09)
 bones/62/rotation = Quaternion(-8.98486e-07, 0.76573, -0.643162, 1.05412e-06)
 bones/63/rotation = Quaternion(1.14979e-06, -0.557449, 0.830211, 7.6131e-07)
@@ -180,9 +180,9 @@ bones/66/rotation = Quaternion(9.01818e-07, 0.765731, -0.643162, -1.05015e-06)
 bones/67/rotation = Quaternion(-1.14615e-06, -0.557449, 0.830211, -7.55722e-07)
 
 [node name="RenIKFootPlacement" parent="localworldroot/test_rig/LogicContainer" index="1"]
-forward_gait = SubResource("Resource_cfnp7")
-backward_gait = SubResource("Resource_ajj7m")
-sideways_gait = SubResource("Resource_0e3vy")
+forward_gait = SubResource("Resource_dj2uy")
+backward_gait = SubResource("Resource_ghi8q")
+sideways_gait = SubResource("Resource_c0on3")
 left_hip_offset = Vector3(0.109996, -0.149882, -0.047796)
 right_hip_offset = Vector3(-0.109996, -0.149882, -0.047796)
 
