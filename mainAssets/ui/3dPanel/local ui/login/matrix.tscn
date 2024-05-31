@@ -4,7 +4,7 @@
 [ext_resource type="Theme" uid="uid://b7mxq6cclub5f" path="res://mainAssets/ui/default_theme.tres" id="1_eqeii"]
 [ext_resource type="Script" path="res://mainAssets/ui/3dPanel/local ui/login/matrix.gd" id="1_ptvo5"]
 [ext_resource type="Script" path="res://mainAssets/ui/3dPanel/local ui/login/roomlist.gd" id="4_f325r"]
-[ext_resource type="Texture2D" uid="uid://dq6wx5duagvu5" path="res://assets/icons/vr-headset.svg" id="4_keerj"]
+[ext_resource type="Texture2D" uid="uid://cscsppr5gqsyd" path="res://assets/icons/vr-headset.svg" id="4_keerj"]
 [ext_resource type="Script" path="res://mainAssets/ui/3dPanel/local ui/login/messages.gd" id="4_ydkch"]
 [ext_resource type="PackedScene" uid="uid://drvs5pgtp63nx" path="res://mainAssets/ui/3dPanel/local ui/login/message.tscn" id="5_8wc7f"]
 [ext_resource type="Script" path="res://mainAssets/ui/3dPanel/local ui/login/SendMessage.gd" id="5_wc8jy"]

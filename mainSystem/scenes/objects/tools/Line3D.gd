@@ -20,20 +20,21 @@ var spline := Curve3D.new()
 var current_pos := Vector3():
 	set(value):
 		current_pos = value
-		spline.clear_points()
-		spline.add_point(Vector3())
-		if istargetglobal:
-			spline.add_point((current_pos), ((target)-(current_pos)) )
-		else:
-			spline.add_point(current_pos, (target-current_pos) )
-		spline.bake_interval = .1
-		vertices = spline.get_baked_points()
-		arrays.clear()
-		arrays.resize(Mesh.ARRAY_MAX)
-		arrays[Mesh.ARRAY_VERTEX] = vertices
-		amesh.clear_surfaces()
-		amesh.add_surface_from_arrays(Mesh.PRIMITIVE_LINE_STRIP,arrays)
-		mesh = amesh
+		if current_pos.length() > .001:
+			spline.clear_points()
+			spline.add_point(Vector3())
+			if istargetglobal:
+				spline.add_point((current_pos), ((target)-(current_pos)) )
+			else:
+				spline.add_point(current_pos, (target-current_pos) )
+			spline.bake_interval = .1
+			vertices = spline.get_baked_points()
+			arrays.clear()
+			arrays.resize(Mesh.ARRAY_MAX)
+			arrays[Mesh.ARRAY_VERTEX] = vertices
+			amesh.clear_surfaces()
+			amesh.add_surface_from_arrays(Mesh.PRIMITIVE_LINE_STRIP,arrays)
+			mesh = amesh
 
 func _process(_delta):
 	if iswobbly:

@@ -234,14 +234,12 @@ func _input(event):
 			if !touchsticklook:
 				rotate_y( -(event.relative.x)*(MOUSE_SPEED/100) )
 				xr_camera_3d.rotate_x( -(event.relative.y)*(MOUSE_SPEED/100) )
-		
 
 func flat_movement():
 	var joy_look_vector = Input.get_vector('lookleft','lookright','lookdown','lookup')
 	if joy_look_vector.length()>.1:
 		rotate_y(-joy_look_vector.x*MOUSE_SPEED)
 		xr_camera_3d.rotate_x(joy_look_vector.y*MOUSE_SPEED)
-	
 	if Input.is_action_just_pressed("click"):
 		if righthand.ui_ray.is_colliding():
 			righthand.ui_ray.click()
@@ -287,7 +285,6 @@ func flat_movement():
 			velocity.z = move_toward(velocity.z, 0, SPEED)
 			if flymode:
 				velocity.y = move_toward(velocity.y, 0, SPEED)
-	
 	if lookdrag:
 		if touchsticklook:
 			rotate_y( -(lookdrag.position.x-lookdrag.startposition.x)*(MOUSE_SPEED/800) )

@@ -47,9 +47,10 @@ func _physics_process(delta):
 		mesh_target_size = Vector2(.025,.025)
 		label_target_position = -.01
 	elif hover:
+		mesh_target_size = Vector2(.1,.1)
 		label_target_position = .01
 	else:
-		mesh_target_size = Vector2(.1,.1)
+		mesh_target_size = Vector2(.09,.09)
 		label_target_position = .0
 	label_3d.position.y = lerpf(label_3d.position.y, label_target_position, .1)
 	mesh_instance_3d.mesh.size.y = lerpf(mesh_instance_3d.mesh.size.y,mesh_target_size.y,.2)

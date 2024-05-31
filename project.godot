@@ -23,6 +23,7 @@ config/windows_native_icon="res://assets/barkvrcorgi.ico"
 
 [audio]
 
+driver/enable_input=true
 driver/mix_rate=48000
 
 [autoload]
@@ -41,6 +42,11 @@ webrtc_config/stun_servers=PackedStringArray("stun:stun.l.google.com:19302", "st
 webrtc_config/turn_servers=PackedStringArray()
 webrtc_config/turn_password=""
 webrtc_config/turn_username=""
+
+[display]
+
+window/size/viewport_width=1400
+window/size/viewport_height=800
 
 [editor]
 
@@ -123,6 +129,7 @@ rightclick={
 middleclick={
 "deadzone": 0.5,
 "events": [Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"button_mask":4,"position":Vector2(107, 26),"global_position":Vector2(111, 69),"factor":1.0,"button_index":3,"canceled":false,"pressed":true,"double_click":false,"script":null)
+, Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":81,"key_label":0,"unicode":113,"echo":false,"script":null)
 ]
 }
 scrollup={
@@ -190,7 +197,6 @@ limits/message_queue/max_size_mb=128
 
 [physics]
 
-3d/run_on_separate_thread=true
 common/physics_jitter_fix=0.0
 3d/physics_engine="JoltPhysics3D"
 

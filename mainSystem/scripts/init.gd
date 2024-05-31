@@ -14,6 +14,7 @@ func _ready():
 	if !dir.dir_exists('./worlds'):
 		dir.make_dir('./worlds')
 	get_window().files_dropped.connect(func(files:PackedStringArray):
+		print(files)
 		var loader :LoadingHalo= load("res://mainAssets/ui/3dui/loading_halo.tscn").instantiate()
 		var import_position :Vector3= get_viewport().get_camera_3d().to_global(Vector3(0,0,-2.0))
 		var thread := Thread.new()
@@ -61,7 +62,9 @@ func _input(event):
 		if event.keycode == KEY_F8:
 			var tmp = MeshInstance3D.new()
 			tmp.mesh = BoxMesh.new()
-			
+		if event.physical_keycode == KEY_V and event.ctrl_pressed:
+			var clip = DisplayServer.clipboard_get()
+			print(clip)
 
 @export var threshold = 0
 # Reference to global player controller

@@ -141,6 +141,8 @@ func import_asset(
 				_import_file(asset_name, content, data.position)
 			else:
 				_import_file(asset_name, content)
+		"uri":
+			pass
 	# Send message to peers.
 	if !recieved:
 		if type == "res":
