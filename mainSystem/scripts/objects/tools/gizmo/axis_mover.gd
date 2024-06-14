@@ -21,17 +21,18 @@ func laser_input(data:Dictionary):
 			_set_colliders(true)
 			var tmppos:Vector3=gizmo.target.global_position
 			tmppos[_axis] = data.position[_axis]-_offset[_axis]
-			Journaling.set_property(
-				get_tree().get_first_node_in_group('localworldroot').get_path_to(gizmo.target),
-				"global_position",
-				tmppos
-				)
+			gizmo.target.global_position = tmppos
 			prev_click_pos = data.position
 		else:
 			interaction_index = -1
 			_set_colliders(false)
 			prev_click_pos = data.position
 			_offset = data.position-gizmo.target.global_position
+			Journaling.set_property(
+				get_tree().get_first_node_in_group('localworldroot').get_path_to(gizmo.target),
+				"global_position",
+				gizmo.target.global_position
+				)
 	elif data.has('hovering'):
 		if !data.hovering:
 			interaction_index = -1

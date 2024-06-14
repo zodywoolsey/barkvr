@@ -1,0 +1,95 @@
+[gd_scene load_steps=7 format=3 uid="uid://bro0elbb47bnx"]
+
+[ext_resource type="PackedScene" uid="uid://yk0dma18v2xm" path="res://addons/renik-gdscript/sample_models/godette.glb" id="1_aes3c"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_uvfo1"]
+size = Vector3(0.089, 0.03, 0.025)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_4tr8g"]
+size = Vector3(0.09, 0.044, 0.03)
+
+[sub_resource type="BoxMesh" id="BoxMesh_00ppd"]
+size = Vector3(0.176, 0.04, 0.025)
+
+[sub_resource type="BoxMesh" id="BoxMesh_qijb4"]
+size = Vector3(0.135, 0.03, 0.025)
+
+[sub_resource type="BoxMesh" id="BoxMesh_5uedm"]
+size = Vector3(0.086, 0.018, 0.025)
+
+[node name="GoddettePhysicsIkTest" type="Node3D"]
+
+[node name="godette" parent="." instance=ExtResource("1_aes3c")]
+
+[node name="Body" parent="godette/Skeleton3D" index="0"]
+visible = false
+
+[node name="rshoulder" type="RigidBody3D" parent="."]
+transform = Transform3D(0.97656, 0.215247, 0, -0.215247, 0.97656, 0, 0, 0, 1, -0.0704731, 0.897794, 0)
+can_sleep = false
+freeze = true
+freeze_mode = 1
+metadata/grabbable = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="rshoulder"]
+mesh = SubResource("BoxMesh_uvfo1")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="rshoulder"]
+shape = SubResource("BoxShape3D_4tr8g")
+disabled = true
+
+[node name="shouldertoupperarm" type="Generic6DOFJoint3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.124546, 0.906741, 0)
+node_a = NodePath("../rshoulder")
+node_b = NodePath("../rupperarm")
+
+[node name="rupperarm" type="RigidBody3D" parent="."]
+transform = Transform3D(0.998108, -0.0614841, 0, 0.0614841, 0.998108, 0, 0, 0, 1, -0.213388, 0.900828, 0)
+can_sleep = false
+freeze_mode = 1
+metadata/grabbable = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="rupperarm"]
+mesh = SubResource("BoxMesh_00ppd")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="rupperarm"]
+shape = SubResource("BoxShape3D_4tr8g")
+disabled = true
+
+[node name="upparmtoforearm" type="Generic6DOFJoint3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.307434, 0.894613, 0)
+node_a = NodePath("../rupperarm")
+node_b = NodePath("../rforearm")
+
+[node name="rforearm" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.377685, 0.892656, 0)
+can_sleep = false
+freeze_mode = 1
+metadata/grabbable = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="rforearm"]
+mesh = SubResource("BoxMesh_qijb4")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="rforearm"]
+shape = SubResource("BoxShape3D_4tr8g")
+disabled = true
+
+[node name="forearmtohand" type="Generic6DOFJoint3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.454422, 0.894128, 0)
+node_a = NodePath("../rforearm")
+node_b = NodePath("../rhand")
+
+[node name="rhand" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.500166, 0.891573, 0)
+can_sleep = false
+freeze_mode = 1
+metadata/grabbable = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="rhand"]
+mesh = SubResource("BoxMesh_5uedm")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="rhand"]
+shape = SubResource("BoxShape3D_4tr8g")
+disabled = true
+
+[editable path="godette"]

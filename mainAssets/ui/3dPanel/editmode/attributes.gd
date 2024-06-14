@@ -38,6 +38,7 @@ func set_target(node):
 		for child in v_box_container.get_children():
 			child.queue_free()
 		target = node
+		var prop_list := target.get_property_list()
 		for prop in target.get_property_list():
 			var fieldname :String= prop.name
 			if prop.name.contains("bones/") and target is Skeleton3D:
@@ -91,13 +92,13 @@ func _ready():
 		)
 	delete.pressed.connect(func():
 		if target and is_instance_valid(target):
-			target.queue_free()
-			target = null
+			Journaling.delete_node(Journaling.root.get_path_to(target))
 			clear_fields()
 		)
 	active.pressed.connect(func():
 		if target and is_instance_valid(target):
-			target.visible = active.button_pressed
+			Journaling.set_property(Journaling.root.get_path_to(target),"visible",active.button_pressed)
+			#target.visible = active.button_pressed
 		)
 	export.pressed.connect(func():
 		var world_root = get_tree().get_first_node_in_group("localworldroot")

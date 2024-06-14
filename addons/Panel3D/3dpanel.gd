@@ -32,14 +32,20 @@ var tex:ViewportTexture
 			viewport.transparent_bg = transparent
 			material.transparency = BaseMaterial3D.TRANSPARENCY_DISABLED
 
-## Sets the viewport size (panel size is automatically .0005 meters * number of pixels)
+## Sets the viewport size in pixels
 @export var viewport_size:Vector2i=Vector2i(1024,1024):
 	set(val):
 		viewport_size = val
 		viewport.size = viewport_size
-		mesh.mesh.size.x = .0005*viewport.size.x
-		mesh.mesh.size.y = .0005*viewport.size.y
-		colshape.shape.size = Vector3(.0005*viewport.size.x,.0005*viewport.size.y,.001)
+		mesh.mesh.size.x = (pixel_size/1000.0)*viewport.size.x
+		mesh.mesh.size.y = (pixel_size/1000.0)*viewport.size.y
+		colshape.shape.size = Vector3((pixel_size/1000.0)*viewport.size.x,(pixel_size/1000.0)*viewport.size.y,.001)
+
+## Sets the size of each pixel[br][code]meters/100[/code]
+@export var pixel_size:float=.5:
+	set(val):
+		pixel_size = val
+		viewport_size = viewport_size
 
 @export_group('Graphics Settings')
 ## The shading mode for the canvas

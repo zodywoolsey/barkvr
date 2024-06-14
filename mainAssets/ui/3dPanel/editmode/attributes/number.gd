@@ -24,7 +24,7 @@ func _ready():
 	else:
 		type_label.text = "int"
 	val.text_changed.connect(func(new_text:String):
-		if (type == 0 and new_text.is_valid_float()) or (type == 1 and new_text.is_valid_int()):
+		if ((type == 0 and new_text.is_valid_float()) or (type == 1 and new_text.is_valid_int())):
 			last_val = new_text
 			if type == 0:
 				target[property_name] = float(new_text)

@@ -6,7 +6,9 @@ extends StaticBody3D
 @onready var label_3d :Label3D = $Label3D
 @onready var collision_shape_3d :CollisionShape3D = $CollisionShape3D
 
+## 
 @export_file var itemToSpawn
+## 
 @export var text :String:
 	set(value):
 		text = value
@@ -14,8 +16,8 @@ extends StaticBody3D
 			label_3d.text = text
 
 ## Optionally add a script to be called when the button is pressed or hovered
-## [br][br]The script is instantiated and the [code]onhover[/code] or
-## [code]onclick[/code] methods will be called when the button is hovered or clicked
+## [br][br]The script is instantiated and the "onhover" or
+## "onclick" methods will be called when the button is hovered or clicked
 @export var callscript : Script:
 	set(value):
 		callscript = value

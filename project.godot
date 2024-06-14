@@ -45,8 +45,9 @@ webrtc_config/turn_username=""
 
 [display]
 
-window/size/viewport_width=1400
+window/size/viewport_width=1500
 window/size/viewport_height=800
+window/subwindows/embed_subwindows=false
 
 [editor]
 

@@ -6,12 +6,21 @@ extends Control
 
 
 func _ready():
+	login_existing.get_popup().hide_on_checkable_item_selection = false
+	login_existing.get_popup().hide_on_item_selection = false
+	login_existing.get_popup().hide_on_state_item_selection = false
 	login_existing.item_selected.connect(func(index):
-		print(login_existing.get_popup().get_child_count(true))
-		#Vector.readUserDict()
+		if login_existing.get_item_text(index) != "existing logins":
+			Vector.readUserDict(login_existing.get_item_text(index))
 		)
+	login_existing.toggled.connect(func(toggled_on):
+		if toggled_on:
+			login_existing.clear()
+			login_existing.add_item("existing logins",0)
+			for session : String in Vector.getExistingSessions():
+				login_existing.add_item(session)
+			)
 	Vector.got_joined_rooms.connect(func():
-		print(Vector.joinedRooms)
 		add_items(Vector.joinedRooms)
 		)
 	Vector.user_logged_in.connect(func():
@@ -19,11 +28,11 @@ func _ready():
 			add_items(Vector.joinedRooms)
 		else:
 			Vector.get_joined_rooms()
+		Vector.sync()
 		chat.show()
 		login.hide()
 		)
 	Vector.got_room_state.connect(func(data):
-		print(data)
 		if data.response_code and data.response_code == 200:
 			var tmp_name
 			#var avatar

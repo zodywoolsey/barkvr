@@ -65,6 +65,8 @@ func _input(event):
 		if event.physical_keycode == KEY_V and event.ctrl_pressed:
 			var clip = DisplayServer.clipboard_get()
 			print(clip)
+		if event.physical_keycode == KEY_Z and event.ctrl_pressed and event.pressed:
+			Journaling.undo_action()
 
 @export var threshold = 0
 # Reference to global player controller

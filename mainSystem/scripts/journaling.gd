@@ -6,15 +6,38 @@ var registered_actions: PackedStringArray = [
 ]
 
 var actions: Array[Dictionary] = []
+var undid_actions: Array[Dictionary] = []
+var new_actions: Array[Dictionary] = []
 
 var root: Node
 
 func _ready() -> void:
 	_get_root()
 
+func _add_action(data:Dictionary, undid:=false) -> void:
+	if undid:
+		#undid_actions.append(data)
+		new_actions.append(data)
+	else:
+		actions.append(data)
+		new_actions.append(data)
+
+func undo_action() -> void:
+	check_root()
+	if !actions.is_empty():
+		var action_to_undo :Dictionary = actions.pop_back()
+		if action_to_undo and "action_name" in action_to_undo:
+			match action_to_undo.action_name:
+				'set_property':
+					set_property(action_to_undo.target, action_to_undo.prop_name, action_to_undo.previous_value, false, true)
+				'delete_node':
+					pass
+				'add_node':
+					pass
+
 func get_actions() -> Array[Dictionary]:
-	var tmp := actions.duplicate()
-	actions.clear()
+	var tmp := new_actions.duplicate(true)
+	new_actions.clear()
 	return tmp
 
 func check_root() -> void:
@@ -35,32 +58,111 @@ func set_parent(target: NodePath, new_parent: NodePath) -> void:
 		'new_parent': new_parent
 	})
 
-func delete_node(target: NodePath, recieved := false) -> void:
+## Adds a node to the scene[br]
+## should provide the nodepath for the node that will be the parent of the added
+## nodes.[br]
+## the nodes dictionary should be a heirarchy that directly reflects the desired
+## node heirarchy once added to the scene and have parameters as follows:
+## [code] {node_class: "ClassStringForThisNode", properties: ArrayOfPropertyDictionaries, children: ArrayOfChildren}
+## [br]the array of property dictionaries should be an array of dictionaries 
+## where each dictionary contains {name: "property_name", value: "property_value"}
+## [br]the array of children should be an array of nodes with an identical format
+## to the example dictionary.
+## [br]if you do not wish to change the properties from default you can exclude the properties array
+## [br]if you do not wish to have children added to a given node, you can exclude the children array
+## [br]node_class is always required
+## [br]if you would like to add metadata to the node use "metadata/property_name"
+## as the name for the property so it will get parsed as a metadata property
+func add_node(parent: NodePath, nodes:Dictionary, recieved := false, undid := false):
+	var p_node := root.get_node(parent)
+	if is_instance_valid(p_node):
+		var t_node :Node = _read_add_node_nodes_dict(nodes)
+		while p_node.has_node("./"+t_node.name):
+			var placeholder_name :String=  str(nodes.node_class) + str(hash(nodes))
+			print('parent already has child')
+		p_node.add_child(t_node)
+		if !recieved and !undid:
+			_add_action({
+				'action_name': 'add_node',
+				'parent': parent,
+				'added_node_path': root.get_path_to(t_node),
+				'nodes': nodes
+			})
+		if undid:
+			_add_action({
+				'action_name': 'add_node',
+				'parent': parent,
+				'added_node_path': root.get_path_to(t_node),
+				'nodes': nodes
+			},true)
+
+func _read_add_node_nodes_dict(node_dict:Dictionary) -> Node:
+	if "node_class" in node_dict and ClassDB.can_instantiate(node_dict.node_class):
+		var node = ClassDB.instantiate(node_dict.node_class)
+		var node_props = node.get_property_list()
+		if "properties" in node_dict and node_dict.properties is Array:
+			for prop in node_dict.properties:
+				if prop is Dictionary and "name" in prop and "value" in prop:
+					if prop.name in node and !(typeof(node[prop.name]) in [TYPE_CALLABLE, TYPE_OBJECT, TYPE_SIGNAL]):
+						node[prop.name] = prop.value
+					elif prop.name.begins_with('metadata/'):
+						node.set_meta(prop.name.trim_prefix("metadata/"), prop.value)
+		if node.name == "":
+			var placeholder_name :String= str(node_dict.node_class) + str(hash(node))
+			if "properties" in node_dict:
+				node_dict.properties.append({"name":"name","value":placeholder_name})
+			else:
+				node_dict.properties = [{"name":"name","value":placeholder_name}]
+			node.name = placeholder_name
+		if "children" in node_dict:
+			for child in node_dict.children:
+				node.add_child(_read_add_node_nodes_dict(child))
+				
+		return node
+	var tmp = Node.new()
+	tmp.name = "ERROR"
+	return tmp
+
+func delete_node(target: NodePath, recieved := false, undid := false) -> void:
 	check_root()
 	var t_node := root.get_node(target)
+	var deleted_node_as_packed_scene := PackedScene.new()
+	take_owner_of_node_and_all_children(t_node, t_node)
+	deleted_node_as_packed_scene.pack(t_node)
 	t_node.queue_free()
 	if !recieved:
-		actions.append({
+		_add_action({
 			'action_name': 'delete_node',
-			'target': target
+			'target': target,
+			'deleted_node': Marshalls.variant_to_base64(deleted_node_as_packed_scene,true)
 		})
 
-func set_property(target: NodePath, prop_name: String, value: Variant, recieved := false) -> void:
+
+func set_property(target: NodePath, prop_name: String, value: Variant, recieved := false, undid := false) -> void:
 	check_root()
 	var t_node := root.get_node(target)
 	if is_instance_valid(t_node) and prop_name.split(':')[0] in t_node:
-		t_node.get_indexed(prop_name)
+		var previous_value = t_node.get_indexed(prop_name)
 		t_node.set_indexed(prop_name,value)
-		if !recieved:
-			actions.append({
+		if !recieved and !undid:
+			_add_action({
 				'action_name': 'set_property',
 				'target': target,
 				'prop_name': prop_name,
-				'value': value
+				'value': value,
+				'previous_value': previous_value
 			})
+		if undid:
+			_add_action({
+				'action_name': 'set_property',
+				'target': target,
+				'prop_name': prop_name,
+				'value': value,
+				'previous_value': previous_value
+			},true)
 
 func take_owner_of_node_and_all_children(node:Node,new_owner:Node):
-	set_property(root.get_path_to(node),"owner",new_owner)
+	node.owner = new_owner
 	if node.get_child_count() > 0:
 		for child in node.get_children():
 			take_owner_of_node_and_all_children(child, new_owner)
@@ -211,49 +313,6 @@ func _import_glb(content: Variant, asset_name := '', _data := {}, position:Vecto
 	GLTFDocument.unregister_gltf_document_extension(vrm_extension)
 	
 	_post_import.call_deferred(root, generated_scene, asset_name, position, false)
-	
-	# OLD IMPORT CODE
-	#TODO: remove old import code
-	#print(logging_prefix+"loading gltf/glb/vrm of ")
-	#var doc := GLTFDocument.new()
-	#doc.register_gltf_document_extension(LocalGlobals.VRMC_node_constraint_inst)
-	#doc.register_gltf_document_extension(LocalGlobals.VRMC_vrm_inst)
-	#doc.register_gltf_document_extension(LocalGlobals.VRMC_springBone_inst)
-	#doc.register_gltf_document_extension(LocalGlobals.VRMC_materials_hdr_emissiveMultiplier_inst)
-	#doc.register_gltf_document_extension(LocalGlobals.VRMC_materials_mtoon_inst)
-	#var state := GLTFState.new()
-	#var base_path := ''
-	#if 'base_path' in data:
-		#base_path = data.base_path
-	#var err:int
-	#if content is PackedByteArray:
-		#err = doc.append_from_buffer(content, base_path, state)
-	#elif content is String:
-		#err = doc.append_from_file(content, state)
-	#if err == OK:
-		#for node in state.nodes:
-			#var scene_node := state.get_scene_node(0)
-		##var scene := Node
-		#print(logging_prefix+"loading meshes")
-		#for mesh in state.get_meshes():
-			#print(logging_prefix+'mesh: '+str(mesh.mesh))
-			#
-			#print(logging_prefix+'surfaces: '+str(mesh.mesh.get_surface_count()))
-			#if mesh.mesh.get_surface_lod_count(0) == 0:
-				#print(logging_prefix+'generating lod')
-				#mesh.mesh.generate_lods(25,60,[])
-			#
-		#var scene := doc.generate_scene(state)
-		#
-		#if root:
-			#asset_name += str(Time.get_unix_time_from_system())
-		#scene.name = asset_name
-##		if scene is Node3D:
-##			scene.scale = Vector3(.1,.1,.1)
-		#root.call_deferred('add_child', scene)
-		##root.add_child(scene)
-	#else:
-		#Notifyvr.send_notification("error importing gltf document")
 
 ## Imports a Godot resource.
 func _import_res(asset_name: String, asset_to_import: Variant, position:Vector3=Vector3(0,0,0)) -> void:
@@ -371,15 +430,17 @@ func rejoin_thread_when_finished(thread: Thread) -> void:
 ## Accept an incoming network message and handle it appropriately.
 func receive(action: Dictionary) -> void:
 	match action.action_name:
-		"net_propagate_node":
-			var parent: String = action.get('parent', '')
-			net_propagate_node(action.node_string, parent, '', true)
+		#"net_propagate_node":
+			#var parent: String = action.get('parent', '')
+			#net_propagate_node(action.node_string, parent, '', true)
 		"set_property":
 			set_property(action.target, action.prop_name, action.value, true)
 		"import_asset":
 			import_asset(action.type, action.asset_to_import, '', true)
 		"delete_node":
 			delete_node(action.target, true)
+		"add_node":
+			add_node(action.parent,action.nodes,true)
 
 func _post_import(_root_node:Node,node_to_add:Node,node_name:String,position:Vector3=Vector3(),lookatuser:bool=false):
 	check_root()

@@ -4,6 +4,13 @@
 
 BarkVR is an open-source and decentralized social XR creativity tool, built upon the solid foundation of Godot 4.x.
 
+# WARNING:
+
+Please keep in mind that this software is not secure in it's current state. It is a completely open tool that exposes
+godot functionality to you and any other user you connect to. This will likely remain true until the first alpha. The
+first alpha will contain basic security and network sync exclusions to allow you to prevent users from pushing code
+to your device unless you clearly and explicitly allow it. But those features are not ready yet.
+
 ## Status:
 The project is still in the very early stages. Please feel free to support the project however you wish, or not at all.
 

@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://cr02u36wo3sqp"]
+[gd_scene load_steps=8 format=3 uid="uid://cr02u36wo3sqp"]
 
 [ext_resource type="PackedScene" uid="uid://b2r6qi0effaiw" path="res://addons/contextmenu/gridmenu/gridmenubutton.tscn" id="1_1fmp6"]
 [ext_resource type="Script" path="res://addons/contextmenu/gridmenu/handmenu.gd" id="1_jd5nk"]
@@ -25,6 +25,34 @@ script/source = "extends Object
 
 func onclick():
 	print('clicked')
+"
+
+[sub_resource type="GDScript" id="GDScript_wrd3g"]
+script/source = "extends Object
+
+func onclick():
+	Journaling.undo_action()
+"
+
+[sub_resource type="GDScript" id="GDScript_hxyqk"]
+script/source = "extends Object
+
+func onclick():
+	Journaling.add_node(Journaling.root.get_path_to(Journaling.root),
+		{
+			\"node_class\": \"CSGBox3D\",
+			\"properties\": [
+				{\"name\":\"position\",\"value\":Vector3(1,0,0)},
+				{\"name\":\"use_collision\",\"value\":true},
+				{\"name\":\"metadata/testdata\", \"value\":1}
+			],
+			\"children\": [
+				{
+					\"node_class\": \"CSGSphere3D\"
+				}
+			]
+		}
+	)
 "
 
 [node name="handmenu" type="Node3D"]
@@ -61,9 +89,14 @@ callscript = SubResource("GDScript_djyhs")
 
 [node name="StaticBody3D7" parent="." instance=ExtResource("1_1fmp6")]
 transform = Transform3D(-1, -8.74228e-08, 3.82137e-15, 0, -4.37114e-08, -1, 8.74228e-08, -1, 4.37114e-08, 0.1, -0.1, -8.74228e-09)
+text = "undo"
+callscript = SubResource("GDScript_wrd3g")
 
 [node name="StaticBody3D8" parent="." instance=ExtResource("1_1fmp6")]
 transform = Transform3D(-1, -8.74228e-08, 3.82137e-15, 0, -4.37114e-08, -1, 8.74228e-08, -1, 4.37114e-08, 0, -0.1, 0)
+text = "redo"
 
 [node name="StaticBody3D9" parent="." instance=ExtResource("1_1fmp6")]
 transform = Transform3D(-1, -8.74228e-08, 3.82137e-15, 0, -4.37114e-08, -1, 8.74228e-08, -1, 4.37114e-08, -0.1, -0.1, 8.74228e-09)
+text = "add csgbox"
+callscript = SubResource("GDScript_hxyqk")

@@ -1,11 +1,11 @@
 extends Node
 
-func node_to_var(node:Node, _type:String='', _cust_name:String=''):
+func node_to_var(node:Node, _type:String='', _cust_name:String='') -> Dictionary:
 	var out: Dictionary = {}
 	if node.get_child_count() > 0:
 		var children := Array()
 		for child in node.get_children():
-			children.append(node_to_var(child))
+			children.append(Marshalls.variant_to_base64(child,true))
 		out.children = children
 	#out.node = var_to_str(node)
 	out.node = var_to_bytes_with_objects(node)
@@ -43,7 +43,7 @@ func var_to_node(_item:String='', dict:Dictionary={}):
 		node = bytes_to_var_with_objects(dict.node)
 		if dict.has('children'):
 			for child in dict.children:
-				node.add_child(var_to_node(child))
+				node.add_child(Marshalls.base64_to_variant(child))
 	return node
 ####OLD:
 	#var j = JSON.new()

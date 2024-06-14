@@ -35,7 +35,7 @@ func _ready():
 			float(new_text))
 		)
 
-func _physics_process(_delta):
+func _process(_delta):
 	var scrollparentrect = get_parent_control().get_parent_control().get_global_rect()
 	var rect = get_global_rect()
 	if v_box_container.visible and !(rect.end.y > scrollparentrect.position.y and rect.position.y < scrollparentrect.end.y):

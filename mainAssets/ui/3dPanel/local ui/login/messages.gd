@@ -23,31 +23,9 @@ func _ready():
 			for event in data['body']['chunk']:
 				match event['type']:
 					'm.room.message':
-						if event.has('content') and event['content'].has('body') and event.room_id == target_room:
-							var exists = false
-							for i in get_children():
-								if i.name == event.event_id:
-									exists = true
-#									break
-							if !exists:
-								var tmp = preload("res://mainAssets/ui/3dPanel/local ui/login/message.tscn").instantiate()
-								tmp.name = event.event_id
-								tmp.text = (
-									"[b][u]"+event.sender.split(':')[0].right(-1)+'[/u][/b]:\n'+event.content.body
-									)
-								if event.sender == Vector.userData.login.user_id:
-									tmp.leftside = false
-								print("sizes")
-								print(scroll_container.scroll_vertical)
-								print(size.y)
-								if scroll_container.scroll_vertical == size.y:
-									add_child(tmp)
-									move_child(tmp,0)
-									scroll_container.scroll_vertical = size.y
-								else:
-									add_child(tmp)
-									move_child(tmp,0)
+						_display_message(event)
 					'bark.session.request':
+						_display_message(event)
 						if event.event_id not in already_processed_requests:
 							already_processed_requests.append(event.event_id)
 							if event.sender != Vector.userData.login.user_id:
@@ -56,6 +34,7 @@ func _ready():
 									requesting_user = event.sender
 									Notifyvr.send_notification('got request')
 					'bark.session.offer':
+						_display_message(event)
 						if event.event_id not in already_processed_offers:
 							already_processed_offers.append(event.event_id)
 							if Time.get_unix_time_from_system()*1000.0-10000 < event.origin_server_ts:
@@ -63,6 +42,7 @@ func _ready():
 									NetworkHandler.create_new_peer_connection(event.content.sdp,event.sender)
 									Notifyvr.send_notification('got offer')
 					'bark.session.answer':
+						_display_message(event)
 						if event.event_id not in already_processed_answers:
 							already_processed_answers.append(event.event_id)
 							if Time.get_unix_time_from_system()*1000.0-10000 < event.origin_server_ts:
@@ -73,6 +53,7 @@ func _ready():
 											peer.set_remote = true
 											Notifyvr.send_notification('got answer')
 					'bark.session.ice':
+						_display_message(event)
 						if Time.get_unix_time_from_system()*1000.0-10000 < event.origin_server_ts and event.event_id not in already_processed_answers:
 							if event.content.for_user == Vector.userData.login.user_id:
 								for peer in NetworkHandler.peers:
@@ -88,6 +69,33 @@ func _ready():
 												Notifyvr.send_notification('set_ice')
 			prevmessages = data
 		)
+
+func _display_message(event):
+	if event.has('content'):
+		if event.room_id == target_room:
+			var exists = false
+			for i in get_children():
+				if i.name == event.event_id:
+					exists = true
+	#									break
+			if !exists:
+				var tmp = preload("res://mainAssets/ui/3dPanel/local ui/login/message.tscn").instantiate()
+				tmp.name = event.event_id
+				if event['content'].has('body'):
+					tmp.text = (
+						"[b][u]"+event.sender.split(':')[0].right(-1)+'[/u][/b]:\n'+event.content.body
+						)
+				else:
+					tmp.text = str(event)
+				if event.sender == Vector.userData.login.user_id:
+					tmp.leftside = false
+				if scroll_container.scroll_vertical == size.y:
+					add_child(tmp)
+					move_child(tmp,0)
+					scroll_container.scroll_vertical = size.y
+				else:
+					add_child(tmp)
+					move_child(tmp,0)
 
 func _gui_input(event):
 	if event is InputEventMouseButton and event.is_pressed():

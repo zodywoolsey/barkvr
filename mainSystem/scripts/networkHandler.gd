@@ -13,16 +13,10 @@ var bytes_to_send
 
 var chat_timer :float = 0.0
 var journal_timer :float = 0.0
-var voip_timer :float = 0.0
 
 var uname :String = ""
 
 var current_room :String = ''
-
-#var audioshit:Dictionary = {}
-var capture:AudioEffectCapture
-var mic_playback:MicPlayback
-var mic_buffer:PackedByteArray
 
 signal created_offer(data:Dictionary)
 signal created_answer(data:Dictionary)
@@ -81,16 +75,16 @@ func apply_connection_string(type:String):
 	if data and data.has('description') and data.has('candidates'):
 		for peer in peers:
 			if peer.peer.get_connection_state() == 1:
-				print('found peer1')
-				print(peer.peer.set_remote_description(type, data.description))
-				print('set remote desc1')
+				pass
+				#print('found peer1')
+				#print(peer.peer.set_remote_description(type, data.description))
+				#print('set remote desc1')
 
 func _ready():
-	mic_playback = get_tree().get_first_node_in_group('mic_playback')
-	capture = AudioServer.get_bus_effect(2,0)
 	Vector.got_turn_server.connect(got_turn_server)
 	Vector.user_logged_in.connect(user_logged_in)
 	thread.start(poll)
+	Journaling.rejoin_thread_when_finished(thread)
 	get_window().close_requested.connect(func():
 		close_requested = true
 		thread.wait_to_finish()
@@ -98,7 +92,6 @@ func _ready():
 
 func user_logged_in():
 		uname = Vector.userData.login.user_id.split(':')[0].right(-1)
-		print(uname)
 
 func got_turn_server(data):
 		if data.has('username'):
@@ -119,12 +112,17 @@ func _physics_process(_delta):
 			packetdict.user_pos.rhpos = player.righthand.global_position
 		if is_instance_valid(player.lefthand):
 			packetdict.user_pos.lhpos = player.lefthand.global_position
-	if !thread.is_alive() and thread.is_started():
-		thread.wait_to_finish()
-		thread.start(poll)
+	#if !thread.is_alive() and thread.is_started():
+		#print('thread died')
+		#thread.wait_to_finish()
+		#thread.start(poll)
 	for peer in peers:
+		if !is_instance_valid(peer):
+			break
 		var tmp = true
 		for chan in peer.channels:
+			if !is_instance_valid(peer):
+				break
 			if chan.channel.get_ready_state() != WebRTCDataChannel.STATE_OPEN:
 				tmp = false
 		peer.channels_ready = tmp
@@ -136,16 +134,24 @@ func poll():
 		prev_time = Time.get_ticks_msec()
 		chat_timer += delta
 		journal_timer += delta
-		voip_timer += delta
-		var current_actions = Journaling.get_actions
+		if chat_timer < 0:
+			chat_timer = 0
+		if journal_timer < 0:
+			journal_timer = 0
 		for peer in peers:
-			if peer:
+			if is_instance_valid(peer.peer):
 				peer.peer.poll()
 				if peer.has('channels_ready') and peer.channels_ready:
 					for chan in peer.channels:
-						chan.channel.poll()
+						if !is_instance_valid(peer.peer):
+							break
+						#chan.channel.poll()
 						if chan.label == 'bark-chat' and chat_timer > 8.3:
+							if !is_instance_valid(peer.peer):
+								break
 							while chan.channel.get_available_packet_count() > 0:
+								if !is_instance_valid(peer.peer):
+									break
 								var data = bytes_to_var(chan.channel.get_packet().decompress_dynamic(999999999999, 3))
 								var remplayer = get_tree().get_first_node_in_group(data.p_id)
 								if remplayer:
@@ -155,12 +161,20 @@ func poll():
 									var tmp:Node = load("res://mainSystem/scenes/player/remote player/remote player.tscn").instantiate()
 									tmp.add_to_group(data.p_id)
 									await root.call_deferred('add_child',tmp)
+							if !is_instance_valid(peer.peer):
+								break
 							chat_timer = 0.0
 							var packet = var_to_bytes(packetdict).compress(3)
 							chan.channel.put_packet(packet)
 						if chan.label == 'bark-journal' and journal_timer > 8.3:
+							if !is_instance_valid(peer.peer):
+								break
+							var current_actions :Array[Dictionary] = Journaling.get_actions()
 							# Sync from incoming data
 							while chan.channel.get_available_packet_count() > 0:
+								if !is_instance_valid(peer.peer):
+									break
+								print('getting available journal')
 								var data = chan.channel.get_var(true)
 								if data.has('pos') and data.pos != -1 and data.has('bytes'):
 									pack.append_array(data.bytes)
@@ -172,10 +186,14 @@ func poll():
 									pack = PackedByteArray()
 								if data and data is Array:
 									for action in data:
-										Journaling.receive.call_deferred(action)
+										print("got action: "+str(action))
+										Journaling.call_deferred("receive",action)
 							# Send all new journal events to the other users
 							journal_timer = 0.0
-							if current_actions.size() >0:
+							if !current_actions.is_empty():
+								if !is_instance_valid(peer.peer):
+									break
+								print('putting actions: '+str(current_actions))
 								bytes_to_send = var_to_bytes_with_objects(current_actions).compress(3)
 								if bytes_to_send.size() < packet_size:
 									chan.channel.put_var({
@@ -183,8 +201,12 @@ func poll():
 										'bytes': bytes_to_send
 									})
 								else:
+									if !is_instance_valid(peer.peer):
+										break
 									var parts:int = float(bytes_to_send.size())/packet_size
 									for i:int in range(float(bytes_to_send.size())/packet_size):
+										if !is_instance_valid(peer.peer):
+											break
 										var pack_dict = {}
 										if i < parts-1: 
 											pack_dict['pos'] = i
@@ -195,7 +217,10 @@ func poll():
 				#							print('err: ',chan.put_var(pack_dict))
 										var err = chan.channel.put_var(pack_dict)
 										if err != OK:
-											print("Network handler, channel.put_var"+str(err))
+											#print("Network handler, channel.put_var"+str(err))
+											pass
+					if !is_instance_valid(peer.peer):
+						break
 			else:
 				peers.erase(peer)
 
@@ -269,8 +294,8 @@ func create_new_peer_connection(offer_string:String='', for_user:String=''):
 		assert(tmp == OK)
 
 func _on_ice_candidate(media, index, ice_name, data:Dictionary):
-	print("ice:")
-#	print("media: ",str(media),"\nindex: ",str(index),"\nname: ",str(ice_name))
+	#print("ice:")
+	#print("media: ",str(media),"\nindex: ",str(index),"\nname: ",str(ice_name))
 	data.candidates.append({
 		'name':ice_name,
 		'media':media,
@@ -282,8 +307,7 @@ func _on_ice_candidate(media, index, ice_name, data:Dictionary):
 
 func description_created(type:String, sdp:String, data:Dictionary):
 #	print("type: ",type,"\nsdp: ",sdp)
-	print('set local description')
-	print(type)
+	#print('set local description'+"\ntype: "+type)
 	if sdp.contains('actpass'):
 		sdp = sdp.replace('actpass', 'passive')
 	data.peer.set_local_description(type,sdp)

@@ -1,9 +1,10 @@
-[gd_scene load_steps=6 format=3 uid="uid://b3sbt3oft3cxg"]
+[gd_scene load_steps=7 format=3 uid="uid://b3sbt3oft3cxg"]
 
 [ext_resource type="Script" path="res://mainAssets/ui/3dPanel/editmode/vreditor.gd" id="1_8pitw"]
 [ext_resource type="PackedScene" uid="uid://buiy5jgywujh8" path="res://mainAssets/ui/3dPanel/editmode/sceneinspector.tscn" id="2_sp2og"]
 [ext_resource type="Script" path="res://addons/Panel3D/3dpanel.gd" id="2_tnd62"]
 [ext_resource type="PackedScene" uid="uid://jqh6stt10ct5" path="res://mainAssets/ui/3dPanel/editmode/attributes.tscn" id="4_hhemb"]
+[ext_resource type="PackedScene" uid="uid://oyjnngbldb6v" path="res://mainAssets/ui/3dPanel/editmode/popup/add_node.tscn" id="5_r0hk5"]
 [ext_resource type="PackedScene" uid="uid://cw57xg0xewjcv" path="res://mainAssets/ui/3dPanel/editmode/gdscriptpanel.tscn" id="5_s3be6"]
 
 [node name="inspector" type="StaticBody3D"]
@@ -31,6 +32,16 @@ collision_mask = 4
 script = ExtResource("2_tnd62")
 _auto_load_ui = ExtResource("4_hhemb")
 transparent = false
+metadata/grabbable = true
+
+[node name="addnode" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 2.51218e-15, 0, -2.17558e-15, 0.866025, -0.5, -1.25607e-15, 0.5, 0.866026, 0, 0.4, 0.0629571)
+collision_layer = 4
+collision_mask = 4
+script = ExtResource("2_tnd62")
+_auto_load_ui = ExtResource("5_r0hk5")
+transparent = false
+viewport_size = Vector2i(1014, 504)
 metadata/grabbable = true
 
 [node name="vreditor" type="Node" parent="."]

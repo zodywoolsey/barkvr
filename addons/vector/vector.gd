@@ -21,6 +21,7 @@ var timeout = 3000
 var joinedRooms
 var userData : Dictionary = {}
 var uname : String
+var uid : String
 
 # matrix enums
 const PRESENCE = {"offline":"offline","online":"online","unavailable":"unavailable"}
@@ -53,6 +54,7 @@ func _ready():
 					Vector.userData.login = {}
 				Vector.userData.login.user_id = msgJson.user_id
 				uname = Vector.userData.login.user_id.split(':')[0].right(-1)
+				uid = Vector.userData.login.user_id
 				userToken = msgJson.access_token
 				base_url = msgJson.well_known["m.homeserver"].base_url
 				userData['login'] = msgJson
@@ -75,7 +77,6 @@ func _ready():
 		joinedRooms = msgJson['joined_rooms']
 		userData['joined_rooms'] = msgJson['joined_rooms']
 		saveUserDict()
-		print('got joined rooms')
 		got_joined_rooms.emit()
 		)
 	api.got_room_state.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
@@ -104,12 +105,29 @@ func _ready():
 	api.synced.connect(func(result:int,response_code:int,header:PackedStringArray,body:PackedByteArray):
 		var msg = body.get_string_from_ascii()
 		var msgJson = JSON.parse_string(msg)
+		if msgJson.has('next_batch'):
+			userData.next_batch = msgJson.next_batch
+		if "rooms" in msgJson:
+			#print('has rooms')
+			#print(msgJson.rooms)
+			if "join" in msgJson.rooms:
+				#print('has join')
+				#print(msgJson.rooms.join)
+				for room in msgJson.rooms.join:
+					if "timeline" in msgJson.rooms.join[room]:
+						#print(msgJson.rooms.join[room].timeline)
+						if "events" in msgJson.rooms.join[room].timeline:
+							for event in msgJson.rooms.join[room].timeline.events:
+								if "type" in event:
+									print(event.type)
+								else:
+									print("event has no type:\n"+str(event.content))
 		synced.emit(msgJson)
+		print('synced')
 	)
 	api.got_turn_server.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 		var msg = body.get_string_from_ascii()
 		var msgJson = JSON.parse_string(msg)
-		print('got turn server: ',msgJson)
 		got_turn_server.emit(msgJson)
 	)
 	api.placed_room_send.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
@@ -183,20 +201,25 @@ func readRequestBytes():
 func saveUserDict():
 	if !DirAccess.dir_exists_absolute("user://logins"):
 		DirAccess.make_dir_absolute("user://logins")
-	var file = FileAccess.open("user://logins/"+uname+".data",FileAccess.WRITE)
+	var file = FileAccess.open(("user://logins/"+uid.validate_filename()+".data"),FileAccess.WRITE)
+	print(uid)
+	print(file)
 	userData["home_server"] = home_server
 	var toStore = var_to_bytes(userData)
 	toStore.reverse()
 	file.store_var(toStore)
 	file.close()
 
-func getExistingSessions() -> Array[String]:
+func getExistingSessions() -> PackedStringArray:
 	var files = DirAccess.get_files_at("user://logins/")
-	print(files)
 	return files
 
-func readUserDict():
-	var file = FileAccess.open("user://user.data",FileAccess.READ)
+func readUserDict(target_login:String=""):
+	var file : FileAccess
+	if target_login.is_empty():
+		file = FileAccess.open("user://user.data",FileAccess.READ)
+	else:
+		file = FileAccess.open("user://logins/"+target_login,FileAccess.READ_WRITE)
 	if file:
 		var read = file.get_var()
 		read.reverse()
@@ -207,18 +230,19 @@ func readUserDict():
 			headers.push_back("Authorization: Bearer {0}".format([userToken]))
 			home_server = userData['login']['user_id'].split(':')[1]
 			base_url = userData['login']['well_known']['m.homeserver']['base_url']
-			print("baseurl: ",base_url)
 			if userData.has('next_batch'):
 				next_batch = userData.next_batch
 			if userData.has('joined_rooms'):
 				joinedRooms = userData.joined_rooms
+				got_joined_rooms.emit()
 			user_logged_in.emit()
 			return true
+	Notifyvr.send_notification("faile to login with existing session")
 	return false
 
 func sync():
 	var reqData = {}
-	print(next_batch)
+	print("next batch: "+next_batch)
 	if !next_batch.is_empty():
 		reqData['since'] = next_batch
 	api.sync(reqData)
