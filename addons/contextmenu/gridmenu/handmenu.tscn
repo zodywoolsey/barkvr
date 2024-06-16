@@ -48,7 +48,16 @@ func onclick():
 			],
 			\"children\": [
 				{
-					\"node_class\": \"CSGSphere3D\"
+					\"node_class\": \"CSGSphere3D\",
+					\"children\":[
+						{
+							\"node_class\": \"MeshInstance3D\",
+							\"properties\": [
+								{\"name\":\"position\",\"value\":Vector3(0,1,0)},
+								{\"name\":\"script\",\"value\":Script}
+							]
+						}
+					]
 				}
 			]
 		}

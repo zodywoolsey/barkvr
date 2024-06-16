@@ -12,7 +12,7 @@ emission = Color(1, 1, 1, 1)
 [sub_resource type="PlaneMesh" id="PlaneMesh_xa0iw"]
 resource_local_to_scene = true
 material = SubResource("StandardMaterial3D_f8ppm")
-size = Vector2(0.1, 0.1)
+size = Vector2(0.09, 0.09)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_xwkcp"]
 size = Vector3(0.1, 0.01, 0.1)

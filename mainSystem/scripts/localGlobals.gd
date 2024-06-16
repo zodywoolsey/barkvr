@@ -30,14 +30,14 @@ var VRMC_vrm_animation_inst = VRMC_vrm_animation.new()
 		player_state = value
 		if value != 2 and !vr_supported:
 			playerreleaseuifocus.emit()
-static var PLAYER_STATE_PAUSED := 0
-static var PLAYER_STATE_PLAYING:= 1
-static var PLAYER_STATE_TYPING := 2
+const PLAYER_STATE_PAUSED := 0
+const PLAYER_STATE_PLAYING:= 1
+const PLAYER_STATE_TYPING := 2
 
 @export_enum("EDITING", "PLAYING", "VIEWING") var world_state : int = 0
-static var WORLD_STATE_EDITING := 0
-static var WORLD_STATE_PLAYING := 1
-static var WORLD_STATE_VIEWING := 2
+const WORLD_STATE_EDITING := 0
+const WORLD_STATE_PLAYING := 1
+const WORLD_STATE_VIEWING := 2
 
 signal playerinit(isvr: bool)
 signal playerreleaseuifocus
@@ -54,3 +54,5 @@ func _ready() -> void:
 	#if OS.get_name() == "Android":
 		#OS.request_permissions()
 
+func set_player_state(value:int):
+	player_state = value

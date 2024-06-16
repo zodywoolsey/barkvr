@@ -1,18 +1,17 @@
 class_name Bark_Journal
 extends Node
 
-var registered_actions: PackedStringArray = [
-	'set_parent'
-]
-
 var actions: Array[Dictionary] = []
 var undid_actions: Array[Dictionary] = []
 var new_actions: Array[Dictionary] = []
 
 var root: Node
 
+func _init():
+	print('journal init')
+
 func _ready() -> void:
-	_get_root()
+	check_root()
 
 func _add_action(data:Dictionary, undid:=false) -> void:
 	if undid:
@@ -74,6 +73,8 @@ func set_parent(target: NodePath, new_parent: NodePath) -> void:
 ## [br]if you would like to add metadata to the node use "metadata/property_name"
 ## as the name for the property so it will get parsed as a metadata property
 func add_node(parent: NodePath, nodes:Dictionary, recieved := false, undid := false):
+	check_root()
+	print("journal_add_node")
 	var p_node := root.get_node(parent)
 	if is_instance_valid(p_node):
 		var t_node :Node = _read_add_node_nodes_dict(nodes)
@@ -215,14 +216,14 @@ func import_asset(
 	# Decide how to import asset based on type.
 	# TODO pck support
 	match type:
-		"glb", "vrm":
-			#var thread := Thread.new()
-			#thread.start(_import_glb.bind(asset_to_import, asset_name, data))
-			#rejoin_thread_when_finished(thread)
-			if "position" in data:
-				_import_glb(asset_to_import, asset_name, data, data.position)
-			else:
-				_import_glb(asset_to_import, asset_name, data)
+		#"glb", "vrm":
+			##var thread := Thread.new()
+			##thread.start(_import_glb.bind(asset_to_import, asset_name, data))
+			##rejoin_thread_when_finished(thread)
+			#if "position" in data:
+				#_import_glb(asset_to_import, asset_name, data, data.position)
+			#else:
+				#_import_glb(asset_to_import, asset_name, data)
 		"res":
 			# TODO scenes and resources can't easily be sent to peers because of
 			# possible dependencies in other files.
@@ -272,8 +273,8 @@ func _check_loaded(path: String, asset_name:String, position:Vector3, last_time:
 			var node = res.instantiate()
 			_post_import.call_deferred(root,node,asset_name,position)
 
-
-const gltf_document_extension_class = preload("res://addons/vrm/vrm_extension.gd")
+#
+var gltf_document_extension_class = load("res://addons/vrm/vrm_extension.gd")
 const SAVE_DEBUG_GLTFSTATE_RES: bool = false
 
 #COPIED FROM https://github.com/godotengine/godot/blob/c4279fe3e0b27d0f40857c00eece7324a967285f/modules/gltf/gltf_document.cpp#L62
@@ -284,13 +285,11 @@ const SAVE_DEBUG_GLTFSTATE_RES: bool = false
 #define GLTF_IMPORT_FORCE_DISABLE_MESH_COMPRESSION 64
 
 func _import_glb(content: Variant, asset_name := '', _data := {}, position:Vector3=Vector3(0,0,0)) -> void:
-	Thread.set_thread_safety_checks_enabled(false)
+	#Thread.set_thread_safety_checks_enabled(false)
 	var logging_prefix := asset_name+" : "
 	print("Import VRM: " + asset_name + " ----------------------")
 	var gltf: GLTFDocument = GLTFDocument.new()
-	var flags =\
-		EditorSceneFormatImporter.IMPORT_USE_NAMED_SKIN_BINDS+\
-		EditorSceneFormatImporter.IMPORT_GENERATE_TANGENT_ARRAYS
+	var flags := 16+8
 	var vrm_extension: GLTFDocumentExtension = gltf_document_extension_class.new()
 	GLTFDocument.register_gltf_document_extension(vrm_extension, true)
 	var state: GLTFState = GLTFState.new()

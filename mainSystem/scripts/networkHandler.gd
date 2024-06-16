@@ -128,7 +128,6 @@ func _physics_process(_delta):
 		peer.channels_ready = tmp
 
 func poll():
-	Thread.set_thread_safety_checks_enabled(false)
 	while !close_requested:
 		var delta = Time.get_ticks_msec()-prev_time
 		prev_time = Time.get_ticks_msec()

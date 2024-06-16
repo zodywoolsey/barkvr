@@ -19,7 +19,7 @@
 
 [sub_resource type="AudioStreamMicrophone" id="AudioStreamMicrophone_ve6pm"]
 
-[sub_resource type="Resource" id="Resource_e7vcy"]
+[sub_resource type="Resource" id="Resource_uecji"]
 resource_name = "ForwardGait"
 script = ExtResource("6_kr2oq")
 speed_scalar_min = 1.0
@@ -51,7 +51,7 @@ contact_point_ease = 0.05
 contact_point_ease_scalar = 0.4
 scaling_ease = 0.85
 
-[sub_resource type="Resource" id="Resource_hnhfg"]
+[sub_resource type="Resource" id="Resource_5wrnp"]
 resource_name = "BackwardGait"
 script = ExtResource("6_kr2oq")
 speed_scalar_min = 0.5
@@ -83,7 +83,7 @@ contact_point_ease = 0.1
 contact_point_ease_scalar = 0.4
 scaling_ease = 0.85
 
-[sub_resource type="Resource" id="Resource_bj0ma"]
+[sub_resource type="Resource" id="Resource_i23tv"]
 resource_name = "SidewaysGait"
 script = ExtResource("6_kr2oq")
 speed_scalar_min = 0.75
@@ -133,20 +133,15 @@ bus = &"mic"
 script = ExtResource("2_3r3cq")
 
 [node name="EnterWebXR" type="CanvasLayer" parent="StartXR"]
-visible = false
 
 [node name="EnterVRButton" type="Button" parent="StartXR/EnterWebXR"]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -132.0
-offset_top = -52.5
-offset_right = 132.0
-offset_bottom = 52.5
-grow_horizontal = 2
-grow_vertical = 2
+visible = false
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -105.0
+offset_right = 264.0
+grow_vertical = 0
 text = "Enter VR"
 
 [node name="localworldroot" type="Node3D" parent="." groups=["localworldroot"]]
@@ -182,9 +177,9 @@ bones/66/rotation = Quaternion(9.01818e-07, 0.765731, -0.643162, -1.05015e-06)
 bones/67/rotation = Quaternion(-1.14615e-06, -0.557449, 0.830211, -7.55722e-07)
 
 [node name="RenIKFootPlacement" parent="localworldroot/test_rig/LogicContainer" index="1"]
-forward_gait = SubResource("Resource_e7vcy")
-backward_gait = SubResource("Resource_hnhfg")
-sideways_gait = SubResource("Resource_bj0ma")
+forward_gait = SubResource("Resource_uecji")
+backward_gait = SubResource("Resource_5wrnp")
+sideways_gait = SubResource("Resource_i23tv")
 left_hip_offset = Vector3(0.109996, -0.149882, -0.047796)
 right_hip_offset = Vector3(-0.109996, -0.149882, -0.047796)
 

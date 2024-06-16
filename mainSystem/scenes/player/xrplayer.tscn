@@ -39,9 +39,9 @@ script/source = "extends Label3D
 [sub_resource type="BoxMesh" id="BoxMesh_kgbb2"]
 size = Vector3(0.1, 0.1, 0.1)
 
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_1uxmk"]
-radius = 0.1
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_clvwe"]
 height = 1.0
+radius = 0.1
 
 [sub_resource type="GDScript" id="GDScript_sn3ga"]
 script/source = "extends Node3D
@@ -62,7 +62,6 @@ current = true
 
 [node name="XrCamera3d" type="XRCamera3D" parent="CharacterBody3D/xrplayer" groups=["playerCamera"]]
 cull_mask = 1048573
-current = true
 fov = 90.0
 
 [node name="camray" type="RayCast3D" parent="CharacterBody3D/xrplayer/XrCamera3d"]
@@ -77,18 +76,6 @@ transform = Transform3D(0.075, 0, 0, 0, 0.075, 0, 0, 0, 0.075, -0.0929923, -0.08
 
 [node name="iktarget" type="Node3D" parent="CharacterBody3D/xrplayer/XrCamera3d"]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0.141187)
-
-[node name="worldRay" parent="CharacterBody3D/xrplayer/XrCamera3d" instance=ExtResource("4_316iy")]
-unique_name_in_owner = true
-visible = false
-enabled = false
-collision_mask = 3
-
-[node name="uiRay" parent="CharacterBody3D/xrplayer/XrCamera3d" instance=ExtResource("4_316iy")]
-unique_name_in_owner = true
-visible = false
-enabled = false
-collision_mask = 260
 
 [node name="righthand" type="XRController3D" parent="CharacterBody3D/xrplayer"]
 unique_name_in_owner = true
@@ -231,7 +218,7 @@ mesh = SubResource("BoxMesh_kgbb2")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D"]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.496656, 0)
-shape = SubResource("CapsuleShape3D_1uxmk")
+shape = SubResource("CylinderShape3D_clvwe")
 
 [node name="playercamoffset" type="Node3D" parent="CharacterBody3D"]
 

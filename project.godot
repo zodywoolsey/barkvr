@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="barkvr"
-run/main_scene="res://mainSystem/scenes/main.tscn"
+run/main_scene="res://mainSystem/scenes/main-for-web.tscn"
 config/use_custom_user_dir=true
 config/custom_user_dir_name="bark"
 config/features=PackedStringArray("4.2", "Mobile")
@@ -210,8 +210,8 @@ anti_aliasing/quality/msaa_3d=1
 
 [xr]
 
+openxr/enabled=true
 openxr/foveation_level=3
 openxr/foveation_dynamic=true
-openxr/startup_alert=false
 openxr/extensions/eye_gaze_interaction=true
 shaders/enabled=true

@@ -2,10 +2,14 @@ extends Node3D
 
 @onready var start_xr = $StartXR
 
+#var gltf_document_extension_class = load("res://addons/vrm/vrm_extension.gd")
+
 func _ready():
 	#GLTFDocument.register_gltf_document_extension(VRMC_vrm_animation_inst)
 #	print(ProjectSettings.get_global_class_list())
 	#get_viewport().canvas_cull_mask
+	#var vrm_extension: GLTFDocumentExtension = gltf_document_extension_class.new()
+	#GLTFDocument.register_gltf_document_extension(vrm_extension, true)
 	var dir = DirAccess.open('user://')
 	if !dir.dir_exists('./tmp'):
 		dir.make_dir('./tmp')

@@ -24,7 +24,13 @@ var camPrevPos : Vector3 = Vector3()
 @export var SPEED := 5.0
 @export var JUMP_VELOCITY := 4.5
 
-@export var flymode := true
+@export var flymode := true:
+	set(value):
+		flymode = value
+		if value:
+			motion_mode = CharacterBody3D.MOTION_MODE_FLOATING
+		else:
+			motion_mode = CharacterBody3D.MOTION_MODE_GROUNDED
 @export var noclip := false:
 	set(value):
 		noclip = value
@@ -44,12 +50,29 @@ var lookdrag : Dictionary = {} #{'index': -1,'relative': Vector2(),'velocity': V
 @export var touchsticklook := false
 var grab_point := Vector3()
 
+var vr_supported := true:
+	set(value):
+		vr_supported = value
+		if LocalGlobals:
+			LocalGlobals.vr_supported = value
+		if !value:
+			collision_shape_3d.shape.height = 1.0
+			collision_shape_3d.shape.radius = .1
+			get_viewport().use_xr = false
+			if get_viewport().get_camera_3d() is XRCamera3D:
+				get_viewport().get_camera_3d()
+			xr_camera_3d.position.y = .9
+			righthand.position = Vector3(.2,.6,-.2)
+			lefthand.position = Vector3(-.2,.6,0.0)
+			lefthand.rotation_degrees = Vector3(-90.0,0,0)
+		else:
+			get_viewport().use_xr = true
+
 func _ready():
-	if !LocalGlobals.vr_supported:
-		xr_camera_3d.position.y = .9
-		righthand.position = Vector3(.2,.6,-.2)
-		lefthand.position = Vector3(-.2,.6,0.0)
-		lefthand.rotation_degrees = Vector3(-90.0,0,0)
+	if !ProjectSettings.get_setting("xr/openxr/enabled"):
+		vr_supported = false
+	vr_supported = vr_supported
+	
 	var spawnLoc = get_tree().get_nodes_in_group("PlayerSpawnLocation").pick_random()
 	if spawnLoc:
 		global_position = spawnLoc.global_position
@@ -120,13 +143,9 @@ func _physics_process(delta):
 	
 	# Flat mode toggle
 	if Input.is_action_just_pressed("desktoptoggle"):
-		if LocalGlobals.vr_supported:
-			LocalGlobals.vr_supported = false
-			xr_camera_3d.position.y = .9
-			righthand.position = Vector3(.2,.6,-.2)
-#			lefthand.hide()
+		vr_supported = !vr_supported
 
-	if LocalGlobals.vr_supported || OS.get_name() == "Android":
+	if vr_supported || OS.get_name() == "Android":
 		#LocalGlobals.player_state = LocalGlobals.PLAYER_STATE_PLAYING
 		#if LocalGlobals.player_state == LocalGlobals.PLAYER_STATE_PLAYING:
 		xrplayer.position.x = -xr_camera_3d.position.x
@@ -152,15 +171,13 @@ func _physics_process(delta):
 		else:
 			collision_shape_3d.shape.height = 0.1
 #		collision_shape_3d.position = xr_camera_3d.position.y/2.0
-	else:
-		righthand
-		flat_movement()
 	
 	# Handle Jump.
-	if LocalGlobals.vr_supported:
+	if vr_supported:
 		if rightaxbtn and (is_on_floor() or flymode):
 			velocity.y = JUMP_VELOCITY
 	else:
+		flat_movement()
 		if (Input.is_action_just_pressed("jump") or (flymode and Input.is_action_pressed("jump"))) and (is_on_floor() or flymode) and LocalGlobals.player_state == LocalGlobals.PLAYER_STATE_PLAYING:
 			velocity.y = JUMP_VELOCITY
 		
@@ -190,17 +207,17 @@ func _input(event):
 		if event.pressed:
 			if event.keycode == KEY_ESCAPE:
 				if LocalGlobals.player_state == LocalGlobals.PLAYER_STATE_TYPING:
-					LocalGlobals.player_state = LocalGlobals.PLAYER_STATE_PLAYING
+					LocalGlobals.set_player_state(LocalGlobals.PLAYER_STATE_PLAYING)
 					LocalGlobals.emit_signal("playerreleaseuifocus")
 					Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 				else:
-					LocalGlobals.player_state = LocalGlobals.PLAYER_STATE_PAUSED
+					LocalGlobals.set_player_state(LocalGlobals.PLAYER_STATE_PAUSED)
 					LocalGlobals.emit_signal("playerreleaseuifocus")
 					Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	if event is InputEventMouseButton:
-		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT and !LocalGlobals.vr_supported:
+		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT and !vr_supported:
 			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-			LocalGlobals.player_state = LocalGlobals.PLAYER_STATE_PLAYING
+			LocalGlobals.set_player_state(LocalGlobals.PLAYER_STATE_PLAYING)
 	if event is InputEventScreenTouch:
 		if event.position.x > get_viewport().size.x/2.0 and lookdrag.is_empty():
 			lookdrag = {
