@@ -124,7 +124,11 @@ func float32_array_size(array:PackedFloat32Array):
 	mag = sqrt(a)
 	return mag
 
-
+func rejoin_thread_when_finished(thread: Thread) -> void:
+	if thread and thread.is_started() and thread.is_alive():
+		get_tree().create_timer(1).timeout.connect(rejoin_thread_when_finished.bind(thread))
+		return
+	thread.wait_to_finish()
 
 
 

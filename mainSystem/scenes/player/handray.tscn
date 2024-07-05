@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://12mm63qyglpf"]
 
-[ext_resource type="Script" path="res://mainSystem/scenes/player/interactionRay.gd" id="1_nnnux"]
+[ext_resource type="Script" path="res://mainSystem/scripts/player/interactionRay.gd" id="1_nnnux"]
 [ext_resource type="Script" path="res://mainSystem/scenes/objects/tools/Line3D.gd" id="2_hejn6"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6bpur"]
@@ -17,7 +17,6 @@ _surfaces = [{
 }]
 
 [node name="handray" type="RayCast3D"]
-transform = Transform3D(-1, 0, 1.50996e-07, 0, 1, 0, -1.50996e-07, 0, -1, 0, 0, 0)
 target_position = Vector3(0, 0, -1000)
 collision_mask = 4
 script = ExtResource("1_nnnux")

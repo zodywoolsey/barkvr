@@ -46,13 +46,6 @@ signal clear_gizmos
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	vr_supported = ProjectSettings.get_setting('xr/openxr/enabled', false)
-	Vector.user_logged_in.connect(func() -> void:
-		discord_login_status = 'logged in'
-	)
-	Journaling.check_root()
-	#get_tree().get_first_node_in_group('localroot').add_child(load('res://mainSystem/scenes/player/xrplayer.tscn').instantiate())
-	#if OS.get_name() == "Android":
-		#OS.request_permissions()
 
 func set_player_state(value:int):
 	player_state = value

@@ -21,7 +21,7 @@ extends StaticBody3D
 @export var callscript : Script:
 	set(value):
 		callscript = value
-		if callscript.can_instantiate():
+		if callscript and callscript.can_instantiate():
 			callscriptinstance = callscript.new()
 var callscriptinstance:
 	set(value):

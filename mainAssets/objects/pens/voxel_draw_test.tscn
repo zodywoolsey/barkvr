@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://dd52tl2k4gref"]
+
+[ext_resource type="Script" path="res://mainAssets/objects/pens/voxel_draw_test.gd" id="1_lncpd"]
+
+[node name="voxel draw test" type="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.8943, 4.04754, 3.91274)
+script = ExtResource("1_lncpd")

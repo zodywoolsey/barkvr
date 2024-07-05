@@ -1,27 +1,28 @@
-[gd_scene load_steps=16 format=3 uid="uid://c3i4ahamrqxcq"]
+[gd_scene load_steps=10 format=3 uid="uid://c3i4ahamrqxcq"]
 
 [ext_resource type="Script" path="res://mainSystem/scripts/init.gd" id="1_qrvq0"]
 [ext_resource type="Script" path="res://mainSystem/scripts/startxr.gd" id="2_5iqft"]
-[ext_resource type="PackedScene" uid="uid://dckbok0o553v7" path="res://mainSystem/scenes/objects/worldObjects/playerSpawnLocation.tscn" id="3_hlsxl"]
-[ext_resource type="PackedScene" uid="uid://br1vh8in0e65o" path="res://mainAssets/worlds/basic_starter.tscn" id="4_03msp"]
-[ext_resource type="PackedScene" uid="uid://d0wvfw354l2i5" path="res://mainAssets/ui/3dui/loading halo demo.tscn" id="7_tivpi"]
-[ext_resource type="Script" path="res://mainSystem/scripts/mic_playback.gd" id="9_8qobq"]
-[ext_resource type="Script" path="res://addons/Panel3D/3dpanel.gd" id="10_hwxa6"]
-[ext_resource type="PackedScene" uid="uid://i3pxsgqnbjly" path="res://mainAssets/ui/3dPanel/local ui/login/matrix.tscn" id="11_2vn2i"]
-[ext_resource type="PackedScene" uid="uid://pnqmxgn13qw2" path="res://mainAssets/ui/3dPanel/local ui/settings/settings.tscn" id="12_xb1e0"]
-[ext_resource type="PackedScene" uid="uid://cljm3qfem1gc1" path="res://mainAssets/ui/3dPanel/local ui/debug/webrtc_debug.tscn" id="13_rl05m"]
-[ext_resource type="PackedScene" uid="uid://b3sbt3oft3cxg" path="res://mainAssets/ui/3dPanel/editmode/vreditor.tscn" id="14_4i48s"]
-[ext_resource type="PackedScene" uid="uid://lauwp8okd1vh" path="res://mainAssets/ui/3dPanel/local ui/keyboard/virtual_keyboard_2d.tscn" id="15_ujpwc"]
-[ext_resource type="PackedScene" uid="uid://r68jre2w5k33" path="res://mainSystem/scenes/player/xrplayer.tscn" id="16_racr7"]
+[ext_resource type="Script" path="res://mainSystem/scripts/bark_singletons_manager.gd" id="2_eofys"]
+[ext_resource type="PackedScene" uid="uid://dv0etfy0ao5" path="res://mainSystem/scenes/init_world.tscn" id="2_yu4a7"]
+[ext_resource type="Script" path="res://mainSystem/scripts/journaling.gd" id="3_w8dnk"]
+[ext_resource type="Script" path="res://mainSystem/scripts/networkHandler.gd" id="4_hlpqx"]
+[ext_resource type="Script" path="res://addons/vector/vector.gd" id="5_8rwc2"]
+[ext_resource type="Script" path="res://mainSystem/scripts/settings.gd" id="7_or0ic"]
 
 [sub_resource type="AudioStreamMicrophone" id="AudioStreamMicrophone_ve6pm"]
 
-[sub_resource type="AudioStreamGenerator" id="AudioStreamGenerator_f6fry"]
-mix_rate = 44800.0
-
-[node name="main" type="Node3D" node_paths=PackedStringArray("global_origin") groups=["localroot"]]
+[node name="main" type="Node3D" groups=["localroot"]]
 script = ExtResource("1_qrvq0")
-global_origin = NodePath(".")
+game_startup_scene = ExtResource("2_yu4a7")
+
+[node name="bark_singletons" type="Node" parent="." groups=["singletons_manager"]]
+script = ExtResource("2_eofys")
+singletons = {
+"event_manager": ExtResource("3_w8dnk"),
+"network_manager": ExtResource("4_hlpqx"),
+"settings_manager": ExtResource("7_or0ic"),
+"user_manager": ExtResource("5_8rwc2")
+}
 
 [node name="RequestParent" type="Node" parent="." groups=["requestParent"]]
 
@@ -34,9 +35,9 @@ bus = &"mic"
 script = ExtResource("2_5iqft")
 
 [node name="EnterWebXR" type="CanvasLayer" parent="StartXR"]
+visible = false
 
 [node name="EnterVRButton" type="Button" parent="StartXR/EnterWebXR"]
-visible = false
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
@@ -44,61 +45,5 @@ offset_top = -105.0
 offset_right = 264.0
 grow_vertical = 0
 text = "Enter VR"
-
-[node name="multiplayer world root" type="Node3D" parent="." groups=["localworldroot"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-
-[node name="basic starter world" parent="multiplayer world root" instance=ExtResource("4_03msp")]
-
-[node name="playerSpawnLocation" parent="multiplayer world root/basic starter world" instance=ExtResource("3_hlsxl")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -2.76036, 0.0923181, 2.56459)
-
-[node name="LoadingHaloDemo" parent="multiplayer world root/basic starter world" instance=ExtResource("7_tivpi")]
-transform = Transform3D(-0.250853, 0, 0.968025, 0, 1, 0, -0.968025, 0, -0.250853, -3.40314, 1.01349, 3.20371)
-
-[node name="AudioStreamPlayer2" type="AudioStreamPlayer" parent="." groups=["mic_playback"]]
-stream = SubResource("AudioStreamGenerator_f6fry")
-autoplay = true
-script = ExtResource("9_8qobq")
-
-[node name="matrix panel" type="StaticBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, -1.06581e-14, 0, 1.06581e-14, 1, -2.48848, 2, -0.367195)
-collision_layer = 4
-collision_mask = 4
-script = ExtResource("10_hwxa6")
-_auto_load_ui = ExtResource("11_2vn2i")
-transparent = false
-viewport_size = Vector2i(1984, 1024)
-
-[node name="test settings panel" type="StaticBody3D" parent="."]
-transform = Transform3D(0.707107, -1.30385e-08, 0.707107, 0, 1, -4.47035e-08, -0.707107, 4.47035e-08, 0.707107, -3.73758, 2, 0)
-collision_layer = 4
-collision_mask = 4
-script = ExtResource("10_hwxa6")
-_auto_load_ui = ExtResource("12_xb1e0")
-transparent = false
-
-[node name="webrtc connection debug panel" type="StaticBody3D" parent="."]
-transform = Transform3D(0, 2.23905e-08, 1, 0, 1, -4.47035e-08, -1, 4.08298e-08, 0, -3.54102, 2, 0.913856)
-collision_layer = 4
-collision_mask = 4
-script = ExtResource("10_hwxa6")
-_auto_load_ui = ExtResource("13_rl05m")
-transparent = false
-
-[node name="vreditor" parent="." instance=ExtResource("14_4i48s")]
-transform = Transform3D(-4.37114e-08, 1.06581e-14, 1, 0, 1, -1.06581e-14, -1, -4.6588e-22, -4.37114e-08, -4, 2, 2)
-
-[node name="keyboard panel" type="StaticBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.4736, 1.7588, 0)
-collision_layer = 4
-collision_mask = 4
-script = ExtResource("10_hwxa6")
-_auto_load_ui = ExtResource("15_ujpwc")
-viewport_size = Vector2i(1166, 470)
-metadata/grabbable = true
-
-[node name="playercontainer" parent="." instance=ExtResource("16_racr7")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.08992, 1.91664, 2.46325)
 
 [connection signal="pressed" from="StartXR/EnterWebXR/EnterVRButton" to="StartXR" method="_on_enter_webxr_button_pressed"]

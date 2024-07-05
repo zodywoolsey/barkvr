@@ -1,0 +1,75 @@
+[gd_scene load_steps=6 format=3 uid="uid://doy6bwhtmwdc6"]
+
+[ext_resource type="Script" path="res://mainAssets/ui/3dPanel/local ui/localmenu.gd" id="1_62fs1"]
+[ext_resource type="PackedScene" uid="uid://i3pxsgqnbjly" path="res://mainAssets/ui/3dPanel/local ui/login/matrix.tscn" id="1_wuo22"]
+[ext_resource type="PackedScene" uid="uid://pnqmxgn13qw2" path="res://mainAssets/ui/3dPanel/local ui/settings/settings.tscn" id="3_tbhb0"]
+[ext_resource type="PackedScene" uid="uid://jqh6stt10ct5" path="res://mainAssets/ui/3dPanel/editmode/attributes.tscn" id="4_tuvns"]
+[ext_resource type="PackedScene" uid="uid://cljm3qfem1gc1" path="res://mainAssets/ui/3dPanel/local ui/debug/webrtc_debug.tscn" id="5_2xf7q"]
+
+[node name="Localmenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_62fs1")
+
+[node name="TabContainer" type="TabContainer" parent="."]
+clip_contents = true
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 45.0
+grow_horizontal = 2
+size_flags_vertical = 3
+tab_alignment = 1
+drag_to_rearrange_enabled = true
+tab_focus_mode = 0
+
+[node name="matrix" parent="TabContainer" instance=ExtResource("1_wuo22")]
+clip_contents = true
+layout_mode = 2
+
+[node name="settings" parent="TabContainer" instance=ExtResource("3_tbhb0")]
+visible = false
+clip_contents = true
+layout_mode = 2
+
+[node name="window_properties" parent="TabContainer" instance=ExtResource("4_tuvns")]
+visible = false
+layout_mode = 2
+
+[node name="titlebar" parent="TabContainer/window_properties/VBoxContainer" index="0"]
+visible = false
+
+[node name="WebrtcDebug" parent="TabContainer" instance=ExtResource("5_2xf7q")]
+visible = false
+layout_mode = 2
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 45.0
+grow_horizontal = 2
+size_flags_vertical = 3
+focus_mode = 0
+text = "/\\"
+
+[node name="resize" type="Button" parent="."]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -12.0
+offset_top = -12.0
+grow_horizontal = 0
+grow_vertical = 0
+focus_mode = 0
+
+[editable path="TabContainer/window_properties"]

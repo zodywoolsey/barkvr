@@ -7,9 +7,10 @@ extends Button
 
 func _ready():
 	button.pressed.connect(func():
-		Vector.login_username_password(
-			homeserver.text,
-			uname.text,
-			pword.text
-		)
+		if is_instance_valid(Engine.get_singleton("user_manager")):
+			Engine.get_singleton("user_manager").login_username_password(
+				homeserver.text,
+				uname.text,
+				pword.text
+			)
 		)

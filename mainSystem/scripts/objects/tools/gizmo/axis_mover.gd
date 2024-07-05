@@ -28,11 +28,13 @@ func laser_input(data:Dictionary):
 			_set_colliders(false)
 			prev_click_pos = data.position
 			_offset = data.position-gizmo.target.global_position
-			Journaling.set_property(
-				get_tree().get_first_node_in_group('localworldroot').get_path_to(gizmo.target),
-				"global_position",
-				gizmo.target.global_position
-				)
+			if is_instance_valid(Engine.get_singleton("event_manager")):
+				print("apply")
+				Engine.get_singleton("event_manager").set_property(
+					get_tree().get_first_node_in_group('localworldroot').get_path_to(gizmo.target),
+					"global_position",
+					gizmo.target.global_position
+					)
 	elif data.has('hovering'):
 		if !data.hovering:
 			interaction_index = -1

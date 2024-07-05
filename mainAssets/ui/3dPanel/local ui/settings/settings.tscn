@@ -1,4 +1,34 @@
-[gd_scene load_steps=3 format=3 uid="uid://pnqmxgn13qw2"]
+[gd_scene load_steps=4 format=3 uid="uid://pnqmxgn13qw2"]
+
+[sub_resource type="GDScript" id="GDScript_wa730"]
+script/source = "extends VBoxContainer
+
+#localuilookat
+
+@onready var xval = $position/xval
+@onready var yval = $position/yval
+@onready var zval = $position/zval
+
+func _ready():
+	xval.text = \"enabled\" if get_tree().get_first_node_in_group('localuilookat').x else \"disabled\"
+	xval.set_deferred(\"pressed\", get_tree().get_first_node_in_group('localuilookat').x)
+	yval.text = \"enabled\" if get_tree().get_first_node_in_group('localuilookat').y else \"disabled\"
+	yval.set_deferred(\"pressed\", get_tree().get_first_node_in_group('localuilookat').y)
+	zval.text = \"enabled\" if get_tree().get_first_node_in_group('localuilookat').z else \"disabled\"
+	zval.set_deferred(\"pressed\", get_tree().get_first_node_in_group('localuilookat').z)
+	xval.toggled.connect(func(toggled_on: bool):
+		xval.text = \"enabled\" if toggled_on else \"disabled\"
+		get_tree().get_first_node_in_group('localuilookat').x = toggled_on
+		)
+	yval.toggled.connect(func(toggled_on: bool):
+		yval.text = \"enabled\" if toggled_on else \"disabled\"
+		get_tree().get_first_node_in_group('localuilookat').y = toggled_on
+		)
+	zval.toggled.connect(func(toggled_on: bool):
+		zval.text = \"enabled\" if toggled_on else \"disabled\"
+		get_tree().get_first_node_in_group('localuilookat').z = toggled_on
+		)
+"
 
 [sub_resource type="GDScript" id="GDScript_abd45"]
 script/source = "extends Control
@@ -23,14 +53,13 @@ func _ready():
 
 [node name="settings" type="Control"]
 layout_mode = 3
-anchor_left = 0.1
-anchor_top = 0.1
-anchor_right = 0.9
-anchor_bottom = 0.9
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -38,41 +67,164 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="scaling3d" type="VBoxContainer" parent="VBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="localmenulookataxistoggles" type="VBoxContainer" parent="ScrollContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+script = SubResource("GDScript_wa730")
+
+[node name="Label" type="Label" parent="ScrollContainer/VBoxContainer/localmenulookataxistoggles"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "Local Menu LookAt Axis Toggles"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="position" type="HBoxContainer" parent="ScrollContainer/VBoxContainer/localmenulookataxistoggles"]
+custom_minimum_size = Vector2(500, 100)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="xval" type="Button" parent="ScrollContainer/VBoxContainer/localmenulookataxistoggles/position"]
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+toggle_mode = true
+text = "disabled"
+icon_alignment = 1
+expand_icon = true
+
+[node name="ColorRect" type="ColorRect" parent="ScrollContainer/VBoxContainer/localmenulookataxistoggles/position/xval"]
+custom_minimum_size = Vector2(0, 5)
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 0
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.1
+color = Color(1, 0, 0, 1)
+
+[node name="Label" type="Label" parent="ScrollContainer/VBoxContainer/localmenulookataxistoggles/position/xval"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_right = 0.5
+grow_horizontal = 2
+grow_vertical = 0
+text = "x"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="yval" type="Button" parent="ScrollContainer/VBoxContainer/localmenulookataxistoggles/position"]
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+toggle_mode = true
+text = "disabled"
+icon_alignment = 1
+expand_icon = true
+
+[node name="ColorRect" type="ColorRect" parent="ScrollContainer/VBoxContainer/localmenulookataxistoggles/position/yval"]
+custom_minimum_size = Vector2(0, 5)
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 0
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.1
+color = Color(0, 1, 0, 1)
+
+[node name="Label" type="Label" parent="ScrollContainer/VBoxContainer/localmenulookataxistoggles/position/yval"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_right = 0.5
+grow_horizontal = 2
+grow_vertical = 0
+text = "y"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="zval" type="Button" parent="ScrollContainer/VBoxContainer/localmenulookataxistoggles/position"]
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+toggle_mode = true
+text = "disabled"
+icon_alignment = 1
+expand_icon = true
+
+[node name="ColorRect" type="ColorRect" parent="ScrollContainer/VBoxContainer/localmenulookataxistoggles/position/zval"]
+custom_minimum_size = Vector2(0, 5)
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 0
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.1
+color = Color(0, 0, 1, 1)
+
+[node name="Label" type="Label" parent="ScrollContainer/VBoxContainer/localmenulookataxistoggles/position/zval"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_right = 0.5
+grow_horizontal = 2
+grow_vertical = 0
+text = "z"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="scaling3d" type="VBoxContainer" parent="ScrollContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 script = SubResource("GDScript_abd45")
 
-[node name="Label" type="Label" parent="VBoxContainer/scaling3d"]
+[node name="Label" type="Label" parent="ScrollContainer/VBoxContainer/scaling3d"]
 layout_mode = 2
 size_flags_vertical = 3
 text = "Scaling 3d:"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="HSlider" type="HSlider" parent="VBoxContainer/scaling3d"]
+[node name="HSlider" type="HSlider" parent="ScrollContainer/VBoxContainer/scaling3d"]
 layout_mode = 2
 size_flags_vertical = 3
 focus_mode = 0
 min_value = 0.1
-max_value = 2.0
+max_value = 1.9
 step = 0.1
 value = 1.0
+scrollable = false
+tick_count = 3
 ticks_on_borders = true
 
-[node name="guibasescale" type="VBoxContainer" parent="VBoxContainer"]
+[node name="guibasescale" type="VBoxContainer" parent="ScrollContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 script = SubResource("GDScript_iyo8c")
 
-[node name="Label" type="Label" parent="VBoxContainer/guibasescale"]
+[node name="Label" type="Label" parent="ScrollContainer/VBoxContainer/guibasescale"]
 layout_mode = 2
 size_flags_vertical = 3
 text = "UI Scale:"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="HSlider" type="HSlider" parent="VBoxContainer/guibasescale"]
+[node name="HSlider" type="HSlider" parent="ScrollContainer/VBoxContainer/guibasescale"]
 layout_mode = 2
 size_flags_vertical = 3
 focus_mode = 0
@@ -80,5 +232,6 @@ min_value = 0.5
 max_value = 4.5
 step = 0.5
 value = 1.0
+scrollable = false
 tick_count = 9
 ticks_on_borders = true

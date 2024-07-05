@@ -12,12 +12,12 @@ var api = api_script.new()
 
 # other vars
 var client = HTTPClient.new()
-var userToken = ""
-var base_url = ""
-var home_server = ""
-var headers = ["content-type: application/json"]
-var next_batch = ''
-var timeout = 3000
+var userToken :String= ""
+var base_url :String= ""
+var home_server :String= ""
+var headers :PackedStringArray= ["content-type: application/json"]
+var next_batch :String= ''
+var timeout := 3000
 var joinedRooms
 var userData : Dictionary = {}
 var uname : String
@@ -29,15 +29,16 @@ const PRESENCE = {"offline":"offline","online":"online","unavailable":"unavailab
 # signals
 signal user_logged_in
 signal got_joined_rooms
-signal got_room_state(data)
-signal update_room(data)
-signal synced(data)
-signal got_turn_server(data)
-signal got_room_messages(data)
+signal got_room_state(data:Dictionary)
+signal update_room(data:Dictionary)
+signal synced(data:Dictionary)
+signal got_turn_server(data:Dictionary)
+signal got_room_messages(data:Dictionary)
 
 var requestParent:Node
 
 func _ready():
+	add_child(api)
 	requestParent = get_tree().get_first_node_in_group('requestParent')
 	api.user_logged_in.connect(func(result:int,response_code:int,header:PackedStringArray,body:PackedByteArray):
 		var msg = body.get_string_from_ascii()
@@ -50,11 +51,11 @@ func _ready():
 					Notifyvr.send_notification("Please try again after: "+str(msgJson.retry_after_ms/1000)+" seconds")
 				return
 			if msgJson.has('access_token') and msgJson.has('well_known'):
-				if !Vector.userData.has("login"):
-					Vector.userData.login = {}
-				Vector.userData.login.user_id = msgJson.user_id
-				uname = Vector.userData.login.user_id.split(':')[0].right(-1)
-				uid = Vector.userData.login.user_id
+				if !userData.has("login"):
+					userData.login = {}
+				userData.login.user_id = msgJson.user_id
+				uname = userData.login.user_id.split(':')[0].right(-1)
+				uid = userData.login.user_id
 				userToken = msgJson.access_token
 				base_url = msgJson.well_known["m.homeserver"].base_url
 				userData['login'] = msgJson
@@ -118,11 +119,11 @@ func _ready():
 						#print(msgJson.rooms.join[room].timeline)
 						if "events" in msgJson.rooms.join[room].timeline:
 							for event in msgJson.rooms.join[room].timeline.events:
-								if "type" in event:
-									print(event.type)
-								else:
-									print("event has no type:\n"+str(event.content))
-		synced.emit(msgJson)
+								pass
+								#if "type" in event:
+									#print(event.type)
+								#else:
+									#print("event has no type:\n"+str(event.content))
 		print('synced')
 	)
 	api.got_turn_server.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
@@ -160,6 +161,9 @@ func get_turn_server():
 func get_room_messages(room_id:String):
 	api.get_room_messages(base_url,headers,room_id,'b','','',10)
 
+func get_room_state(room_id):
+	api.get_room_state(base_url, headers, room_id)
+
 func connect_to_homeserver(homeServer:String = ""):
 	var homeserverurl = "https://{0}".format([
 		userData["home_server"] if homeServer == "" and userData.has("home_server") else homeServer
@@ -177,10 +181,10 @@ func login_username_password(homeserver:String,username:String,password:String):
 	var homeserverurl = "https://{0}".format([
 		userData["home_server"] if homeserver == "" and userData.has("home_server") else homeserver
 		])
-	api.login_username_password(homeserver,username,password)
+	api.login_username_password(homeserver,headers,username,password)
 
 func get_joined_rooms():
-	api.get_joined_rooms()
+	api.get_joined_rooms(base_url,headers,userData.login.access_token)
 
 func readRequestBytes():
 	while client.get_status() == client.STATUS_REQUESTING:
@@ -245,4 +249,4 @@ func sync():
 	print("next batch: "+next_batch)
 	if !next_batch.is_empty():
 		reqData['since'] = next_batch
-	api.sync(reqData)
+	api.sync(base_url,headers,reqData)

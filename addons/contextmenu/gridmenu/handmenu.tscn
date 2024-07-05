@@ -31,37 +31,14 @@ func onclick():
 script/source = "extends Object
 
 func onclick():
-	Journaling.undo_action()
+	Engine.get_singleton(\"event_manager\").undo_action()
 "
 
 [sub_resource type="GDScript" id="GDScript_hxyqk"]
 script/source = "extends Object
 
 func onclick():
-	Journaling.add_node(Journaling.root.get_path_to(Journaling.root),
-		{
-			\"node_class\": \"CSGBox3D\",
-			\"properties\": [
-				{\"name\":\"position\",\"value\":Vector3(1,0,0)},
-				{\"name\":\"use_collision\",\"value\":true},
-				{\"name\":\"metadata/testdata\", \"value\":1}
-			],
-			\"children\": [
-				{
-					\"node_class\": \"CSGSphere3D\",
-					\"children\":[
-						{
-							\"node_class\": \"MeshInstance3D\",
-							\"properties\": [
-								{\"name\":\"position\",\"value\":Vector3(0,1,0)},
-								{\"name\":\"script\",\"value\":Script}
-							]
-						}
-					]
-				}
-			]
-		}
-	)
+	LocalGlobals.clear_gizmos.emit()
 "
 
 [node name="handmenu" type="Node3D"]
@@ -107,5 +84,5 @@ text = "redo"
 
 [node name="StaticBody3D9" parent="." instance=ExtResource("1_1fmp6")]
 transform = Transform3D(-1, -8.74228e-08, 3.82137e-15, 0, -4.37114e-08, -1, 8.74228e-08, -1, 4.37114e-08, -0.1, -0.1, 8.74228e-09)
-text = "add csgbox"
+text = "clear gizmos"
 callscript = SubResource("GDScript_hxyqk")

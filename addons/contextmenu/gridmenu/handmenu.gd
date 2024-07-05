@@ -2,14 +2,14 @@ extends Node3D
 
 var dismissTimer = 0.0
 
-func _process(delta):
+func _physics_process(delta):
 	dismissTimer += delta
 	var tmp = false
 	for i in get_children():
 		if i.hover == true:
 			tmp = true
 			dismissTimer = 0.0
-			break;
+			break
 	if visible and tmp == false and dismissTimer > .2:
 		hide()
 		scale = Vector3(.0001,.0001,.0001)

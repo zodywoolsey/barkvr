@@ -1,6 +1,16 @@
-[gd_scene load_steps=2 format=3 uid="uid://cw57xg0xewjcv"]
+[gd_scene load_steps=3 format=3 uid="uid://cw57xg0xewjcv"]
 
 [ext_resource type="Script" path="res://mainAssets/ui/3dPanel/editmode/gdscriptpanel.gd" id="1_g4jiw"]
+
+[sub_resource type="CodeHighlighter" id="CodeHighlighter_mlath"]
+number_color = Color(0.627451, 0.996078, 0.87451, 1)
+symbol_color = Color(0.94902, 0.419608, 0.498039, 1)
+function_color = Color(0.560784, 0.564706, 0.843137, 1)
+member_variable_color = Color(0.611765, 0.729412, 0.831373, 1)
+color_regions = {
+"\" \"": Color(1, 0.633333, 0, 1),
+"#": Color(0.423651, 0.423651, 0.423651, 1)
+}
 
 [node name="gdscriptpanel" type="Control"]
 layout_mode = 3
@@ -18,8 +28,43 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+size_flags_vertical = 3
+theme_override_constants/line_spacing = 4
+context_menu_enabled = false
 scroll_smooth = true
+scroll_past_end_of_file = true
+minimap_draw = true
+caret_blink = true
+caret_blink_interval = 0.5
+caret_draw_when_editable_disabled = true
+syntax_highlighter = SubResource("CodeHighlighter_mlath")
+highlight_all_occurrences = true
+highlight_current_line = true
+draw_tabs = true
+symbol_lookup_on_click = true
 line_folding = true
+line_length_guidelines = Array[int]([100, 80])
+gutters_draw_breakpoints_gutter = true
+gutters_draw_bookmarks = true
+gutters_draw_executing_lines = true
+gutters_draw_line_numbers = true
+gutters_draw_fold_gutter = true
+delimiter_strings = Array[String](["''' '''", "\"\"\" \"\"\"", "' '", "\" \""])
+delimiter_comments = Array[String](["##", "#"])
+code_completion_enabled = true
+code_completion_prefixes = Array[String]([".", ",", "(", "=", "$", "@", "\"", "'"])
+indent_automatic = true
+auto_brace_completion_enabled = true
+auto_brace_completion_highlight_matching = true
+auto_brace_completion_pairs = {
+"\"": "\"",
+"\"\"\"": "\"\"\"",
+"'": "'",
+"'''": "'''",
+"(": ")",
+"[": "]",
+"{": "}"
+}
 
 [node name="Button" type="Button" parent="."]
 layout_mode = 1

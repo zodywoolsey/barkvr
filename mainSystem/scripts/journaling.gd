@@ -5,7 +5,27 @@ var actions: Array[Dictionary] = []
 var undid_actions: Array[Dictionary] = []
 var new_actions: Array[Dictionary] = []
 
-var root: Node
+var root: Node:
+	get:
+		if !is_instance_valid(root):
+			_get_root()
+		return root
+
+var local_root: Node:
+	get:
+		if !is_instance_valid(local_root):
+			local_root = get_tree().root
+		return local_root
+
+func is_path_remote(path:NodePath, from_journal_root:bool=true):
+	var t_node :Node
+	if from_journal_root:
+		t_node = root.get_node_or_null(path)
+	else:
+		t_node = get_tree().root.get_node_or_null(path)
+	if t_node != null and root.is_ancestor_of(t_node):
+		return true
+	return false
 
 func _init():
 	print('journal init')
@@ -25,6 +45,7 @@ func undo_action() -> void:
 	check_root()
 	if !actions.is_empty():
 		var action_to_undo :Dictionary = actions.pop_back()
+		print(action_to_undo)
 		if action_to_undo and "action_name" in action_to_undo:
 			match action_to_undo.action_name:
 				'set_property':
@@ -45,6 +66,10 @@ func check_root() -> void:
 
 func _get_root() -> void:
 	root = get_tree().get_first_node_in_group('localworldroot')
+
+# TODO create function to iterate over the current scene and prepare it for remote syncing
+func _prepare_root_for_remote_sync() -> void:
+	pass
 
 func set_parent(target: NodePath, new_parent: NodePath) -> void:
 	check_root()
@@ -79,8 +104,8 @@ func add_node(parent: NodePath, nodes:Dictionary, recieved := false, undid := fa
 	if is_instance_valid(p_node):
 		var t_node :Node = _read_add_node_nodes_dict(nodes)
 		while p_node.has_node("./"+t_node.name):
-			var placeholder_name :String=  str(nodes.node_class) + str(hash(nodes))
-			print('parent already has child')
+			var placeholder_name :String=  str(str(str(nodes.node_class) + str( str(nodes) + str( Time.get_unix_time_from_system() + float(Time.get_ticks_usec()) ))).hash())
+			t_node.name = placeholder_name
 		p_node.add_child(t_node)
 		if !recieved and !undid:
 			_add_action({
@@ -98,6 +123,7 @@ func add_node(parent: NodePath, nodes:Dictionary, recieved := false, undid := fa
 			},true)
 
 func _read_add_node_nodes_dict(node_dict:Dictionary) -> Node:
+	check_root()
 	if "node_class" in node_dict and ClassDB.can_instantiate(node_dict.node_class):
 		var node = ClassDB.instantiate(node_dict.node_class)
 		var node_props = node.get_property_list()
@@ -108,8 +134,8 @@ func _read_add_node_nodes_dict(node_dict:Dictionary) -> Node:
 						node[prop.name] = prop.value
 					elif prop.name.begins_with('metadata/'):
 						node.set_meta(prop.name.trim_prefix("metadata/"), prop.value)
-		if node.name == "":
-			var placeholder_name :String= str(node_dict.node_class) + str(hash(node))
+		if node.name:
+			var placeholder_name :String= str(str(str(node_dict.node_class) + str( str(node) + str( Time.get_unix_time_from_system() + float(Time.get_ticks_usec()) ))).hash())
 			if "properties" in node_dict:
 				node_dict.properties.append({"name":"name","value":placeholder_name})
 			else:
@@ -126,6 +152,7 @@ func _read_add_node_nodes_dict(node_dict:Dictionary) -> Node:
 
 func delete_node(target: NodePath, recieved := false, undid := false) -> void:
 	check_root()
+	print(is_path_remote(target))
 	var t_node := root.get_node(target)
 	var deleted_node_as_packed_scene := PackedScene.new()
 	take_owner_of_node_and_all_children(t_node, t_node)
@@ -135,11 +162,11 @@ func delete_node(target: NodePath, recieved := false, undid := false) -> void:
 		_add_action({
 			'action_name': 'delete_node',
 			'target': target,
-			'deleted_node': Marshalls.variant_to_base64(deleted_node_as_packed_scene,true)
+			'deleted_node': t_node.name#Marshalls.variant_to_base64(deleted_node_as_packed_scene,true)
 		})
 
-
 func set_property(target: NodePath, prop_name: String, value: Variant, recieved := false, undid := false) -> void:
+	print(target)
 	check_root()
 	var t_node := root.get_node(target)
 	if is_instance_valid(t_node) and prop_name.split(':')[0] in t_node:
@@ -163,6 +190,7 @@ func set_property(target: NodePath, prop_name: String, value: Variant, recieved 
 			},true)
 
 func take_owner_of_node_and_all_children(node:Node,new_owner:Node):
+	check_root()
 	node.owner = new_owner
 	if node.get_child_count() > 0:
 		for child in node.get_children():
@@ -197,6 +225,7 @@ func import_asset(
 	recieved := false,
 	data := {}
 ) -> void:
+	print(type)
 	# Make sure root is valid.
 	check_root()
 	# Generate an asset name if not given.
@@ -213,39 +242,33 @@ func import_asset(
 			content = asset_to_import
 		elif asset_to_import is String:
 			content = FileAccess.get_file_as_bytes(asset_to_import)
+		elif asset_to_import is Image:
+			content = asset_to_import.get_data()
 	# Decide how to import asset based on type.
 	# TODO pck support
 	match type:
-		#"glb", "vrm":
-			##var thread := Thread.new()
-			##thread.start(_import_glb.bind(asset_to_import, asset_name, data))
-			##rejoin_thread_when_finished(thread)
-			#if "position" in data:
-				#_import_glb(asset_to_import, asset_name, data, data.position)
-			#else:
-				#_import_glb(asset_to_import, asset_name, data)
+		"text":
+			_import_text(asset_to_import,asset_to_import, data)
+		"glb", "vrm":
+			_import_glb(asset_to_import, asset_name, data)
 		"res":
 			# TODO scenes and resources can't easily be sent to peers because of
 			# possible dependencies in other files.
-			if "position" in data:
-				_import_res(asset_name, asset_to_import, data.position)
-			else:
-				_import_res(asset_name, asset_to_import)
+			_import_res(asset_name, asset_to_import, data)
 		"image":
-			if "position" in data:
-				_import_image(asset_name, content, data.position)
+			if asset_to_import is Image:
+				_import_image_image(asset_name, asset_to_import, data)
 			else:
-				_import_image(asset_name, content)
+				_import_image_bytes(asset_name, content, data)
 		"file":
-			#var thread := Thread.new()
-			#thread.start(_import_file.bind(asset_name,content))
-			#rejoin_thread_when_finished(thread)
-			if "position" in data:
-				_import_file(asset_name, content, data.position)
-			else:
-				_import_file(asset_name, content)
+			_import_file(asset_name, content, data)
 		"uri":
-			pass
+			_import_uri(asset_to_import, data)
+		"zip":
+			_import_zip(asset_name, asset_to_import, data)
+		_:
+			if "loader" in data:
+				data.loader.done('failed')
 	# Send message to peers.
 	if !recieved:
 		if type == "res":
@@ -263,15 +286,118 @@ func import_asset(
 				'asset_name': asset_name
 			})
 
-func _check_loaded(path: String, asset_name:String, position:Vector3, last_time:float=0.0) -> void:
+func _import_uri(uri:String, data:Dictionary={}):
+	var tmpdir:String = "user://tmp/"+str(hash(uri))
+	if !("iterations" in data):
+		data.iterations = 0
+	if uri.begins_with("http://") or uri.begins_with("https://"):
+		if "iterations" in data and data.iterations > 4:
+			print("loop while trying to import uri, cancelling import")
+			return
+		var req := HTTPRequest.new()
+		req.download_file = tmpdir
+		call_deferred("add_child",req)
+		if !req.is_node_ready():
+			await req.ready
+		Thread.set_thread_safety_checks_enabled(false)
+		req.request_completed.connect(_uri_request_completed.bind(req,data,uri))
+		Thread.set_thread_safety_checks_enabled(true)
+		req.request(uri)
+
+func _uri_request_completed(result: int, response_code: int, headers: PackedStringArray, body: PackedByteArray, req:HTTPRequest, data:Dictionary, uri:String):
+			print('req completed')
+			print('response code: '+str(response_code))
+			var msg = body.get_string_from_ascii()
+			for header in headers:
+				if header.begins_with("Content-Type:"):
+					print('content')
+					print(header.trim_prefix("Content-Type: "))
+					var trimmed := header.trim_prefix("Content-Type: ")
+					if trimmed.begins_with("image") and !trimmed.contains("gif"):
+						print('importing uri image')
+						while body.size() < 1:
+							if data.iterations > 4:
+								return
+							data.iterations += 1
+							body = (FileAccess.get_file_as_bytes(req.download_file))
+						_import_image_bytes(uri, body, data)
+						return
+			print('uri returned text')
+			print('uri: '+uri)
+			if uri.contains('.gltf') or uri.contains('.glb'):
+				import_asset('glb', req.download_file, uri, false, data)
+			elif uri.contains('.vrm'):
+				import_asset('vrm',req.download_file, uri, false, data)
+			elif uri.contains('.res') or uri.contains('.tres') or uri.contains('.scn') or uri.contains('.tscn'):
+				import_asset('res',req.download_file, uri, false, data)
+			#elif dropped.ends_with('.zip') or dropped.ends_with('.pck'):
+			elif uri.contains('.pck'):
+				import_asset('pck', req.download_file, uri, false, data)
+			elif uri.contains('.png') or \
+				uri.contains('.jpg') or \
+				uri.contains('.jpeg') or \
+				uri.contains('.bmp') or \
+				uri.contains('.svg') or \
+				uri.contains('.tga') or \
+				uri.contains('.ktx') or \
+				uri.contains('.webp'):
+				import_asset('image', req.download_file, uri, false, data)
+			else:
+				# hit "https://image.thum.io/get/" to grab an image of the website
+				if !uri.begins_with("https://image.thum.io/get/"):
+					uri = "https://image.thum.io/get/"+uri
+				if "iterations" in data:
+					data.iterations += 1
+				else:
+					data.iterations = 1
+				print("get preview:\n"+uri)
+				_import_uri(uri,data)
+				#elif dropped.ends_with(".zip"):
+					#import_asset('zip', reader.read_file(dropped), asset_name, false, data)
+				#else:
+					#import_asset('file', reader.read_file(dropped), asset_name, false, data)
+			req.queue_free()
+
+func _import_zip(asset_name:String, asset_path:String, data:Dictionary={}):
+	var reader := ZIPReader.new()
+	if reader.open(asset_path) == 0:
+		for dropped in reader.get_files():
+			print('dropped: '+dropped)
+			if reader.file_exists(dropped):
+				print('is file')
+				if dropped.contains('.gltf') or dropped.contains('.glb'):
+					import_asset('glb', reader.read_file(dropped), asset_name, false, data)
+				elif dropped.contains('.vrm'):
+					import_asset('vrm',reader.read_file(dropped), asset_name, false, data)
+				elif dropped.ends_with('.res') or dropped.ends_with('.tres') or dropped.ends_with('.scn') or dropped.ends_with('.tscn'):
+					import_asset('res',reader.read_file(dropped), asset_name, false, data)
+				#elif dropped.ends_with('.zip') or dropped.ends_with('.pck'):
+				elif dropped.ends_with('.pck'):
+					import_asset('pck', reader.read_file(dropped), asset_name, false, data)
+				elif dropped.ends_with('.png') or \
+					dropped.ends_with('.jpg') or \
+					dropped.ends_with('.jpeg') or \
+					dropped.ends_with('.bmp') or \
+					dropped.ends_with('.svg') or \
+					dropped.ends_with('.tga') or \
+					dropped.ends_with('.ktx') or \
+					dropped.ends_with('.webp'):
+					import_asset('image', reader.read_file(dropped), asset_name, false, data)
+				#elif dropped.ends_with(".zip"):
+					#import_asset('zip', reader.read_file(dropped), asset_name, false, data)
+				#else:
+					#import_asset('file', reader.read_file(dropped), asset_name, false, data)
+
+func _check_loaded(path: String, asset_name:String, data:Dictionary={}, last_time:float=0.0) -> void:
+	check_root()
 	while ResourceLoader.load_threaded_get_status(path) == ResourceLoader.THREAD_LOAD_IN_PROGRESS:
-			pass
-			#get_tree().create_timer(1).timeout.connect(_check_loaded.bind(path, asset_name, position))
-	if ResourceLoader.THREAD_LOAD_LOADED:
+		pass
+		#get_tree().create_timer(1).timeout.connect(_check_loaded.bind(path, asset_name, position))
+	if ResourceLoader.load_threaded_get_status(path) == ResourceLoader.THREAD_LOAD_LOADED:
 		var res := ResourceLoader.load_threaded_get(path)
 		if res != null:
 			var node = res.instantiate()
-			_post_import.call_deferred(root,node,asset_name,position)
+			_post_import.call_deferred(root,node,asset_name,data)
 
 #
 var gltf_document_extension_class = load("res://addons/vrm/vrm_extension.gd")
@@ -284,7 +410,9 @@ const SAVE_DEBUG_GLTFSTATE_RES: bool = false
 #define GLTF_IMPORT_DISCARD_MESHES_AND_MATERIALS 32
 #define GLTF_IMPORT_FORCE_DISABLE_MESH_COMPRESSION 64
 
-func _import_glb(content: Variant, asset_name := '', _data := {}, position:Vector3=Vector3(0,0,0)) -> void:
+func _import_glb(content: Variant, asset_name := '', data := {}) -> void:
+	print(content)
+	check_root()
 	#Thread.set_thread_safety_checks_enabled(false)
 	var logging_prefix := asset_name+" : "
 	print("Import VRM: " + asset_name + " ----------------------")
@@ -295,7 +423,11 @@ func _import_glb(content: Variant, asset_name := '', _data := {}, position:Vecto
 	var state: GLTFState = GLTFState.new()
 	# HANDLE_BINARY_EMBED_AS_BASISU crashes on some files in 4.0 and 4.1
 	state.handle_binary_image = GLTFState.HANDLE_BINARY_EMBED_AS_UNCOMPRESSED  # GLTFState.HANDLE_BINARY_EXTRACT_TEXTURES
-	var err = gltf.append_from_file(content, state, flags)
+	var err :int
+	if content is String:
+		err = gltf.append_from_file(content, state, flags)
+	elif content is PackedByteArray:
+		err = gltf.append_from_buffer(content, '', state, flags)
 	if err != OK:
 		GLTFDocument.unregister_gltf_document_extension(vrm_extension)
 		return
@@ -303,53 +435,59 @@ func _import_glb(content: Variant, asset_name := '', _data := {}, position:Vecto
 			if mesh.mesh.get_surface_lod_count(0) == 0:
 				print(logging_prefix+'generating lods')
 				mesh.mesh.generate_lods(25,60,[])
-		
+	print("generated scene")
 	var generated_scene = gltf.generate_scene(state)
-	if SAVE_DEBUG_GLTFSTATE_RES and content != "":
-		if !ResourceLoader.exists(content + ".res"):
-			state.take_over_path(content + ".res")
-			ResourceSaver.save(state, content + ".res")
+	#if SAVE_DEBUG_GLTFSTATE_RES and content != "":
+		#if !ResourceLoader.exists(content + ".res"):
+			#state.take_over_path(content + ".res")
+			#ResourceSaver.save(state, content + ".res")
 	GLTFDocument.unregister_gltf_document_extension(vrm_extension)
-	
-	_post_import.call_deferred(root, generated_scene, asset_name, position, false)
+	print('post importing glb/gltf/vrm')
+	_post_import.call_deferred(root, generated_scene, asset_name, data, false)
 
 ## Imports a Godot resource.
-func _import_res(asset_name: String, asset_to_import: Variant, position:Vector3=Vector3(0,0,0)) -> void:
+func _import_res(asset_name: String, asset_to_import: Variant, data:Dictionary={}) -> void:
+	check_root()
 	# If asset to import is not a path, create a path.
 	# Note that this may mean assets might not load for peers.
 	if asset_to_import is PackedByteArray:
 		# Write the content to a temporary file.
 		# TODO cleanup of the file?
-		var path := "user://tmp/" + str(str(asset_to_import).hash())
+		var path := "user://tmp/" + str(str(asset_to_import).hash()) + ".res"
 		var file := FileAccess.open(path, FileAccess.WRITE)
 		file.store_buffer(asset_to_import)
 		file.flush()
 		file.close()
 		asset_to_import = path
+	ResourceLoader.set_abort_on_missing_resources(false)
 	ResourceLoader.load_threaded_request(asset_to_import, '', true, ResourceLoader.CACHE_MODE_IGNORE)
-	_check_loaded(asset_to_import,asset_name,position)
+	_check_loaded(asset_to_import,asset_name,data)
 
-## Imports an image.
-func _import_image(asset_name: String, content: PackedByteArray, position:Vector3=Vector3(0,0,0)) -> void:
+## Imports an image from bytes.
+func _import_image_bytes(asset_name: String, content: PackedByteArray, data:Dictionary={}) -> void:
+	check_root()
 	var img := Image.new()
 	var err: Error
-
-	if asset_name.ends_with('.jpg') or asset_name.ends_with('.jpeg'):
-		err = img.load_jpg_from_buffer(content)
-	elif asset_name.ends_with('.png'):
-		err = img.load_png_from_buffer(content)
-	elif asset_name.ends_with('.bmp'):
-		err = img.load_bmp_from_buffer(content)
-	elif asset_name.ends_with('.tga'):
-		err = img.load_tga_from_buffer(content)
-	elif asset_name.ends_with('.webp'):
-		err = img.load_webp_from_buffer(content)
-	else:
-		return
-
+	
+	err = img.load_webp_from_buffer(content)
 	if err != OK:
+		err = img.load_png_from_buffer(content)
+	if err != OK:
+		err = img.load_bmp_from_buffer(content)
+	if err != OK:
+		err = img.load_tga_from_buffer(content)
+	if err != OK:
+		err = img.load_jpg_from_buffer(content)
+	if err != OK:
+		err = img.load_svg_from_buffer(content)
+	if err != OK:
+		err = img.load_ktx_from_buffer(content)
+	
+	if err != OK:
+		if "loader" in data:
+			data.loader.done('failed')
 		return
-
+	
 	var tex := ImageTexture.create_from_image(img)
 	var plane := MeshInstance3D.new()
 	var tmpmesh := PlaneMesh.new()
@@ -376,14 +514,88 @@ func _import_image(asset_name: String, content: PackedByteArray, position:Vector
 	tmpbody.collision_mask = 2
 	
 	tmpbody.add_child(plane)
-	_post_import.call_deferred(root, tmpbody, asset_name, position, true)
+	_post_import.call_deferred(root, tmpbody, asset_name, data, true)
 
 
-## Imports a file.
-func _import_file(asset_name: String, content: PackedByteArray, position:Vector3=Vector3(0,0,0) ) -> void:
+## Imports an image from an existing image resource.
+func _import_image_image(asset_name: String, img: Image, data:Dictionary={}) -> void:
+	check_root()
+	
+	var tex := ImageTexture.create_from_image(img)
+	var plane := MeshInstance3D.new()
+	var tmpmesh := PlaneMesh.new()
+	var tmpmat := StandardMaterial3D.new()
+	tmpmesh.size.y = 1.0
+	tmpmesh.size.x = ((tex.get_size()).x/(tex.get_size()).y)
+	tmpmat.albedo_texture = tex
+	tmpmat.cull_mode = BaseMaterial3D.CULL_DISABLED
+	tmpmat.shading_mode = tmpmat.SHADING_MODE_UNSHADED
+	tmpmesh.material = tmpmat
+	tmpmesh.orientation = PlaneMesh.FACE_Z
+	plane.mesh = tmpmesh
+	
+	var tmpbody := StaticBody3D.new()
+	tmpbody.set_meta("grabbable",true)
+	var tmpcol := CollisionShape3D.new()
+	var tmpcolshape := BoxShape3D.new()
+	tmpcolshape.size.y = 1.0
+	tmpcolshape.size.x = ((tex.get_size()).x/(tex.get_size()).y)
+	tmpcolshape.size.z = .001
+	tmpcol.shape = tmpcolshape
+	tmpbody.add_child(tmpcol)
+	tmpbody.collision_layer = 2
+	tmpbody.collision_mask = 2
+	
+	tmpbody.add_child(plane)
+	_post_import.call_deferred(root, tmpbody, asset_name, data, true)
+
+## Imports some text.
+func _import_text(asset_name: String, content: String, data:Dictionary={} ) -> void:
+	check_root()
 	var tex := NoiseTexture2D.new()
 	var noise := FastNoiseLite.new()
-	noise.seed = randi()
+	noise.seed = asset_name.hash()
+	tex.height = 100
+	tex.width = 100
+	tex.noise = noise
+	var mesh := MeshInstance3D.new()
+	#var tmpmesh := PlaneMesh.new()
+	var tmpmesh := TextMesh.new()
+	tmpmesh.text = asset_name
+	tmpmesh.autowrap_mode = TextServer.AUTOWRAP_WORD
+	tmpmesh.font_size = 4
+	tmpmesh.depth = .01
+	#tmpmesh.size = tex.get_size()*.001
+	var tmpmat := StandardMaterial3D.new()
+	
+	var tmpbody := StaticBody3D.new()
+	tmpbody.set_meta("grabbable",true)
+	var tmpcol := CollisionShape3D.new()
+	var tmpcolshape := BoxShape3D.new()
+	#tmpcolshape.size.x = (tex.get_size()*.001).x
+	#tmpcolshape.size.y = (tex.get_size()*.001).y
+	tmpcolshape.size = tmpmesh.get_aabb().size
+	
+	#tmpcolshape.size.z = .001
+	tmpcol.shape = tmpcolshape
+	tmpbody.add_child(tmpcol)
+	tmpbody.collision_layer = 2
+	tmpbody.collision_mask = 2
+	
+	tmpmat.albedo_texture = tex
+	tmpmat.shading_mode = tmpmat.SHADING_MODE_UNSHADED
+	tmpmesh.material = tmpmat
+	#tmpmesh.orientation = PlaneMesh.FACE_Z
+	mesh.mesh = tmpmesh
+	tmpbody.add_child(mesh)
+	_post_import.call_deferred(root, tmpbody, asset_name, data, true)
+
+## Imports a file.
+func _import_file(asset_name: String, content: PackedByteArray, data:Dictionary={} ) -> void:
+	check_root()
+	var tex := NoiseTexture2D.new()
+	var noise := FastNoiseLite.new()
+	noise.seed = asset_name.hash()
 	tex.height = 100
 	tex.width = 100
 	tex.noise = noise
@@ -418,20 +630,12 @@ func _import_file(asset_name: String, content: PackedByteArray, position:Vector3
 	plane.mesh = tmpmesh
 	tmpbody.add_child(plane)
 	tmpbody.set_meta("file_bytes",content.compress())
-	_post_import.call_deferred(root, tmpbody, asset_name, position, true)
-
-func rejoin_thread_when_finished(thread: Thread) -> void:
-	if thread and thread.is_started() and thread.is_alive():
-		get_tree().create_timer(1).timeout.connect(rejoin_thread_when_finished.bind(thread))
-		return
-	thread.wait_to_finish()
+	_post_import.call_deferred(root, tmpbody, asset_name, data, true)
 
 ## Accept an incoming network message and handle it appropriately.
 func receive(action: Dictionary) -> void:
+	check_root()
 	match action.action_name:
-		#"net_propagate_node":
-			#var parent: String = action.get('parent', '')
-			#net_propagate_node(action.node_string, parent, '', true)
 		"set_property":
 			set_property(action.target, action.prop_name, action.value, true)
 		"import_asset":
@@ -441,12 +645,20 @@ func receive(action: Dictionary) -> void:
 		"add_node":
 			add_node(action.parent,action.nodes,true)
 
-func _post_import(_root_node:Node,node_to_add:Node,node_name:String,position:Vector3=Vector3(),lookatuser:bool=false):
+func _post_import(_root_node:Node,node_to_add:Node,node_name:String,data:Dictionary={},lookatuser:bool=false):
 	check_root()
+	var position = Vector3()
+	if "position" in data:
+		position = data.position
+	var scale = 1.0
+	if "scale" in data:
+		scale = data.scale
 	root.add_child(node_to_add)
-	if lookatuser and node_to_add is Node3D:
-		node_to_add.look_at_from_position(position,get_viewport().get_camera_3d().global_position,Vector3.UP,true)
-	node_to_add.global_position = position
+	if node_to_add is Node3D:
+		if lookatuser:
+			node_to_add.look_at_from_position(position,get_viewport().get_camera_3d().global_position,Vector3.UP,true)
+		node_to_add.global_position = position
+		node_to_add.scale *= scale
 	node_to_add.name = node_name
 	print(node_name)
 	# add IK stuff if VRM
@@ -473,3 +685,5 @@ func _post_import(_root_node:Node,node_to_add:Node,node_name:String,position:Vec
 		if skele:
 			print('found skele')
 			quickreniksetup.armature_skeleton = skele
+	if "loader" in data:
+		data.loader.done()

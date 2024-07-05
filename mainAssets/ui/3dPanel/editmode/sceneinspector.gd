@@ -18,7 +18,7 @@ func _ready():
 			return
 		if node is Node3D:
 			var giz = load("res://mainSystem/scenes/objects/tools/gizmo/gizmo.tscn").instantiate()
-			get_tree().get_first_node_in_group('localworldroot').add_child(giz)
+			root.add_child(giz)
 			giz.global_position = node.global_position
 			giz.target = node
 			giz.name = "gizmo"
@@ -33,7 +33,10 @@ func _ready():
 		await get_tree().process_frame
 		if root:
 			if is_instance_valid(node) and root.is_ancestor_of(node):
-				tree.add_item(node.name, {
+				var nodename :String = node.name
+				if node.has_meta('display_name'):
+					nodename = node.get_meta('display_name')
+				tree.add_item(nodename, {
 					'node':node,
 					'parent':node.get_parent()
 				})
@@ -63,13 +66,16 @@ func setRoot(item:Node):
 	addchildren(item)
 
 func addchildren(node:Node, parent:Node=null):
+	var nodename :String = node.name
+	if node.has_meta("display_name"):
+		nodename = node.get_meta("display_name")
 	if parent:
-		tree.add_item(node.name, {
+		tree.add_item(nodename, {
 			'node':node,
 			'parent':parent,
 		})
 	else:
-		tree.add_item(node.name,{
+		tree.add_item(nodename,{
 			'node':node
 		})
 	if node.get_child_count() > 0:

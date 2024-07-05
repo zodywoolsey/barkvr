@@ -5,16 +5,27 @@ var target :Node
 @onready var item_list = $ItemList
 @onready var line_edit = $LineEdit
 
+var event_manager
+
 func set_target(item:Node):
 	target = item
 
 func _ready():
+	event_manager = Engine.get_singleton("event_manager")
+	print("event supplier: "+str(event_manager))
 	item_list.item_selected.connect(func(index):
 		if is_instance_valid(target):
 			var tmpclass :String = item_list.get_item_text(index)
-			Journaling.add_node(Journaling.root.get_path_to(target),{
-				"node_class":tmpclass
-			})
+			if is_instance_valid(event_manager):
+				event_manager.add_node(event_manager.root.get_path_to(target),{
+					"node_class":tmpclass,
+					"properties":[
+						{
+							"name": "metadata/display_name",
+							"value" :tmpclass
+						}
+					]
+				})
 		item_list.deselect_all()
 		)
 	line_edit.text_changed.connect(func(new_text:String):

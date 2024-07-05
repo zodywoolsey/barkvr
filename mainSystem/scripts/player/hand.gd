@@ -3,12 +3,11 @@ extends XRController3D
 
 @onready var grabArea : Area3D = $handproxy/grabArea
 @onready var world_ray : RayCast3D = $handproxy/worldRay
-@onready var ui_ray = $handproxy/uiRay
-@onready var label_3d = $handproxy/Label3D
-@onready var handmenu = %"handmenu"
-@onready var hand_menu_point = $handproxy/handMenuPoint
-@onready var grab_parent = $handproxy/grabParent
-@onready var grabjoint = $handproxy/grabjoint
+@onready var ui_ray : RayCast3D = $handproxy/uiRay
+@onready var handmenu :Node3D = %"handmenu"
+@onready var hand_menu_point :Node3D = $handproxy/handMenuPoint
+@onready var grab_parent :Node3D= $handproxy/grabParent
+#@onready var grabjoint = $handproxy/grabjoint
 @onready var local_player = %CharacterBody3D
 @onready var righthand = %righthand
 @onready var lefthand = %lefthand
@@ -29,8 +28,20 @@ var isscalinggrabbedobject := false
 var scalinggrabbedstartdist : float
 var scalinggrabbedobject : Node
 var scalinggrabbedstartscale : Vector3
+var rays_disabled : bool = false:
+	set(value):
+		rays_disabled = value
+		if is_instance_valid(world_ray) and is_instance_valid(ui_ray):
+			world_ray.enabled = !value
+			world_ray.visible = !value
+			ui_ray.enabled = !value
+			ui_ray.visible = !value
 
 func _ready():
+	world_ray.enabled = !rays_disabled
+	world_ray.visible = !rays_disabled
+	ui_ray.enabled = !rays_disabled
+	ui_ray.visible = !rays_disabled
 	if name == "righthand":
 		otherhand = lefthand
 	else:
@@ -44,11 +55,14 @@ func _ready():
 			match name:
 				"grip_force":
 					if value > .1 and !grabbing:
-						trigger_haptic_pulse("haptic",100.0,.5,.1,0.0)
+						trigger_haptic_pulse("haptic",400.0,.5,.1,0.0)
 						grip()
 				"grip":
 					if value < 1.0:
-						grabbing = false
+						if grabbing:
+							grabbing = false
+							trigger_haptic_pulse("haptic",100.0,.5,.1,0.0)
+							ungrip()
 		else:
 			match name:
 				"grip":
@@ -65,7 +79,7 @@ func _ready():
 		)
 
 func _physics_process(delta):
-	if visible:
+	if !rays_disabled:
 		if buttons.has('by_button') and LocalGlobals.world_state:
 			if buttons['by_button']:
 				contexttimer += delta
@@ -75,26 +89,26 @@ func _physics_process(delta):
 		if Input.is_action_just_pressed("scrollup"):
 			if Input.is_physical_key_pressed(KEY_SHIFT):
 				print(item.offset.basis)
-				item.offset.basis.x *= Settings.grabbed_object_scale_factor
-				item.offset.basis.y *= Settings.grabbed_object_scale_factor
-				item.offset.basis.z *= Settings.grabbed_object_scale_factor
+				item.offset.basis.x *= Engine.get_singleton("settings_manager").grabbed_object_scale_factor
+				item.offset.basis.y *= Engine.get_singleton("settings_manager").grabbed_object_scale_factor
+				item.offset.basis.z *= Engine.get_singleton("settings_manager").grabbed_object_scale_factor
 			else:
-				item.offset.origin *= Settings.grabbed_object_scale_factor
+				item.offset.origin *= Engine.get_singleton("settings_manager").grabbed_object_scale_factor
 		if Input.is_action_just_pressed("scrolldown"):
 			if Input.is_physical_key_pressed(KEY_SHIFT):
 				print(item.offset.basis)
-				item.offset.basis.x *= 1.0/Settings.grabbed_object_scale_factor
-				item.offset.basis.y *= 1.0/Settings.grabbed_object_scale_factor
-				item.offset.basis.z *= 1.0/Settings.grabbed_object_scale_factor
+				item.offset.basis.x *= 1.0/Engine.get_singleton("settings_manager").grabbed_object_scale_factor
+				item.offset.basis.y *= 1.0/Engine.get_singleton("settings_manager").grabbed_object_scale_factor
+				item.offset.basis.z *= 1.0/Engine.get_singleton("settings_manager").grabbed_object_scale_factor
 			else:
-				item.offset.origin *= 1.0/Settings.grabbed_object_scale_factor
+				item.offset.origin *= 1.0/Engine.get_singleton("settings_manager").grabbed_object_scale_factor
 		if self == righthand:
 			item.node.global_transform = righthand.global_transform * item.offset
 		else:
 			item.node.global_transform = lefthand.global_transform * item.offset
 
 func _process(delta):
-	if visible:
+	if !rays_disabled:
 		if isscalinggrabbedobject:
 			var ts = global_position.distance_to(otherhand.global_position)-scalinggrabbedstartdist
 			ts *= 4.0
@@ -125,7 +139,6 @@ func grabBodyExited(body):
 
 func buttonPressed(name):
 	buttons[name] = true
-	label_3d.text = name
 	if name == "grip_click":
 		pass
 	if name == "trigger_click":
@@ -134,12 +147,10 @@ func buttonPressed(name):
 		else:
 			world_ray.click()
 		for item in grabbed.values():
-			if item.has_method('primary'):
-				item.primary(true)
-			if item.has('trigger_pressed'):
-				item.trigger_pressed = true
-		if grabjoint.node_b and get_node(grabjoint.node_b).has_method('primary'):
-			get_node(grabjoint.node_b).primary(true)
+			if 'primary' in item.node:
+				item.node.primary()
+			if "trigger_pressed" in item.node:
+				item.node.trigger_pressed = true
 
 func buttonReleased(name):
 	buttons[name] = false
@@ -151,13 +162,11 @@ func buttonReleased(name):
 		ui_ray.release()
 		if grab_parent.get_child_count()>0:
 			for item in grab_parent.get_children():
-				if is_instance_valid(item):
-					if item.has_method('primary'):
-						item.primary(false)
-					if item.has('trigger_pressed'):
-						item.trigger_pressed = false
-		if grabjoint.node_b and get_node(grabjoint.node_b).has_method('primary'):
-			get_node(grabjoint.node_b).primary(false)
+				if is_instance_valid(item.node):
+					if 'primary_released' in item.node:
+						item.node.primary_released()
+					if 'trigger_pressed' in item.node:
+						item.node.trigger_pressed = false
 		rayBody = null
 
 func contextMenuSummon():
@@ -191,8 +200,6 @@ func grip():
 func ungrip():
 	for item in grabbed.values():
 		releasegrab(item.node)
-	if grabjoint.node_b:
-		grabjoint.node_b = ""
 	if isscalinggrabbedobject:
 		scalinggrabbedobject = null
 		scalinggrabbedstartdist = 0
@@ -202,7 +209,6 @@ func grab(node:Node, laser:bool=false):
 	var tmpgrab = node.get_meta("grabbable")
 	if tmpgrab:
 		if node.is_class("RigidBody3D"):
-#			grabjoint.node_b = node.get_path()
 			node.freeze = true
 			if grabbed.has(node.name):
 				scalinggrabbedobject = node
@@ -217,7 +223,6 @@ func grab(node:Node, laser:bool=false):
 					'frozen': node.freeze,
 					'node': node
 				}
-#				node.reparent(grab_parent, true)
 		else:
 			if laser:
 				pass
@@ -233,21 +238,10 @@ func grab(node:Node, laser:bool=false):
 					'rotoffset': node.global_rotation,
 					'node': node
 				}
-#				node.reparent(grab_parent, true)
 
 func releasegrab(node:Node):
 	if grabbed.has(node.name):
-#		if lefthand == grabbed[node.name].parent or righthand == grabbed[node.name].parent:
-#			node.reparent(get_tree().get_first_node_in_group('worldroot'))
-#		else:
-#			node.reparent(grabbed[node.name].parent)
 		if node is RigidBody3D:
 			node.freeze = false
 		grabbed.erase(node.name)
 		
-
-func isgrabbed(node):
-	for i in grab_parent.get_children():
-		if i == node:
-			return true
-	

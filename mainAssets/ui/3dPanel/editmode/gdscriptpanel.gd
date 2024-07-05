@@ -7,15 +7,16 @@ var target : Node
 
 func _ready():
 	code_edit.text_changed.connect(func():
+		code_edit.code_completion_prefixes = [".", ",", "(", "=", "$", "@", "\"", "\'"]
 		print("valid? ",is_instance_valid(target))
 		if target and is_instance_valid(target):
 			var tmp :GDScript = GDScript.new()
 			print("script: ",tmp)
 			tmp.source_code = code_edit.text
 			var result = tmp.reload()
-			#var clas = tmp.get_class()
 			if result == OK:
 				target.set_script(tmp)
+				var parent :Node = target.get_parent()
 				target.set_process(true)
 				target.set_physics_process(true)
 		)

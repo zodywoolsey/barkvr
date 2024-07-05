@@ -91,4 +91,7 @@ func update_item(node:Node) -> void:
 	var item_id := node.get_instance_id()
 	if tree.has(item_id):
 		if is_instance_valid(tree[item_id].tree_item):
-			tree[item_id].tree_item.set_text(0,node.name)
+			if node.has_meta("display_name"):
+				tree[item_id].tree_item.set_text(0,node.get_meta("display_name"))
+			else:
+				tree[item_id].tree_item.set_text(0,node.name)

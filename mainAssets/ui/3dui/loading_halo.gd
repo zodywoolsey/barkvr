@@ -31,7 +31,7 @@ func set_wait_for_thread(thread:Thread=null):
 
 func set_wait_for_timer(seconds:float=1.0):
 	get_tree().create_timer(seconds,true,false,true).timeout.connect(func():
-		_exit()
+		done()
 		)
 
 func _wait_for_thread_and_remove_loader(thread:Thread):
@@ -40,11 +40,11 @@ func _wait_for_thread_and_remove_loader(thread:Thread):
 		get_tree().create_timer(1).timeout.connect(_wait_for_thread_and_remove_loader.bind(thread))
 		return
 	thread.wait_to_finish()
-	_exit()
+	done()
 
-func _exit():
+func done(text:String="done!"):
 	isloading = false
-	text = "done!"
+	text = text
 	var tween := create_tween()
 	animation_player.pause()
 	animation_player3.pause()

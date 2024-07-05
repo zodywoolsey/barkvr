@@ -12,7 +12,7 @@ var packet_size : int = 100000
 var bytes_to_send
 
 var chat_timer :float = 0.0
-var journal_timer :float = 0.0
+var event_sync_timer :float = 0.0
 
 var uname :String = ""
 
@@ -81,17 +81,19 @@ func apply_connection_string(type:String):
 				#print('set remote desc1')
 
 func _ready():
-	Vector.got_turn_server.connect(got_turn_server)
-	Vector.user_logged_in.connect(user_logged_in)
+	if is_instance_valid(Engine.get_singleton("user_manager")):
+		Engine.get_singleton("user_manager").got_turn_server.connect(got_turn_server)
+		Engine.get_singleton("user_manager").user_logged_in.connect(user_logged_in)
 	thread.start(poll)
-	Journaling.rejoin_thread_when_finished(thread)
+	BarkHelpers.rejoin_thread_when_finished(thread)
 	get_window().close_requested.connect(func():
 		close_requested = true
 		thread.wait_to_finish()
 		)
 
 func user_logged_in():
-		uname = Vector.userData.login.user_id.split(':')[0].right(-1)
+	if is_instance_valid(Engine.get_singleton("user_manager")):
+		uname = Engine.get_singleton("user_manager").userData.login.user_id.split(':')[0].right(-1)
 
 func got_turn_server(data):
 		if data.has('username'):
@@ -132,11 +134,11 @@ func poll():
 		var delta = Time.get_ticks_msec()-prev_time
 		prev_time = Time.get_ticks_msec()
 		chat_timer += delta
-		journal_timer += delta
+		event_sync_timer += delta
 		if chat_timer < 0:
 			chat_timer = 0
-		if journal_timer < 0:
-			journal_timer = 0
+		if event_sync_timer < 0:
+			event_sync_timer = 0
 		for peer in peers:
 			if is_instance_valid(peer.peer):
 				peer.peer.poll()
@@ -145,7 +147,7 @@ func poll():
 						if !is_instance_valid(peer.peer):
 							break
 						#chan.channel.poll()
-						if chan.label == 'bark-chat' and chat_timer > 8.3:
+						if chan.label == 'social_sync_channel' and chat_timer > 8.3:
 							if !is_instance_valid(peer.peer):
 								break
 							while chan.channel.get_available_packet_count() > 0:
@@ -165,59 +167,60 @@ func poll():
 							chat_timer = 0.0
 							var packet = var_to_bytes(packetdict).compress(3)
 							chan.channel.put_packet(packet)
-						if chan.label == 'bark-journal' and journal_timer > 8.3:
-							if !is_instance_valid(peer.peer):
-								break
-							var current_actions :Array[Dictionary] = Journaling.get_actions()
-							# Sync from incoming data
-							while chan.channel.get_available_packet_count() > 0:
+						if chan.label == 'event_sync_channel' and event_sync_timer > 8.3:
+							if is_instance_valid(Engine.get_singleton("event_manager")) and "receive" in Engine.get_singleton("event_manager") and "get_actions" in Engine.get_singleton("event_manager"):
 								if !is_instance_valid(peer.peer):
 									break
-								print('getting available journal')
-								var data = chan.channel.get_var(true)
-								if data.has('pos') and data.pos != -1 and data.has('bytes'):
-									pack.append_array(data.bytes)
-									packsize += 1
-								elif data.has('pos') and data.pos == -1:
-									pack.append_array(data.bytes)
-									packsize += 1
-									data = bytes_to_var_with_objects(pack.decompress_dynamic(999999999999, 3))
-									pack = PackedByteArray()
-								if data and data is Array:
-									for action in data:
-										print("got action: "+str(action))
-										Journaling.call_deferred("receive",action)
-							# Send all new journal events to the other users
-							journal_timer = 0.0
-							if !current_actions.is_empty():
-								if !is_instance_valid(peer.peer):
-									break
-								print('putting actions: '+str(current_actions))
-								bytes_to_send = var_to_bytes_with_objects(current_actions).compress(3)
-								if bytes_to_send.size() < packet_size:
-									chan.channel.put_var({
-										'pos': -1,
-										'bytes': bytes_to_send
-									})
-								else:
+								var current_actions :Array[Dictionary] = Engine.get_singleton("event_manager").get_actions()
+								# Sync from incoming data
+								while chan.channel.get_available_packet_count() > 0:
 									if !is_instance_valid(peer.peer):
 										break
-									var parts:int = float(bytes_to_send.size())/packet_size
-									for i:int in range(float(bytes_to_send.size())/packet_size):
+									print('getting available network events')
+									var data = chan.channel.get_var(true)
+									if data.has('pos') and data.pos != -1 and data.has('bytes'):
+										pack.append_array(data.bytes)
+										packsize += 1
+									elif data.has('pos') and data.pos == -1:
+										pack.append_array(data.bytes)
+										packsize += 1
+										data = bytes_to_var_with_objects(pack.decompress_dynamic(999999999999, 3))
+										pack = PackedByteArray()
+									if data and data is Array:
+										for action in data:
+											print("got action: "+str(action))
+											Engine.get_singleton("event_manager").call_deferred("receive",action)
+								# Send all new network events to the other users
+								event_sync_timer = 0.0
+								if !current_actions.is_empty():
+									if !is_instance_valid(peer.peer):
+										break
+									print('putting actions: '+str(current_actions))
+									bytes_to_send = var_to_bytes_with_objects(current_actions).compress(3)
+									if bytes_to_send.size() < packet_size:
+										chan.channel.put_var({
+											'pos': -1,
+											'bytes': bytes_to_send
+										})
+									else:
 										if !is_instance_valid(peer.peer):
 											break
-										var pack_dict = {}
-										if i < parts-1: 
-											pack_dict['pos'] = i
-											pack_dict['bytes'] = bytes_to_send.slice(i*packet_size, (i*packet_size)+packet_size)
-										else:
-											pack_dict['bytes'] = bytes_to_send.slice(i*packet_size)
-											pack_dict['pos'] = -1
-				#							print('err: ',chan.put_var(pack_dict))
-										var err = chan.channel.put_var(pack_dict)
-										if err != OK:
-											#print("Network handler, channel.put_var"+str(err))
-											pass
+										var parts:int = float(bytes_to_send.size())/packet_size
+										for i:int in range(float(bytes_to_send.size())/packet_size):
+											if !is_instance_valid(peer.peer):
+												break
+											var pack_dict = {}
+											if i < parts-1: 
+												pack_dict['pos'] = i
+												pack_dict['bytes'] = bytes_to_send.slice(i*packet_size, (i*packet_size)+packet_size)
+											else:
+												pack_dict['bytes'] = bytes_to_send.slice(i*packet_size)
+												pack_dict['pos'] = -1
+					#							print('err: ',chan.put_var(pack_dict))
+											var err = chan.channel.put_var(pack_dict)
+											if err != OK:
+												#print("Network handler, channel.put_var"+str(err))
+												pass
 					if !is_instance_valid(peer.peer):
 						break
 			else:
@@ -258,20 +261,20 @@ func create_new_peer_connection(offer_string:String='', for_user:String=''):
 	var peer_dict = {
 		'peer': peer,
 		'channels': [{
-			'channel':peer.create_data_channel("bark-chat", {
+			'channel':peer.create_data_channel("social_sync_channel", {
 				'id':1,
 				'negotiated': true,
 				'maxPacketLifeTime': 500
 				}),
-			'label':'bark-chat'
+			'label':'social_sync_channel'
 		},
 		{
-			'channel':peer.create_data_channel("bark-journal", {
+			'channel':peer.create_data_channel("event_sync_channel", {
 				'id':2,
 				'negotiated': true,
 				'ordered': true
 				}),
-			'label':'bark-journal'
+			'label':'event_sync_channel'
 		}
 		],
 		'for_user': for_user,

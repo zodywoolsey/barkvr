@@ -11,64 +11,70 @@ var already_processed_answers := []
 @onready var text_edit = $"../../Control/TextEdit"
 
 func _ready():
-	NetworkHandler.created_offer.connect(offer_created)
-	NetworkHandler.created_answer.connect(answer_created)
-	NetworkHandler.finished_candidates.connect(candidates_finished)
-	Vector.got_room_messages.connect(func(data):
-		if var_to_bytes(data).size() != var_to_bytes(prevmessages).size():
-#			for child in get_children():
-#				child.queue_free()
-			if data and data.has('body') and data.body.has('chunk'):
-				data.body.chunk.reverse()
-			for event in data['body']['chunk']:
-				match event['type']:
-					'm.room.message':
-						_display_message(event)
-					'bark.session.request':
-						_display_message(event)
-						if event.event_id not in already_processed_requests:
-							already_processed_requests.append(event.event_id)
-							if event.sender != Vector.userData.login.user_id:
-								if Time.get_unix_time_from_system()*1000.0-10000 < event.origin_server_ts:
-									NetworkHandler.create_new_peer_connection('',event.sender)
-									requesting_user = event.sender
-									Notifyvr.send_notification('got request')
-					'bark.session.offer':
-						_display_message(event)
-						if event.event_id not in already_processed_offers:
-							already_processed_offers.append(event.event_id)
-							if Time.get_unix_time_from_system()*1000.0-10000 < event.origin_server_ts:
-								if event.content.for_user == Vector.userData.login.user_id:
-									NetworkHandler.create_new_peer_connection(event.content.sdp,event.sender)
-									Notifyvr.send_notification('got offer')
-					'bark.session.answer':
-						_display_message(event)
-						if event.event_id not in already_processed_answers:
-							already_processed_answers.append(event.event_id)
-							if Time.get_unix_time_from_system()*1000.0-10000 < event.origin_server_ts:
-								if event.content.for_user == Vector.userData.login.user_id:
-									for peer in NetworkHandler.peers:
-										if peer.for_user == event.sender:
-											peer.peer.set_remote_description('answer',event.content.sdp)
-											peer.set_remote = true
-											Notifyvr.send_notification('got answer')
-					'bark.session.ice':
-						_display_message(event)
-						if Time.get_unix_time_from_system()*1000.0-10000 < event.origin_server_ts and event.event_id not in already_processed_answers:
-							if event.content.for_user == Vector.userData.login.user_id:
-								for peer in NetworkHandler.peers:
-									if peer.for_user == event.sender:
-										if peer.set_remote:
-											already_processed_answers.append(event.event_id)
-											for candidate in event.content.candidates:
-												peer.peer.add_ice_candidate(
-													candidate.media,
-													candidate.index,
-													candidate.name
-												)
-												Notifyvr.send_notification('set_ice')
-			prevmessages = data
-		)
+	if is_instance_valid(Engine.get_singleton("network_manager")):
+		Engine.get_singleton("network_manager").created_offer.connect(offer_created)
+		Engine.get_singleton("network_manager").created_answer.connect(answer_created)
+		Engine.get_singleton("network_manager").finished_candidates.connect(candidates_finished)
+	if is_instance_valid(Engine.get_singleton("user_manager")):
+		Engine.get_singleton("user_manager").got_room_messages.connect(func(data):
+			if var_to_bytes(data).size() != var_to_bytes(prevmessages).size():
+	#			for child in get_children():
+	#				child.queue_free()
+				if data and data.has('body') and data.body.has('chunk'):
+					data.body.chunk.reverse()
+				for event in data['body']['chunk']:
+					match event['type']:
+						'm.room.message':
+							_display_message(event)
+						'bark.session.request':
+							if is_instance_valid(Engine.get_singleton("network_manager")):
+								_display_message(event)
+								if event.event_id not in already_processed_requests:
+									already_processed_requests.append(event.event_id)
+									if event.sender != Engine.get_singleton("user_manager").userData.login.user_id:
+										if Time.get_unix_time_from_system()*1000.0-10000 < event.origin_server_ts:
+											Engine.get_singleton("network_manager").create_new_peer_connection('',event.sender)
+											requesting_user = event.sender
+											Notifyvr.send_notification('got request')
+						'bark.session.offer':
+							if is_instance_valid(Engine.get_singleton("network_manager")):
+								_display_message(event)
+								if event.event_id not in already_processed_offers:
+									already_processed_offers.append(event.event_id)
+									if Time.get_unix_time_from_system()*1000.0-10000 < event.origin_server_ts:
+										if event.content.for_user == Engine.get_singleton("user_manager").userData.login.user_id:
+											Engine.get_singleton("network_manager").create_new_peer_connection(event.content.sdp,event.sender)
+											Notifyvr.send_notification('got offer')
+						'bark.session.answer':
+							if is_instance_valid(Engine.get_singleton("network_manager")):
+								_display_message(event)
+								if event.event_id not in already_processed_answers:
+									already_processed_answers.append(event.event_id)
+									if Time.get_unix_time_from_system()*1000.0-10000 < event.origin_server_ts:
+										if event.content.for_user == Engine.get_singleton("user_manager").userData.login.user_id:
+											for peer in Engine.get_singleton("network_manager").peers:
+												if peer.for_user == event.sender:
+													peer.peer.set_remote_description('answer',event.content.sdp)
+													peer.set_remote = true
+													Notifyvr.send_notification('got answer')
+						'bark.session.ice':
+							if is_instance_valid(Engine.get_singleton("network_manager")):
+								_display_message(event)
+								if Time.get_unix_time_from_system()*1000.0-10000 < event.origin_server_ts and event.event_id not in already_processed_answers:
+									if event.content.for_user == Engine.get_singleton("user_manager").userData.login.user_id:
+										for peer in Engine.get_singleton("network_manager").peers:
+											if peer.for_user == event.sender:
+												if peer.set_remote:
+													already_processed_answers.append(event.event_id)
+													for candidate in event.content.candidates:
+														peer.peer.add_ice_candidate(
+															candidate.media,
+															candidate.index,
+															candidate.name
+														)
+														Notifyvr.send_notification('set_ice')
+				prevmessages = data
+			)
 
 func _display_message(event):
 	if event.has('content'):
@@ -87,7 +93,7 @@ func _display_message(event):
 						)
 				else:
 					tmp.text = str(event)
-				if event.sender == Vector.userData.login.user_id:
+				if is_instance_valid(Engine.get_singleton("user_manager")) and event.sender == Engine.get_singleton("user_manager").userData.login.user_id:
 					tmp.leftside = false
 				if scroll_container.scroll_vertical == size.y:
 					add_child(tmp)
@@ -102,8 +108,8 @@ func _gui_input(event):
 		text_edit.release_focus()
 
 func offer_created(data:Dictionary):
-	if data.for_user == requesting_user and target_room:
-		Vector.send_room_event(
+	if data.for_user == requesting_user and target_room and is_instance_valid(Engine.get_singleton("user_manager")):
+		Engine.get_singleton("user_manager").send_room_event(
 			target_room,
 			'bark.session.offer',
 			{
@@ -114,8 +120,8 @@ func offer_created(data:Dictionary):
 		Notifyvr.send_notification('sent offer')
 
 func answer_created(data:Dictionary):
-	if target_room:
-		Vector.send_room_event(
+	if target_room and is_instance_valid(Engine.get_singleton("user_manager")):
+		Engine.get_singleton("user_manager").send_room_event(
 			target_room,
 			'bark.session.answer',
 			{
@@ -126,8 +132,8 @@ func answer_created(data:Dictionary):
 		Notifyvr.send_notification('sent answer')
 
 func candidates_finished(data:Dictionary):
-	if target_room:
-		Vector.send_room_event(
+	if target_room and is_instance_valid(Engine.get_singleton("user_manager")):
+		Engine.get_singleton("user_manager").send_room_event(
 			target_room,
 			'bark.session.ice',
 			{

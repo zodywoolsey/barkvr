@@ -1,0 +1,102 @@
+[gd_scene load_steps=13 format=3 uid="uid://dv0etfy0ao5"]
+
+[ext_resource type="PackedScene" uid="uid://br1vh8in0e65o" path="res://mainAssets/worlds/basic_starter.tscn" id="1_ad4cs"]
+[ext_resource type="PackedScene" uid="uid://dckbok0o553v7" path="res://mainSystem/scenes/objects/worldObjects/playerSpawnLocation.tscn" id="2_humgq"]
+[ext_resource type="PackedScene" uid="uid://d0wvfw354l2i5" path="res://mainAssets/ui/3dui/loading halo demo.tscn" id="3_eytop"]
+[ext_resource type="Script" path="res://mainSystem/scripts/mic_playback.gd" id="4_5gnpn"]
+[ext_resource type="Script" path="res://addons/Panel3D/3dpanel.gd" id="5_ykx2e"]
+[ext_resource type="PackedScene" uid="uid://b3sbt3oft3cxg" path="res://mainAssets/ui/3dPanel/editmode/vreditor.tscn" id="9_k6sjl"]
+[ext_resource type="PackedScene" uid="uid://r68jre2w5k33" path="res://mainSystem/scenes/player/xrplayer.tscn" id="11_qw71v"]
+[ext_resource type="PackedScene" uid="uid://lauwp8okd1vh" path="res://mainAssets/ui/3dPanel/local ui/keyboard/virtual_keyboard_2d.tscn" id="12_r71vt"]
+
+[sub_resource type="GDScript" id="GDScript_icupb"]
+script/source = "extends Node3D
+
+@onready var button :GridMenuButton = $StaticBody3D
+
+func _ready():
+	button.clicked.connect(func():
+		var tmp_loader :LoadingHalo= load(\"res://mainAssets/ui/3dui/loading_halo.tscn\").instantiate()
+		add_child(tmp_loader)
+		tmp_loader.position = button.position
+		tmp_loader.set_wait_for_timer(10.0)
+		tmp_loader.text = \"hello!\"
+		await get_tree().create_timer(.01).timeout
+	)
+"
+
+[sub_resource type="AudioStreamGenerator" id="AudioStreamGenerator_f6fry"]
+mix_rate = 44800.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xtqms"]
+albedo_color = Color(0, 0, 0, 1)
+emission_enabled = true
+emission = Color(0.6, 0.466667, 1, 1)
+emission_energy_multiplier = 2.0
+point_size = 5.0
+
+[sub_resource type="GDScript" id="GDScript_pli2f"]
+script/source = "extends CSGBox3D
+
+var drawing := false
+
+func _process(delta):
+	if drawing and is_instance_valid(Engine.get_singleton(\"voxel_manager\")):
+		Engine.get_singleton(\"voxel_manager\").set_true_sphere(global_position, 1.0)
+
+func primary():
+	drawing = true
+
+func primary_released():
+	drawing = false
+"
+
+[node name="init_world" type="Node3D"]
+
+[node name="multiplayer world root" type="Node3D" parent="." groups=["localworldroot"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+
+[node name="basic starter world" parent="multiplayer world root" instance=ExtResource("1_ad4cs")]
+
+[node name="playerSpawnLocation" parent="multiplayer world root/basic starter world" instance=ExtResource("2_humgq")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -2.76036, 0.0923181, 2.56459)
+
+[node name="LoadingHaloDemo" parent="multiplayer world root/basic starter world" instance=ExtResource("3_eytop")]
+transform = Transform3D(-0.250853, 0, 0.968025, 0, 1, 0, -0.968025, 0, -0.250853, -3.40314, 1.01349, 3.20371)
+script = SubResource("GDScript_icupb")
+
+[node name="playercontainer" parent="multiplayer world root" instance=ExtResource("11_qw71v")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.08992, 0.91664, 2.46325)
+
+[node name="AudioStreamPlayer2" type="AudioStreamPlayer" parent="." groups=["mic_playback"]]
+stream = SubResource("AudioStreamGenerator_f6fry")
+autoplay = true
+script = ExtResource("4_5gnpn")
+
+[node name="Node3D" type="Node3D" parent="."]
+
+[node name="CSGBox3D" type="CSGBox3D" parent="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.08259, 1.78338, 3.40336)
+use_collision = true
+size = Vector3(0.05, 0.05, 0.05)
+material = SubResource("StandardMaterial3D_xtqms")
+script = SubResource("GDScript_pli2f")
+metadata/grabbable = true
+
+[node name="local_ui" type="Node3D" parent="."]
+
+[node name="vreditor" parent="local_ui" instance=ExtResource("9_k6sjl")]
+transform = Transform3D(-4.37114e-08, 1.06581e-14, 1, 0, 1, -1.06581e-14, -1, -4.6588e-22, -4.37114e-08, -4, 2, 2)
+ANCHOR_POSITION = 4
+minimum_viewport_size = Vector2i(50, 50)
+render_priority = 0
+on_top = false
+
+[node name="keyboard panel" type="StaticBody3D" parent="local_ui"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.4736, 1.7588, 0)
+collision_layer = 4
+collision_mask = 4
+script = ExtResource("5_ykx2e")
+_auto_load_ui = ExtResource("12_r71vt")
+viewport_size = Vector2i(1166, 470)
+metadata/grabbable = true

@@ -12,25 +12,29 @@ var target:Node
 var _is_editing:bool = false
 var property_name:String = ''
 
+var event_supplier
+
 func _ready():
+	event_supplier = Engine.get_singleton("event_manager")
+	print("event suppliervec3: "+str(event_supplier))
 	xval.text_changed.connect(func(new_text):
-		Journaling.check_root()
-		Journaling.set_property(
-			Journaling.root.get_path_to(target),
+		event_supplier.check_root()
+		event_supplier.set_property(
+			event_supplier.root.get_path_to(target),
 			property_name+":x",
 			float(new_text))
 		)
 	yval.text_changed.connect(func(new_text):
-		Journaling.check_root()
-		Journaling.set_property(
-			Journaling.root.get_path_to(target),
+		event_supplier.check_root()
+		event_supplier.set_property(
+			event_supplier.root.get_path_to(target),
 			property_name+":y",
 			float(new_text))
 		)
 	zval.text_changed.connect(func(new_text):
-		Journaling.check_root()
-		Journaling.set_property(
-			Journaling.root.get_path_to(target),
+		event_supplier.check_root()
+		event_supplier.set_property(
+			event_supplier.root.get_path_to(target),
 			property_name+":z",
 			float(new_text))
 		)

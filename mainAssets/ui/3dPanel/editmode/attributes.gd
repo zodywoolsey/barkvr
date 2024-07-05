@@ -6,13 +6,14 @@ extends Control
 #			that they can be updated in batches by the parent attr panel
 #			with optional self update for user simplicity reasons.
 
-@onready var export = $titlebar/HBoxContainer/HBoxContainer/export
-@onready var dupbtn = $titlebar/HBoxContainer/HBoxContainer3/dupbtn
-@onready var delete = $titlebar/HBoxContainer/HBoxContainer2/delete
-@onready var active = $titlebar/HBoxContainer2/active/HBoxContainer/CheckButton
-@onready var targetname = $titlebar/HBoxContainer/Panel/targetname
+@onready var export = $VBoxContainer/titlebar/HBoxContainer/HBoxContainer/export
+@onready var dupbtn = $VBoxContainer/titlebar/HBoxContainer/HBoxContainer3/dupbtn
+@onready var delete = $VBoxContainer/titlebar/HBoxContainer/HBoxContainer2/delete
+@onready var properties_header_label = $"VBoxContainer/titlebar/properties header/Panel9/properties header label"
+@onready var active = $"VBoxContainer/titlebar/properties header/active/HBoxContainer/CheckButton"
+@onready var targetname = $VBoxContainer/titlebar/HBoxContainer/Panel/targetname
 
-@onready var v_box_container = $ScrollContainer/VBoxContainer
+@onready var v_box_container = $VBoxContainer/ScrollContainer/VBoxContainer
 
 var vector_3_field = preload("res://mainAssets/ui/3dPanel/editmode/attributes/vector3.tscn")
 var vector_2_field = preload("res://mainAssets/ui/3dPanel/editmode/attributes/vector2.tscn")
@@ -22,6 +23,8 @@ var enum_field = preload("res://mainAssets/ui/3dPanel/editmode/attributes/enum.t
 var is_field_focused = false
 var target : Node = null
 
+var event_manager
+
 #func _process(delta):
 #	if !is_field_focused:
 #		update_fields()
@@ -29,12 +32,15 @@ var target : Node = null
 func set_target(node):
 	if node and node is Node:
 		targetname.text = node.name
+		if node.has_meta("display_name"):
+			targetname.text = node.get_meta("display_name")
 		if "visible" in node:
 			active.disabled = false
 			active.button_pressed = node.visible
 		else:
 			active.button_pressed = true
 			active.disabled = true
+		properties_header_label.text = node.get_class()+" Properties:"
 		for child in v_box_container.get_children():
 			child.queue_free()
 		target = node
@@ -77,13 +83,22 @@ func set_target(node):
 
 func update_fields():
 	if target and is_instance_valid(target):
-		targetname.text = target.name
+		if target.has_meta("display_name"):
+			targetname.text = target.get_meta("display_name")
+		else:
+			targetname.text = target.name
 
 func clear_fields():
 	if target:
-		targetname.text = target.name
+		if target.has_meta("display_name"):
+			targetname.text = target.get_meta("display_name")
+		else:
+			targetname.text = target.name
 
 func _ready():
+	event_manager = Engine.get_singleton("event_manager")
+	print("event supplierattrib: "+str(event_manager))
+	print(event_manager)
 	dupbtn.pressed.connect(func():
 		if target:
 			var tmp :Node=target.duplicate()
@@ -92,12 +107,12 @@ func _ready():
 		)
 	delete.pressed.connect(func():
 		if target and is_instance_valid(target):
-			Journaling.delete_node(Journaling.root.get_path_to(target))
+			event_manager.delete_node(event_manager.root.get_path_to(target))
 			clear_fields()
 		)
 	active.pressed.connect(func():
 		if target and is_instance_valid(target):
-			Journaling.set_property(Journaling.root.get_path_to(target),"visible",active.button_pressed)
+			event_manager.set_property(event_manager.root.get_path_to(target),"visible",active.button_pressed)
 			#target.visible = active.button_pressed
 		)
 	export.pressed.connect(func():
@@ -105,7 +120,7 @@ func _ready():
 		if world_root and target:
 			var thread = Thread.new()
 			thread.start(_export_node.bind(target))
-			Journaling.rejoin_thread_when_finished(thread)
+			BarkHelpers.rejoin_thread_when_finished(thread)
 #			_export_node(target)
 #			var tmp:PackedScene = PackedScene.new()
 #			assert(tmp.pack(target)==OK)
@@ -115,7 +130,8 @@ func _ready():
 		)
 	targetname.text_changed.connect(func(new_text:String):
 		if target:
-			target.name = new_text
+			target.set_meta("display_name",new_text)
+			target.name = target.name
 		)
 	targetname.focus_entered.connect(func():
 		is_field_focused = true
@@ -127,16 +143,23 @@ func _ready():
 
 func _export_node(tmp_target:Node):
 	Thread.set_thread_safety_checks_enabled(false)
-	print('start export')
-	var downpath :String=OS.get_system_dir(OS.SYSTEM_DIR_DOWNLOADS)
-	downpath += "/"
-	if OS.get_name() == "Windows" and DirAccess.dir_exists_absolute(downpath):
-		var packed := PackedScene.new()
-		Journaling.take_owner_of_node_and_all_children(tmp_target,tmp_target)
-		packed.pack(tmp_target)
-		print("save path: "+downpath+tmp_target.name+".res")
-		var err = ResourceSaver.save(packed, downpath+tmp_target.name+".res",ResourceSaver.FLAG_BUNDLE_RESOURCES+ResourceSaver.FLAG_COMPRESS)
-		print("export error: "+str(err))
+	print(var_to_str(tmp_target))
+	#print('start export')
+	#var downpath :String=OS.get_system_dir(OS.SYSTEM_DIR_DOWNLOADS)
+	#downpath += "/"
+	#if OS.get_name() == "Web":
+		#var packed := PackedScene.new()
+		#event_manager.take_owner_of_node_and_all_children(tmp_target,tmp_target)
+		#packed.pack(tmp_target)
+		#print("save path: "+downpath+tmp_target.name+".res")
+		#JavaScriptBridge.download_buffer(var_to_bytes_with_objects(packed),tmp_target.name+".res")
+		##print("export error: "+str(err))
+	#elif DirAccess.dir_exists_absolute(downpath):
+		#var packed := PackedScene.new()
+		#event_manager.take_owner_of_node_and_all_children(tmp_target,tmp_target)
+		#packed.pack(tmp_target)
+		#var err = ResourceSaver.save(packed, downpath+tmp_target.name+".res",ResourceSaver.FLAG_BUNDLE_RESOURCES)
+		#print("export error: "+str(err))
 		
 		
 	#if !dir.dir_exists("./objects"):

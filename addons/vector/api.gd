@@ -44,7 +44,7 @@ func get_well_known(base_url:String='', headers:Array=[]):
 	var client = HTTPRequest.new()
 	print("getting well known for: ",base_url)
 	client.use_threads = false
-	Vector.requestParent.add_child(client)
+	get_tree().get_first_node_in_group("requestParent").add_child(client)
 	client.request_completed.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 		# if result == RESULT_SUCCESS, emit signal
 		if result == HTTPRequest.RESULT_SUCCESS:
@@ -70,7 +70,7 @@ func get_versions(base_url:String='', headers:Array=[]):
 	var client = HTTPRequest.new()
 	print("getting versions for: ",base_url)
 	client.use_threads = false
-	Vector.requestParent.add_child(client)
+	get_tree().get_first_node_in_group("requestParent").add_child(client)
 	client.request_completed.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 		# if result == RESULT_SUCCESS, emit signal
 		if result == HTTPRequest.RESULT_SUCCESS:
@@ -101,7 +101,7 @@ func get_registration_token_validity(base_url:String='', headers:Array=[], token
 	var client = HTTPRequest.new()
 	print("getting registration token validity for: ",base_url)
 	client.use_threads = false
-	Vector.requestParent.add_child(client)
+	get_tree().get_first_node_in_group("requestParent").add_child(client)
 	client.request_completed.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 		# if result == RESULT_SUCCESS, emit signal
 		if result == HTTPRequest.RESULT_SUCCESS:
@@ -127,7 +127,7 @@ func get_login(base_url:String='', headers:Array=[]):
 	var client = HTTPRequest.new()
 	print("getting login configuration for: ",base_url)
 	client.use_threads = false
-	Vector.requestParent.add_child(client)
+	get_tree().get_first_node_in_group("requestParent").add_child(client)
 	client.request_completed.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 		# if result == RESULT_SUCCESS, emit signal
 		if result == HTTPRequest.RESULT_SUCCESS:
@@ -157,7 +157,7 @@ func post_login(home_server:String='', headers:Array=[], address:String='', devi
 	var client = HTTPRequest.new()
 	print("posting login for: ",home_server)
 	client.use_threads = false
-	Vector.requestParent.add_child(client)
+	get_tree().get_first_node_in_group("requestParent").add_child(client)
 	client.request_completed.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 		# if result == RESULT_SUCCESS, emit signal
 		if result == HTTPRequest.RESULT_SUCCESS:
@@ -208,7 +208,7 @@ func post_refresh(base_url:String='', headers:Array=[], refresh_token:String='')
 	var client = HTTPRequest.new()
 	print("posting refresh for: ",base_url)
 	client.use_threads = false
-	Vector.requestParent.add_child(client)
+	get_tree().get_first_node_in_group("requestParent").add_child(client)
 	client.request_completed.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 		# if result == RESULT_SUCCESS, emit signal
 		if result == HTTPRequest.RESULT_SUCCESS:
@@ -240,7 +240,7 @@ func post_logout(base_url:String='', headers:Array=[]):
 	var client = HTTPRequest.new()
 	print("posting logout for: ",base_url)
 	client.use_threads = false
-	Vector.requestParent.add_child(client)
+	get_tree().get_first_node_in_group("requestParent").add_child(client)
 	client.request_completed.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 		# if result == RESULT_SUCCESS, emit signal
 		if result == HTTPRequest.RESULT_SUCCESS:
@@ -266,7 +266,7 @@ func post_logout_all(base_url:String='', headers:Array=[]):
 	var client = HTTPRequest.new()
 	print("posting logout_all for: ",base_url)
 	client.use_threads = false
-	Vector.requestParent.add_child(client)
+	get_tree().get_first_node_in_group("requestParent").add_child(client)
 	client.request_completed.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 		# if result == RESULT_SUCCESS, emit signal
 		if result == HTTPRequest.RESULT_SUCCESS:
@@ -295,7 +295,7 @@ func post_account_deactivate(base_url:String='', headers:Array=[], auth:Dictiona
 	var client = HTTPRequest.new()
 	print("posting account_deactivate for: ",base_url)
 	client.use_threads = false
-	Vector.requestParent.add_child(client)
+	get_tree().get_first_node_in_group("requestParent").add_child(client)
 	client.request_completed.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 		# if result == RESULT_SUCCESS, emit signal
 		if result == HTTPRequest.RESULT_SUCCESS:
@@ -331,7 +331,7 @@ func post_account_password(base_url:String='', headers:Array=[], auth:Dictionary
 	var client = HTTPRequest.new()
 	print("posting account_password for: ",base_url)
 	client.use_threads = false
-	Vector.requestParent.add_child(client)
+	get_tree().get_first_node_in_group("requestParent").add_child(client)
 	client.request_completed.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 		# if result == RESULT_SUCCESS, emit signal
 		if result == HTTPRequest.RESULT_SUCCESS:
@@ -366,7 +366,7 @@ func post_account_password_email_requestToken(base_url:String='', headers:Array=
 	var client = HTTPRequest.new()
 	print("posting account_password for: ",base_url)
 	client.use_threads = false
-	Vector.requestParent.add_child(client)
+	get_tree().get_first_node_in_group("requestParent").add_child(client)
 	client.request_completed.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 		# if result == RESULT_SUCCESS, emit signal
 		if result == HTTPRequest.RESULT_SUCCESS:
@@ -408,7 +408,7 @@ func post_account_password_msisdn_requestToken(base_url:String='', headers:Array
 	var client = HTTPRequest.new()
 	print("posting account_password for: ",base_url)
 	client.use_threads = false
-	Vector.requestParent.add_child(client)
+	get_tree().get_first_node_in_group("requestParent").add_child(client)
 	client.request_completed.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 		# if result == RESULT_SUCCESS, emit signal
 		if result == HTTPRequest.RESULT_SUCCESS:
@@ -455,7 +455,7 @@ func post_register(base_url:String='', headers:Array=[], kind:String='user', aut
 	var client = HTTPRequest.new()
 	print("registering for: ",base_url)
 	client.use_threads = false
-	Vector.requestParent.add_child(client)
+	get_tree().get_first_node_in_group("requestParent").add_child(client)
 	client.request_completed.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 		# if result == RESULT_SUCCESS, emit signal
 		if result == HTTPRequest.RESULT_SUCCESS:
@@ -504,7 +504,7 @@ func get_register_available(base_url:String='', headers:Array=[], username:Strin
 	var client = HTTPRequest.new()
 	print("getting register_available for: ",base_url)
 	client.use_threads = false
-	Vector.requestParent.add_child(client)
+	get_tree().get_first_node_in_group("requestParent").add_child(client)
 	client.request_completed.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 		# if result == RESULT_SUCCESS, emit signal
 		if result == HTTPRequest.RESULT_SUCCESS:
@@ -535,7 +535,7 @@ func post_register_email_requesttoken(base_url:String='', headers:Array=[], clie
 	var client = HTTPRequest.new()
 	print("registering email_requesttoken for: ",base_url)
 	client.use_threads = false
-	Vector.requestParent.add_child(client)
+	get_tree().get_first_node_in_group("requestParent").add_child(client)
 	client.request_completed.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 		# if result == RESULT_SUCCESS, emit signal
 		if result == HTTPRequest.RESULT_SUCCESS:
@@ -577,7 +577,7 @@ func post_register_msisdn_requesttoken(base_url:String='', headers:Array=[], cli
 	var client = HTTPRequest.new()
 	print("registering msisdn_requesttoken for: ",base_url)
 	client.use_threads = false
-	Vector.requestParent.add_child(client)
+	get_tree().get_first_node_in_group("requestParent").add_child(client)
 	client.request_completed.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 		# if result == RESULT_SUCCESS, emit signal
 		if result == HTTPRequest.RESULT_SUCCESS:
@@ -620,17 +620,15 @@ func post_register_msisdn_requesttoken(base_url:String='', headers:Array=[], cli
 ## limit: The maximum number of events to return. Default: 10. [br]
 ## to: The token to stop returning events at. [br]
 ## [url=https://spec.matrix.org/v1.7/client-server-api/#get_matrixclientv3roomsroomidmessages]matrix documentation page[/url]
-func get_room_messages(base_url:String='', headers:Array=[], roomId: String = '', dir: String = '', filter:String = '', from:String = '', limit:int = -99, to:String = ''):
+func get_room_messages(base_url:String='', headers:Array=[], roomId: String = '', dir: String = 'b', filter:String = '', from:String = '', limit:int = 10, to:String = ''):
 	assert(roomId!='',"get_room_messages: roomId is required")
-	if dir == '':
-		dir = 'b'
 	if headers.is_empty():
 		push_warning("get_room_messages: headers are required to be set for this call, due to authentication requirements")
 	var res
 	var client = HTTPRequest.new()
 #	print("getting room_messages for: ",roomId)
 	client.use_threads = false
-	Vector.requestParent.add_child(client)
+	get_tree().get_first_node_in_group("requestParent").add_child(client)
 	client.request_completed.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 		# if result == RESULT_SUCCESS, emit signal
 		if result == HTTPRequest.RESULT_SUCCESS:
@@ -647,8 +645,7 @@ func get_room_messages(base_url:String='', headers:Array=[], roomId: String = ''
 		qp.append("filter="+filter)
 	if from!='':
 		qp.append("from="+from)
-	if limit!=-99:
-		qp.append("limit="+str(limit))
+	qp.append("limit="+str(limit))
 	if to!='':
 		qp.append("to="+to)
 	# construct qp string
@@ -682,7 +679,7 @@ func put_room_state(base_url:String='', headers:Array=[], room_id:String='', eve
 	var client = HTTPRequest.new()
 	print("putting room_state for: ",room_id)
 	client.use_threads = false
-	Vector.requestParent.add_child(client)
+	get_tree().get_first_node_in_group("requestParent").add_child(client)
 	client.request_completed.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 		# if result == RESULT_SUCCESS, emit signal
 		if result == HTTPRequest.RESULT_SUCCESS:
@@ -716,7 +713,7 @@ func put_room_send(base_url:String='', headers:Array=[], room_id:String='', even
 	var client = HTTPRequest.new()
 	print("putting room_send for: ",room_id)
 	client.use_threads = false
-	Vector.requestParent.add_child(client)
+	get_tree().get_first_node_in_group("requestParent").add_child(client)
 	client.request_completed.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 		if result == HTTPRequest.RESULT_SUCCESS and response_code == 200:
 			placed_room_send.emit(result,response_code,headers,body)
@@ -742,7 +739,7 @@ func get_turn_server(base_url:String='', headers:Array=[]):
 	var client = HTTPRequest.new()
 	print("getting turn_server")
 	client.use_threads = false
-	Vector.requestParent.add_child(client)
+	get_tree().get_first_node_in_group("requestParent").add_child(client)
 	client.request_completed.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 		# if result == RESULT_SUCCESS, emit signal
 		if result == HTTPRequest.RESULT_SUCCESS:
@@ -787,7 +784,7 @@ func get_room_members(base_url:String='', headers:Array=[], room_id:String='', m
 	var client = HTTPRequest.new()
 	print("getting room_members for: ",room_id)
 	client.use_threads = false
-	Vector.requestParent.add_child(client)
+	get_tree().get_first_node_in_group("requestParent").add_child(client)
 	client.request_completed.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 		if result == HTTPRequest.RESULT_SUCCESS:
 			got_room_members.emit(result,response_code,headers,body)
@@ -801,18 +798,10 @@ func get_room_members(base_url:String='', headers:Array=[], room_id:String='', m
 	HTTPClient.METHOD_GET
 	)
 
-
-
-
-
-
-
-
-
-func login_username_password(homeserver:String,username:String,password:String):
+func login_username_password(base_url:String,headers:Array,username:String,password:String):
 	var client = HTTPRequest.new()
 	client.use_threads = false
-	Vector.requestParent.add_child(client)
+	get_tree().get_first_node_in_group("requestParent").add_child(client)
 	client.request_completed.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 		user_logged_in.emit(result,response_code,headers,body)
 		client.queue_free()
@@ -824,11 +813,9 @@ func login_username_password(homeserver:String,username:String,password:String):
 		"device_id": OS.get_unique_id(),
 		"initial_device_display_name": "barkvr"
 		}
-	var response = await Vector.connect_to_homeserver(homeserver)
-	assert(response == OK)
-	response = client.request(
-		"https://"+homeserver+"/_matrix/client/v3/login",
-		Vector.headers,
+	var response = client.request(
+		base_url+"/_matrix/client/v3/login",
+		headers,
 		HTTPClient.METHOD_POST,
 		JSON.stringify(loginDict)
 		)
@@ -837,20 +824,20 @@ func login_username_password(homeserver:String,username:String,password:String):
 	var stat = client.get_http_client_status()
 	assert(client.get_http_client_status()==0)
 
-func get_joined_rooms():
+func get_joined_rooms(base_url:String, headers:PackedStringArray, access_token:String):
 	print('getting joined rooms')
 	var res
-	if Vector.userData['login'].has("access_token"):
+	if access_token:
 		var client = HTTPRequest.new()
 		client.use_threads = false
-		Vector.requestParent.add_child(client)
+		get_tree().get_first_node_in_group("requestParent").add_child(client)
 		client.request_completed.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 			got_joined_rooms.emit(result,response_code,headers,body)
 			client.queue_free()
 			)
 		res = client.request(
-		Vector.base_url+"_matrix/client/v3/joined_rooms",
-		Vector.headers,
+		base_url+"_matrix/client/v3/joined_rooms",
+		headers,
 		HTTPClient.METHOD_GET
 		)
 	else:
@@ -859,11 +846,11 @@ func get_joined_rooms():
 ## GET /_matrix/client/v3/sync
 ## accepts: {since:String, filter:String, set_presence:String, timeout:int, full_state:bool}
 ## https://spec.matrix.org/v1.6/client-server-api/#get_matrixclientv3sync
-func sync(options:Dictionary):
+func sync(base_url:String, headers:PackedStringArray, options:Dictionary):
 	var res
 	var client = HTTPRequest.new()
 	client.use_threads = false
-	Vector.requestParent.add_child(client)
+	get_tree().get_first_node_in_group("requestParent").add_child(client)
 	client.request_completed.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 		synced.emit(result,response_code,headers,body)
 		client.queue_free()
@@ -882,18 +869,17 @@ func sync(options:Dictionary):
 		if options.has('full_state'):
 			qp += "&full_state="+str(options.full_state)
 	res = client.request(
-	Vector.base_url+"_matrix/client/v3/sync"+qp,
-	Vector.headers,
+	base_url+"_matrix/client/v3/sync"+qp,
+	headers,
 	HTTPClient.METHOD_GET
 	)
-	print("url: ",Vector.base_url+"_matrix/client/v3/sync"+qp)
 	
 ## Get the state events for the current state of a room
 ## Url: /_matrix/client/v3/rooms/{roomId}/state
-func get_room_state(room_id:String):
+func get_room_state(base_url:String, headers:PackedStringArray, room_id:String):
 	var client = HTTPRequest.new()
 	client.use_threads = false
-	Vector.requestParent.add_child(client)
+	get_tree().get_first_node_in_group("requestParent").add_child(client)
 	client.request_completed.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 		assert(result == OK)
 		got_room_state.emit(result,response_code,headers,body)
@@ -901,8 +887,8 @@ func get_room_state(room_id:String):
 		)
 	var res
 	res = client.request(
-		Vector.base_url+"_matrix/client/v3/rooms/{0}/state".format([room_id]),
-		Vector.headers,
+		base_url+"_matrix/client/v3/rooms/{0}/state".format([room_id]),
+		headers,
 		HTTPClient.METHOD_GET
 		)
 	assert(res == OK)
@@ -921,13 +907,13 @@ func get_room_state(room_id:String):
 	
 ## Gets a list of aliases for the specified room
 ## Url: /_matrix/client/v3/rooms/{roomId}/aliases
-func get_room_aliases(room_id:String):
-	var res
-	if Vector.client.get_status() == HTTPClient.STATUS_CONNECTED:
-		res = Vector.client.request(
-			HTTPClient.METHOD_GET,
-			"/_matrix/client/v3/rooms/{0}/aliases".format([room_id]),
-			Vector.headers)
-		var msg = await Vector.readRequestBytes()
-		var pmsg = JSON.parse_string(msg)
-		return pmsg
+#func get_room_aliases(room_id:String):
+	#var res
+	#if Vector.client.get_status() == HTTPClient.STATUS_CONNECTED:
+		#res = Vector.client.request(
+			#HTTPClient.METHOD_GET,
+			#"/_matrix/client/v3/rooms/{0}/aliases".format([room_id]),
+			#Vector.headers)
+		#var msg = await Vector.readRequestBytes()
+		#var pmsg = JSON.parse_string(msg)
+		#return pmsg

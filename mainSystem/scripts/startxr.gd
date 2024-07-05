@@ -220,10 +220,8 @@ func _on_webxr_session_supported(session_mode: String, supported: bool) -> void:
 			# WebXR supported - show canvas on web browser to enter WebVR
 			$EnterWebXR.visible = true
 		else:
-			OS.alert("Your web browser doesn't support VR. Sorry!")
-			var player = get_tree().get_first_node_in_group("player")
-			if player:
-				player.vr_supported = false
+			#OS.alert("Your web browser doesn't support VR. Sorry!")
+			pass
 
 
 # Called when the WebXR session has started successfully
