@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://c3i4ahamrqxcq"]
+[gd_scene load_steps=11 format=3 uid="uid://c3i4ahamrqxcq"]
 
 [ext_resource type="Script" path="res://mainSystem/scripts/init.gd" id="1_qrvq0"]
 [ext_resource type="Script" path="res://mainSystem/scripts/startxr.gd" id="2_5iqft"]
@@ -8,6 +8,7 @@
 [ext_resource type="Script" path="res://mainSystem/scripts/networkHandler.gd" id="4_hlpqx"]
 [ext_resource type="Script" path="res://addons/vector/vector.gd" id="5_8rwc2"]
 [ext_resource type="Script" path="res://mainSystem/scripts/settings.gd" id="7_or0ic"]
+[ext_resource type="Script" path="res://mainAssets/objects/pens/voxel_draw_test.gd" id="8_6nkox"]
 
 [sub_resource type="AudioStreamMicrophone" id="AudioStreamMicrophone_ve6pm"]
 
@@ -21,7 +22,8 @@ singletons = {
 "event_manager": ExtResource("3_w8dnk"),
 "network_manager": ExtResource("4_hlpqx"),
 "settings_manager": ExtResource("7_or0ic"),
-"user_manager": ExtResource("5_8rwc2")
+"user_manager": ExtResource("5_8rwc2"),
+"voxel_manager": ExtResource("8_6nkox")
 }
 
 [node name="RequestParent" type="Node" parent="." groups=["requestParent"]]
