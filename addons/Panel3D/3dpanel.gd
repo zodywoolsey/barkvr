@@ -9,7 +9,7 @@ var colshape : CollisionShape3D
 var material : StandardMaterial3D
 
 var ui : Node
-var tex:ViewportTexture
+var tex : ViewportTexture
 
 ## material rendered in "next_pass" of the default material good for backgrounds
 ## behind transparent panels
@@ -155,6 +155,7 @@ const BOTTOM_RIGHT = 8
 
 func _init():
 	viewport = SubViewport.new()
+	viewport.is_processing_input()
 	viewport.gui_embed_subwindows = true
 	viewport.own_world_3d = true
 	viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
@@ -164,6 +165,8 @@ func _init():
 	colshape.shape = BoxShape3D.new()
 	material = StandardMaterial3D.new()
 	mesh.mesh.surface_set_material(0,material)
+	#viewport_container = SubViewportContainer.new()
+	#viewport_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	#add_child(viewport_container)
 	#viewport_container.add_child(viewport)
 	if is_instance_valid(find_child("3dpanel_viewport")):
@@ -236,6 +239,7 @@ func laser_input(data:Dictionary):
 		"click":
 			event = InputEventMouseButton.new()
 			event.button_index = 1
+			#event = InputEventScreenTouch.new()
 		"custom":
 			# Use this to pass a different event type or add event strings below
 			event = data.event
@@ -279,7 +283,7 @@ func laser_input(data:Dictionary):
 	viewport.handle_input_locally = true
 	# Push the event to the viewport
 	viewport.push_input(event,true)
-	#viewport.handle_input_locally = false
+	viewport.handle_input_locally = false
 
 func set_viewport_scene(node):
 	# Clears the current nodes from within the viewport first

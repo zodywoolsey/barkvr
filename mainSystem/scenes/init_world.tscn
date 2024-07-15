@@ -87,10 +87,6 @@ metadata/grabbable = true
 
 [node name="vreditor" parent="local_ui" instance=ExtResource("9_k6sjl")]
 transform = Transform3D(-4.37114e-08, 1.06581e-14, 1, 0, 1, -1.06581e-14, -1, -4.6588e-22, -4.37114e-08, -4, 2, 2)
-ANCHOR_POSITION = 4
-minimum_viewport_size = Vector2i(50, 50)
-render_priority = 0
-on_top = false
 
 [node name="keyboard panel" type="StaticBody3D" parent="local_ui"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.4736, 1.7588, 0)

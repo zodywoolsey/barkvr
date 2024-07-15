@@ -4,9 +4,6 @@ extends Node3D
 
 #var gltf_document_extension_class = load("res://addons/vrm/vrm_extension.gd")
 
-var alt_tree = SceneTree.new()
-var alt_loop = MainLoop.new()
-
 @export var game_startup_scene :PackedScene
 
 func _ready():
@@ -18,6 +15,7 @@ func _ready():
 	#var vrm_extension: GLTFDocumentExtension = gltf_document_extension_class.new()
 	#GLTFDocument.register_gltf_document_extension(vrm_extension, true)
 	var dir = DirAccess.open('user://')
+	print("open current directory: "+str(dir.get_current_dir(true))+"\n"+str(dir))
 	if !dir.dir_exists('./tmp'):
 		dir.make_dir('./tmp')
 	if !dir.dir_exists('./objects'):
@@ -33,18 +31,22 @@ func _ready():
 			player_size_mult = (tmpscale.x+tmpscale.y+tmpscale.z)/3.0
 		var import_position :Vector3= get_viewport().get_camera_3d().to_global(Vector3(0,0,-2.0)*player_size_mult)
 		if !OS.get_name() == "Web":
-			var thread := Thread.new()
-			thread.start(func():
+			#var thread := Thread.new()
+			WorkerThreadPool.add_task(func():
 				Thread.set_thread_safety_checks_enabled(false)
 				import(files,loader,import_position,player_size_mult)
-				)
-			BarkHelpers.rejoin_thread_when_finished(thread)
+				, true, "importing: "+str(files))
+			#BarkHelpers.rejoin_thread_when_finished(thread)
 			get_tree().get_first_node_in_group("localworldroot").add_child(loader)
 			if loader.text.is_empty():
 				loader.text = "nothing?"
 			loader.global_position = import_position
 		else:
-			import(files)
+			import(files,loader,import_position,player_size_mult)
+			get_tree().get_first_node_in_group("localworldroot").add_child(loader)
+			if loader.text.is_empty():
+				loader.text = "nothing?"
+			loader.global_position = import_position
 	)# end of files dropped
 
 func _process(delta):

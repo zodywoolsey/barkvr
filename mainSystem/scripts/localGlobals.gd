@@ -39,6 +39,24 @@ const WORLD_STATE_EDITING := 0
 const WORLD_STATE_PLAYING := 1
 const WORLD_STATE_VIEWING := 2
 
+var voice_analyzer :AudioEffectSpectrumAnalyzerInstance:
+	get:
+		if !is_instance_valid(voice_analyzer):
+			for effect_index in AudioServer.get_bus_effect_count(AudioServer.get_bus_index("mic")):
+				var ceffect := AudioServer.get_bus_effect(AudioServer.get_bus_index("mic"),effect_index)
+				if ceffect.resource_name == "voiceanalyzer":
+					voice_analyzer = AudioServer.get_bus_effect_instance(AudioServer.get_bus_index("mic"),effect_index)
+		return voice_analyzer
+
+#var voice_analyzer :AudioEffectSpectrumAnalyzerInstance:
+	#get:
+		#if !is_instance_valid(voice_analyzer):
+			#for effect_index in AudioServer.get_bus_effect_count(AudioServer.get_bus_index("mic")):
+				#var ceffect := AudioServer.get_bus_effect(AudioServer.get_bus_index("mic"),effect_index)
+				#if ceffect.resource_name == "voiceanalyzer":
+					#voice_analyzer = AudioServer.get_bus_effect_instance(AudioServer.get_bus_index("mic"),effect_index)
+		#return voice_analyzer
+
 signal playerinit(isvr: bool)
 signal playerreleaseuifocus
 signal clear_gizmos

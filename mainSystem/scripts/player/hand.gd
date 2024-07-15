@@ -11,8 +11,10 @@ extends XRController3D
 @onready var local_player = %CharacterBody3D
 @onready var righthand = %righthand
 @onready var lefthand = %lefthand
+@onready var lefthandtracking :SimpleOpenXRHand= %lefthandtracking
+@onready var righthandtracking :SimpleOpenXRHand= %righthandtracking
+var thishandtracking :SimpleOpenXRHand
 var otherhand : XRController3D
-
 
 var prevHover : Node
 var grabAreaBodies : Array = []
@@ -44,8 +46,10 @@ func _ready():
 	ui_ray.visible = !rays_disabled
 	if name == "righthand":
 		otherhand = lefthand
+		thishandtracking = righthandtracking
 	else:
 		otherhand = righthand
+		thishandtracking = lefthandtracking
 	grabArea.connect("body_entered", grabBodyEntered)
 	grabArea.connect("body_exited", grabBodyExited)
 	connect("button_pressed",buttonPressed)
@@ -79,6 +83,11 @@ func _ready():
 		)
 
 func _physics_process(delta):
+	if local_player.vr_mode_enabled:
+		if thishandtracking.tracking and !rays_disabled:
+			rays_disabled = true
+		elif rays_disabled:
+			rays_disabled = false
 	if !rays_disabled:
 		if buttons.has('by_button') and LocalGlobals.world_state:
 			if buttons['by_button']:

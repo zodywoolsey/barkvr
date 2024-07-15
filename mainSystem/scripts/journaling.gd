@@ -430,6 +430,8 @@ func _import_glb(content: Variant, asset_name := '', data := {}) -> void:
 		err = gltf.append_from_buffer(content, '', state, flags)
 	if err != OK:
 		GLTFDocument.unregister_gltf_document_extension(vrm_extension)
+		if "loader" in data:
+			data.loader.done('failed')
 		return
 	for mesh in state.meshes:
 			if mesh.mesh.get_surface_lod_count(0) == 0:

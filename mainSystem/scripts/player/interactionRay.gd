@@ -14,11 +14,12 @@ var last_point := Vector3()
 var last_dist := float()
 
 func _process(_delta):
-	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
-		var cam = get_viewport().get_camera_3d()
-		target_position = (cam.project_local_ray_normal(get_viewport().get_mouse_position()))*10.0
-	else:
-		target_position = Vector3(0,0,-10)
+	if !get_viewport().use_xr:
+		if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
+			var cam = get_viewport().get_camera_3d()
+			target_position = (cam.project_local_ray_normal(get_viewport().get_mouse_position()))*10.0
+		else:
+			target_position = Vector3(0,0,-1000)
 	procrayvis()
 	if is_colliding():
 		line_3d.target = to_local(get_collision_point())

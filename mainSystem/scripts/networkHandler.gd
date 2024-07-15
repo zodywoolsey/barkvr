@@ -55,7 +55,7 @@ func _input(event):
 
 func get_clipboard_connection_string():
 	var tmp
-	if peers[0].has('offer'):
+	if !peers.is_empty() and peers[0].has('offer'):
 		tmp = str({
 			"description": peers[0].offer,
 			"candidates": peers[0].candidates

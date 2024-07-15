@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://i3pxsgqnbjly"]
+[gd_scene load_steps=9 format=3 uid="uid://i3pxsgqnbjly"]
 
 [ext_resource type="Script" path="res://mainAssets/ui/3dPanel/local ui/login/loginbutton.gd" id="1_18njo"]
 [ext_resource type="Theme" uid="uid://b7mxq6cclub5f" path="res://mainAssets/ui/default_theme.tres" id="1_eqeii"]
@@ -6,7 +6,6 @@
 [ext_resource type="Script" path="res://mainAssets/ui/3dPanel/local ui/login/roomlist.gd" id="4_f325r"]
 [ext_resource type="Texture2D" uid="uid://dq6wx5duagvu5" path="res://assets/icons/vr-headset.svg" id="4_keerj"]
 [ext_resource type="Script" path="res://mainAssets/ui/3dPanel/local ui/login/messages.gd" id="4_ydkch"]
-[ext_resource type="PackedScene" uid="uid://drvs5pgtp63nx" path="res://mainAssets/ui/3dPanel/local ui/login/message.tscn" id="5_8wc7f"]
 [ext_resource type="Script" path="res://mainAssets/ui/3dPanel/local ui/login/SendMessage.gd" id="5_wc8jy"]
 
 [sub_resource type="GDScript" id="GDScript_2qa45"]
@@ -162,25 +161,30 @@ clip_text = true
 expand_icon = true
 
 [node name="MessageSplitContainer" type="VSplitContainer" parent="chat/HBoxContainer/RoomSplitContainer"]
+clip_contents = true
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="ScrollContainer" type="ScrollContainer" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer"]
+[node name="Control2" type="Control" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer"]
 layout_mode = 2
 size_flags_vertical = 3
-follow_focus = true
 
-[node name="Control" type="VBoxContainer" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/Control2"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_bottom = -0.00238037
+grow_horizontal = 2
+grow_vertical = 0
+size_flags_vertical = 3
+
+[node name="Control" type="VBoxContainer" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/Control2/ScrollContainer"]
+clip_contents = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-alignment = 2
 script = ExtResource("4_ydkch")
-
-[node name="message" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control" instance=ExtResource("5_8wc7f")]
-layout_mode = 2
-size_flags_horizontal = 1
-leftside = false
 
 [node name="Control" type="Control" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer"]
 custom_minimum_size = Vector2(0, 50)

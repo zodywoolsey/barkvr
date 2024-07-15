@@ -819,7 +819,7 @@ func login_username_password(base_url:String,headers:Array,username:String,passw
 		HTTPClient.METHOD_POST,
 		JSON.stringify(loginDict)
 		)
-	assert(response == OK)
+	#assert(response == OK)
 	await client.request_completed
 	var stat = client.get_http_client_status()
 	assert(client.get_http_client_status()==0)

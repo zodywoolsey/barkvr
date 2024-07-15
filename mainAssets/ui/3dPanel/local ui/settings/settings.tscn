@@ -1,32 +1,89 @@
-[gd_scene load_steps=4 format=3 uid="uid://pnqmxgn13qw2"]
+[gd_scene load_steps=8 format=3 uid="uid://pnqmxgn13qw2"]
+
+[ext_resource type="Script" path="res://mainAssets/ui/3dPanel/local ui/settings/quick_toggler.tres.gd" id="1_2xlvg"]
+
+[sub_resource type="GDScript" id="GDScript_jyg8t"]
+script/source = "extends VBoxContainer
+
+@onready var toggle = $passthrough/toggle
+@onready var color_rect = $passthrough/toggle/ColorRect
+
+var on_color :Color=Color.GREEN
+var off_color :Color=Color.GRAY
+
+func _ready():
+	if XRServer.primary_interface and XRServer.primary_interface.is_passthrough_supported() and XRServer.primary_interface.is_passthrough_enabled():
+		toggle.button_pressed = true
+	else:
+		toggle.button_pressed = false
+	toggle.toggled.connect(func(on:bool):
+		if XRServer.primary_interface and XRServer.primary_interface.is_passthrough_supported():
+			if on:
+				XRServer.primary_interface.start_passthrough()
+			else:
+				XRServer.primary_interface.stop_passthrough()
+			if !XRServer.primary_interface.is_passthrough_enabled():
+				toggle.button_pressed = false
+		else:
+			toggle.button_pressed = false
+		create_tween().tween_property(color_rect,\"color\",on_color if toggle.button_pressed else off_color,.5).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+		toggle.text = \"is enabled\" if toggle.button_pressed else \"is disabled\"
+		)
+"
+
+[sub_resource type="GDScript" id="GDScript_udd3x"]
+script/source = "extends VBoxContainer
+
+@onready var toggle = $hand_tracking_toggle/toggle
+@onready var color_rect = $hand_tracking_toggle/toggle/ColorRect
+
+var on_color :Color=Color.GREEN
+var off_color :Color=Color.GRAY
+
+func _ready():
+	toggle.button_pressed = Engine.get_singleton(\"settings_manager\").hand_tracking_enabled
+	create_tween().tween_property(color_rect,\"color\",on_color if toggle.button_pressed else off_color,.5).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+	create_tween().tween_property(toggle,\"text\",\"is enabled\" if toggle.button_pressed else \"is disabled\", .5)
+	toggle.toggled.connect(func(on:bool):
+		Engine.get_singleton(\"settings_manager\").hand_tracking_enabled = on
+		create_tween().tween_property(color_rect,\"color\",on_color if toggle.button_pressed else off_color,.5).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+		create_tween().tween_property(toggle,\"text\",\"is enabled\" if toggle.button_pressed else \"is disabled\", .5)
+		)
+"
 
 [sub_resource type="GDScript" id="GDScript_wa730"]
 script/source = "extends VBoxContainer
 
 #localuilookat
 
-@onready var xval = $position/xval
-@onready var yval = $position/yval
-@onready var zval = $position/zval
+@onready var xval = $position/xvbox/xval
+@onready var x_color_rect = $position/xvbox/xval/ColorRect
+@onready var yval = $position/yvbox/yval
+@onready var y_color_rect = $position/yvbox/yval/ColorRect
+@onready var zval = $position/zvbox/zval
+@onready var z_color_rect = $position/zvbox/zval/ColorRect
 
 func _ready():
 	xval.text = \"enabled\" if get_tree().get_first_node_in_group('localuilookat').x else \"disabled\"
-	xval.set_deferred(\"pressed\", get_tree().get_first_node_in_group('localuilookat').x)
+	xval.set_deferred(\"button_pressed\", get_tree().get_first_node_in_group('localuilookat').x)
 	yval.text = \"enabled\" if get_tree().get_first_node_in_group('localuilookat').y else \"disabled\"
-	yval.set_deferred(\"pressed\", get_tree().get_first_node_in_group('localuilookat').y)
+	yval.set_deferred(\"button_pressed\", get_tree().get_first_node_in_group('localuilookat').y)
 	zval.text = \"enabled\" if get_tree().get_first_node_in_group('localuilookat').z else \"disabled\"
-	zval.set_deferred(\"pressed\", get_tree().get_first_node_in_group('localuilookat').z)
+	zval.set_deferred(\"button_pressed\", get_tree().get_first_node_in_group('localuilookat').z)
 	xval.toggled.connect(func(toggled_on: bool):
-		xval.text = \"enabled\" if toggled_on else \"disabled\"
+		create_tween().tween_property(xval, \"text\", \"is enabled\" if toggled_on else \"is disabled\", .5)
 		get_tree().get_first_node_in_group('localuilookat').x = toggled_on
+		create_tween().tween_property(x_color_rect,\"color\",Color.RED if toggled_on else Color.GRAY,.5).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
 		)
 	yval.toggled.connect(func(toggled_on: bool):
-		yval.text = \"enabled\" if toggled_on else \"disabled\"
+		create_tween().tween_property(yval, \"text\", \"is enabled\" if toggled_on else \"is disabled\", .5)
 		get_tree().get_first_node_in_group('localuilookat').y = toggled_on
+		create_tween().tween_property(y_color_rect,\"color\",Color.GREEN if toggled_on else Color.GRAY,.5).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
 		)
 	zval.toggled.connect(func(toggled_on: bool):
-		zval.text = \"enabled\" if toggled_on else \"disabled\"
+		create_tween().tween_property(zval, \"text\", \"is enabled\" if toggled_on else \"is disabled\", .5)
 		get_tree().get_first_node_in_group('localuilookat').z = toggled_on
+		create_tween().tween_property(z_color_rect,\"color\",Color.BLUE if toggled_on else Color.GRAY,.5).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
 		)
 "
 
@@ -40,15 +97,92 @@ func _ready():
 		)
 "
 
-[sub_resource type="GDScript" id="GDScript_iyo8c"]
-script/source = "extends Control
-@onready var h_slider = $HSlider
+[sub_resource type="GDScript" id="GDScript_46aot"]
+script/source = "extends OptionButton
+
+@onready var color_rect = $ColorRect
 
 func _ready():
-	h_slider.value_changed.connect(func(value):
-		ThemeDB.fallback_base_scale = value
-		print(ThemeDB.fallback_base_scale)
+	for device in AudioServer.get_input_device_list():
+		if !has_item_label(device):
+			add_item(device, hash(device))
+	for item in item_count:
+		if get_item_text(item) not in AudioServer.get_input_device_list():
+			remove_item(item)
+	get_popup().hide_on_checkable_item_selection = false
+	get_popup().hide_on_item_selection = false
+	get_popup().hide_on_state_item_selection = false
+	toggled.connect(func(toggled_on:bool):
+		var selected_id = get_item_id(selected)
+		if toggled_on:
+			for device in AudioServer.get_input_device_list():
+				if !has_item_label(device):
+					add_item(device, hash(device))
+			for item in item_count:
+				if get_item_text(item) not in AudioServer.get_input_device_list():
+					remove_item(item)
 		)
+	item_selected.connect(func(index:int):
+		AudioServer.input_device = get_item_text(index)
+		)
+
+func _process(delta):
+	if LocalGlobals.voice_analyzer:
+		color_rect.color.a = LocalGlobals.voice_analyzer.get_magnitude_for_frequency_range(0,40000,AudioEffectSpectrumAnalyzerInstance.MAGNITUDE_MAX).length()*100.0
+
+func has_item_label(item_label:String):
+	for item in range(item_count):
+		if get_item_text(item) ==  item_label:
+			return true
+	return false
+
+func items() -> PackedStringArray:
+	var output :PackedStringArray
+	for item in range(item_count):
+		output.append(get_item_text(item))
+	return output
+"
+
+[sub_resource type="GDScript" id="GDScript_f8k8b"]
+script/source = "extends OptionButton
+
+@onready var color_rect = $ColorRect
+
+func _ready():
+	for device in AudioServer.get_output_device_list():
+		if !has_item_label(device):
+			add_item(device, hash(device))
+	for item in item_count:
+		if get_item_text(item) not in AudioServer.get_output_device_list():
+			remove_item(item)
+	get_popup().hide_on_checkable_item_selection = false
+	get_popup().hide_on_item_selection = false
+	get_popup().hide_on_state_item_selection = false
+	toggled.connect(func(toggled_on:bool):
+		var selected_id = get_item_id(selected)
+		if toggled_on:
+			for device in AudioServer.get_output_device_list():
+				if !has_item_label(device):
+					add_item(device, hash(device))
+			for item in item_count:
+				if get_item_text(item) not in AudioServer.get_output_device_list():
+					remove_item(item)
+		)
+	item_selected.connect(func(index:int):
+		AudioServer.output_device = get_item_text(index)
+		)
+
+func has_item_label(item_label:String):
+	for item in range(item_count):
+		if get_item_text(item) ==  item_label:
+			return true
+	return false
+
+func items() -> PackedStringArray:
+	var output :PackedStringArray
+	for item in range(item_count):
+		output.append(get_item_text(item))
+	return output
 "
 
 [node name="settings" type="Control"]
@@ -72,24 +206,39 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="localmenulookataxistoggles" type="VBoxContainer" parent="ScrollContainer/VBoxContainer"]
+[node name="vrsettingsbutton" type="Button" parent="ScrollContainer/VBoxContainer" node_paths=PackedStringArray("node_to_toggle")]
 layout_mode = 2
-size_flags_vertical = 3
-script = SubResource("GDScript_wa730")
+focus_mode = 0
+toggle_mode = true
+text = "VR Settings"
+script = ExtResource("1_2xlvg")
+node_to_toggle = NodePath("../vrsettings")
 
-[node name="Label" type="Label" parent="ScrollContainer/VBoxContainer/localmenulookataxistoggles"]
+[node name="vrsettings" type="VBoxContainer" parent="ScrollContainer/VBoxContainer"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="passthrough" type="VBoxContainer" parent="ScrollContainer/VBoxContainer/vrsettings"]
 layout_mode = 2
 size_flags_vertical = 3
-text = "Local Menu LookAt Axis Toggles"
+script = SubResource("GDScript_jyg8t")
+
+[node name="Label" type="Label" parent="ScrollContainer/VBoxContainer/vrsettings/passthrough"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "toggle passthrough"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="position" type="HBoxContainer" parent="ScrollContainer/VBoxContainer/localmenulookataxistoggles"]
+[node name="passthrough" type="VBoxContainer" parent="ScrollContainer/VBoxContainer/vrsettings/passthrough"]
 custom_minimum_size = Vector2(500, 100)
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="xval" type="Button" parent="ScrollContainer/VBoxContainer/localmenulookataxistoggles/position"]
+[node name="toggle" type="Button" parent="ScrollContainer/VBoxContainer/vrsettings/passthrough/passthrough"]
+custom_minimum_size = Vector2(0, 75)
 layout_mode = 2
 size_flags_horizontal = 3
 focus_mode = 0
@@ -98,7 +247,108 @@ text = "disabled"
 icon_alignment = 1
 expand_icon = true
 
-[node name="ColorRect" type="ColorRect" parent="ScrollContainer/VBoxContainer/localmenulookataxistoggles/position/xval"]
+[node name="ColorRect" type="ColorRect" parent="ScrollContainer/VBoxContainer/vrsettings/passthrough/passthrough/toggle"]
+custom_minimum_size = Vector2(0, 5)
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 0
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.1
+
+[node name="hand_tracking_toggle" type="VBoxContainer" parent="ScrollContainer/VBoxContainer/vrsettings"]
+layout_mode = 2
+size_flags_vertical = 3
+script = SubResource("GDScript_udd3x")
+
+[node name="Label" type="Label" parent="ScrollContainer/VBoxContainer/vrsettings/hand_tracking_toggle"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "toggle hand tracking"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="hand_tracking_toggle" type="VBoxContainer" parent="ScrollContainer/VBoxContainer/vrsettings/hand_tracking_toggle"]
+custom_minimum_size = Vector2(500, 100)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="toggle" type="Button" parent="ScrollContainer/VBoxContainer/vrsettings/hand_tracking_toggle/hand_tracking_toggle"]
+custom_minimum_size = Vector2(0, 75)
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+toggle_mode = true
+text = "disabled"
+icon_alignment = 1
+expand_icon = true
+
+[node name="ColorRect" type="ColorRect" parent="ScrollContainer/VBoxContainer/vrsettings/hand_tracking_toggle/hand_tracking_toggle/toggle"]
+custom_minimum_size = Vector2(0, 5)
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 0
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.1
+
+[node name="uisettingsbutton" type="Button" parent="ScrollContainer/VBoxContainer" node_paths=PackedStringArray("node_to_toggle")]
+layout_mode = 2
+focus_mode = 0
+toggle_mode = true
+text = "UI Settings"
+script = ExtResource("1_2xlvg")
+node_to_toggle = NodePath("../uisettings")
+
+[node name="uisettings" type="VBoxContainer" parent="ScrollContainer/VBoxContainer"]
+visible = false
+layout_mode = 2
+
+[node name="localmenulookataxistoggles2" type="VBoxContainer" parent="ScrollContainer/VBoxContainer/uisettings"]
+layout_mode = 2
+script = SubResource("GDScript_wa730")
+
+[node name="Label" type="Label" parent="ScrollContainer/VBoxContainer/uisettings/localmenulookataxistoggles2"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "Local Menu LookAt Axis Toggles"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="position" type="HBoxContainer" parent="ScrollContainer/VBoxContainer/uisettings/localmenulookataxistoggles2"]
+custom_minimum_size = Vector2(500, 100)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="xvbox" type="VBoxContainer" parent="ScrollContainer/VBoxContainer/uisettings/localmenulookataxistoggles2/position"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="ScrollContainer/VBoxContainer/uisettings/localmenulookataxistoggles2/position/xvbox"]
+custom_minimum_size = Vector2(0, 25)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "x"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="xval" type="Button" parent="ScrollContainer/VBoxContainer/uisettings/localmenulookataxistoggles2/position/xvbox"]
+custom_minimum_size = Vector2(0, 75)
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+toggle_mode = true
+text = "disabled"
+icon_alignment = 1
+expand_icon = true
+
+[node name="ColorRect" type="ColorRect" parent="ScrollContainer/VBoxContainer/uisettings/localmenulookataxistoggles2/position/xvbox/xval"]
 custom_minimum_size = Vector2(0, 5)
 layout_mode = 1
 anchors_preset = 12
@@ -111,18 +361,20 @@ size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.1
 color = Color(1, 0, 0, 1)
 
-[node name="Label" type="Label" parent="ScrollContainer/VBoxContainer/localmenulookataxistoggles/position/xval"]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.5
-anchor_right = 0.5
-grow_horizontal = 2
-grow_vertical = 0
-text = "x"
+[node name="yvbox" type="VBoxContainer" parent="ScrollContainer/VBoxContainer/uisettings/localmenulookataxistoggles2/position"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="ScrollContainer/VBoxContainer/uisettings/localmenulookataxistoggles2/position/yvbox"]
+custom_minimum_size = Vector2(0, 25)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "y"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="yval" type="Button" parent="ScrollContainer/VBoxContainer/localmenulookataxistoggles/position"]
+[node name="yval" type="Button" parent="ScrollContainer/VBoxContainer/uisettings/localmenulookataxistoggles2/position/yvbox"]
+custom_minimum_size = Vector2(0, 75)
 layout_mode = 2
 size_flags_horizontal = 3
 focus_mode = 0
@@ -131,7 +383,7 @@ text = "disabled"
 icon_alignment = 1
 expand_icon = true
 
-[node name="ColorRect" type="ColorRect" parent="ScrollContainer/VBoxContainer/localmenulookataxistoggles/position/yval"]
+[node name="ColorRect" type="ColorRect" parent="ScrollContainer/VBoxContainer/uisettings/localmenulookataxistoggles2/position/yvbox/yval"]
 custom_minimum_size = Vector2(0, 5)
 layout_mode = 1
 anchors_preset = 12
@@ -144,18 +396,20 @@ size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.1
 color = Color(0, 1, 0, 1)
 
-[node name="Label" type="Label" parent="ScrollContainer/VBoxContainer/localmenulookataxistoggles/position/yval"]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.5
-anchor_right = 0.5
-grow_horizontal = 2
-grow_vertical = 0
-text = "y"
+[node name="zvbox" type="VBoxContainer" parent="ScrollContainer/VBoxContainer/uisettings/localmenulookataxistoggles2/position"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="ScrollContainer/VBoxContainer/uisettings/localmenulookataxistoggles2/position/zvbox"]
+custom_minimum_size = Vector2(0, 25)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "z"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="zval" type="Button" parent="ScrollContainer/VBoxContainer/localmenulookataxistoggles/position"]
+[node name="zval" type="Button" parent="ScrollContainer/VBoxContainer/uisettings/localmenulookataxistoggles2/position/zvbox"]
+custom_minimum_size = Vector2(0, 75)
 layout_mode = 2
 size_flags_horizontal = 3
 focus_mode = 0
@@ -164,7 +418,7 @@ text = "disabled"
 icon_alignment = 1
 expand_icon = true
 
-[node name="ColorRect" type="ColorRect" parent="ScrollContainer/VBoxContainer/localmenulookataxistoggles/position/zval"]
+[node name="ColorRect" type="ColorRect" parent="ScrollContainer/VBoxContainer/uisettings/localmenulookataxistoggles2/position/zvbox/zval"]
 custom_minimum_size = Vector2(0, 5)
 layout_mode = 1
 anchors_preset = 12
@@ -177,30 +431,18 @@ size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.1
 color = Color(0, 0, 1, 1)
 
-[node name="Label" type="Label" parent="ScrollContainer/VBoxContainer/localmenulookataxistoggles/position/zval"]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.5
-anchor_right = 0.5
-grow_horizontal = 2
-grow_vertical = 0
-text = "z"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="scaling3d" type="VBoxContainer" parent="ScrollContainer/VBoxContainer"]
+[node name="scaling3d" type="VBoxContainer" parent="ScrollContainer/VBoxContainer/uisettings"]
 layout_mode = 2
-size_flags_vertical = 3
 script = SubResource("GDScript_abd45")
 
-[node name="Label" type="Label" parent="ScrollContainer/VBoxContainer/scaling3d"]
+[node name="Label" type="Label" parent="ScrollContainer/VBoxContainer/uisettings/scaling3d"]
 layout_mode = 2
 size_flags_vertical = 3
 text = "Scaling 3d:"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="HSlider" type="HSlider" parent="ScrollContainer/VBoxContainer/scaling3d"]
+[node name="HSlider" type="HSlider" parent="ScrollContainer/VBoxContainer/uisettings/scaling3d"]
 layout_mode = 2
 size_flags_vertical = 3
 focus_mode = 0
@@ -212,26 +454,80 @@ scrollable = false
 tick_count = 3
 ticks_on_borders = true
 
-[node name="guibasescale" type="VBoxContainer" parent="ScrollContainer/VBoxContainer"]
+[node name="audiosettingsbutton" type="Button" parent="ScrollContainer/VBoxContainer" node_paths=PackedStringArray("node_to_toggle")]
 layout_mode = 2
-size_flags_vertical = 3
-script = SubResource("GDScript_iyo8c")
+focus_mode = 0
+toggle_mode = true
+text = "Audio Settings"
+script = ExtResource("1_2xlvg")
+node_to_toggle = NodePath("../audiosettings")
 
-[node name="Label" type="Label" parent="ScrollContainer/VBoxContainer/guibasescale"]
+[node name="audiosettings" type="VBoxContainer" parent="ScrollContainer/VBoxContainer"]
+visible = false
+layout_mode = 2
+
+[node name="audioinputselector" type="VBoxContainer" parent="ScrollContainer/VBoxContainer/audiosettings"]
 layout_mode = 2
 size_flags_vertical = 3
-text = "UI Scale:"
+
+[node name="Label" type="Label" parent="ScrollContainer/VBoxContainer/audiosettings/audioinputselector"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "Audio Input Device"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="HSlider" type="HSlider" parent="ScrollContainer/VBoxContainer/guibasescale"]
+[node name="toggle" type="OptionButton" parent="ScrollContainer/VBoxContainer/audiosettings/audioinputselector"]
+custom_minimum_size = Vector2(0, 75)
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+icon_alignment = 1
+expand_icon = true
+script = SubResource("GDScript_46aot")
+
+[node name="ColorRect" type="ColorRect" parent="ScrollContainer/VBoxContainer/audiosettings/audioinputselector/toggle"]
+custom_minimum_size = Vector2(0, 5)
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 0
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.1
+color = Color(0, 1, 0, 0)
+
+[node name="audiooutputselector" type="VBoxContainer" parent="ScrollContainer/VBoxContainer/audiosettings"]
 layout_mode = 2
 size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="ScrollContainer/VBoxContainer/audiosettings/audiooutputselector"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "Audio Input Device"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="toggle" type="OptionButton" parent="ScrollContainer/VBoxContainer/audiosettings/audiooutputselector"]
+custom_minimum_size = Vector2(0, 75)
+layout_mode = 2
+size_flags_horizontal = 3
 focus_mode = 0
-min_value = 0.5
-max_value = 4.5
-step = 0.5
-value = 1.0
-scrollable = false
-tick_count = 9
-ticks_on_borders = true
+icon_alignment = 1
+expand_icon = true
+script = SubResource("GDScript_f8k8b")
+
+[node name="ColorRect" type="ColorRect" parent="ScrollContainer/VBoxContainer/audiosettings/audiooutputselector/toggle"]
+custom_minimum_size = Vector2(0, 5)
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 0
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.1
+color = Color(0, 1, 0, 0)

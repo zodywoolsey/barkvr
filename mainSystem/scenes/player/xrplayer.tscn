@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://r68jre2w5k33"]
+[gd_scene load_steps=25 format=3 uid="uid://r68jre2w5k33"]
 
 [ext_resource type="Script" path="res://mainSystem/scripts/player/xrplayer-controller.gd" id="1_iwrfe"]
 [ext_resource type="Script" path="res://mainSystem/scripts/player/hand.gd" id="2_npgyv"]
@@ -10,6 +10,8 @@
 [ext_resource type="PackedScene" uid="uid://cr02u36wo3sqp" path="res://addons/contextmenu/gridmenu/handmenu.tscn" id="9_opil0"]
 [ext_resource type="Script" path="res://addons/Panel3D/3dpanel.gd" id="9_u4nd0"]
 [ext_resource type="PackedScene" uid="uid://doy6bwhtmwdc6" path="res://mainAssets/ui/3dPanel/local ui/localmenu.tscn" id="9_ydb0h"]
+[ext_resource type="Script" path="res://addons/SimpleOpenXRHand/simple_openxr_hand.gd" id="11_3flo1"]
+[ext_resource type="Shader" path="res://mainSystem/scenes/player/screenspace.gdshader" id="12_0o03h"]
 
 [sub_resource type="GDScript" id="GDScript_swjn5"]
 
@@ -66,6 +68,15 @@ func _process(delta):
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_clvwe"]
 height = 1.0
 radius = 0.1
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_sgooi"]
+render_priority = 0
+shader = ExtResource("12_0o03h")
+shader_parameter/size = Vector2(32, 28)
+
+[sub_resource type="QuadMesh" id="QuadMesh_uehvj"]
+flip_faces = true
+size = Vector2(100, 100)
 
 [node name="playercontainer" type="Node3D"]
 
@@ -135,7 +146,7 @@ mesh = SubResource("BoxMesh_mky8q")
 skeleton = NodePath("")
 
 [node name="handMenuPoint" type="Node3D" parent="CharacterBody3D/xrplayer/righthand/handproxy"]
-transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -1.77804e-08, 0, 0.203384)
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, 0, -0.203)
 
 [node name="StaticBody3D" type="StaticBody3D" parent="CharacterBody3D/xrplayer/righthand/handproxy"]
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, 0, 0)
@@ -211,7 +222,7 @@ pixel_size = 0.001
 text = "test"
 
 [node name="handMenuPoint" type="Node3D" parent="CharacterBody3D/xrplayer/lefthand/handproxy"]
-transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -1.77804e-08, 0, 0.203384)
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, 0, -0.203)
 
 [node name="StaticBody3D" type="StaticBody3D" parent="CharacterBody3D/xrplayer/lefthand/handproxy"]
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, 0, 0)
@@ -228,6 +239,15 @@ node_a = NodePath("../StaticBody3D")
 [node name="notificationparent" type="Node3D" parent="CharacterBody3D/xrplayer/lefthand/handproxy" groups=["notificationparent"]]
 transform = Transform3D(-4.37114e-09, -4.37114e-09, 0.1, -4.37114e-09, -0.1, -4.37114e-09, 0.1, -4.37114e-09, 4.37114e-09, 0.048, -0.064, -0.077)
 script = ExtResource("8_n4qtp")
+
+[node name="lefthandtracking" type="Node3D" parent="CharacterBody3D/xrplayer"]
+unique_name_in_owner = true
+script = ExtResource("11_3flo1")
+
+[node name="righthandtracking" type="Node3D" parent="CharacterBody3D/xrplayer"]
+unique_name_in_owner = true
+script = ExtResource("11_3flo1")
+hand = 1
 
 [node name="XRAnchor3D" type="XRAnchor3D" parent="CharacterBody3D/xrplayer"]
 tracker = &"/user/eyes_ext"
@@ -272,3 +292,9 @@ offset_left = 91.0
 offset_top = 84.0
 offset_right = 131.0
 offset_bottom = 107.0
+
+[node name="screenspace" type="MeshInstance3D" parent="."]
+visible = false
+material_override = SubResource("ShaderMaterial_sgooi")
+extra_cull_margin = 16384.0
+mesh = SubResource("QuadMesh_uehvj")

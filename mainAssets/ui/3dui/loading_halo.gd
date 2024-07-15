@@ -42,9 +42,9 @@ func _wait_for_thread_and_remove_loader(thread:Thread):
 	thread.wait_to_finish()
 	done()
 
-func done(text:String="done!"):
+func done(finish_text:String="done!"):
 	isloading = false
-	text = text
+	text = finish_text
 	var tween := create_tween()
 	animation_player.pause()
 	animation_player3.pause()

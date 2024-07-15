@@ -30,10 +30,10 @@ var meshparent := Node3D.new()
 
 func _ready():
 	add_child(meshparent)
-	mesh_thread.start(_update_mesh_thread)
-	dictionary_thread.start(_update_dictionary_thread)
-	BarkHelpers.rejoin_thread_when_finished(mesh_thread)
-	BarkHelpers.rejoin_thread_when_finished(dictionary_thread)
+	#mesh_thread.start(_update_mesh_thread)
+	#dictionary_thread.start(_update_dictionary_thread)
+	#BarkHelpers.rejoin_thread_when_finished(mesh_thread)
+	#BarkHelpers.rejoin_thread_when_finished(dictionary_thread)
 
 func new_stroke():
 	mesh = MeshInstance3D.new()
@@ -74,7 +74,8 @@ func set_true_nearest(global_point:Vector3):
 	
 	if !updated_chunks.has(chunk_point):
 		updated_chunks.append(chunk_point)
-	mesh_semaphore.post()
+	#mesh_semaphore.post()
+	WorkerThreadPool.add_task(update_meshes)
 
 func set_false_nearest(global_point:Vector3):
 	var local_point :Vector3 = (to_local(global_point)*(1.0/density))
@@ -86,7 +87,8 @@ func set_false_nearest(global_point:Vector3):
 			points[chunk_point].erase(local_chunk_point)
 	dictionary_mutex.unlock()
 	#_update_mesh()
-	mesh_semaphore.post()
+	#mesh_semaphore.post()
+	WorkerThreadPool.add_task(update_meshes)
 
 func set_true_cube(global_point:Vector3, size:float):
 	var local_point :Vector3 = (to_local(global_point)*(1.0/density))
@@ -106,12 +108,14 @@ func set_true_cube(global_point:Vector3, size:float):
 						points[ chunk_point ][ local_chunk_point ] = true
 	#points[ round(local_point) ] = true
 	#_update_mesh()
-	dictionary_semaphore.post()
+	#dictionary_semaphore.post()
+	WorkerThreadPool.add_task(update_dictionary)
 
 func set_true_sphere(global_point:Vector3,size:float):
 	var local_point :Vector3 = (to_local(global_point)*(1.0/density))
 	events.append({"action":"_set_true_sphere", "local_point":local_point,"size":size})
-	dictionary_semaphore.post()
+	#dictionary_semaphore.post()
+	WorkerThreadPool.add_task(update_dictionary)
 
 func _set_true_sphere(local_point:Vector3, size:float):
 	print("sphere")
@@ -164,7 +168,8 @@ func _set_true_sphere(local_point:Vector3, size:float):
 func set_false_sphere(global_point:Vector3,size:float):
 	var local_point :Vector3 = (to_local(global_point)*(1.0/density))
 	events.append({"action":"_set_false_sphere", "local_point":local_point,"size":size})
-	dictionary_semaphore.post()
+	#dictionary_semaphore.post()
+	WorkerThreadPool.add_task(update_dictionary)
 
 func _set_false_sphere(local_point:Vector3, size:float):
 	var dict:Dictionary
@@ -197,12 +202,15 @@ func _set_false_sphere(local_point:Vector3, size:float):
 
 func _update_mesh_thread():
 	while true:
-		#print(updated_chunks)
-		var upd = updated_chunks.duplicate(true)
-		updated_chunks.clear()
-		for i in upd:
-			if i != null:
-				_update_mesh(i)
+		update_meshes()
+
+func update_meshes():
+	#print(updated_chunks)
+	var upd = updated_chunks.duplicate(true)
+	updated_chunks.clear()
+	for i in upd:
+		if i != null:
+			_update_mesh(i)
 
 func _update_mesh(part:Vector3=Vector3()):
 	var start_meshes_time := Time.get_ticks_msec()
@@ -248,19 +256,23 @@ func _update_mesh(part:Vector3=Vector3()):
 func _update_dictionary_thread():
 	while true:
 		dictionary_semaphore.wait()
-		var start_dict_time := Time.get_ticks_msec()
-		if !events.is_empty():
-			var l_events := events.duplicate(true)
-			events.clear()
-			for event in l_events:
-				match event.action:
-					"_set_true_sphere":
-						_set_true_sphere(event.local_point,event.size)
-					"_set_false_sphere":
-						_set_false_sphere(event.local_point,event.size)
-				mesh_semaphore.post()
-		
-		#print("dictionaries: "+str(Time.get_ticks_msec()-start_dict_time))
+		update_dictionary()
+
+func update_dictionary():
+	var start_dict_time := Time.get_ticks_msec()
+	if !events.is_empty():
+		var l_events := events.duplicate(true)
+		events.clear()
+		for event in l_events:
+			match event.action:
+				"_set_true_sphere":
+					_set_true_sphere(event.local_point,event.size)
+				"_set_false_sphere":
+					_set_false_sphere(event.local_point,event.size)
+			#mesh_semaphore.post()
+			WorkerThreadPool.add_task(update_meshes)
+	
+	#print("dictionaries: "+str(Time.get_ticks_msec()-start_dict_time))
 
 func _add_cube_to_array(array:PackedVector3Array, pos:Vector3):
 	#these need to be tris, so here we go

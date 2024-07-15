@@ -19,7 +19,7 @@ func _ready():
 			login_existing.add_item("existing logins",0)
 			for session : String in Engine.get_singleton("user_manager").getExistingSessions():
 				login_existing.add_item(session)
-			)
+		)
 	if is_instance_valid(Engine.get_singleton("user_manager")):
 		Engine.get_singleton("user_manager").got_joined_rooms.connect(func():
 			add_items(Engine.get_singleton("user_manager").joinedRooms)

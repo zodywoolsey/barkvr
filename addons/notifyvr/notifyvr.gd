@@ -19,8 +19,10 @@ func _process(delta):
 				tmp.move_child(i,0)
 				queuedmessages.erase(i)
 				var tmpsize = 0.0
-				for a in tmp.get_children():
-					tmpsize += a.get_aabb().size.y
-#					print(a)
-				i.position.y = tmpsize
+	
+	var tmp = get_tree().get_first_node_in_group("notificationparent")
+	if tmp:for a in tmp.get_children():
+		var tmpsize = 0.0
+		tmpsize += a.get_aabb().size.y
+		a.position.y = tmpsize
 			

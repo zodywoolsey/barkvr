@@ -32,7 +32,7 @@ var callscriptinstance:
 var mesh_target_size := Vector2()
 var label_target_position := 0.0
 
-var alpha := 0.1
+var alpha := 0.5
 
 var hover := false
 var isclicked := false
@@ -45,11 +45,14 @@ func _ready():
 func _physics_process(delta):
 	var tmp = mesh_instance_3d.mesh.surface_get_material(0)
 	tmp.albedo_color.a = lerpf(tmp.albedo_color.a, alpha, .1)
+	tmp.albedo_color.r = lerpf(tmp.albedo_color.r, alpha, .1)
+	tmp.albedo_color.g = lerpf(tmp.albedo_color.g, alpha, .1)
+	tmp.albedo_color.b = lerpf(tmp.albedo_color.b, alpha, .1)
 	if isclicked:
-		mesh_target_size = Vector2(.025,.025)
+		mesh_target_size = Vector2(.02,.02)
 		label_target_position = -.01
 	elif hover:
-		mesh_target_size = Vector2(.1,.1)
+		mesh_target_size = Vector2(.11,.11)
 		label_target_position = .01
 	else:
 		mesh_target_size = Vector2(.09,.09)
@@ -85,8 +88,8 @@ func laser_input(data:Dictionary):
 			if callscriptinstance != null and 'onhover' in callscriptinstance:
 				callscriptinstance.onhover()
 			if data.has('hovering') and data['hovering'] == true:
-				alpha = 0.25
+				alpha = 1.0
 				hover = true
 			else:
-				alpha = 0.1
+				alpha = 0.5
 				hover = false

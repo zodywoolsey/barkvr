@@ -6,9 +6,9 @@ var target_room:String = ''
 var already_processed_requests := []
 var already_processed_offers := []
 var already_processed_answers := []
-@onready var item_list := $"../../../../ItemList"
+@onready var item_list := $"../../../../../ItemList"
 @onready var scroll_container := $".."
-@onready var text_edit = $"../../Control/TextEdit"
+@onready var text_edit = $"../../../Control/TextEdit"
 
 func _ready():
 	if is_instance_valid(Engine.get_singleton("network_manager")):

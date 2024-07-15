@@ -1,5 +1,5 @@
 extends hashed_tree_list
-@onready var messages = $"../RoomSplitContainer/MessageSplitContainer/ScrollContainer/Control"
+@onready var messages = $"../RoomSplitContainer/MessageSplitContainer/Control2/ScrollContainer/Control"
 
 var target_room:String = ''
 @onready var join_button:Button = $"../RoomSplitContainer/Panel/join button"

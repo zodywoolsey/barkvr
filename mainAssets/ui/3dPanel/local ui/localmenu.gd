@@ -3,6 +3,7 @@ extends Control
 @onready var button = $Button
 @onready var window_properties = $TabContainer/window_properties
 @onready var resize = $resize
+@onready var tab_container = $TabContainer
 
 var big_height := 800
 var big_width := 800
@@ -19,6 +20,7 @@ func _ready():
 	button.pressed.connect(func():
 		expanded = !expanded
 		resize.visible = expanded
+		tab_container.visible = expanded
 		create_tween().tween_property(get_viewport().get_parent(),"viewport_size:y",big_height if expanded else small_height,.4).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BACK)
 		create_tween().tween_property(get_viewport().get_parent(),"viewport_size:x",big_width if expanded else small_height,1.0).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BACK)
 		)

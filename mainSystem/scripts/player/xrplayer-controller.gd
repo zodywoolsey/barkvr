@@ -13,6 +13,7 @@ extends CharacterBody3D
 @onready var ui_ray :InteractionRay = %uiRay
 @onready var handmenu = %handmenu
 @onready var menuoffset = %menuoffset
+@onready var screenspace = $"../screenspace"
 
 #controller input vars:
 var rightStick :Vector2 = Vector2()
@@ -54,9 +55,14 @@ var lookdrag : Dictionary = {} #{'index': -1,'relative': Vector2(),'velocity': V
 @export var touchsticklook := false
 var grab_point := Vector3()
 
+@export var force_set_vr_enabled := false
+
 var vr_mode_enabled := true:
 	set(value):
+		if force_set_vr_enabled:
+			value = force_set_vr_enabled
 		vr_mode_enabled = value
+		Notifyvr.send_notification("vrmode: "+str(value))
 		_toggle_xr(value)
 
 func _toggle_xr(value):
@@ -65,12 +71,12 @@ func _toggle_xr(value):
 	if is_instance_valid(lefthand) and is_instance_valid(righthand):
 		lefthand.rays_disabled = !value
 		righthand.rays_disabled = !value
-		world_ray.enabled = false
-		world_ray.hide()
-		ui_ray.enabled = false
-		ui_ray.hide()
+		world_ray.enabled = !value
+		world_ray.visible = !value
+		ui_ray.enabled = !value
+		ui_ray.visible = !value
 	if !value:
-		print("DISABLING XR")
+		Notifyvr.send_notification("DISABLING XR")
 		collision_shape_3d.shape.height = 1.0
 		collision_shape_3d.shape.radius = .1
 		if OS.get_name() != "Web":
@@ -156,6 +162,7 @@ func _ready():
 		)
 
 func _process(delta):
+	screenspace.global_position = get_viewport().get_camera_3d().global_position
 	if !vr_mode_enabled:
 		menuoffset.global_rotation = Vector3()
 
