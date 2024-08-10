@@ -128,10 +128,10 @@ func _ready():
 		if input_name == "ax_button":
 			rightaxbtn = false
 		)
-	#righthand.input_float_changed.connect(func(input_name:String,value:float):
-##		print('value {0}, {1}'.format([name,value]))
-		#pass
-		#)
+	righthand.input_float_changed.connect(func(input_name:String,value:float):
+#		print('value {0}, {1}'.format([name,value]))
+		pass
+		)
 	righthand.input_vector2_changed.connect(func(input_name:String,value):
 #		print('axis {0}, {1}'.format([name,value]))
 		pass
@@ -314,6 +314,10 @@ func flat_movement():
 		xr_camera_3d.rotate_x(joy_look_vector.y*MOUSE_SPEED)
 		camera_3d.rotate_x(joy_look_vector.y*MOUSE_SPEED)
 	if Input.is_action_just_pressed("click"):
+		if LocalGlobals.player_state != 0:
+			LocalGlobals.player_state = LocalGlobals.PLAYER_STATE_PLAYING
+		else:
+			LocalGlobals.player_state = LocalGlobals.PLAYER_STATE_PAUSED
 		if grabbed.size() > 0:
 			for item in grabbed.values():
 				if "node" in item and "primary" in item.node:

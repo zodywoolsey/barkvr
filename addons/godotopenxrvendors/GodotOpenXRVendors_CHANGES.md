@@ -1,8 +1,23 @@
 # Change history for the Godot OpenXR loaders asset
 
-## 2.0.4
-- Fix misc crash when reloading project on Godot 4.3
-- Fix issue with only the first permission being requested
+## 3.0.0
+- Merge GDExtension into a single implementation
+- Upgrade Android, Gradle, Godot and Kotlin dependencies
+- Add XR_FB_face_tracking support
+- Update to OpenXR 1.0.34 headers
+- Add XR_FB_render_model extension wrapper and OpenXRFBRenderModel node
+- Add XR_FB_passthrough extension wrapper
+- Add XR_FB_hand_tracking_mesh extension wrapper and OpenXRFbHandTrackingMesh node
+- Add XR_FB_hand_tracking_aim support
+- Update Meta OpenXR mobile SDK to version 62
+- Add a developer-facing API for interacting with scene anchors
+- Add support for developer-created spatial anchors via XR_FB_spatial_entity
+- Add XR_FB_hand_tracking_capsules extension wrapper
+- Add OpenXRFbPassthroughGeometry node
+- Add OpenXRMetaPassthroughColorLut
+- Add feature flags to Khronos loader for HTC
+- Add XR_HTC_passthrough extension wrapper
+- Add manifest entries to Pico and switch Pico to using the Khronos Loader
 
 ## 2.0.3
 - Migrate the export scripts from gdscript to C++ via gdextension

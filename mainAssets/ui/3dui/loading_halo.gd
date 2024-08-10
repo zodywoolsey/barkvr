@@ -13,15 +13,17 @@ var isloading := true
 var text : String = "":
 	set(value):
 		text = value
-		if isloading:
-			label_3d.text = "loading:\n"+str(value)
-		else:
-			label_3d.text = str(value)
-		create_tween().tween_callback(func():
-			mesh_instance_3d.detect_size(label_3d)
-			).set_delay(.01)
+		if label_3d:
+			if isloading:
+				label_3d.text = "loading:\n"+str(value)
+			else:
+				label_3d.text = str(value)
+			create_tween().tween_callback(func():
+				mesh_instance_3d.detect_size(label_3d)
+				).set_delay(.01)
 
 func _ready():
+	text = text
 	animation_player.play("rotate")
 	animation_player3.play("rotate")
 

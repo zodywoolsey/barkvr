@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://c3i4ahamrqxcq"]
+[gd_scene load_steps=12 format=3 uid="uid://c3i4ahamrqxcq"]
 
 [ext_resource type="Script" path="res://mainSystem/scripts/init.gd" id="1_qrvq0"]
 [ext_resource type="Script" path="res://mainSystem/scripts/startxr.gd" id="2_5iqft"]
@@ -11,6 +11,8 @@
 [ext_resource type="Script" path="res://mainAssets/objects/pens/voxel_draw_test.gd" id="8_6nkox"]
 
 [sub_resource type="AudioStreamMicrophone" id="AudioStreamMicrophone_ve6pm"]
+
+[sub_resource type="AudioStreamGenerator" id="AudioStreamGenerator_gvjes"]
 
 [node name="main" type="Node3D" groups=["localroot"]]
 script = ExtResource("1_qrvq0")
@@ -32,6 +34,7 @@ singletons = {
 stream = SubResource("AudioStreamMicrophone_ve6pm")
 autoplay = true
 bus = &"mic"
+playback_type = 1
 
 [node name="StartXR" type="Node" parent="."]
 script = ExtResource("2_5iqft")
@@ -47,5 +50,8 @@ offset_top = -105.0
 offset_right = 264.0
 grow_vertical = 0
 text = "Enter VR"
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
+stream = SubResource("AudioStreamGenerator_gvjes")
 
 [connection signal="pressed" from="StartXR/EnterWebXR/EnterVRButton" to="StartXR" method="_on_enter_webxr_button_pressed"]

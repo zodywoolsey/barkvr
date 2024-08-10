@@ -17,12 +17,16 @@
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright (c) Mikael Hermansson and Godot Jolt contributors.</string>
 	<key>CFBundleVersion</key>
-	<string>0.11.0</string>
+	<string>0.12.0</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.11.0</string>
+	<string>0.12.0</string>
 	<key>CFBundlePackageType</key>
 	<string>FMWK</string>
 	<key>CSResourcesFileMapped</key>
 	<true/>
+	<key>DTPlatformName</key>
+	<string>iphoneos</string>
+	<key>MinimumOSVersion</key>
+	<string>12.0</string>
 </dict>
 </plist>

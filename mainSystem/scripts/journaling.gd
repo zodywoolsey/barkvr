@@ -462,8 +462,25 @@ func _import_res(asset_name: String, asset_to_import: Variant, data:Dictionary={
 		file.close()
 		asset_to_import = path
 	ResourceLoader.set_abort_on_missing_resources(false)
-	ResourceLoader.load_threaded_request(asset_to_import, '', true, ResourceLoader.CACHE_MODE_IGNORE)
-	_check_loaded(asset_to_import,asset_name,data)
+	print(asset_to_import)
+	var res :Resource
+	print(ResourceLoader.get_dependencies(asset_to_import)[0])
+	print(asset_to_import)
+	#res = ResourceLoader.load(asset_to_import,'',ResourceLoader.CACHE_MODE_IGNORE)
+	#print(res.resource_path)
+	#res = _load_res_with_dependencies(asset_to_import)
+	#if res != null:
+		#var node = res.instantiate()
+		#_post_import.call_deferred(root,node,asset_name,data)
+	#ResourceLoader.load_threaded_request(asset_to_import, '', true, ResourceLoader.CACHE_MODE_IGNORE)
+	#_check_loaded(asset_to_import,asset_name,data)
+
+func _load_res_with_dependencies(path:String) -> Resource:
+	var res :Resource
+	for dep in ResourceLoader.get_dependencies(path):
+		_load_res_with_dependencies(dep)
+	res = ResourceLoader.load(path)
+	return res
 
 ## Imports an image from bytes.
 func _import_image_bytes(asset_name: String, content: PackedByteArray, data:Dictionary={}) -> void:

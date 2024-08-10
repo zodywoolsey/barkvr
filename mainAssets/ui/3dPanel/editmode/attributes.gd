@@ -1,10 +1,14 @@
-@tool
 extends Control
 
-#TODO 	for optimization create a system where fields appended (ex: Vector3_Attribute)
-#			register the values they need updated with the parent manager so
-#			that they can be updated in batches by the parent attr panel
-#			with optional self update for user simplicity reasons.
+#TODO 	find a more optimized way to update field values
+#		currently, we're culling field updates to only those visible
+# the want is for the fields to behave like they're sharing the reference to a 
+# pointer and then are just all the same pointer value. then they would update 
+# implicitly because theyre value exists in the same spot. the issue is that
+# we still need to tell the elements to update the visuals at some rate. but
+# i think if we could get the engine to behave in a way like described, it could
+# be cheaper to just deref the pointer for the value it should be instead of
+# letting the engine pass those variables around and potentially be duping them
 
 @onready var export = $VBoxContainer/titlebar/HBoxContainer/HBoxContainer/export
 @onready var dupbtn = $VBoxContainer/titlebar/HBoxContainer/HBoxContainer3/dupbtn

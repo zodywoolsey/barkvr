@@ -29,6 +29,13 @@ alignment = 1
 layout_mode = 2
 text = "load asset"
 
-[node name="HTTPRequest" type="HTTPRequest" parent="."]
+[node name="submitastext" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "load asset as text"
+
+[node name="HTTPRequestFile" type="HTTPRequest" parent="."]
 download_file = "user://tmp/downloaded_asset"
+use_threads = true
+
+[node name="HTTPRequest" type="HTTPRequest" parent="."]
 use_threads = true

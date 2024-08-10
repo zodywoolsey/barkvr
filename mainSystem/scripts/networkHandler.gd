@@ -30,21 +30,25 @@ var thread = Thread.new()
 var packetdict = {
 	'p_id': OS.get_unique_id(),
 	'uname': '',
-	'user_pos': {
-		'pos': Vector3(),
-		'rhpos': Vector3(),
-		'lhpos': Vector3()
+	'trackers': {
+		'head': Vector3(),
+		'righthand': Vector3(),
+		'lefthand': Vector3()
 	}
 }
+
+var audiobuffer := PackedVector2Array()
+
+var currentactions :Array[Dictionary] 
 
 func _input(event):
 	if event is InputEventKey and event.pressed:
 		if event.keycode == KEY_F2:
-			get_clipboard_connection_string()
-		elif event.keycode == KEY_F3:
-			apply_connection_string('offer')
-		elif event.keycode == KEY_F4:
 			create_new_peer_connection()
+		elif event.keycode == KEY_F3:
+			get_clipboard_connection_string()
+		elif event.keycode == KEY_F4:
+			apply_connection_string('offer')
 		elif event.keycode == KEY_F5:
 			apply_connection_string('answer')
 		elif event.keycode == KEY_F6:
@@ -106,14 +110,14 @@ func got_turn_server(data):
 func reset():
 	peers = []
 
-func _physics_process(_delta):
+func _process(_delta):
 	var player = get_tree().get_first_node_in_group('player')
 	if player:
-		packetdict.user_pos.pos = player.global_position
+		packetdict.trackers.head = player.global_position
 		if is_instance_valid(player.righthand):
-			packetdict.user_pos.rhpos = player.righthand.global_position
+			packetdict.trackers.righthand = player.righthand.global_position
 		if is_instance_valid(player.lefthand):
-			packetdict.user_pos.lhpos = player.lefthand.global_position
+			packetdict.trackers.lefthand = player.lefthand.global_position
 	#if !thread.is_alive() and thread.is_started():
 		#print('thread died')
 		#thread.wait_to_finish()
@@ -133,6 +137,13 @@ func poll():
 	while !close_requested:
 		var delta = Time.get_ticks_msec()-prev_time
 		prev_time = Time.get_ticks_msec()
+		
+		currentactions.append_array(Engine.get_singleton("event_manager").get_actions())
+		
+		if LocalGlobals.voice_capture.can_get_buffer(960):
+			audiobuffer = LocalGlobals.voice_capture.get_buffer(960)
+		else:
+			audiobuffer = PackedVector2Array()
 		chat_timer += delta
 		event_sync_timer += delta
 		if chat_timer < 0:
@@ -153,25 +164,30 @@ func poll():
 							while chan.channel.get_available_packet_count() > 0:
 								if !is_instance_valid(peer.peer):
 									break
-								var data = bytes_to_var(chan.channel.get_packet().decompress_dynamic(999999999999, 3))
-								var remplayer = get_tree().get_first_node_in_group(data.p_id)
-								if remplayer:
-									remplayer.call_deferred('set_target_pos',data.user_pos.pos)
+								#var data = bytes_to_var(chan.channel.get_packet().decompress_dynamic(999999999999, 3))
+								var data = bytes_to_var(chan.channel.get_packet())
+								if is_instance_valid(peer.remote_player):
+									if peer.remote_player:
+										var root = get_tree().get_first_node_in_group('localworldroot')
+										root.call_deferred('add_child',peer.remote_player)
+									peer.remote_player.call_deferred('set_target_pos',data.trackers.head)
 								else:
 									var root = get_tree().get_first_node_in_group('localworldroot')
-									var tmp:Node = load("res://mainSystem/scenes/player/remote player/remote player.tscn").instantiate()
-									tmp.add_to_group(data.p_id)
-									await root.call_deferred('add_child',tmp)
+									peer.remote_player = load("res://mainSystem/scenes/player/remote player/remote player.tscn").instantiate()
+									peer.remote_player.add_to_group(data.p_id)
+									root.call_deferred('add_child',peer.remote_player)
+									print("added remote player")
 							if !is_instance_valid(peer.peer):
 								break
 							chat_timer = 0.0
-							var packet = var_to_bytes(packetdict).compress(3)
+							#var packet = var_to_bytes(packetdict).compress(3)
+							var packet = var_to_bytes(packetdict)
 							chan.channel.put_packet(packet)
+						#end of social sync
 						if chan.label == 'event_sync_channel' and event_sync_timer > 8.3:
 							if is_instance_valid(Engine.get_singleton("event_manager")) and "receive" in Engine.get_singleton("event_manager") and "get_actions" in Engine.get_singleton("event_manager"):
 								if !is_instance_valid(peer.peer):
 									break
-								var current_actions :Array[Dictionary] = Engine.get_singleton("event_manager").get_actions()
 								# Sync from incoming data
 								while chan.channel.get_available_packet_count() > 0:
 									if !is_instance_valid(peer.peer):
@@ -184,7 +200,8 @@ func poll():
 									elif data.has('pos') and data.pos == -1:
 										pack.append_array(data.bytes)
 										packsize += 1
-										data = bytes_to_var_with_objects(pack.decompress_dynamic(999999999999, 3))
+										#data = bytes_to_var_with_objects(pack.decompress_dynamic(999999999999, 3))
+										data = bytes_to_var_with_objects(pack)
 										pack = PackedByteArray()
 									if data and data is Array:
 										for action in data:
@@ -192,11 +209,12 @@ func poll():
 											Engine.get_singleton("event_manager").call_deferred("receive",action)
 								# Send all new network events to the other users
 								event_sync_timer = 0.0
-								if !current_actions.is_empty():
+								if !currentactions.is_empty():
 									if !is_instance_valid(peer.peer):
 										break
-									print('putting actions: '+str(current_actions))
-									bytes_to_send = var_to_bytes_with_objects(current_actions).compress(3)
+									print('putting actions: '+str(currentactions))
+									#bytes_to_send = var_to_bytes_with_objects(current_actions).compress(3)
+									bytes_to_send = var_to_bytes_with_objects(currentactions)
 									if bytes_to_send.size() < packet_size:
 										chan.channel.put_var({
 											'pos': -1,
@@ -221,6 +239,31 @@ func poll():
 											if err != OK:
 												#print("Network handler, channel.put_var"+str(err))
 												pass
+									currentactions = []
+						# end of journal sync
+						if chan.label == 'voice_sync_channel' and !audiobuffer.is_empty():
+							if !is_instance_valid(peer.peer):
+								break
+							while chan.channel.get_available_packet_count() > 0:
+								if !is_instance_valid(peer.peer):
+									break
+								#var data = bytes_to_var(chan.channel.get_packet().decompress_dynamic(999999999999, 3))
+								var data = bytes_to_var(chan.channel.get_packet())
+								var remplayer = get_tree().get_first_node_in_group(data.p_id)
+								if is_instance_valid(remplayer):
+									
+									remplayer.call_deferred('set_target_pos',data.user_pos.pos)
+								else:
+									var root = get_tree().get_first_node_in_group('localworldroot')
+									var tmp:Node = load("res://mainSystem/scenes/player/remote player/remote player.tscn").instantiate()
+									tmp.add_to_group(data.p_id)
+									root.call_deferred('add_child',tmp)
+							if !is_instance_valid(peer.peer):
+								break
+							chat_timer = 0.0
+							#var packet = var_to_bytes(packetdict).compress(3)
+							var packet = var_to_bytes(packetdict)
+							chan.channel.put_packet(packet)
 					if !is_instance_valid(peer.peer):
 						break
 			else:
@@ -268,13 +311,21 @@ func create_new_peer_connection(offer_string:String='', for_user:String=''):
 				}),
 			'label':'social_sync_channel'
 		},
-		{
+		{#voice_sync_channel
 			'channel':peer.create_data_channel("event_sync_channel", {
 				'id':2,
-				'negotiated': true,
-				'ordered': true
+				'negotiated': true
 				}),
 			'label':'event_sync_channel'
+		},
+		{
+			'channel':peer.create_data_channel("voice_sync_channel", {
+				'id':3,
+				'negotiated': true,
+				'maxRetransmits': 0,
+				'ordered': true
+				}),
+			'label':'voice_sync_channel'
 		}
 		],
 		'for_user': for_user,
@@ -288,12 +339,12 @@ func create_new_peer_connection(offer_string:String='', for_user:String=''):
 	# add peer to list of peers
 	peers.append(peer_dict)
 	# if there is an offer to use, use it
-	if offer_string:
+	if !offer_string.is_empty():
 		peer.set_remote_description("offer",offer_string)
 		peer_dict.set_remote = true
 	else: # otherwise, create an offer
 		tmp = peer.create_offer()
-		assert(tmp == OK)
+		print('created offer')
 
 func _on_ice_candidate(media, index, ice_name, data:Dictionary):
 	#print("ice:")
@@ -308,8 +359,8 @@ func _on_ice_candidate(media, index, ice_name, data:Dictionary):
 	
 
 func description_created(type:String, sdp:String, data:Dictionary):
-#	print("type: ",type,"\nsdp: ",sdp)
-	#print('set local description'+"\ntype: "+type)
+	print("type: ",type,"\nsdp: ",sdp)
+	print('set local description'+"\ntype: "+type)
 	if sdp.contains('actpass'):
 		sdp = sdp.replace('actpass', 'passive')
 	data.peer.set_local_description(type,sdp)

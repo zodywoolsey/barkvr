@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://c0p3oet77tkgf"]
+[gd_scene load_steps=7 format=3 uid="uid://c0p3oet77tkgf"]
 
 [ext_resource type="Script" path="res://mainSystem/scenes/player/remote player/remote player.gd" id="1_jdtww"]
 
@@ -18,13 +18,15 @@ size = Vector3(0.05, 0.05, 0.05)
 [sub_resource type="BoxMesh" id="BoxMesh_ljhjn"]
 size = Vector3(0.05, 0.05, 0.05)
 
+[sub_resource type="AudioStreamGenerator" id="AudioStreamGenerator_pahfl"]
+
 [node name="remote player" type="Node3D"]
 script = ExtResource("1_jdtww")
 
 [node name="RigidBody3D" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.496656, 0)
-continuous_cd = true
 freeze = true
+continuous_cd = true
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D"]
 shape = SubResource("CapsuleShape3D_dbmhc")
@@ -38,3 +40,7 @@ mesh = SubResource("BoxMesh_rus0a")
 
 [node name="lefthand" type="MeshInstance3D" parent="."]
 mesh = SubResource("BoxMesh_ljhjn")
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
+stream = SubResource("AudioStreamGenerator_pahfl")
+autoplay = true

@@ -130,10 +130,5 @@ func rejoin_thread_when_finished(thread: Thread) -> void:
 		return
 	thread.wait_to_finish()
 
-
-
-
-
-
-
-
+func invert_image(image:Image):
+	print(image.data)

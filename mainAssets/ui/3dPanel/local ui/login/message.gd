@@ -22,4 +22,3 @@ func _enter_tree():
 	label = $Panel/MarginContainer/Label
 	if text:
 		label.text = text
-

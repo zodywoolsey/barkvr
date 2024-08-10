@@ -127,58 +127,6 @@ size_flags_horizontal = 3
 focus_mode = 0
 metadata/_edit_use_anchors_ = true
 
-[node name="actions" type="HBoxContainer" parent="VBoxContainer/titlebar"]
-visible = false
-custom_minimum_size = Vector2(0, 30)
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="Panel9" type="ColorRect" parent="VBoxContainer/titlebar/actions"]
-layout_mode = 2
-size_flags_horizontal = 3
-color = Color(0, 0, 0, 1)
-
-[node name="Label" type="Label" parent="VBoxContainer/titlebar/actions/Panel9"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-text = "Properties"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="active" type="ColorRect" parent="VBoxContainer/titlebar/actions"]
-layout_mode = 2
-size_flags_horizontal = 3
-color = Color(0, 0, 0, 1)
-
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/titlebar/actions/active"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="active" type="Label" parent="VBoxContainer/titlebar/actions/active/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 1
-size_flags_stretch_ratio = 4.0
-text = "visible:"
-horizontal_alignment = 2
-vertical_alignment = 1
-metadata/_edit_use_anchors_ = true
-
-[node name="CheckButton" type="CheckButton" parent="VBoxContainer/titlebar/actions/active/HBoxContainer"]
-custom_minimum_size = Vector2(50, 0)
-layout_mode = 2
-size_flags_horizontal = 3
-focus_mode = 0
-metadata/_edit_use_anchors_ = true
-
 [node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3

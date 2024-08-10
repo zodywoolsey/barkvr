@@ -48,14 +48,14 @@ var voice_analyzer :AudioEffectSpectrumAnalyzerInstance:
 					voice_analyzer = AudioServer.get_bus_effect_instance(AudioServer.get_bus_index("mic"),effect_index)
 		return voice_analyzer
 
-#var voice_analyzer :AudioEffectSpectrumAnalyzerInstance:
-	#get:
-		#if !is_instance_valid(voice_analyzer):
-			#for effect_index in AudioServer.get_bus_effect_count(AudioServer.get_bus_index("mic")):
-				#var ceffect := AudioServer.get_bus_effect(AudioServer.get_bus_index("mic"),effect_index)
-				#if ceffect.resource_name == "voiceanalyzer":
-					#voice_analyzer = AudioServer.get_bus_effect_instance(AudioServer.get_bus_index("mic"),effect_index)
-		#return voice_analyzer
+var voice_capture :AudioEffectCapture:
+	get:
+		if !is_instance_valid(voice_capture):
+			for effect_index in AudioServer.get_bus_effect_count(AudioServer.get_bus_index("mic")):
+				var ceffect := AudioServer.get_bus_effect(AudioServer.get_bus_index("mic"),effect_index)
+				if ceffect.resource_name == "voicecapture":
+					voice_capture = ceffect
+		return voice_capture
 
 signal playerinit(isvr: bool)
 signal playerreleaseuifocus

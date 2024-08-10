@@ -1,13 +1,21 @@
-[gd_scene load_steps=3 format=3 uid="uid://drvs5pgtp63nx"]
+[gd_scene load_steps=5 format=3 uid="uid://drvs5pgtp63nx"]
 
 [ext_resource type="Script" path="res://mainAssets/ui/3dPanel/local ui/login/message.gd" id="1_tdypu"]
+[ext_resource type="Texture2D" uid="uid://ctpqomaxv1n6h" path="res://assets/icons/teenyicons/solid/clipboard.svg" id="2_4knqr"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3qcyn"]
 bg_color = Color(0, 0, 0, 0.509804)
-corner_radius_top_left = 32
-corner_radius_top_right = 32
-corner_radius_bottom_right = 32
-corner_radius_bottom_left = 32
+
+[sub_resource type="GDScript" id="GDScript_xgvtk"]
+script/source = "extends Button
+@onready var label: RichTextLabel = $\"../../MarginContainer/Label\"
+
+func _ready() -> void:
+	BarkHelpers.invert_image(icon.get_image())
+
+func _pressed() -> void:
+	DisplayServer.clipboard_set(label.text)
+"
 
 [node name="message" type="MarginContainer"]
 custom_minimum_size = Vector2(0, 53)
@@ -19,6 +27,7 @@ size_flags_vertical = 3
 script = ExtResource("1_tdypu")
 
 [node name="Panel" type="PanelContainer" parent="."]
+clip_contents = true
 custom_minimum_size = Vector2(0, 53)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -39,3 +48,20 @@ bbcode_enabled = true
 text = "fjawbeigojbwairgubiworuoarugbiougbiwaugbiaowuregoiawurgbiuawbgiouawregiuasbgiuwabigouwregilwaiwbeioubwqigbysiafgiuwagfiuwaawhiofuhwioauefhiowuaefhiouwahefiouwahiofeuwahioefuhaweiofuhwioufehiowufehioawuefh"
 fit_content = true
 context_menu_enabled = true
+
+[node name="Control" type="Control" parent="Panel"]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="Panel/Control"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -55.0
+offset_bottom = 45.0
+grow_horizontal = 0
+icon = ExtResource("2_4knqr")
+flat = true
+icon_alignment = 1
+expand_icon = true
+script = SubResource("GDScript_xgvtk")

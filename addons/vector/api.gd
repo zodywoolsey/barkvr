@@ -814,7 +814,7 @@ func login_username_password(base_url:String,headers:Array,username:String,passw
 		"initial_device_display_name": "barkvr"
 		}
 	var response = client.request(
-		base_url+"/_matrix/client/v3/login",
+		"https://"+base_url+"/_matrix/client/v3/login",
 		headers,
 		HTTPClient.METHOD_POST,
 		JSON.stringify(loginDict)

@@ -1,5 +1,5 @@
 extends Control
-@onready var item_list = $chat/HBoxContainer/ItemList
+@onready var item_list = $chat/HBoxContainer/VBoxContainer/ItemList
 @onready var chat = $chat
 @onready var login_existing :OptionButton= $login/Button
 @onready var login = $login
@@ -9,18 +9,18 @@ func _ready():
 	login_existing.get_popup().hide_on_item_selection = false
 	login_existing.get_popup().hide_on_state_item_selection = false
 	login_existing.item_selected.connect(func(index):
-		if is_instance_valid(Engine.get_singleton("user_manager")):
+		if Engine.has_singleton("user_manager"):
 			if login_existing.get_item_text(index) != "existing logins":
 				Engine.get_singleton("user_manager").readUserDict(login_existing.get_item_text(index))
 		)
 	login_existing.toggled.connect(func(toggled_on):
-		if toggled_on and is_instance_valid(Engine.get_singleton("user_manager")):
+		if toggled_on and Engine.has_singleton("user_manager"):
 			login_existing.clear()
 			login_existing.add_item("existing logins",0)
 			for session : String in Engine.get_singleton("user_manager").getExistingSessions():
 				login_existing.add_item(session)
 		)
-	if is_instance_valid(Engine.get_singleton("user_manager")):
+	if Engine.has_singleton("user_manager"):
 		Engine.get_singleton("user_manager").got_joined_rooms.connect(func():
 			add_items(Engine.get_singleton("user_manager").joinedRooms)
 			)
@@ -65,4 +65,3 @@ func add_items(items):
 func loggedIn():
 	if is_instance_valid(Engine.get_singleton("user_manager")):
 		Engine.get_singleton("user_manager").sync()
-

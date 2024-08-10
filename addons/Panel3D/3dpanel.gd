@@ -300,4 +300,3 @@ func set_viewport_scene(node):
 			emit_signal('action',data)
 		)
 	mesh.mesh.surface_get_material(0).albedo_texture = tex
-

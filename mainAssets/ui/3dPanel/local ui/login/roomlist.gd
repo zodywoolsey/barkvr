@@ -1,8 +1,8 @@
 extends hashed_tree_list
-@onready var messages = $"../RoomSplitContainer/MessageSplitContainer/Control2/ScrollContainer/Control"
+@onready var messages = %messages
 
 var target_room:String = ''
-@onready var join_button:Button = $"../RoomSplitContainer/Panel/join button"
+@onready var join_button:Button = %"join button"
 
 func _ready():
 	if is_instance_valid(Engine.get_singleton("user_manager")):

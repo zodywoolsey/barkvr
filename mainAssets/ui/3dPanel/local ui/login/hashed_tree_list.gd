@@ -64,11 +64,11 @@ func add_item(text:String,metadata:Variant,replace:String=''):
 						})
 					var parent_item :TreeItem = tree[metadata.parent.get_instance_id()].tree_item
 					tmp_tree_item = create_item(parent_item)
-					tmp_tree_item.add_button(0,load("res://assets/icons/teenyicons/solid/bin.svg"))
+					#tmp_tree_item.add_button(0,load("res://assets/icons/teenyicons/solid/bin.svg"))
 					tree[item_id].tree_item = tmp_tree_item
 				else:
 					tree[item_id].tree_item = create_item()
-					tree[item_id].tree_item.add_button(0,load("res://assets/icons/teenyicons/solid/bin.svg"))
+					#tree[item_id].tree_item.add_button(0,load("res://assets/icons/teenyicons/solid/bin.svg"))
 				tree[item_id].tree_item.collapsed = true
 				tree[item_id].tree_item.set_text(0,text)
 				tree[item_id].tree_item.set_metadata(0,metadata)

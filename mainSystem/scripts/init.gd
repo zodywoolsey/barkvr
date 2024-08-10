@@ -9,11 +9,6 @@ extends Node3D
 func _ready():
 	if game_startup_scene:
 		call_deferred("add_child",game_startup_scene.instantiate())
-	#GLTFDocument.register_gltf_document_extension(VRMC_vrm_animation_inst)
-#	print(ProjectSettings.get_global_class_list())
-	#get_viewport().canvas_cull_mask
-	#var vrm_extension: GLTFDocumentExtension = gltf_document_extension_class.new()
-	#GLTFDocument.register_gltf_document_extension(vrm_extension, true)
 	var dir = DirAccess.open('user://')
 	print("open current directory: "+str(dir.get_current_dir(true))+"\n"+str(dir))
 	if !dir.dir_exists('./tmp'):
@@ -74,10 +69,10 @@ func import(files:PackedStringArray, loader:LoadingHalo=null, import_position:Ve
 			print('failed to open import file')
 			continue
 		var new_import_position :Vector3=import_position+Vector3(0,0,offset)
-		if dropped.to_lower().contains('.gltf') or \
-			dropped.to_lower().contains('.glb'):
+		if dropped.to_lower().ends_with('.gltf') or \
+			dropped.to_lower().ends_with('.glb'):
 			Engine.get_singleton("event_manager").import_asset('glb', dropped, filename, false, {"base_path":dropped, "position":new_import_position,"scale":player_size_mult})
-		elif dropped.to_lower().contains('.vrm'):
+		elif dropped.to_lower().ends_with('.vrm'):
 			Engine.get_singleton("event_manager").import_asset('vrm',dropped, filename, false, {"position":new_import_position,"scale":player_size_mult})
 		elif dropped.to_lower().ends_with('.res') or \
 			dropped.to_lower().ends_with('.tres') or \
@@ -85,8 +80,8 @@ func import(files:PackedStringArray, loader:LoadingHalo=null, import_position:Ve
 			dropped.to_lower().ends_with('.tscn'):
 			Engine.get_singleton("event_manager").import_asset('res',dropped, filename, false, {"position":new_import_position,"scale":player_size_mult})
 		#elif dropped.ends_with('.zip') or dropped.ends_with('.pck'):
-		elif dropped.to_lower().ends_with('.pck'):
-			Engine.get_singleton("event_manager").import_asset('pck', dropped, filename, false, {"position":new_import_position,"scale":player_size_mult})
+		#elif dropped.to_lower().ends_with('.pck'):
+			#Engine.get_singleton("event_manager").import_asset('pck', dropped, filename, false, {"position":new_import_position,"scale":player_size_mult})
 		elif dropped.to_lower().ends_with('.png') or \
 			dropped.to_lower().ends_with('.jpg')  or \
 			dropped.to_lower().ends_with('.jpeg') or \
@@ -96,7 +91,7 @@ func import(files:PackedStringArray, loader:LoadingHalo=null, import_position:Ve
 			dropped.to_lower().ends_with('.ktx')  or \
 			dropped.to_lower().ends_with('.webp'):
 			Engine.get_singleton("event_manager").import_asset('image', FileAccess.get_file_as_bytes(dropped), filename, false, {"position":new_import_position,"scale":player_size_mult})
-		elif dropped.ends_with(".zip"):
+		elif dropped.ends_with(".zip") or dropped.to_lower().ends_with('.pck'):
 			Engine.get_singleton("event_manager").import_asset('zip', dropped, filename, false, {"position":new_import_position,"scale":player_size_mult})
 		else:
 			Engine.get_singleton("event_manager").import_asset('file', FileAccess.get_file_as_bytes(dropped), filename, false, {"position":new_import_position,"scale":player_size_mult})
@@ -122,7 +117,7 @@ func _input(event):
 		if event.keycode == KEY_F8:
 			var tmp = MeshInstance3D.new()
 			tmp.mesh = BoxMesh.new()
-		if event.physical_keycode == KEY_V and event.ctrl_pressed and event.pressed:
+		if event.physical_keycode == KEY_V and event.ctrl_pressed and event.pressed and LocalGlobals.player_state != LocalGlobals.PLAYER_STATE_TYPING:
 			var player_size_mult:float=1.0
 			if is_instance_valid(get_tree().get_first_node_in_group("player")):
 				var tmpscale = get_tree().get_first_node_in_group("player").global_basis.get_scale()
@@ -136,4 +131,3 @@ func _input(event):
 			loader.global_position = import_position
 		if event.physical_keycode == KEY_Z and event.ctrl_pressed and event.pressed:
 			Engine.get_singleton("event_manager").undo_action()
-

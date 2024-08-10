@@ -19,6 +19,15 @@ func _ready():
 		)
 
 func _process(_delta):
+	var scrollparentrect = get_parent_control().get_parent_control().get_global_rect()
+	if scrollparentrect is ScrollContainer:
+		var rect = get_global_rect()
+		if (rect.end.y > scrollparentrect.position.y and rect.position.y < scrollparentrect.end.y):
+				update_fields()
+	else:
+		update_fields()
+
+func update_fields():
 	if target and !property_name.is_empty() and !_is_editing and is_instance_valid(target) and !_check_focus():
 		val.button_pressed = (target[property_name])
 	elif !is_instance_valid(target):

@@ -16,8 +16,6 @@ extends XRController3D
 var thishandtracking :SimpleOpenXRHand
 var otherhand : XRController3D
 
-var prevHover : Node
-var grabAreaBodies : Array = []
 var grabbed :Dictionary
 var grabbedVel := Vector3()
 var rayBody : RigidBody3D
@@ -50,8 +48,6 @@ func _ready():
 	else:
 		otherhand = righthand
 		thishandtracking = lefthandtracking
-	grabArea.connect("body_entered", grabBodyEntered)
-	grabArea.connect("body_exited", grabBodyExited)
 	connect("button_pressed",buttonPressed)
 	connect("button_released",buttonReleased)
 	input_float_changed.connect(func(name:String,value:float):
@@ -134,17 +130,6 @@ func update_raycasts():
 	ui_ray.force_update_transform()
 	world_ray.force_raycast_update()
 	world_ray.force_update_transform()
-
-func grabBodyEntered(body):
-	if body.has_meta("grabbable"):
-		var bodyMeta = body.get_meta("grabbable")
-		if bodyMeta:
-			grabAreaBodies.push_back(body)
-
-func grabBodyExited(body):
-	var tmp = grabAreaBodies.find(body)
-	if tmp != -1:
-		grabAreaBodies.pop_at(tmp)
 
 func buttonPressed(name):
 	buttons[name] = true
