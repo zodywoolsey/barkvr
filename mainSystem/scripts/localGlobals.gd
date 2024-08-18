@@ -65,5 +65,6 @@ signal clear_gizmos
 func _ready() -> void:
 	vr_supported = ProjectSettings.get_setting('xr/openxr/enabled', false)
 
-func set_player_state(value:int):
-	player_state = value
+func _set(property: StringName, value: Variant) -> bool:
+	print('prop changed: '+property)
+	return false

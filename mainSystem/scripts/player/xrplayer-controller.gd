@@ -256,15 +256,15 @@ func _input(event):
 			if event.keycode == KEY_ESCAPE:
 				match LocalGlobals.player_state:
 					LocalGlobals.PLAYER_STATE_TYPING:
-						LocalGlobals.set_player_state(LocalGlobals.PLAYER_STATE_PLAYING)
+						LocalGlobals.player_state = LocalGlobals.PLAYER_STATE_PLAYING
 						LocalGlobals.emit_signal("playerreleaseuifocus")
 						Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 					LocalGlobals.PLAYER_STATE_PLAYING:
-						LocalGlobals.set_player_state(LocalGlobals.PLAYER_STATE_PAUSED)
+						LocalGlobals.player_state = LocalGlobals.PLAYER_STATE_PAUSED
 						LocalGlobals.emit_signal("playerreleaseuifocus")
 						Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 					LocalGlobals.PLAYER_STATE_PAUSED:
-						LocalGlobals.set_player_state(LocalGlobals.PLAYER_STATE_PLAYING)
+						LocalGlobals.player_state = LocalGlobals.PLAYER_STATE_PLAYING
 						LocalGlobals.emit_signal("playerreleaseuifocus")
 						Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	if event is InputEventMouseButton:

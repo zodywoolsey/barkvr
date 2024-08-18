@@ -6,9 +6,9 @@ var target_room:String = ''
 var already_processed_requests := []
 var already_processed_offers := []
 var already_processed_answers := []
-@onready var item_list := $"../../../../../ItemList"
+@onready var item_list := %roomlist
 @onready var scroll_container := $".."
-@onready var text_edit = $"../../../Control/TextEdit"
+@onready var text_edit = %messagetext
 
 func _ready():
 	if is_instance_valid(Engine.get_singleton("network_manager")):
@@ -20,7 +20,7 @@ func _ready():
 			if var_to_bytes(data).size() != var_to_bytes(prevmessages).size():
 	#			for child in get_children():
 	#				child.queue_free()
-				if data and data.has('body') and data.body.has('chunk'):
+				if data and 'body' in data and 'chunk' in data.body:
 					data.body.chunk.reverse()
 				for event in data['body']['chunk']:
 					match event['type']:
@@ -28,7 +28,7 @@ func _ready():
 							_display_message(event)
 						'bark.session.request':
 							if is_instance_valid(Engine.get_singleton("network_manager")):
-								_display_message(event)
+								#_display_message(event)
 								if event.event_id not in already_processed_requests:
 									already_processed_requests.append(event.event_id)
 									if event.sender != Engine.get_singleton("user_manager").userData.login.user_id:
@@ -38,7 +38,7 @@ func _ready():
 											Notifyvr.send_notification('got request')
 						'bark.session.offer':
 							if is_instance_valid(Engine.get_singleton("network_manager")):
-								_display_message(event)
+								#_display_message(event)
 								if event.event_id not in already_processed_offers:
 									already_processed_offers.append(event.event_id)
 									if Time.get_unix_time_from_system()*1000.0-10000 < event.origin_server_ts:
@@ -47,7 +47,7 @@ func _ready():
 											Notifyvr.send_notification('got offer')
 						'bark.session.answer':
 							if is_instance_valid(Engine.get_singleton("network_manager")):
-								_display_message(event)
+								#_display_message(event)
 								if event.event_id not in already_processed_answers:
 									already_processed_answers.append(event.event_id)
 									if Time.get_unix_time_from_system()*1000.0-10000 < event.origin_server_ts:
@@ -59,7 +59,7 @@ func _ready():
 													Notifyvr.send_notification('got answer')
 						'bark.session.ice':
 							if is_instance_valid(Engine.get_singleton("network_manager")):
-								_display_message(event)
+								#_display_message(event)
 								if Time.get_unix_time_from_system()*1000.0-10000 < event.origin_server_ts and event.event_id not in already_processed_answers:
 									if event.content.for_user == Engine.get_singleton("user_manager").userData.login.user_id:
 										for peer in Engine.get_singleton("network_manager").peers:
@@ -85,7 +85,7 @@ func _display_message(event):
 					exists = true
 	#									break
 			if !exists:
-				var tmp = preload("res://mainAssets/ui/3dPanel/local ui/login/message.tscn").instantiate()
+				var tmp = load("res://mainAssets/ui/3dPanel/local ui/login/message.tscn").instantiate()
 				tmp.name = event.event_id
 				if event['content'].has('body'):
 					tmp.text = (

@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="barkvr"
-run/main_scene="res://mainSystem/scenes/main-for-web.tscn"
+run/main_scene="res://mainSystem/scenes/main.tscn"
 config/use_custom_user_dir=true
 config/custom_user_dir_name="bark"
 config/features=PackedStringArray("4.3", "Mobile")
@@ -43,6 +43,7 @@ webrtc_config/turn_username=""
 window/size/viewport_width=1500
 window/size/viewport_height=800
 window/subwindows/embed_subwindows=false
+window/vsync/vsync_mode=0
 
 [editor]
 
@@ -201,6 +202,7 @@ limits/message_queue/max_size_mb=128
 
 3d/run_on_separate_thread=true
 common/physics_jitter_fix=0.0
+3d/physics_engine="JoltPhysics3D"
 
 [rendering]
 
@@ -210,8 +212,10 @@ textures/vram_compression/import_etc2_astc=true
 
 [xr]
 
+openxr/foveation_level=2
 openxr/foveation_dynamic=true
 openxr/startup_alert=false
 openxr/extensions/hand_interaction_profile=true
 openxr/extensions/eye_gaze_interaction=true
 shaders/enabled=true
+openxr/extensions/hand_tracking_aim=true

@@ -1,5 +1,5 @@
 extends Control
-@onready var item_list = $chat/HBoxContainer/VBoxContainer/ItemList
+@onready var item_list = %roomlist
 @onready var chat = $chat
 @onready var login_existing :OptionButton= $login/Button
 @onready var login = $login

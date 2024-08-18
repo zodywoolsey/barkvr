@@ -881,7 +881,6 @@ func get_room_state(base_url:String, headers:PackedStringArray, room_id:String):
 	client.use_threads = false
 	get_tree().get_first_node_in_group("requestParent").add_child(client)
 	client.request_completed.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
-		assert(result == OK)
 		got_room_state.emit(result,response_code,headers,body)
 		client.queue_free()
 		)

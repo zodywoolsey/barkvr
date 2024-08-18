@@ -1,6 +1,38 @@
 class_name Network_Handler
 extends Node
 
+## peer dictionary schema 2024-08-17:
+## {
+##		'peer': peer,
+##		'channels': [{
+##			'channel':peer.create_data_channel("social_sync_channel", {
+##				'id':1,
+##				'negotiated': true,
+##				'maxPacketLifeTime': 500
+##				}),
+##			'label':'social_sync_channel'
+##		},
+##		{#voice_sync_channel
+##			'channel':peer.create_data_channel("event_sync_channel", {
+##				'id':2,
+##				'negotiated': true
+##				}),
+##			'label':'event_sync_channel'
+##		},
+##		{
+##			'channel':peer.create_data_channel("voice_sync_channel", {
+##				'id':3,
+##				'negotiated': true,
+##				'maxRetransmits': 0,
+##				'ordered': true
+##				}),
+##			'label':'voice_sync_channel'
+##		}
+##		],
+##		'for_user': for_user,
+##		'candidates': [],
+##		'set_remote': false
+##		}
 var peers : Array[Dictionary] = []
 
 var packs : Array[PackedByteArray] = [PackedByteArray()]
@@ -23,6 +55,7 @@ signal created_answer(data:Dictionary)
 signal finished_candidates(data:Dictionary)
 
 var close_requested := false
+var reset_requested := false
 
 @onready var prev_time:float = Time.get_unix_time_from_system()
 
@@ -108,7 +141,7 @@ func got_turn_server(data):
 			ProjectSettings.set_setting('bark/webrtc_config/turn_servers',data.uris)
 
 func reset():
-	peers = []
+	reset_requested = true
 
 func _process(_delta):
 	var player = get_tree().get_first_node_in_group('player')
@@ -123,7 +156,7 @@ func _process(_delta):
 		#thread.wait_to_finish()
 		#thread.start(poll)
 	for peer in peers:
-		if !is_instance_valid(peer):
+		if !is_instance_valid(peer.peer):
 			break
 		var tmp = true
 		for chan in peer.channels:
@@ -135,6 +168,9 @@ func _process(_delta):
 
 func poll():
 	while !close_requested:
+		if reset_requested:
+			reset_requested = false
+			peers = []
 		var delta = Time.get_ticks_msec()-prev_time
 		prev_time = Time.get_ticks_msec()
 		
@@ -153,7 +189,7 @@ func poll():
 		for peer in peers:
 			if is_instance_valid(peer.peer):
 				peer.peer.poll()
-				if peer.has('channels_ready') and peer.channels_ready:
+				if 'channels_ready' in peer and peer.channels_ready and 'channels' in peer:
 					for chan in peer.channels:
 						if !is_instance_valid(peer.peer):
 							break
@@ -166,10 +202,7 @@ func poll():
 									break
 								#var data = bytes_to_var(chan.channel.get_packet().decompress_dynamic(999999999999, 3))
 								var data = bytes_to_var(chan.channel.get_packet())
-								if is_instance_valid(peer.remote_player):
-									if peer.remote_player:
-										var root = get_tree().get_first_node_in_group('localworldroot')
-										root.call_deferred('add_child',peer.remote_player)
+								if "remote_player" in peer and is_instance_valid(peer.remote_player):
 									peer.remote_player.call_deferred('set_target_pos',data.trackers.head)
 								else:
 									var root = get_tree().get_first_node_in_group('localworldroot')
@@ -182,7 +215,8 @@ func poll():
 							chat_timer = 0.0
 							#var packet = var_to_bytes(packetdict).compress(3)
 							var packet = var_to_bytes(packetdict)
-							chan.channel.put_packet(packet)
+							if chan.channel.get_ready_state() == 1:
+								chan.channel.put_packet(packet)
 						#end of social sync
 						if chan.label == 'event_sync_channel' and event_sync_timer > 8.3:
 							if is_instance_valid(Engine.get_singleton("event_manager")) and "receive" in Engine.get_singleton("event_manager") and "get_actions" in Engine.get_singleton("event_manager"):
@@ -215,7 +249,7 @@ func poll():
 									print('putting actions: '+str(currentactions))
 									#bytes_to_send = var_to_bytes_with_objects(current_actions).compress(3)
 									bytes_to_send = var_to_bytes_with_objects(currentactions)
-									if bytes_to_send.size() < packet_size:
+									if bytes_to_send.size() < packet_size and chan.channel.get_ready_state() == 1:
 										chan.channel.put_var({
 											'pos': -1,
 											'bytes': bytes_to_send
@@ -250,20 +284,15 @@ func poll():
 								#var data = bytes_to_var(chan.channel.get_packet().decompress_dynamic(999999999999, 3))
 								var data = bytes_to_var(chan.channel.get_packet())
 								var remplayer = get_tree().get_first_node_in_group(data.p_id)
-								if is_instance_valid(remplayer):
-									
-									remplayer.call_deferred('set_target_pos',data.user_pos.pos)
-								else:
-									var root = get_tree().get_first_node_in_group('localworldroot')
-									var tmp:Node = load("res://mainSystem/scenes/player/remote player/remote player.tscn").instantiate()
-									tmp.add_to_group(data.p_id)
-									root.call_deferred('add_child',tmp)
+								
 							if !is_instance_valid(peer.peer):
 								break
 							chat_timer = 0.0
 							#var packet = var_to_bytes(packetdict).compress(3)
 							var packet = var_to_bytes(packetdict)
-							chan.channel.put_packet(packet)
+							
+							if chan.channel.get_ready_state() == 1:
+								chan.channel.put_packet(packet)
 					if !is_instance_valid(peer.peer):
 						break
 			else:
@@ -303,7 +332,7 @@ func create_new_peer_connection(offer_string:String='', for_user:String=''):
 #	print('initialized new peer')
 	var peer_dict = {
 		'peer': peer,
-		'channels': [{
+		'channels': [{# sync player tracker transforms (non-state essential data)
 			'channel':peer.create_data_channel("social_sync_channel", {
 				'id':1,
 				'negotiated': true,
@@ -311,14 +340,14 @@ func create_new_peer_connection(offer_string:String='', for_user:String=''):
 				}),
 			'label':'social_sync_channel'
 		},
-		{#voice_sync_channel
+		{# sync player scene update events
 			'channel':peer.create_data_channel("event_sync_channel", {
 				'id':2,
 				'negotiated': true
 				}),
 			'label':'event_sync_channel'
 		},
-		{
+		{# voip
 			'channel':peer.create_data_channel("voice_sync_channel", {
 				'id':3,
 				'negotiated': true,
