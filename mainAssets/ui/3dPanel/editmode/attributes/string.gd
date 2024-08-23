@@ -1,4 +1,4 @@
-class_name Number_Attribute
+class_name String_Attribute
 extends Control
 
 @onready var label = $VBoxContainer/Panel2/Label
@@ -8,27 +8,10 @@ extends Control
 var target:Node
 var _is_editing:bool = false
 var property_name:String = ''
-@export_enum("float","int") var type = 0:
-	set(val):
-		type = val
-		if type_label:
-			if val == 0:
-				type_label.text = "float"
-			else:
-				type_label.text = "int"
 
 func _ready():
-	if type == 0:
-		type_label.text = "float"
-	else:
-		type_label.text = "int"
 	val.text_changed.connect(func(new_text:String):
-		#if ((type == 0 and new_text.is_valid_float()) or (type == 1 and new_text.is_valid_int())):
-		if ((type == 0) or (type == 1)):
-			if type == 0:
-				target[property_name] = float(new_text)
-			else:
-				target[property_name] = int(new_text)
+		target[property_name] = new_text
 		)
 
 func _process(_delta):
@@ -41,16 +24,11 @@ func _process(_delta):
 		update_fields()
 
 func update_fields():
-	if target and !property_name.is_empty() and !_is_editing and is_instance_valid(target) and !_check_focus():
+	if target and !property_name.is_empty() and !_is_editing and is_instance_valid(target):
 		val.text = str(target[property_name])
 	elif !is_instance_valid(target):
 		target = null
 		val.text = ''
-
-func _check_focus():
-	if val.has_focus():
-		return true
-	return false
 
 ## sets the name, field target node, and the property name for the field to look for
 ## name:String, new_target:Node, new_property_name:String

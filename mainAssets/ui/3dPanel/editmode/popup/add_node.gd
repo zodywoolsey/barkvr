@@ -32,16 +32,16 @@ func _ready():
 		item_list.deselect_all()
 		item_list.clear()
 		new_text = new_text.to_lower()
-		for cls in ClassDB.get_class_list():
-			if ClassDB.is_parent_class(cls, "Node"):
+		for node_class in ClassDB.get_class_list():
+			if ClassDB.is_parent_class(node_class, "Node"):
 				var contains_all_chars :bool = true
-				var clslower := cls.to_lower()
-				for char in new_text:
-					if !clslower.contains(char):
+				var node_class_lower := node_class.to_lower()
+				for character in new_text:
+					if !node_class_lower.contains(character):
 						contains_all_chars = false
 						break
-				if contains_all_chars or clslower.contains(new_text) or clslower.similarity(new_text) > .6:
-					item_list.add_item(cls)
+				if contains_all_chars or node_class_lower.contains(new_text) or node_class_lower.similarity(new_text) > .6:
+					item_list.add_item(node_class)
 		)
 	for cls in ClassDB.get_class_list():
 		if ClassDB.is_parent_class(cls, "Node"):

@@ -60,6 +60,7 @@ var reset_requested := false
 @onready var prev_time:float = Time.get_unix_time_from_system()
 
 var thread = Thread.new()
+var voip_thread = Thread.new()
 var packetdict = {
 	'p_id': OS.get_unique_id(),
 	'uname': '',
@@ -123,6 +124,8 @@ func _ready():
 		Engine.get_singleton("user_manager").user_logged_in.connect(user_logged_in)
 	thread.start(poll)
 	BarkHelpers.rejoin_thread_when_finished(thread)
+	voip_thread.start(voip_poll)
+	BarkHelpers.rejoin_thread_when_finished(voip_thread)
 	get_window().close_requested.connect(func():
 		close_requested = true
 		thread.wait_to_finish()
@@ -141,6 +144,7 @@ func got_turn_server(data):
 			ProjectSettings.set_setting('bark/webrtc_config/turn_servers',data.uris)
 
 func reset():
+	print('start reset')
 	reset_requested = true
 
 func _process(_delta):
@@ -156,7 +160,7 @@ func _process(_delta):
 		#thread.wait_to_finish()
 		#thread.start(poll)
 	for peer in peers:
-		if !is_instance_valid(peer.peer):
+		if !("peer" in peer) or !is_instance_valid(peer.peer):
 			break
 		var tmp = true
 		for chan in peer.channels:
@@ -169,17 +173,15 @@ func _process(_delta):
 func poll():
 	while !close_requested:
 		if reset_requested:
+			print('reset')
 			reset_requested = false
+			for peer in peers:
+				peer.remote_player.queue_free()
 			peers = []
 		var delta = Time.get_ticks_msec()-prev_time
 		prev_time = Time.get_ticks_msec()
 		
 		currentactions.append_array(Engine.get_singleton("event_manager").get_actions())
-		
-		if LocalGlobals.voice_capture.can_get_buffer(960):
-			audiobuffer = LocalGlobals.voice_capture.get_buffer(960)
-		else:
-			audiobuffer = PackedVector2Array()
 		chat_timer += delta
 		event_sync_timer += delta
 		if chat_timer < 0:
@@ -194,109 +196,124 @@ func poll():
 						if !is_instance_valid(peer.peer):
 							break
 						#chan.channel.poll()
-						if chan.label == 'social_sync_channel' and chat_timer > 8.3:
-							if !is_instance_valid(peer.peer):
-								break
-							while chan.channel.get_available_packet_count() > 0:
-								if !is_instance_valid(peer.peer):
-									break
-								#var data = bytes_to_var(chan.channel.get_packet().decompress_dynamic(999999999999, 3))
-								var data = bytes_to_var(chan.channel.get_packet())
-								if "remote_player" in peer and is_instance_valid(peer.remote_player):
-									peer.remote_player.call_deferred('set_target_pos',data.trackers.head)
-								else:
-									var root = get_tree().get_first_node_in_group('localworldroot')
-									peer.remote_player = load("res://mainSystem/scenes/player/remote player/remote player.tscn").instantiate()
-									peer.remote_player.add_to_group(data.p_id)
-									root.call_deferred('add_child',peer.remote_player)
-									print("added remote player")
-							if !is_instance_valid(peer.peer):
-								break
-							chat_timer = 0.0
-							#var packet = var_to_bytes(packetdict).compress(3)
-							var packet = var_to_bytes(packetdict)
-							if chan.channel.get_ready_state() == 1:
-								chan.channel.put_packet(packet)
-						#end of social sync
-						if chan.label == 'event_sync_channel' and event_sync_timer > 8.3:
-							if is_instance_valid(Engine.get_singleton("event_manager")) and "receive" in Engine.get_singleton("event_manager") and "get_actions" in Engine.get_singleton("event_manager"):
-								if !is_instance_valid(peer.peer):
-									break
-								# Sync from incoming data
+						match chan.label:
+							'social_sync_channel':
+								if chat_timer > 8.3:
+									if !is_instance_valid(peer.peer):
+										break
+									while chan.channel.get_available_packet_count() > 0:
+										if !is_instance_valid(peer.peer):
+											break
+										#var data = bytes_to_var(chan.channel.get_packet().decompress_dynamic(999999999999, 3))
+										var data = bytes_to_var(chan.channel.get_packet())
+										if "remote_player" in peer and is_instance_valid(peer.remote_player):
+											peer.remote_player.call_deferred('set_target_pos',data.trackers.head)
+										else:
+											var root = get_tree().get_first_node_in_group('localworldroot')
+											peer.remote_player = load("res://mainSystem/scenes/player/remote player/remote player.tscn").instantiate()
+											peer.remote_player.add_to_group(data.p_id)
+											root.call_deferred('add_child',peer.remote_player)
+											print("added remote player")
+									if !is_instance_valid(peer.peer):
+										break
+									#var packet = var_to_bytes(packetdict).compress(3)
+									if chan.channel.get_ready_state() == 1:
+										var packet = var_to_bytes(packetdict)
+										chan.channel.put_packet(packet)
+										chat_timer = 0.0
+							#end of social sync
+							'event_sync_channel':
+								if event_sync_timer > 8.3:
+									if is_instance_valid(Engine.get_singleton("event_manager")) and "receive" in Engine.get_singleton("event_manager") and "get_actions" in Engine.get_singleton("event_manager"):
+										if !is_instance_valid(peer.peer):
+											break
+										# Sync from incoming data
+										while chan.channel.get_available_packet_count() > 0:
+											if !is_instance_valid(peer.peer):
+												break
+											print('getting available network events')
+											var data = chan.channel.get_var(true)
+											if data.has('pos') and data.pos != -1 and data.has('bytes'):
+												pack.append_array(data.bytes)
+												packsize += 1
+											elif data.has('pos') and data.pos == -1:
+												pack.append_array(data.bytes)
+												packsize += 1
+												#data = bytes_to_var_with_objects(pack.decompress_dynamic(999999999999, 3))
+												data = bytes_to_var_with_objects(pack)
+												pack = PackedByteArray()
+											if data and data is Array:
+												for action in data:
+													print("got action: "+str(action))
+													Engine.get_singleton("event_manager").call_deferred("receive",action)
+										# Send all new network events to the other users
+										event_sync_timer = 0.0
+										if !currentactions.is_empty():
+											if !is_instance_valid(peer.peer):
+												break
+											print('putting actions: '+str(currentactions))
+											#bytes_to_send = var_to_bytes_with_objects(current_actions).compress(3)
+											bytes_to_send = var_to_bytes_with_objects(currentactions)
+											if bytes_to_send.size() < packet_size and chan.channel.get_ready_state() == 1:
+												chan.channel.put_var({
+													'pos': -1,
+													'bytes': bytes_to_send
+												})
+											else:
+												if !is_instance_valid(peer.peer):
+													break
+												var parts:int = float(bytes_to_send.size())/packet_size
+												for i:int in range(float(bytes_to_send.size())/packet_size):
+													if !is_instance_valid(peer.peer):
+														break
+													var pack_dict = {}
+													if i < parts-1: 
+														pack_dict['pos'] = i
+														pack_dict['bytes'] = bytes_to_send.slice(i*packet_size, (i*packet_size)+packet_size)
+													else:
+														pack_dict['bytes'] = bytes_to_send.slice(i*packet_size)
+														pack_dict['pos'] = -1
+							#							print('err: ',chan.put_var(pack_dict))
+													var err = chan.channel.put_var(pack_dict)
+													if err != OK:
+														#print("Network handler, channel.put_var"+str(err))
+														pass
+											currentactions = []
+							# end of journal sync
+					if !is_instance_valid(peer.peer):
+						break
+
+func voip_poll():
+	while !close_requested:
+		var packet := PackedByteArray()
+		if LocalGlobals.voice_capture.can_get_buffer(960):
+			var dict := LocalGlobals.voice_capture.gdopus_encode()
+			packet = dict["output"]
+		for peer in peers:
+			if is_instance_valid(peer.peer):
+				if 'channels_ready' in peer and peer.channels_ready and 'channels' in peer:
+					for chan in peer.channels:
+						if !is_instance_valid(peer.peer):
+							break
+						match chan.label:
+							'voice_sync_channel':
 								while chan.channel.get_available_packet_count() > 0:
 									if !is_instance_valid(peer.peer):
 										break
-									print('getting available network events')
-									var data = chan.channel.get_var(true)
-									if data.has('pos') and data.pos != -1 and data.has('bytes'):
-										pack.append_array(data.bytes)
-										packsize += 1
-									elif data.has('pos') and data.pos == -1:
-										pack.append_array(data.bytes)
-										packsize += 1
-										#data = bytes_to_var_with_objects(pack.decompress_dynamic(999999999999, 3))
-										data = bytes_to_var_with_objects(pack)
-										pack = PackedByteArray()
-									if data and data is Array:
-										for action in data:
-											print("got action: "+str(action))
-											Engine.get_singleton("event_manager").call_deferred("receive",action)
-								# Send all new network events to the other users
-								event_sync_timer = 0.0
-								if !currentactions.is_empty():
+									#var data = bytes_to_var(chan.channel.get_packet().decompress_dynamic(999999999999, 2))
+									var data = chan.channel.get_packet()
+									if "remote_player" in peer and is_instance_valid(peer.remote_player) and peer.remote_player.is_node_ready():
+										peer.remote_player.push_audio_buffer_bytes(data)
+								if !packet.is_empty():
 									if !is_instance_valid(peer.peer):
 										break
-									print('putting actions: '+str(currentactions))
-									#bytes_to_send = var_to_bytes_with_objects(current_actions).compress(3)
-									bytes_to_send = var_to_bytes_with_objects(currentactions)
-									if bytes_to_send.size() < packet_size and chan.channel.get_ready_state() == 1:
-										chan.channel.put_var({
-											'pos': -1,
-											'bytes': bytes_to_send
-										})
-									else:
-										if !is_instance_valid(peer.peer):
-											break
-										var parts:int = float(bytes_to_send.size())/packet_size
-										for i:int in range(float(bytes_to_send.size())/packet_size):
-											if !is_instance_valid(peer.peer):
-												break
-											var pack_dict = {}
-											if i < parts-1: 
-												pack_dict['pos'] = i
-												pack_dict['bytes'] = bytes_to_send.slice(i*packet_size, (i*packet_size)+packet_size)
-											else:
-												pack_dict['bytes'] = bytes_to_send.slice(i*packet_size)
-												pack_dict['pos'] = -1
-					#							print('err: ',chan.put_var(pack_dict))
-											var err = chan.channel.put_var(pack_dict)
-											if err != OK:
-												#print("Network handler, channel.put_var"+str(err))
-												pass
-									currentactions = []
-						# end of journal sync
-						if chan.label == 'voice_sync_channel' and !audiobuffer.is_empty():
-							if !is_instance_valid(peer.peer):
-								break
-							while chan.channel.get_available_packet_count() > 0:
-								if !is_instance_valid(peer.peer):
-									break
-								#var data = bytes_to_var(chan.channel.get_packet().decompress_dynamic(999999999999, 3))
-								var data = bytes_to_var(chan.channel.get_packet())
-								var remplayer = get_tree().get_first_node_in_group(data.p_id)
-								
-							if !is_instance_valid(peer.peer):
-								break
-							chat_timer = 0.0
-							#var packet = var_to_bytes(packetdict).compress(3)
-							var packet = var_to_bytes(packetdict)
-							
-							if chan.channel.get_ready_state() == 1:
-								chan.channel.put_packet(packet)
-					if !is_instance_valid(peer.peer):
-						break
-			else:
-				peers.erase(peer)
+									#var packet = var_to_bytes(packetdict).compress(3)
+									if chan.channel.get_ready_state() == 1:
+										chan.channel.put_packet( packet )
+								#if LocalGlobals.twovoip_capture.chunk_available():
+									#if chan.channel.get_ready_state() == 1:
+										#var packet :PackedByteArray = LocalGlobals.twovoip_capture.read_opus_packet(PackedByteArray())
+										#chan.channel.put_packet(packet)
 
 ## Takes an optional offer_string, and an optional for_user string
 ## offer_string will automatically set a remote offer description for the created peer

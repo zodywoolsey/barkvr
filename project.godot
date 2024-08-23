@@ -15,7 +15,7 @@ run/main_scene="res://mainSystem/scenes/main.tscn"
 config/use_custom_user_dir=true
 config/custom_user_dir_name="bark"
 config/features=PackedStringArray("4.3", "Mobile")
-boot_splash/bg_color=Color(0, 0, 0, 1)
+boot_splash/bg_color=Color(0, 0, 0, 0)
 boot_splash/image="res://assets/icons/barkiconrounded.png"
 boot_splash/fullsize=false
 config/icon="res://assets/icons/barkiconrounded.png"
@@ -24,6 +24,7 @@ config/windows_native_icon="res://assets/barkvrcorgi.ico"
 [audio]
 
 driver/enable_input=true
+driver/mix_rate=48000
 
 [autoload]
 
@@ -43,7 +44,6 @@ webrtc_config/turn_username=""
 window/size/viewport_width=1500
 window/size/viewport_height=800
 window/subwindows/embed_subwindows=false
-window/vsync/vsync_mode=0
 
 [editor]
 
@@ -200,7 +200,6 @@ limits/message_queue/max_size_mb=128
 
 [physics]
 
-3d/run_on_separate_thread=true
 common/physics_jitter_fix=0.0
 3d/physics_engine="JoltPhysics3D"
 

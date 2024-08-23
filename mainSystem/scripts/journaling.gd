@@ -18,13 +18,15 @@ var local_root: Node:
 		return local_root
 
 func is_path_remote(path:NodePath, from_journal_root:bool=true):
-	var t_node :Node
+	var target_node :Node
 	if from_journal_root:
-		t_node = root.get_node_or_null(path)
+		target_node = root.get_node_or_null(path)
 	else:
-		t_node = get_tree().root.get_node_or_null(path)
-	if t_node != null and root.is_ancestor_of(t_node):
+		target_node = get_tree().root.get_node_or_null(path)
+	if target_node != null and root.is_ancestor_of(target_node):
+		print('root is ancestor')
 		return true
+	print('root not ancestor')
 	return false
 
 func _init():
@@ -73,9 +75,9 @@ func _prepare_root_for_remote_sync() -> void:
 
 func set_parent(target: NodePath, new_parent: NodePath) -> void:
 	check_root()
-	var t_node := root.get_node(target)
+	var target_node := root.get_node(target)
 	var np_node := root.get_node(new_parent)
-	t_node.reparent(np_node)
+	target_node.reparent(np_node)
 	actions.append({
 		'action_name': 'set_parent',
 		'target': target,
@@ -102,27 +104,32 @@ func add_node(parent: NodePath, nodes:Dictionary, recieved := false, undid := fa
 	print("journal_add_node")
 	var p_node := root.get_node(parent)
 	if is_instance_valid(p_node):
-		var t_node :Node = _read_add_node_nodes_dict(nodes)
-		while p_node.has_node("./"+t_node.name):
-			var placeholder_name :String=  str(str(str(nodes.node_class) + str( str(nodes) + str( Time.get_unix_time_from_system() + float(Time.get_ticks_usec()) ))).hash())
-			t_node.name = placeholder_name
-		p_node.add_child(t_node)
+		var target_node :Node = _read_add_node_nodes_dict(nodes, recieved)
+		if !recieved:
+			while p_node.has_node("./"+target_node.name):
+				var placeholder_name :String=  str(str(str(nodes.node_class) + str( str(nodes) + str( Time.get_unix_time_from_system() + float(Time.get_ticks_usec()) ))).hash())
+				target_node.name = placeholder_name
+				if "properties" in nodes:
+					nodes.properties.append({"name":"name","value":placeholder_name})
+				else:
+					nodes.properties = [{"name":"name","value":placeholder_name}]
+		p_node.add_child(target_node)
 		if !recieved and !undid:
 			_add_action({
 				'action_name': 'add_node',
 				'parent': parent,
-				'added_node_path': root.get_path_to(t_node),
+				'added_node_path': root.get_path_to(target_node),
 				'nodes': nodes
 			})
 		if undid:
 			_add_action({
 				'action_name': 'add_node',
 				'parent': parent,
-				'added_node_path': root.get_path_to(t_node),
+				'added_node_path': root.get_path_to(target_node),
 				'nodes': nodes
 			},true)
 
-func _read_add_node_nodes_dict(node_dict:Dictionary) -> Node:
+func _read_add_node_nodes_dict(node_dict:Dictionary, recieved:=false) -> Node:
 	check_root()
 	if "node_class" in node_dict and ClassDB.can_instantiate(node_dict.node_class):
 		var node = ClassDB.instantiate(node_dict.node_class)
@@ -134,7 +141,7 @@ func _read_add_node_nodes_dict(node_dict:Dictionary) -> Node:
 						node[prop.name] = prop.value
 					elif prop.name.begins_with('metadata/'):
 						node.set_meta(prop.name.trim_prefix("metadata/"), prop.value)
-		if node.name:
+		if !recieved:
 			var placeholder_name :String= str(str(str(node_dict.node_class) + str( str(node) + str( Time.get_unix_time_from_system() + float(Time.get_ticks_usec()) ))).hash())
 			if "properties" in node_dict:
 				node_dict.properties.append({"name":"name","value":placeholder_name})
@@ -153,25 +160,25 @@ func _read_add_node_nodes_dict(node_dict:Dictionary) -> Node:
 func delete_node(target: NodePath, recieved := false, undid := false) -> void:
 	check_root()
 	print(is_path_remote(target))
-	var t_node := root.get_node(target)
+	var target_node := root.get_node(target)
 	var deleted_node_as_packed_scene := PackedScene.new()
-	take_owner_of_node_and_all_children(t_node, t_node)
-	deleted_node_as_packed_scene.pack(t_node)
-	t_node.queue_free()
+	take_owner_of_node_and_all_children(target_node, target_node)
+	deleted_node_as_packed_scene.pack(target_node)
+	target_node.queue_free()
 	if !recieved:
 		_add_action({
 			'action_name': 'delete_node',
 			'target': target,
-			'deleted_node': t_node.name#Marshalls.variant_to_base64(deleted_node_as_packed_scene,true)
+			'deleted_node': target_node.name#Marshalls.variant_to_base64(deleted_node_as_packed_scene,true)
 		})
 
 func set_property(target: NodePath, prop_name: String, value: Variant, recieved := false, undid := false) -> void:
 	print(target)
 	check_root()
-	var t_node := root.get_node(target)
-	if is_instance_valid(t_node) and prop_name.split(':')[0] in t_node:
-		var previous_value = t_node.get_indexed(prop_name)
-		t_node.set_indexed(prop_name,value)
+	var target_node := root.get_node(target)
+	if is_instance_valid(target_node) and prop_name.split(':')[0] in target_node:
+		var previous_value = target_node.get_indexed(prop_name)
+		target_node.set_indexed(prop_name,value)
 		if !recieved and !undid:
 			_add_action({
 				'action_name': 'set_property',
@@ -664,7 +671,7 @@ func receive(action: Dictionary) -> void:
 		"add_node":
 			add_node(action.parent,action.nodes,true)
 
-func _post_import(_root_node:Node,node_to_add:Node,node_name:String,data:Dictionary={},lookatuser:bool=false):
+func _post_import(_rootarget_node:Node,node_to_add:Node,node_name:String,data:Dictionary={},lookatuser:bool=false):
 	check_root()
 	var position = Vector3()
 	if "position" in data:

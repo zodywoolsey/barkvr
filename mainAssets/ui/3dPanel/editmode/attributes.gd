@@ -19,11 +19,12 @@ extends Control
 
 @onready var v_box_container = $VBoxContainer/ScrollContainer/VBoxContainer
 
-var vector_3_field = preload("res://mainAssets/ui/3dPanel/editmode/attributes/vector3.tscn")
-var vector_2_field = preload("res://mainAssets/ui/3dPanel/editmode/attributes/vector2.tscn")
-var number_field = preload("res://mainAssets/ui/3dPanel/editmode/attributes/number.tscn")
-var bool_field = preload("res://mainAssets/ui/3dPanel/editmode/attributes/bool.tscn")
-var enum_field = preload("res://mainAssets/ui/3dPanel/editmode/attributes/enum.tscn")
+var vector_3_field = load("res://mainAssets/ui/3dPanel/editmode/attributes/vector3.tscn")
+var vector_2_field = load("res://mainAssets/ui/3dPanel/editmode/attributes/vector2.tscn")
+var number_field = load("res://mainAssets/ui/3dPanel/editmode/attributes/number.tscn")
+var bool_field = load("res://mainAssets/ui/3dPanel/editmode/attributes/bool.tscn")
+var enum_field = load("res://mainAssets/ui/3dPanel/editmode/attributes/enum.tscn")
+var string_field = load("res://mainAssets/ui/3dPanel/editmode/attributes/string.tscn")
 var is_field_focused = false
 var target : Node = null
 
@@ -49,11 +50,19 @@ func set_target(node):
 			child.queue_free()
 		target = node
 		var prop_list := target.get_property_list()
-		for prop in target.get_property_list():
+		for prop in prop_list:
 			var fieldname :String= prop.name
 			if prop.name.contains("bones/") and target is Skeleton3D:
 				fieldname = "bone: "+target.get_bone_name(int(prop.name.split("/")[1]))+" "+prop.name.split("/")[-1]
 			match prop.type:
+				TYPE_STRING_NAME:
+					var tmp :String_Attribute = string_field.instantiate()
+					v_box_container.add_child(tmp)
+					tmp.set_data(fieldname, target, prop.name)
+				TYPE_STRING:
+					var tmp :String_Attribute = string_field.instantiate()
+					v_box_container.add_child(tmp)
+					tmp.set_data(fieldname, target, prop.name)
 				TYPE_BOOL:
 					var tmp :Bool_Attribute = bool_field.instantiate()
 					v_box_container.add_child(tmp)

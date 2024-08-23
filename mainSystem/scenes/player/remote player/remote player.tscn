@@ -18,7 +18,9 @@ size = Vector3(0.05, 0.05, 0.05)
 [sub_resource type="BoxMesh" id="BoxMesh_ljhjn"]
 size = Vector3(0.05, 0.05, 0.05)
 
-[sub_resource type="AudioStreamGenerator" id="AudioStreamGenerator_pahfl"]
+[sub_resource type="AudioStreamOpusDecoder" id="AudioStreamOpusDecoder_bkn5h"]
+mix_rate = 48000.0
+buffer_length = 0.04
 
 [node name="remote player" type="Node3D"]
 script = ExtResource("1_jdtww")
@@ -42,5 +44,5 @@ mesh = SubResource("BoxMesh_rus0a")
 mesh = SubResource("BoxMesh_ljhjn")
 
 [node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
-stream = SubResource("AudioStreamGenerator_pahfl")
+stream = SubResource("AudioStreamOpusDecoder_bkn5h")
 autoplay = true

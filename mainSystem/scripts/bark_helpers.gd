@@ -129,12 +129,3 @@ func rejoin_thread_when_finished(thread: Thread) -> void:
 		get_tree().create_timer(1).timeout.connect(rejoin_thread_when_finished.bind(thread))
 		return
 	thread.wait_to_finish()
-
-func invert_image(image:Image):
-	var new_data :PackedByteArray = image.data.data
-	for value in new_data:
-		value = remap(value, 0,255,255,0)
-	print(ClassDB.class_get_enum_constants("Image", "Format").find(image.data.format))
-	print(ClassDB.class_get_enum_constants("Image", "Format"))
-	print(image.data.format)
-	image.set_data(image.data.width,image.data.height,image.data.mipmaps,ClassDB.class_get_enum_constants("Image", "Format").find(image.data.format), new_data)

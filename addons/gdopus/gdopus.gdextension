@@ -1,0 +1,24 @@
+[configuration]
+
+entry_symbol = "example_library_init"
+compatibility_minimum = 4.2
+
+[libraries]
+
+macos.debug = "libgdopusencoder.macos.template_debug.framework"
+macos.release = "libgdopusencoder.macos.template_release.framework"
+windows.debug.x86_32 = "libgdopusencoder.windows.template_debug.x86_32.dll"
+windows.release.x86_32 = "libgdopusencoder.windows.template_release.x86_32.dll"
+windows.debug.x86_64 = "libgdopusencoder.windows.template_debug.x86_64.dll"
+windows.release.x86_64 = "libgdopusencoder.windows.template_release.x86_64.dll"
+linux.debug.x86_64 = "libgdopusencoder.linux.template_debug.x86_64.so"
+linux.release.x86_64 = "libgdopusencoder.linux.template_release.x86_64.so"
+linux.debug.arm64 = "libgdopusencoder.linux.template_debug.arm64.so"
+linux.release.arm64 = "libgdopusencoder.linux.template_release.arm64.so"
+linux.debug.rv64 = "libgdopusencoder.linux.template_debug.rv64.so"
+linux.release.rv64 = "libgdopusencoder.linux.template_release.rv64.so"
+android.debug.x86_64 = "libgdopusencoder.android.template_debug.x86_64.so"
+android.release.x86_64 = "libgdopusencoder.android.template_release.x86_64.so"
+android.debug.arm64 = "libgdopusencoder.android.template_debug.arm64.so"
+android.release.arm64 = "libgdopusencoder.android.template_release.arm64.so"
+web.debug.wasm32 = "libgdopusencoder.web.template_debug.wasm32.wasm"

@@ -48,13 +48,14 @@ var voice_analyzer :AudioEffectSpectrumAnalyzerInstance:
 					voice_analyzer = AudioServer.get_bus_effect_instance(AudioServer.get_bus_index("mic"),effect_index)
 		return voice_analyzer
 
-var voice_capture :AudioEffectCapture:
+var voice_capture :GDOpusEncoder:
 	get:
 		if !is_instance_valid(voice_capture):
 			for effect_index in AudioServer.get_bus_effect_count(AudioServer.get_bus_index("mic")):
 				var ceffect := AudioServer.get_bus_effect(AudioServer.get_bus_index("mic"),effect_index)
 				if ceffect.resource_name == "voicecapture":
 					voice_capture = ceffect
+					break
 		return voice_capture
 
 signal playerinit(isvr: bool)
@@ -64,7 +65,3 @@ signal clear_gizmos
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	vr_supported = ProjectSettings.get_setting('xr/openxr/enabled', false)
-
-func _set(property: StringName, value: Variant) -> bool:
-	print('prop changed: '+property)
-	return false

@@ -17,62 +17,61 @@ func _ready():
 		Engine.get_singleton("network_manager").finished_candidates.connect(candidates_finished)
 	if is_instance_valid(Engine.get_singleton("user_manager")):
 		Engine.get_singleton("user_manager").got_room_messages.connect(func(data):
-			if var_to_bytes(data).size() != var_to_bytes(prevmessages).size():
-	#			for child in get_children():
-	#				child.queue_free()
-				if data and 'body' in data and 'chunk' in data.body:
-					data.body.chunk.reverse()
-				for event in data['body']['chunk']:
-					match event['type']:
-						'm.room.message':
-							_display_message(event)
-						'bark.session.request':
-							if is_instance_valid(Engine.get_singleton("network_manager")):
-								#_display_message(event)
-								if event.event_id not in already_processed_requests:
-									already_processed_requests.append(event.event_id)
-									if event.sender != Engine.get_singleton("user_manager").userData.login.user_id:
-										if Time.get_unix_time_from_system()*1000.0-10000 < event.origin_server_ts:
-											Engine.get_singleton("network_manager").create_new_peer_connection('',event.sender)
-											requesting_user = event.sender
-											Notifyvr.send_notification('got request')
-						'bark.session.offer':
-							if is_instance_valid(Engine.get_singleton("network_manager")):
-								#_display_message(event)
-								if event.event_id not in already_processed_offers:
-									already_processed_offers.append(event.event_id)
+#			for child in get_children():
+#				child.queue_free()
+			if data and 'body' in data and data.body and 'chunk' in data.body:
+				data.body.chunk.reverse()
+			for event in data['body']['chunk']:
+				match event['type']:
+					'm.room.message':
+						_display_message(event)
+					'bark.session.request':
+						if is_instance_valid(Engine.get_singleton("network_manager")):
+							#_display_message(event)
+							if event.event_id not in already_processed_requests:
+								already_processed_requests.append(event.event_id)
+								if event.sender != Engine.get_singleton("user_manager").userData.login.user_id:
 									if Time.get_unix_time_from_system()*1000.0-10000 < event.origin_server_ts:
-										if event.content.for_user == Engine.get_singleton("user_manager").userData.login.user_id:
-											Engine.get_singleton("network_manager").create_new_peer_connection(event.content.sdp,event.sender)
-											Notifyvr.send_notification('got offer')
-						'bark.session.answer':
-							if is_instance_valid(Engine.get_singleton("network_manager")):
-								#_display_message(event)
-								if event.event_id not in already_processed_answers:
-									already_processed_answers.append(event.event_id)
-									if Time.get_unix_time_from_system()*1000.0-10000 < event.origin_server_ts:
-										if event.content.for_user == Engine.get_singleton("user_manager").userData.login.user_id:
-											for peer in Engine.get_singleton("network_manager").peers:
-												if peer.for_user == event.sender:
-													peer.peer.set_remote_description('answer',event.content.sdp)
-													peer.set_remote = true
-													Notifyvr.send_notification('got answer')
-						'bark.session.ice':
-							if is_instance_valid(Engine.get_singleton("network_manager")):
-								#_display_message(event)
-								if Time.get_unix_time_from_system()*1000.0-10000 < event.origin_server_ts and event.event_id not in already_processed_answers:
+										Engine.get_singleton("network_manager").create_new_peer_connection('',event.sender)
+										requesting_user = event.sender
+										Notifyvr.send_notification('got request')
+					'bark.session.offer':
+						if is_instance_valid(Engine.get_singleton("network_manager")):
+							#_display_message(event)
+							if event.event_id not in already_processed_offers:
+								already_processed_offers.append(event.event_id)
+								if Time.get_unix_time_from_system()*1000.0-10000 < event.origin_server_ts:
+									if event.content.for_user == Engine.get_singleton("user_manager").userData.login.user_id:
+										Engine.get_singleton("network_manager").create_new_peer_connection(event.content.sdp,event.sender)
+										Notifyvr.send_notification('got offer')
+					'bark.session.answer':
+						if is_instance_valid(Engine.get_singleton("network_manager")):
+							#_display_message(event)
+							if event.event_id not in already_processed_answers:
+								already_processed_answers.append(event.event_id)
+								if Time.get_unix_time_from_system()*1000.0-10000 < event.origin_server_ts:
 									if event.content.for_user == Engine.get_singleton("user_manager").userData.login.user_id:
 										for peer in Engine.get_singleton("network_manager").peers:
 											if peer.for_user == event.sender:
-												if peer.set_remote:
-													already_processed_answers.append(event.event_id)
-													for candidate in event.content.candidates:
-														peer.peer.add_ice_candidate(
-															candidate.media,
-															candidate.index,
-															candidate.name
-														)
-														Notifyvr.send_notification('set_ice')
+												peer.peer.set_remote_description('answer',event.content.sdp)
+												peer.set_remote = true
+												Notifyvr.send_notification('got answer')
+					'bark.session.ice':
+						if is_instance_valid(Engine.get_singleton("network_manager")):
+							#_display_message(event)
+							if Time.get_unix_time_from_system()*1000.0-10000 < event.origin_server_ts and event.event_id not in already_processed_answers:
+								if event.content.for_user == Engine.get_singleton("user_manager").userData.login.user_id:
+									for peer in Engine.get_singleton("network_manager").peers:
+										if peer.for_user == event.sender:
+											if peer.set_remote:
+												already_processed_answers.append(event.event_id)
+												for candidate in event.content.candidates:
+													peer.peer.add_ice_candidate(
+														candidate.media,
+														candidate.index,
+														candidate.name
+													)
+													Notifyvr.send_notification('set_ice')
 				prevmessages = data
 			)
 

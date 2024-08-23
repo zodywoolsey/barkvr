@@ -44,7 +44,7 @@ func _ready():
 			loader.global_position = import_position
 	)# end of files dropped
 
-func _process(delta):
+func _process(_delta:float) -> void:
 	if !is_instance_valid(get_tree().get_first_node_in_group("player")):
 		var tmp_target_parent = get_tree().get_first_node_in_group("localworldroot")
 		if is_instance_valid(tmp_target_parent):

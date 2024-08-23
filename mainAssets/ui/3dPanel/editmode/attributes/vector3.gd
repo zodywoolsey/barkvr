@@ -17,40 +17,25 @@ func _ready():
 	event_supplier = Engine.get_singleton("event_manager")
 	print("event suppliervec3: "+str(event_supplier))
 	xval.text_changed.connect(func(new_text):
-		var exp := Expression.new()
-		print(exp.get_error_text())
-		if exp.parse(new_text) == 0:
-			new_text = str(exp.execute())
 		event_supplier.set_property(
 			event_supplier.root.get_path_to(target),
 			property_name+":x",
 			float(new_text)
 			)
-		xval.text = new_text
 		)
 	yval.text_changed.connect(func(new_text):
-		var exp := Expression.new()
-		print(exp.get_error_text())
-		if exp.parse(new_text) == 0:
-			new_text = str(exp.execute())
 		event_supplier.set_property(
 			event_supplier.root.get_path_to(target),
 			property_name+":y",
 			float(new_text)
 			)
-		yval.text = new_text
 		)
 	zval.text_changed.connect(func(new_text):
-		var exp := Expression.new()
-		print(exp.get_error_text())
-		if exp.parse(new_text) == 0:
-			new_text = str(exp.execute())
 		event_supplier.set_property(
 			event_supplier.root.get_path_to(target),
 			property_name+":z",
 			float(new_text)
 			)
-		zval.text = new_text
 		)
 
 func _process(_delta):
