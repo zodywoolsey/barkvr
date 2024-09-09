@@ -18,6 +18,8 @@ The project is still in the very early stages. Please feel free to support the p
 
 [Ko-Fi](https://ko-fi.com/zodiepupper)
 
+[Liberapay](https://liberapay.com/zodiepupper)
+
 ## Core Focus:
 - Accessibility: Making BarkVR welcoming to everyone, regardless of background or ability.
 - Decentralized Design: Giving users the power to shape BarkVR's world through decentralization.
