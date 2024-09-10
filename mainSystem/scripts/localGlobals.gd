@@ -65,3 +65,9 @@ signal clear_gizmos
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	vr_supported = ProjectSettings.get_setting('xr/openxr/enabled', false)
+
+func player_init(isvr:bool):
+	playerinit.emit(isvr)
+
+func clear_gizmos_func():
+	clear_gizmos.emit()

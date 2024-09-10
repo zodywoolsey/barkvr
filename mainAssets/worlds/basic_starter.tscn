@@ -32,7 +32,8 @@ func _ready():
 		)
 "
 
-[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_csaaw"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_oclkr"]
+size = Vector3(100000, 1, 100000)
 
 [sub_resource type="Shader" id="Shader_qdnrl"]
 code = "// NOTE: Shader automatically converted from Godot Engine 4.2.1.stable's StandardMaterial3D.
@@ -141,8 +142,8 @@ directional_shadow_mode = 0
 script = SubResource("GDScript_cwteg")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="floor boundary"]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, -82.8998, -0.307133)
-shape = SubResource("WorldBoundaryShape3D_csaaw")
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, -326.938, -0.307133)
+shape = SubResource("BoxShape3D_oclkr")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="."]
 collision_layer = 9

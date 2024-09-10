@@ -23,7 +23,6 @@ signal xr_started
 ## signal.
 signal xr_ended
 
-
 ## If true, the XR interface is automatically initialized
 @export var auto_initialize : bool = true
 

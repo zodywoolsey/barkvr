@@ -40,7 +40,7 @@ script/source = "extends CSGBox3D
 
 var drawing := false
 
-func _process(delta):
+func _process(_delta):
 	if drawing and is_instance_valid(Engine.get_singleton(\"voxel_manager\")):
 		Engine.get_singleton(\"voxel_manager\").set_true_sphere(global_position, 1.0)
 

@@ -1,0 +1,322 @@
+[gd_scene load_steps=3 format=3 uid="uid://5r83rbiuayop"]
+
+[ext_resource type="Script" path="res://mainAssets/ui/3dPanel/editmode/attributes/color.gd" id="1_51r0t"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_ta0h6"]
+font_size = 30
+outline_size = 8
+outline_color = Color(0, 0, 0, 1)
+shadow_size = 0
+shadow_color = Color(0, 0, 0, 1)
+shadow_offset = Vector2(0, 0)
+
+[node name="vector3" type="Control"]
+custom_minimum_size = Vector2(0, 200)
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_bottom = -550.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_51r0t")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Panel2" type="Panel" parent="VBoxContainer"]
+custom_minimum_size = Vector2(100, 50)
+layout_mode = 2
+size_flags_stretch_ratio = 0.2
+
+[node name="Label" type="Label" parent="VBoxContainer/Panel2"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "position"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TabContainer" type="TabContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+tab_alignment = 1
+current_tab = 0
+
+[node name="rgba" type="HBoxContainer" parent="VBoxContainer/TabContainer"]
+custom_minimum_size = Vector2(500, 100)
+layout_mode = 2
+size_flags_vertical = 3
+metadata/_tab_index = 0
+
+[node name="r" type="HBoxContainer" parent="VBoxContainer/TabContainer/rgba"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/rgba/r"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.1
+color = Color(1, 0, 0, 1)
+
+[node name="Label" type="Label" parent="VBoxContainer/TabContainer/rgba/r/ColorRect"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -5.0
+offset_top = -16.5
+offset_right = 5.0
+offset_bottom = 16.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "r"
+label_settings = SubResource("LabelSettings_ta0h6")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="rval" type="LineEdit" parent="VBoxContainer/TabContainer/rgba/r"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="g" type="HBoxContainer" parent="VBoxContainer/TabContainer/rgba"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/rgba/g"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.1
+color = Color(0, 1, 0, 1)
+
+[node name="Label" type="Label" parent="VBoxContainer/TabContainer/rgba/g/ColorRect"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -7.0
+offset_top = -16.5
+offset_right = 7.0
+offset_bottom = 16.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "g"
+label_settings = SubResource("LabelSettings_ta0h6")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="gval" type="LineEdit" parent="VBoxContainer/TabContainer/rgba/g"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="b" type="HBoxContainer" parent="VBoxContainer/TabContainer/rgba"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/rgba/b"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.1
+color = Color(0, 0, 1, 1)
+
+[node name="Label" type="Label" parent="VBoxContainer/TabContainer/rgba/b/ColorRect"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "b"
+label_settings = SubResource("LabelSettings_ta0h6")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="bval" type="LineEdit" parent="VBoxContainer/TabContainer/rgba/b"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="a" type="HBoxContainer" parent="VBoxContainer/TabContainer/rgba"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/rgba/a"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.1
+color = Color(0.41, 0.41, 0.41, 1)
+
+[node name="Label" type="Label" parent="VBoxContainer/TabContainer/rgba/a/ColorRect"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "a"
+label_settings = SubResource("LabelSettings_ta0h6")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="aval" type="LineEdit" parent="VBoxContainer/TabContainer/rgba/a"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="hsva" type="HBoxContainer" parent="VBoxContainer/TabContainer"]
+visible = false
+custom_minimum_size = Vector2(500, 100)
+layout_mode = 2
+size_flags_vertical = 3
+metadata/_tab_index = 1
+
+[node name="h" type="HBoxContainer" parent="VBoxContainer/TabContainer/hsva"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/hsva/h"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.1
+color = Color(0.41, 0.41, 0.41, 1)
+
+[node name="Label" type="Label" parent="VBoxContainer/TabContainer/hsva/h/ColorRect"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "h"
+label_settings = SubResource("LabelSettings_ta0h6")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="hval" type="LineEdit" parent="VBoxContainer/TabContainer/hsva/h"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="s" type="HBoxContainer" parent="VBoxContainer/TabContainer/hsva"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/hsva/s"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.1
+color = Color(0.41, 0.41, 0.41, 1)
+
+[node name="Label" type="Label" parent="VBoxContainer/TabContainer/hsva/s/ColorRect"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "s"
+label_settings = SubResource("LabelSettings_ta0h6")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="sval" type="LineEdit" parent="VBoxContainer/TabContainer/hsva/s"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="v" type="HBoxContainer" parent="VBoxContainer/TabContainer/hsva"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/hsva/v"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.1
+color = Color(0.41, 0.41, 0.41, 1)
+
+[node name="Label" type="Label" parent="VBoxContainer/TabContainer/hsva/v/ColorRect"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "v"
+label_settings = SubResource("LabelSettings_ta0h6")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="vval" type="LineEdit" parent="VBoxContainer/TabContainer/hsva/v"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="a" type="HBoxContainer" parent="VBoxContainer/TabContainer/hsva"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/hsva/a"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.1
+color = Color(0.41, 0.41, 0.41, 1)
+
+[node name="Label" type="Label" parent="VBoxContainer/TabContainer/hsva/a/ColorRect"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "a"
+label_settings = SubResource("LabelSettings_ta0h6")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="aval" type="LineEdit" parent="VBoxContainer/TabContainer/hsva/a"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="hex" type="HBoxContainer" parent="VBoxContainer/TabContainer"]
+visible = false
+custom_minimum_size = Vector2(500, 100)
+layout_mode = 2
+size_flags_vertical = 3
+metadata/_tab_index = 2
+
+[node name="h" type="HBoxContainer" parent="VBoxContainer/TabContainer/hex"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer/TabContainer/hex/h"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.1
+color = Color(0.41, 0.41, 0.41, 1)
+
+[node name="Label" type="Label" parent="VBoxContainer/TabContainer/hex/h/ColorRect"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "hex
+color"
+label_settings = SubResource("LabelSettings_ta0h6")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="hval" type="LineEdit" parent="VBoxContainer/TabContainer/hex/h"]
+layout_mode = 2
+size_flags_horizontal = 3

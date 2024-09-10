@@ -14,7 +14,9 @@ var resizing := false
 var resize_start_position := Vector2()
 
 func _ready():
-	window_properties.set_target(get_window())
+	window_properties.visibility_changed.connect(func():
+		window_properties.call_deferred("set_target",get_window())
+		,4)
 	if get_viewport().get_parent() is Panel3D:
 		get_viewport().get_parent().minimum_viewport_size = Vector2i(small_height,small_height)
 	button.pressed.connect(func():

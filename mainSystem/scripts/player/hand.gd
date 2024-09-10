@@ -50,9 +50,9 @@ func _ready():
 		thishandtracking = lefthandtracking
 	connect("button_pressed",buttonPressed)
 	connect("button_released",buttonReleased)
-	input_float_changed.connect(func(name:String,value:float):
+	input_float_changed.connect(func(input_name:String,value:float):
 		if (XRServer.get_tracker(tracker).profile).ends_with("index_controller"):
-			match name:
+			match input_name:
 				"grip_force":
 					if value > .1 and !grabbing:
 						trigger_haptic_pulse("haptic",400.0,.5,.1,0.0)
@@ -64,7 +64,7 @@ func _ready():
 							trigger_haptic_pulse("haptic",100.0,.5,.1,0.0)
 							ungrip()
 		else:
-			match name:
+			match input_name:
 				"grip":
 					if value > .75 and !grabbing:
 						trigger_haptic_pulse("haptic",100.0,.5,.1,0.0)
@@ -112,7 +112,7 @@ func _physics_process(delta):
 		else:
 			item.node.global_transform = lefthand.global_transform * item.offset
 
-func _process(delta):
+func _process(_delta: float) -> void:
 	if !rays_disabled:
 		if isscalinggrabbedobject:
 			var ts = global_position.distance_to(otherhand.global_position)-scalinggrabbedstartdist
@@ -131,11 +131,11 @@ func update_raycasts():
 	world_ray.force_raycast_update()
 	world_ray.force_update_transform()
 
-func buttonPressed(name):
-	buttons[name] = true
-	if name == "grip_click":
+func buttonPressed(btn_name):
+	buttons[btn_name] = true
+	if btn_name == "grip_click":
 		pass
-	if name == "trigger_click":
+	if btn_name == "trigger_click":
 		if ui_ray.is_colliding():
 			ui_ray.click()
 		else:
@@ -146,13 +146,13 @@ func buttonPressed(name):
 			if "trigger_pressed" in item.node:
 				item.node.trigger_pressed = true
 
-func buttonReleased(name):
-	buttons[name] = false
-	if name == "by_button":
+func buttonReleased(btn_name):
+	buttons[btn_name] = false
+	if btn_name == "by_button":
 		contextMenuSummon()
-	if name == "grip_click":
+	if btn_name == "grip_click":
 		ungrip()
-	if name == "trigger_click":
+	if btn_name == "trigger_click":
 		ui_ray.release()
 		if grab_parent.get_child_count()>0:
 			for item in grab_parent.get_children():

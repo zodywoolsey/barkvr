@@ -16,7 +16,6 @@ func _ready():
 			var result = tmp.reload()
 			if result == OK:
 				target.set_script(tmp)
-				var parent :Node = target.get_parent()
 				target.set_process(true)
 				target.set_physics_process(true)
 		)

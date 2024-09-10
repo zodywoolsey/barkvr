@@ -6,7 +6,7 @@ var target_room:String = ''
 
 func _ready():
 	if is_instance_valid(Engine.get_singleton("user_manager")):
-		Engine.get_singleton("user_manager").got_room_messages.connect(func(data:Dictionary):
+		Engine.get_singleton("user_manager").got_room_messages.connect(func(_data:Dictionary):
 			_check_room_messages()
 			)
 	item_selected.connect(func():

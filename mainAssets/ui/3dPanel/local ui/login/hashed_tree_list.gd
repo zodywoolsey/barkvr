@@ -5,16 +5,8 @@ var tree:Dictionary = {}
 func add_item(text:String,metadata:Variant,replace:String=''):
 	if replace and tree.has(replace):
 		return
-		#tree[replace]['name'] = text
-		#tree[replace]['tree_item'].set_text(0,text)
-		#tree[replace]['tree_item'].set_metadata(0, metadata)
-		#tree[replace]['tree_item'].visible = true
 	elif tree.has(text):
 		return
-		#tree[replace]['name'] = text
-		#tree[replace]['tree_item'].set_text(0,text)
-		#tree[replace]['tree_item'].set_metadata(0, metadata)
-		#tree[replace]['tree_item'].visible = true
 	elif metadata and metadata.has('state'):
 		var roomdict = {
 			"name": text,

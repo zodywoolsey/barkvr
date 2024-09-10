@@ -123,17 +123,17 @@ func _ready():
 			rightaxbtn = true
 		)
 	righthand.connect("button_released",func(input_name):
-#		print("released: "+name)
+#		print("released: "+input_name)
 		pass
 		if input_name == "ax_button":
 			rightaxbtn = false
 		)
 	righthand.input_float_changed.connect(func(input_name:String,value:float):
-#		print('value {0}, {1}'.format([name,value]))
+		print('value {0}, {1}'.format([input_name,value]))
 		pass
 		)
 	righthand.input_vector2_changed.connect(func(input_name:String,value):
-#		print('axis {0}, {1}'.format([name,value]))
+		print('axis {0}, {1}'.format([input_name,value]))
 		pass
 		if input_name == "primary":
 			rightStick = value
@@ -161,7 +161,7 @@ func _ready():
 			leftStick = value
 		)
 
-func _process(delta):
+func _process(_delta):
 	screenspace.global_position = get_viewport().get_camera_3d().global_position
 	if !vr_mode_enabled:
 		menuoffset.global_rotation = Vector3()
@@ -360,7 +360,7 @@ func flat_movement():
 			LocalGlobals.editor_refs.mainpanel.look_at(camera_3d.global_position, Vector3.UP, true)
 			#LocalGlobals.editor_refs.mainpanel.global_rotation.x += deg_to_rad(90.0)
 		else:
-			var vreditor = load("res://mainAssets/ui/3dPanel/editmode/vreditor.tscn").instantiate()
+			vreditor = load("res://mainAssets/ui/3dPanel/editmode/vreditor.tscn").instantiate()
 			get_tree().get_first_node_in_group("localroot").add_child(vreditor)
 			vreditor.global_position = righthand.hand_menu_point.global_position
 	righthand.look_at(camera_3d.to_global(grab_point))

@@ -119,8 +119,6 @@ func set_true_sphere(global_point:Vector3,size:float):
 
 func _set_true_sphere(local_point:Vector3, size:float):
 	print("sphere")
-	var dict:Dictionary
-	var start_sphere_time := Time.get_ticks_msec()
 	var radius_int := int( ((size/2.0)/density) )
 	var chunk_point :Vector3 = floor((local_point)/chunk_size)
 	var local_chunk_point :Vector3 = abs(Vector3( int(local_point.x)%chunk_size, int(local_point.y)%chunk_size, int(local_point.z)%chunk_size))
@@ -172,7 +170,6 @@ func set_false_sphere(global_point:Vector3,size:float):
 	WorkerThreadPool.add_task(update_dictionary)
 
 func _set_false_sphere(local_point:Vector3, size:float):
-	var dict:Dictionary
 	#var local_point :Vector3 = (to_local(global_point)*(1.0/density))
 	var radius_int := int( (size/2.0)*(1.0/density) )
 	var chunk_point :Vector3 = floor((local_point)/chunk_size)
@@ -213,7 +210,6 @@ func update_meshes():
 			_update_mesh(i)
 
 func _update_mesh(part:Vector3=Vector3()):
-	var start_meshes_time := Time.get_ticks_msec()
 	var vertices = PackedVector3Array()
 	if part in points:
 		dictionary_mutex.lock()
@@ -244,7 +240,6 @@ func _update_mesh(part:Vector3=Vector3()):
 			mesh_dict[part].meshin.material_override = mat
 			meshparent.call_deferred("add_child",mesh_dict[part].meshin)
 		mesh_dict[part].amesh.clear_surfaces()
-		mesh_dict[part].amesh
 		mesh_dict[part].amesh.call_deferred("add_surface_from_arrays",Mesh.PRIMITIVE_TRIANGLES, arrays)
 		mesh_dict[part].meshin.mesh = mesh_dict[part].amesh
 	#print("meshes: "+str(Time.get_ticks_msec()-start_meshes_time))
@@ -259,7 +254,6 @@ func _update_dictionary_thread():
 		update_dictionary()
 
 func update_dictionary():
-	var start_dict_time := Time.get_ticks_msec()
 	if !events.is_empty():
 		var l_events := events.duplicate(true)
 		events.clear()
@@ -277,8 +271,6 @@ func update_dictionary():
 func _add_cube_to_array(array:PackedVector3Array, pos:Vector3):
 	#these need to be tris, so here we go
 	# for reference i am thinking of front as z+, right as x+, and up as y+
-	var offset := Vector3()
-	var ofs := density/2.0
 	_add_back_quad(array,pos)
 	_add_bottom_quad(array,pos)
 	_add_front_quad(array,pos)

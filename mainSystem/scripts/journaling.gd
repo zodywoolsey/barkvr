@@ -5,6 +5,8 @@ var actions: Array[Dictionary] = []
 var undid_actions: Array[Dictionary] = []
 var new_actions: Array[Dictionary] = []
 
+var actions_mutex := Mutex.new()
+
 var root: Node:
 	get:
 		if !is_instance_valid(root):
@@ -36,18 +38,20 @@ func _ready() -> void:
 	check_root()
 
 func _add_action(data:Dictionary, undid:=false) -> void:
+	actions_mutex.lock()
 	if undid:
 		#undid_actions.append(data)
 		new_actions.append(data)
 	else:
 		actions.append(data)
 		new_actions.append(data)
+	actions_mutex.unlock()
 
 func undo_action() -> void:
 	check_root()
+	actions_mutex.lock()
 	if !actions.is_empty():
 		var action_to_undo :Dictionary = actions.pop_back()
-		print(action_to_undo)
 		if action_to_undo and "action_name" in action_to_undo:
 			match action_to_undo.action_name:
 				'set_property':
@@ -56,10 +60,13 @@ func undo_action() -> void:
 					pass
 				'add_node':
 					pass
+	actions_mutex.unlock()
 
 func get_actions() -> Array[Dictionary]:
+	actions_mutex.lock()
 	var tmp := new_actions.duplicate(true)
 	new_actions.clear()
+	actions_mutex.unlock()
 	return tmp
 
 func check_root() -> void:
@@ -133,7 +140,7 @@ func _read_add_node_nodes_dict(node_dict:Dictionary, recieved:=false) -> Node:
 	check_root()
 	if "node_class" in node_dict and ClassDB.can_instantiate(node_dict.node_class):
 		var node = ClassDB.instantiate(node_dict.node_class)
-		var node_props = node.get_property_list()
+		var _node_props = node.get_property_list()
 		if "properties" in node_dict and node_dict.properties is Array:
 			for prop in node_dict.properties:
 				if prop is Dictionary and "name" in prop and "value" in prop:
@@ -225,13 +232,7 @@ func net_propagate_node(node_string: String, parent := ^'', node_name := '', rec
 			})
 
 ## Imports an asset and adds that to the action log unless it was a recieved action.
-func import_asset(
-	type: String,
-	asset_to_import: Variant,
-	asset_name := '',
-	recieved := false,
-	data := {}
-) -> void:
+func import_asset( type: String, asset_to_import: Variant, asset_name := '', recieved := false, data := {} ) -> void:
 	print(type)
 	# Make sure root is valid.
 	check_root()
@@ -279,18 +280,20 @@ func import_asset(
 	# Send message to peers.
 	if !recieved:
 		if type == "res":
-			actions.append({
+			_add_action({
 				'action_name': 'import_asset',
 				'type': type,
 				'asset_to_import': content,
-				'asset_name': asset_name
+				'asset_name': asset_name,
+				'data': data
 			})
 		else:
-			actions.append({
+			_add_action({
 				'action_name': 'import_asset',
 				'type': type,
-				'asset_to_import': asset_to_import,
-				'asset_name': asset_name
+				'asset_to_import': content,
+				'asset_name': asset_name,
+				'data': data
 			})
 
 func _import_uri(uri:String, data:Dictionary={}):
@@ -311,10 +314,10 @@ func _import_uri(uri:String, data:Dictionary={}):
 		Thread.set_thread_safety_checks_enabled(true)
 		req.request(uri)
 
-func _uri_request_completed(result: int, response_code: int, headers: PackedStringArray, body: PackedByteArray, req:HTTPRequest, data:Dictionary, uri:String):
+func _uri_request_completed(_result: int, response_code: int, headers: PackedStringArray, body: PackedByteArray, req:HTTPRequest, data:Dictionary, uri:String):
 			print('req completed')
 			print('response code: '+str(response_code))
-			var msg = body.get_string_from_ascii()
+			var _msg = body.get_string_from_ascii()
 			for header in headers:
 				if header.begins_with("Content-Type:"):
 					print('content')
@@ -395,7 +398,7 @@ func _import_zip(asset_name:String, asset_path:String, data:Dictionary={}):
 				#else:
 					#import_asset('file', reader.read_file(dropped), asset_name, false, data)
 
-func _check_loaded(path: String, asset_name:String, data:Dictionary={}, last_time:float=0.0) -> void:
+func _check_loaded(path: String, asset_name:String, data:Dictionary={}, _last_time:float=0.0) -> void:
 	check_root()
 	while ResourceLoader.load_threaded_get_status(path) == ResourceLoader.THREAD_LOAD_IN_PROGRESS:
 		pass
@@ -411,14 +414,12 @@ var gltf_document_extension_class = load("res://addons/vrm/vrm_extension.gd")
 const SAVE_DEBUG_GLTFSTATE_RES: bool = false
 
 #COPIED FROM https://github.com/godotengine/godot/blob/c4279fe3e0b27d0f40857c00eece7324a967285f/modules/gltf/gltf_document.cpp#L62
-# BECAUSE THIS SHIT IS NOT LOCATED ANYWHERE SENSIBLE IN THE ENGINE!!!!
 #define GLTF_IMPORT_GENERATE_TANGENT_ARRAYS 8
 #define GLTF_IMPORT_USE_NAMED_SKIN_BINDS 16
 #define GLTF_IMPORT_DISCARD_MESHES_AND_MATERIALS 32
 #define GLTF_IMPORT_FORCE_DISABLE_MESH_COMPRESSION 64
 
 func _import_glb(content: Variant, asset_name := '', data := {}) -> void:
-	print(content)
 	check_root()
 	#Thread.set_thread_safety_checks_enabled(false)
 	var logging_prefix := asset_name+" : "
@@ -455,7 +456,7 @@ func _import_glb(content: Variant, asset_name := '', data := {}) -> void:
 	_post_import.call_deferred(root, generated_scene, asset_name, data, false)
 
 ## Imports a Godot resource.
-func _import_res(asset_name: String, asset_to_import: Variant, data:Dictionary={}) -> void:
+func _import_res(_asset_name: String, asset_to_import: Variant, _data:Dictionary={}) -> void:
 	check_root()
 	# If asset to import is not a path, create a path.
 	# Note that this may mean assets might not load for peers.
@@ -470,7 +471,7 @@ func _import_res(asset_name: String, asset_to_import: Variant, data:Dictionary={
 		asset_to_import = path
 	ResourceLoader.set_abort_on_missing_resources(false)
 	print(asset_to_import)
-	var res :Resource
+	#var res :Resource
 	print(ResourceLoader.get_dependencies(asset_to_import)[0])
 	print(asset_to_import)
 	#res = ResourceLoader.load(asset_to_import,'',ResourceLoader.CACHE_MODE_IGNORE)
@@ -576,7 +577,7 @@ func _import_image_image(asset_name: String, img: Image, data:Dictionary={}) -> 
 	_post_import.call_deferred(root, tmpbody, asset_name, data, true)
 
 ## Imports some text.
-func _import_text(asset_name: String, content: String, data:Dictionary={} ) -> void:
+func _import_text(asset_name: String, _content: String, data:Dictionary={} ) -> void:
 	check_root()
 	var tex := NoiseTexture2D.new()
 	var noise := FastNoiseLite.new()
@@ -665,7 +666,7 @@ func receive(action: Dictionary) -> void:
 		"set_property":
 			set_property(action.target, action.prop_name, action.value, true)
 		"import_asset":
-			import_asset(action.type, action.asset_to_import, '', true)
+			import_asset(action.type, action.asset_to_import, action.asset_name, true, action.data)
 		"delete_node":
 			delete_node(action.target, true)
 		"add_node":

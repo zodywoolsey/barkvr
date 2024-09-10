@@ -25,6 +25,7 @@ var number_field = load("res://mainAssets/ui/3dPanel/editmode/attributes/number.
 var bool_field = load("res://mainAssets/ui/3dPanel/editmode/attributes/bool.tscn")
 var enum_field = load("res://mainAssets/ui/3dPanel/editmode/attributes/enum.tscn")
 var string_field = load("res://mainAssets/ui/3dPanel/editmode/attributes/string.tscn")
+var object_field = preload("res://mainAssets/ui/3dPanel/editmode/attributes/object.tscn")
 var is_field_focused = false
 var target : Node = null
 
@@ -34,27 +35,31 @@ var event_manager
 #	if !is_field_focused:
 #		update_fields()
 
-func set_target(node):
-	if node and node is Node:
-		targetname.text = node.name
-		if node.has_meta("display_name"):
-			targetname.text = node.get_meta("display_name")
-		if "visible" in node:
+func set_target(target):
+	if target and target is Object:
+		if "name" in target:
+			targetname.text = target.name
+		if target.has_meta("display_name"):
+			targetname.text = target.get_meta("display_name")
+		if "visible" in target:
 			active.disabled = false
-			active.button_pressed = node.visible
+			active.button_pressed = target.visible
 		else:
 			active.button_pressed = true
 			active.disabled = true
-		properties_header_label.text = node.get_class()+" Properties:"
+		properties_header_label.text = target.get_class()+" Properties:"
 		for child in v_box_container.get_children():
 			child.queue_free()
-		target = node
-		var prop_list := target.get_property_list()
+		var prop_list :Array[Dictionary]= target.get_property_list()
 		for prop in prop_list:
 			var fieldname :String= prop.name
 			if prop.name.contains("bones/") and target is Skeleton3D:
 				fieldname = "bone: "+target.get_bone_name(int(prop.name.split("/")[1]))+" "+prop.name.split("/")[-1]
 			match prop.type:
+				TYPE_OBJECT:
+					var tmp :Object_Attribute = object_field.instantiate()
+					v_box_container.add_child(tmp)
+					tmp.call_deferred("set_data",fieldname, target, prop.name)
 				TYPE_STRING_NAME:
 					var tmp :String_Attribute = string_field.instantiate()
 					v_box_container.add_child(tmp)

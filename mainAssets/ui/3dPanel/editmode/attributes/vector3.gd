@@ -7,7 +7,7 @@ extends Control
 @onready var zval = $VBoxContainer/position/z/zval
 @onready var v_box_container = $VBoxContainer
 
-var target:Node
+var target:Object
 var _is_editing:bool = false
 var property_name:String = ''
 
@@ -63,7 +63,7 @@ func _check_focus():
 
 ## sets the name, field target node, and the property name for the field to look for
 ## name:String, new_target:Node, new_property_name:String
-func set_data(new_name:String, new_target:Node, new_property_name:String):
+func set_data(new_name:String, new_target:Object, new_property_name:String):
 	label.text = new_name
 	target = new_target
 	property_name = new_property_name

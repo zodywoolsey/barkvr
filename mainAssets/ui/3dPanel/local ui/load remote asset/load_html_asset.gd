@@ -22,12 +22,10 @@ func _ready():
 		loader.global_position = import_position
 		)
 	submitastext.pressed.connect(func():
-		http_request.request_completed.connect(func(result: int, response_code: int, headers: PackedStringArray, body: PackedByteArray):
+		http_request.request_completed.connect(func(_result: int, _response_code: int, _headers: PackedStringArray, body: PackedByteArray):
 			print("request completed")
 			var xml := XMLParser.new()
 			xml.open_buffer(body)
-			xml
-			
 			var loader :LoadingHalo = load("res://mainAssets/ui/3dui/loading_halo.tscn").instantiate()
 			loader.text = url.text
 			var player_size_mult:float=1.0

@@ -108,7 +108,7 @@ func get_clipboard_connection_string():
 #	discord_sdk.state = "testing a session"
 #	discord_sdk.refresh()
 
-func apply_connection_string(type:String):
+func apply_connection_string(_type:String):
 	var data = JSON.parse_string(DisplayServer.clipboard_get())
 	if data and data.has('description') and data.has('candidates'):
 		for peer in peers:
@@ -176,7 +176,8 @@ func poll():
 			print('reset')
 			reset_requested = false
 			for peer in peers:
-				peer.remote_player.queue_free()
+				if "remote_player" in peer:
+					peer.remote_player.queue_free()
 			peers = []
 		var delta = Time.get_ticks_msec()-prev_time
 		prev_time = Time.get_ticks_msec()
@@ -248,13 +249,13 @@ func poll():
 													Engine.get_singleton("event_manager").call_deferred("receive",action)
 										# Send all new network events to the other users
 										event_sync_timer = 0.0
-										if !currentactions.is_empty():
+										if !currentactions.is_empty() and chan.channel.get_ready_state() == 1:
 											if !is_instance_valid(peer.peer):
 												break
 											print('putting actions: '+str(currentactions))
 											#bytes_to_send = var_to_bytes_with_objects(current_actions).compress(3)
 											bytes_to_send = var_to_bytes_with_objects(currentactions)
-											if bytes_to_send.size() < packet_size and chan.channel.get_ready_state() == 1:
+											if bytes_to_send.size() < packet_size:
 												chan.channel.put_var({
 													'pos': -1,
 													'bytes': bytes_to_send
@@ -262,7 +263,7 @@ func poll():
 											else:
 												if !is_instance_valid(peer.peer):
 													break
-												var parts:int = float(bytes_to_send.size())/packet_size
+												var parts:int = int(float(bytes_to_send.size())/packet_size)
 												for i:int in range(float(bytes_to_send.size())/packet_size):
 													if !is_instance_valid(peer.peer):
 														break

@@ -16,7 +16,6 @@ func _ready():
 		get_window()
 		DisplayServer.virtual_keyboard_show(\"\")
 		print(\"keyboard\")
-		print(DisplayServer.virtual_keyboard_get_height())
 		)
 "
 

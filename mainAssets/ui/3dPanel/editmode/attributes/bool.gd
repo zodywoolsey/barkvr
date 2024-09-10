@@ -4,8 +4,10 @@ extends Control
 @onready var label :Label= $VBoxContainer/Panel2/Label
 @onready var val :Button= $VBoxContainer/position/v/val
 
-var target:Node
-var _is_editing:bool = false
+var target:Object
+var _is_editing:bool = false:
+	get:
+		return _check_focus()
 var property_name:String = ''
 
 func _ready():
@@ -42,7 +44,7 @@ func _check_focus():
 
 ## sets the name, field target node, and the property name for the field to look for
 ## name:String, new_target:Node, new_property_name:String
-func set_data(new_name:String, new_target:Node, new_property_name:String):
+func set_data(new_name:String, new_target:Object, new_property_name:String):
 	label.text = new_name
 	target = new_target
 	property_name = new_property_name

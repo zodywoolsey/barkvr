@@ -54,7 +54,7 @@ script/source = "extends Node
 @export var y := true
 @export var z := true
 
-func _process(delta):
+func _process(_delta):
 	var prev_rot :Vector3= get_parent().rotation
 	get_parent().look_at(get_tree().get_first_node_in_group('player').get_viewport().get_camera_3d().global_position, Vector3.UP, flipped)
 	if !x:
@@ -250,7 +250,6 @@ script = ExtResource("11_3flo1")
 hand = 1
 
 [node name="XRAnchor3D" type="XRAnchor3D" parent="CharacterBody3D/xrplayer"]
-tracker = &"/user/eyes_ext"
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterBody3D/xrplayer/XRAnchor3D"]
 mesh = SubResource("BoxMesh_kgbb2")

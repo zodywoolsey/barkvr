@@ -102,7 +102,7 @@ script/source = "extends Control
 @onready var value = $value
 
 func _ready():
-	value.value_changed.connect(func(value):
+	value.value_changed.connect(func(_value):
 		if Engine.has_singleton(\"settings_manager\") and \"inspector_update_interval\" in Engine.get_singleton(\"settings_manager\"):
 			Engine.get_singleton(\"settings_manager\").inspector_update_interval = value
 		)
@@ -126,7 +126,7 @@ func _ready():
 	get_popup().hide_on_item_selection = false
 	get_popup().hide_on_state_item_selection = false
 	toggled.connect(func(toggled_on:bool):
-		var selected_id = get_item_id(selected)
+		var _selected_id = get_item_id(selected)
 		if toggled_on:
 			for device in AudioServer.get_input_device_list():
 				if !has_item_label(device):
@@ -139,7 +139,7 @@ func _ready():
 		AudioServer.input_device = get_item_text(index)
 		)
 
-func _process(delta):
+func _process(_delta):
 	if LocalGlobals.voice_analyzer:
 		color_rect.color.a = LocalGlobals.voice_analyzer.get_magnitude_for_frequency_range(0,40000,AudioEffectSpectrumAnalyzerInstance.MAGNITUDE_MAX).length()*100.0
 
@@ -172,7 +172,7 @@ func _ready():
 	get_popup().hide_on_item_selection = false
 	get_popup().hide_on_state_item_selection = false
 	toggled.connect(func(toggled_on:bool):
-		var selected_id = get_item_id(selected)
+		var _selected_id = get_item_id(selected)
 		if toggled_on:
 			for device in AudioServer.get_output_device_list():
 				if !has_item_label(device):

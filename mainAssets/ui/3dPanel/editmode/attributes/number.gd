@@ -5,8 +5,10 @@ extends Control
 @onready var val = $VBoxContainer/position/v/val
 @onready var type_label = $VBoxContainer/position/v/Panel2/Label
 
-var target:Node
-var _is_editing:bool = false
+var target:Object
+var _is_editing:bool = false:
+	get:
+		return _check_focus()
 var property_name:String = ''
 @export_enum("float","int") var type = 0:
 	set(val):
@@ -54,7 +56,7 @@ func _check_focus():
 
 ## sets the name, field target node, and the property name for the field to look for
 ## name:String, new_target:Node, new_property_name:String
-func set_data(new_name:String, new_target:Node, new_property_name:String):
+func set_data(new_name:String, new_target:Object, new_property_name:String):
 	label.text = new_name
 	target = new_target
 	property_name = new_property_name

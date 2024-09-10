@@ -20,7 +20,7 @@ func _ready():
 			for session : String in Engine.get_singleton("user_manager").getExistingSessions():
 				login_existing.add_item(session)
 		)
-	if Engine.has_singleton("user_manager"):
+	if Engine.get_singleton("user_manager"):
 		Engine.get_singleton("user_manager").got_joined_rooms.connect(func():
 			add_items(Engine.get_singleton("user_manager").joinedRooms)
 			)
@@ -61,6 +61,11 @@ func add_items(items):
 	if items is Array and is_instance_valid(Engine.get_singleton("user_manager")):
 		for i in items:
 			Engine.get_singleton("user_manager").get_room_state(i)
+	elif items is Dictionary and is_instance_valid(Engine.get_singleton("user_manager")):
+		for item in items.keys():
+			if items[item] is Dictionary and !items[item].is_empty():
+				pass
+			Engine.get_singleton("user_manager").get_room_state(item)
 
 func loggedIn():
 	if is_instance_valid(Engine.get_singleton("user_manager")):

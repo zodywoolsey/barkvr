@@ -18,7 +18,6 @@ var home_server :String= ""
 var headers :PackedStringArray= ["content-type: application/json"]
 var next_batch :String= ''
 var timeout := 3000
-var joinedRooms
 var userData : Dictionary = {}
 var uname : String
 var uid : String
@@ -36,6 +35,13 @@ signal got_turn_server(data:Dictionary)
 signal got_room_messages(data:Dictionary)
 
 var requestParent:Node
+
+#aliases
+var joinedRooms : Dictionary:
+	get:
+		if "joined_rooms" in userData:
+			return userData.joined_rooms
+		return {}
 
 func _ready():
 	add_child(api)
@@ -75,20 +81,26 @@ func _ready():
 	api.got_joined_rooms.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 		var msg = body.get_string_from_ascii()
 		var msgJson = JSON.parse_string(msg)
-		joinedRooms = msgJson['joined_rooms']
-		userData['joined_rooms'] = msgJson['joined_rooms']
+		var roomdict :Dictionary = {}
+		for room in msgJson['joined_rooms']:
+			roomdict[room] = {}
+		userData['joined_rooms'] = roomdict
 		saveUserDict()
 		got_joined_rooms.emit()
 		)
 	api.got_room_state.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 		var msg = body.get_string_from_ascii()
 		var msgJson = JSON.parse_string(msg)
-		got_room_state.emit({
-			"result_code": result,
-			"response_code": response_code,
-			"headers": headers,
-			"body": msgJson
-		})
+		if result == OK and response_code == 200:
+			if "joined_rooms" in userData and msgJson is Array:
+				for event in msgJson:
+					process_event(event)
+			got_room_state.emit({
+				"result_code": result,
+				"response_code": response_code,
+				"headers": headers,
+				"body": msgJson
+			})
 	)
 	api.got_room_messages.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 		var msg = body.get_string_from_ascii()
@@ -206,12 +218,11 @@ func saveUserDict():
 	if !DirAccess.dir_exists_absolute("user://logins"):
 		DirAccess.make_dir_absolute("user://logins")
 	var file = FileAccess.open(("user://logins/"+uid.validate_filename()+".data"),FileAccess.WRITE)
-	print(uid)
-	print(file)
 	userData["home_server"] = home_server
-	var toStore = var_to_bytes(userData)
-	toStore.reverse()
-	file.store_var(toStore)
+	var toStore = JSON.stringify(userData," ")
+	#var toStore = var_to_bytes(userData)
+	
+	file.store_string(toStore)
 	file.close()
 
 func getExistingSessions() -> PackedStringArray:
@@ -220,14 +231,13 @@ func getExistingSessions() -> PackedStringArray:
 
 func readUserDict(target_login:String=""):
 	var file : FileAccess
-	if target_login.is_empty():
+	if target_login.is_empty() and FileAccess.file_exists("user://user.data"):
 		file = FileAccess.open("user://user.data",FileAccess.READ)
 	else:
 		file = FileAccess.open("user://logins/"+target_login,FileAccess.READ_WRITE)
 	if file:
-		var read = file.get_var()
-		read.reverse()
-		userData = bytes_to_var(read)
+		var read :String= file.get_as_text()
+		userData = JSON.parse_string(read)
 		# user_id, access_token, home_server, device_id, well_known{m.homeserver{base_url}}
 		if userData['login'].has("access_token"):
 			userToken = userData['login']["access_token"]
@@ -237,9 +247,14 @@ func readUserDict(target_login:String=""):
 			if userData.has('next_batch'):
 				next_batch = userData.next_batch
 			if userData.has('joined_rooms'):
-				joinedRooms = userData.joined_rooms
+				var tmpjoinedRooms = {}
+				if userData.joined_rooms is Array:
+					for room in userData.joined_rooms:
+						tmpjoinedRooms[room] = {}
+					userData.joined_rooms = tmpjoinedRooms
 				got_joined_rooms.emit()
 			user_logged_in.emit()
+			saveUserDict()
 			return true
 	Notifyvr.send_notification("faile to login with existing session")
 	return false
@@ -250,3 +265,29 @@ func sync():
 	if !next_batch.is_empty():
 		reqData['since'] = next_batch
 	api.sync(base_url,headers,reqData)
+
+func process_event(event:Dictionary):
+	if "room_id" in event and "event_id" in event:
+		if !(event["room_id"] in userData.joined_rooms):
+			userData.joined_rooms[event["room_id"]] = {}
+		if !("state_events" in userData.joined_rooms[event["room_id"]]):
+			userData.joined_rooms[event["room_id"]]["state_events"] = {
+				"users":{}
+			}
+		if "type" in event:
+			match event.type:
+				"m.room.canonical_alias":
+					pass
+				"m.room.create":
+					pass
+				"m.room.join_rules":
+					pass
+				"m.room.member":
+					userData.joined_rooms[event["room_id"]]["state_events"]["users"]
+				"m.room.power_levels":
+					pass
+				"m.room.history_visibility":
+					pass
+				"m.room.power_levels":
+					pass
+		userData.joined_rooms[event["room_id"]]["state_events"][event["event_id"]] = event

@@ -45,7 +45,7 @@ func _input(event):
 				5:
 					scrolldown()
 
-func _physics_process(delta):
+func _physics_process(_delta):
 	var tmpcol
 	var point : Vector3
 	if last_point.is_zero_approx():
