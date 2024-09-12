@@ -65,6 +65,7 @@ var packetdict = {
 	'p_id': OS.get_unique_id(),
 	'uname': '',
 	'trackers': {
+		'body_approx': Vector3(),
 		'head': Vector3(),
 		'righthand': Vector3(),
 		'lefthand': Vector3()
@@ -134,6 +135,7 @@ func _ready():
 func user_logged_in():
 	if is_instance_valid(Engine.get_singleton("user_manager")):
 		uname = Engine.get_singleton("user_manager").userData.login.user_id.split(':')[0].right(-1)
+		#get_tree().get_first_node_in_group('player').name = uname
 
 func got_turn_server(data):
 		if data.has('username'):
@@ -150,7 +152,8 @@ func reset():
 func _process(_delta):
 	var player = get_tree().get_first_node_in_group('player')
 	if player:
-		packetdict.trackers.head = player.global_position
+		packetdict.trackers.body_approx = player.global_position
+		packetdict.trackers.head = player.head_pos
 		if is_instance_valid(player.righthand):
 			packetdict.trackers.righthand = player.righthand.global_position
 		if is_instance_valid(player.lefthand):
@@ -208,11 +211,13 @@ func poll():
 										#var data = bytes_to_var(chan.channel.get_packet().decompress_dynamic(999999999999, 3))
 										var data = bytes_to_var(chan.channel.get_packet())
 										if "remote_player" in peer and is_instance_valid(peer.remote_player):
-											peer.remote_player.call_deferred('set_target_pos',data.trackers.head)
+											peer.remote_player.call_deferred('set_positions', data.trackers.body_approx, data.trackers.head, data.trackers.lefthand, data.trackers.righthand)
 										else:
 											var root = get_tree().get_first_node_in_group('localworldroot')
 											peer.remote_player = load("res://mainSystem/scenes/player/remote player/remote player.tscn").instantiate()
 											peer.remote_player.add_to_group(data.p_id)
+											peer.remote_player.name = data.p_id
+											peer.remote_player.player_name = peer.for_user
 											root.call_deferred('add_child',peer.remote_player)
 											print("added remote player")
 									if !is_instance_valid(peer.peer):

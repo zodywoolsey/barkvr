@@ -1,5 +1,5 @@
 @icon("res://addons/vector/logo.svg")
-## Matrix api handler (must be added as an autoload script named "Vector")
+## Matrix api handler (must be added as an autoload script or an Engine.register_singleton)
 
 class_name vector
 extends Node

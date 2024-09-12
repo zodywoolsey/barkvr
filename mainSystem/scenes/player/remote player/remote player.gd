@@ -1,8 +1,24 @@
 extends Node3D
 
-var targetpos :Vector3 = Vector3()
-var speed :float = 1.5
+@onready var unamelabel: Label3D = %unamelabel
+@onready var headsprite: MeshInstance3D = %headsprite
+@onready var righthand: MeshInstance3D = %righthand
+@onready var lefthand: MeshInstance3D = %lefthand
+
 var time_since :float = 0.0
+
+var player_name :String = "player":
+	set(val):
+		if is_instance_valid(unamelabel):
+			unamelabel.text = val
+		player_name = val
+
+var player_icon :Image:
+	set(val):
+		if is_instance_valid(headsprite):
+			var mat : StandardMaterial3D = headsprite.material_override
+			mat.albedo_texture = ImageTexture.create_from_image(val)
+		player_icon = val
 
 var audio_frames :Array[PackedVector2Array] = []
 var audio_mutex := Mutex.new()
@@ -16,15 +32,29 @@ var pushed_frames :int= 0
 
 var close_requested :bool = false
 
-func set_target_pos(new_pos:Vector3) -> void:
-	targetpos=new_pos
-	create_tween().tween_property(self,'global_position',targetpos,time_since)
+func set_positions(body:Vector3, head:Vector3, left_hand:Vector3, right_hand:Vector3) -> void:
+	create_tween().tween_property(self,'global_position',body,time_since)
+	create_tween().tween_property(headsprite,'global_position',head,time_since)
+	create_tween().tween_property(lefthand,'global_position',left_hand,time_since)
+	create_tween().tween_property(righthand,'global_position',right_hand,time_since)
 	time_since = 0.0
 
 func _process(delta) -> void:
 	time_since += delta
 
 func _ready() -> void:
+	unamelabel.text = player_name
+	if !is_instance_valid(player_icon):
+		var mat : StandardMaterial3D = headsprite.material_override
+		var noise = NoiseTexture2D.new()
+		noise.width = 32
+		noise.height = 32
+		#noise.as_normal_map = true
+		var noiselite = FastNoiseLite.new()
+		noiselite.seed = hash(name)
+		noise.noise = noiselite
+		mat.albedo_texture = noise
+		
 	audio_decoder = audio_stream_player_3d.stream
 	audio_playback = audio_stream_player_3d.get_stream_playback()
 	get_window().close_requested.connect(func():

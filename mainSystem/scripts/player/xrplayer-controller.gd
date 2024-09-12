@@ -13,7 +13,10 @@ extends CharacterBody3D
 @onready var ui_ray :InteractionRay = %uiRay
 @onready var handmenu = %handmenu
 @onready var menuoffset = %menuoffset
-@onready var screenspace = $"../screenspace"
+
+var head_pos :=Vector3():
+	get:
+		return xr_camera_3d.global_position if vr_mode_enabled else camera_3d.global_position
 
 #controller input vars:
 var rightStick :Vector2 = Vector2()
@@ -106,6 +109,7 @@ func respawn_player():
 		global_position = Vector3(0,4,0)
 
 func _ready():
+	name = OS.get_unique_id()
 	world_ray.add_exception(self)
 	ui_ray.add_exception(self)
 	lefthand.rays_disabled = !vr_mode_enabled
@@ -162,7 +166,6 @@ func _ready():
 		)
 
 func _process(_delta):
-	screenspace.global_position = get_viewport().get_camera_3d().global_position
 	if !vr_mode_enabled:
 		menuoffset.global_rotation = Vector3()
 

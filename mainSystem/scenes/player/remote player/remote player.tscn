@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://c0p3oet77tkgf"]
+[gd_scene load_steps=12 format=3 uid="uid://c0p3oet77tkgf"]
 
 [ext_resource type="Script" path="res://mainSystem/scenes/player/remote player/remote player.gd" id="1_jdtww"]
 
@@ -22,27 +22,73 @@ size = Vector3(0.05, 0.05, 0.05)
 mix_rate = 48000.0
 buffer_length = 0.04
 
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_osk1j"]
+fractal_type = 0
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_w3u55"]
+width = 8
+height = 8
+in_3d_space = true
+noise = SubResource("FastNoiseLite_osk1j")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7d1jo"]
+cull_mode = 2
+shading_mode = 0
+albedo_texture = SubResource("NoiseTexture2D_w3u55")
+texture_filter = 0
+
+[sub_resource type="QuadMesh" id="QuadMesh_fxh5c"]
+size = Vector2(0.2, 0.2)
+
+[sub_resource type="GDScript" id="GDScript_sloam"]
+script/source = "extends Node3D
+
+func _process(delta: float) -> void:
+	global_rotation = Vector3()
+"
+
 [node name="remote player" type="Node3D"]
 script = ExtResource("1_jdtww")
 
 [node name="RigidBody3D" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.496656, 0)
 freeze = true
+freeze_mode = 1
 continuous_cd = true
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D"]
 shape = SubResource("CapsuleShape3D_dbmhc")
+disabled = true
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="RigidBody3D"]
+visible = false
 mesh = SubResource("CapsuleMesh_nfyj3")
 skeleton = NodePath("../..")
 
 [node name="righthand" type="MeshInstance3D" parent="."]
+unique_name_in_owner = true
 mesh = SubResource("BoxMesh_rus0a")
 
 [node name="lefthand" type="MeshInstance3D" parent="."]
+unique_name_in_owner = true
 mesh = SubResource("BoxMesh_ljhjn")
 
 [node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
 stream = SubResource("AudioStreamOpusDecoder_bkn5h")
 autoplay = true
+
+[node name="headsprite" type="MeshInstance3D" parent="."]
+unique_name_in_owner = true
+material_override = SubResource("StandardMaterial3D_7d1jo")
+mesh = SubResource("QuadMesh_fxh5c")
+
+[node name="Node3D" type="Node3D" parent="headsprite"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.162669, 0)
+script = SubResource("GDScript_sloam")
+
+[node name="unamelabel" type="Label3D" parent="headsprite/Node3D"]
+unique_name_in_owner = true
+pixel_size = 0.001
+billboard = 2
+render_priority = 120
+text = "test"

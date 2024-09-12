@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://r68jre2w5k33"]
+[gd_scene load_steps=22 format=3 uid="uid://r68jre2w5k33"]
 
 [ext_resource type="Script" path="res://mainSystem/scripts/player/xrplayer-controller.gd" id="1_iwrfe"]
 [ext_resource type="Script" path="res://mainSystem/scripts/player/hand.gd" id="2_npgyv"]
@@ -11,7 +11,6 @@
 [ext_resource type="Script" path="res://addons/Panel3D/3dpanel.gd" id="9_u4nd0"]
 [ext_resource type="PackedScene" uid="uid://doy6bwhtmwdc6" path="res://mainAssets/ui/3dPanel/local ui/localmenu.tscn" id="9_ydb0h"]
 [ext_resource type="Script" path="res://addons/SimpleOpenXRHand/simple_openxr_hand.gd" id="11_3flo1"]
-[ext_resource type="Shader" path="res://mainSystem/scenes/player/screenspace.gdshader" id="12_0o03h"]
 
 [sub_resource type="GDScript" id="GDScript_swjn5"]
 
@@ -69,28 +68,16 @@ func _process(_delta):
 height = 1.0
 radius = 0.1
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_sgooi"]
-render_priority = 0
-shader = ExtResource("12_0o03h")
-shader_parameter/size = Vector2(32, 28)
-
-[sub_resource type="QuadMesh" id="QuadMesh_uehvj"]
-flip_faces = true
-size = Vector2(100, 100)
-
-[node name="playercontainer" type="Node3D"]
-
-[node name="CharacterBody3D" type="CharacterBody3D" parent="." groups=["player"]]
-unique_name_in_owner = true
+[node name="CharacterBody3D" type="CharacterBody3D" groups=["player"]]
 script = ExtResource("1_iwrfe")
 metadata/health = SubResource("GDScript_swjn5")
 
-[node name="xrplayer" type="XROrigin3D" parent="CharacterBody3D"]
+[node name="xrplayer" type="XROrigin3D" parent="."]
 
-[node name="Camera3D" type="Camera3D" parent="CharacterBody3D/xrplayer"]
+[node name="Camera3D" type="Camera3D" parent="xrplayer"]
 current = true
 
-[node name="camray" type="RayCast3D" parent="CharacterBody3D/xrplayer/Camera3D"]
+[node name="camray" type="RayCast3D" parent="xrplayer/Camera3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.13393)
 visible = false
 target_position = Vector3(0, 0, -1000)
@@ -98,170 +85,170 @@ collision_mask = 65535
 hit_back_faces = false
 script = ExtResource("2_wrxg3")
 
-[node name="worldRay" parent="CharacterBody3D/xrplayer/Camera3D" instance=ExtResource("4_316iy")]
+[node name="worldRay" parent="xrplayer/Camera3D" instance=ExtResource("4_316iy")]
 unique_name_in_owner = true
 collision_mask = 3
 
-[node name="uiRay" parent="CharacterBody3D/xrplayer/Camera3D" instance=ExtResource("4_316iy")]
+[node name="uiRay" parent="xrplayer/Camera3D" instance=ExtResource("4_316iy")]
 unique_name_in_owner = true
 collision_mask = 260
 
-[node name="XrCamera3d" type="XRCamera3D" parent="CharacterBody3D/xrplayer" groups=["playerCamera"]]
+[node name="XrCamera3d" type="XRCamera3D" parent="xrplayer" groups=["playerCamera"]]
 cull_mask = 1048573
 fov = 90.0
 
-[node name="Node3D" type="Node3D" parent="CharacterBody3D/xrplayer/XrCamera3d" groups=["notificationparent"]]
+[node name="Node3D" type="Node3D" parent="xrplayer/XrCamera3d" groups=["notificationparent"]]
 transform = Transform3D(0.075, 0, 0, 0, 0.075, 0, 0, 0, 0.075, -0.0929923, -0.0845834, -0.183947)
 
-[node name="iktarget" type="Node3D" parent="CharacterBody3D/xrplayer/XrCamera3d"]
+[node name="iktarget" type="Node3D" parent="xrplayer/XrCamera3d"]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0.141187)
 
-[node name="righthand" type="XRController3D" parent="CharacterBody3D/xrplayer"]
+[node name="righthand" type="XRController3D" parent="xrplayer"]
 unique_name_in_owner = true
 tracker = &"right_hand"
 script = ExtResource("2_npgyv")
 
-[node name="handproxy" type="Node3D" parent="CharacterBody3D/xrplayer/righthand"]
+[node name="handproxy" type="Node3D" parent="xrplayer/righthand"]
 
-[node name="grabParent" type="Node3D" parent="CharacterBody3D/xrplayer/righthand/handproxy"]
+[node name="grabParent" type="Node3D" parent="xrplayer/righthand/handproxy"]
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, 0, 0)
 
-[node name="worldRay" parent="CharacterBody3D/xrplayer/righthand/handproxy" instance=ExtResource("4_316iy")]
+[node name="worldRay" parent="xrplayer/righthand/handproxy" instance=ExtResource("4_316iy")]
 collision_mask = 3
 
-[node name="uiRay" parent="CharacterBody3D/xrplayer/righthand/handproxy" instance=ExtResource("4_316iy")]
+[node name="uiRay" parent="xrplayer/righthand/handproxy" instance=ExtResource("4_316iy")]
 collision_mask = 260
 
-[node name="grabArea" type="Area3D" parent="CharacterBody3D/xrplayer/righthand/handproxy"]
+[node name="grabArea" type="Area3D" parent="xrplayer/righthand/handproxy"]
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0.05, 0, 4.37114e-09)
 input_ray_pickable = false
 monitorable = false
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D/xrplayer/righthand/handproxy/grabArea"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="xrplayer/righthand/handproxy/grabArea"]
 shape = SubResource("SphereShape3D_1q63w")
 
-[node name="MeshInstance3d" type="MeshInstance3D" parent="CharacterBody3D/xrplayer/righthand/handproxy"]
+[node name="MeshInstance3d" type="MeshInstance3D" parent="xrplayer/righthand/handproxy"]
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, 0, 0)
 mesh = SubResource("BoxMesh_mky8q")
 skeleton = NodePath("")
 
-[node name="handMenuPoint" type="Node3D" parent="CharacterBody3D/xrplayer/righthand/handproxy"]
+[node name="handMenuPoint" type="Node3D" parent="xrplayer/righthand/handproxy"]
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, 0, -0.203)
 
-[node name="StaticBody3D" type="StaticBody3D" parent="CharacterBody3D/xrplayer/righthand/handproxy"]
+[node name="StaticBody3D" type="StaticBody3D" parent="xrplayer/righthand/handproxy"]
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, 0, 0)
 visible = false
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D/xrplayer/righthand/handproxy/StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="xrplayer/righthand/handproxy/StaticBody3D"]
 shape = SubResource("BoxShape3D_ndmcs")
 disabled = true
 
-[node name="grabjoint" type="Generic6DOFJoint3D" parent="CharacterBody3D/xrplayer/righthand/handproxy"]
+[node name="grabjoint" type="Generic6DOFJoint3D" parent="xrplayer/righthand/handproxy"]
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, 0, 0)
 node_a = NodePath("../StaticBody3D")
 
-[node name="wristmenu" type="Node3D" parent="CharacterBody3D/xrplayer/righthand/handproxy"]
+[node name="wristmenu" type="Node3D" parent="xrplayer/righthand/handproxy"]
 transform = Transform3D(6.03961e-14, 1.9845e-08, 0.454, 1.5876e-07, 0.454, -1.9845e-08, -0.454, 1.5876e-07, -3.90799e-14, 1.74846e-08, 0, 0.202191)
 script = SubResource("GDScript_utwae")
 
-[node name="StaticBody3D" parent="CharacterBody3D/xrplayer/righthand/handproxy/wristmenu" instance=ExtResource("5_d1mpu")]
+[node name="StaticBody3D" parent="xrplayer/righthand/handproxy/wristmenu" instance=ExtResource("5_d1mpu")]
 transform = Transform3D(-1, 6.99383e-07, -8.74228e-08, 6.99383e-07, 1, -8.74229e-08, 8.74227e-08, -8.74229e-08, -1, 0.05, 7.78848e-08, 2.18557e-09)
 itemToSpawn = "res://mainSystem/scenes/objects/toys/bouncyballgun.tscn"
 text = "spawn cubegun"
 
-[node name="StaticBody3D2" parent="CharacterBody3D/xrplayer/righthand/handproxy/wristmenu" instance=ExtResource("5_d1mpu")]
+[node name="StaticBody3D2" parent="xrplayer/righthand/handproxy/wristmenu" instance=ExtResource("5_d1mpu")]
 transform = Transform3D(-1, 6.99383e-07, -8.74228e-08, 6.99383e-07, 1, -8.74229e-08, 8.74227e-08, -8.74229e-08, -1, 0.15, -7.95723e-10, -1.09278e-08)
 itemToSpawn = "res://mainSystem/scenes/objects/tools/rigid_camera.tscn"
 text = "spawn camera"
 
-[node name="Sprite3D" type="Sprite3D" parent="CharacterBody3D/xrplayer/righthand/handproxy/wristmenu"]
+[node name="Sprite3D" type="Sprite3D" parent="xrplayer/righthand/handproxy/wristmenu"]
 transform = Transform3D(5.81366e-09, 0.019, 5.81362e-09, 1.66103e-09, -5.81362e-09, 0.019, 0.019, -5.81366e-09, -1.66103e-09, 0, -2.77682e-09, -0.0635259)
 visible = false
 texture = ExtResource("6_j5bbn")
 
-[node name="fps" type="Label3D" parent="CharacterBody3D/xrplayer/righthand/handproxy/wristmenu"]
+[node name="fps" type="Label3D" parent="xrplayer/righthand/handproxy/wristmenu"]
 transform = Transform3D(-1, 3.49692e-07, 2.62269e-07, 2.62269e-07, 1.31134e-07, 1, 3.49692e-07, 1, -1.31134e-07, 0.881057, -2.98471e-07, 0.220264)
 visible = false
 pixel_size = 0.002
 text = "test"
 script = SubResource("GDScript_dn0nl")
 
-[node name="lefthand" type="XRController3D" parent="CharacterBody3D/xrplayer"]
+[node name="lefthand" type="XRController3D" parent="xrplayer"]
 unique_name_in_owner = true
 tracker = &"left_hand"
 script = ExtResource("2_npgyv")
 
-[node name="handproxy" type="Node3D" parent="CharacterBody3D/xrplayer/lefthand"]
+[node name="handproxy" type="Node3D" parent="xrplayer/lefthand"]
 
-[node name="worldRay" parent="CharacterBody3D/xrplayer/lefthand/handproxy" instance=ExtResource("4_316iy")]
+[node name="worldRay" parent="xrplayer/lefthand/handproxy" instance=ExtResource("4_316iy")]
 collision_mask = 3
 
-[node name="uiRay" parent="CharacterBody3D/xrplayer/lefthand/handproxy" instance=ExtResource("4_316iy")]
+[node name="uiRay" parent="xrplayer/lefthand/handproxy" instance=ExtResource("4_316iy")]
 collision_mask = 260
 
-[node name="grabParent" type="Node3D" parent="CharacterBody3D/xrplayer/lefthand/handproxy"]
+[node name="grabParent" type="Node3D" parent="xrplayer/lefthand/handproxy"]
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, 0, 0)
 
-[node name="grabArea" type="Area3D" parent="CharacterBody3D/xrplayer/lefthand/handproxy"]
+[node name="grabArea" type="Area3D" parent="xrplayer/lefthand/handproxy"]
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -0.05, 0, -4.37114e-09)
 input_ray_pickable = false
 monitorable = false
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D/xrplayer/lefthand/handproxy/grabArea"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="xrplayer/lefthand/handproxy/grabArea"]
 shape = SubResource("SphereShape3D_1q63w")
 
-[node name="MeshInstance3d" type="MeshInstance3D" parent="CharacterBody3D/xrplayer/lefthand/handproxy"]
+[node name="MeshInstance3d" type="MeshInstance3D" parent="xrplayer/lefthand/handproxy"]
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, 0, 0)
 mesh = SubResource("BoxMesh_mky8q")
 skeleton = NodePath("")
 
-[node name="Label3D" type="Label3D" parent="CharacterBody3D/xrplayer/lefthand/handproxy"]
+[node name="Label3D" type="Label3D" parent="xrplayer/lefthand/handproxy"]
 transform = Transform3D(-0.285086, 0, -0.958502, 0, 1, 0, 0.958502, 0, -0.285086, -5.00462e-10, 0.1, 0.00572462)
 visible = false
 pixel_size = 0.001
 text = "test"
 
-[node name="handMenuPoint" type="Node3D" parent="CharacterBody3D/xrplayer/lefthand/handproxy"]
+[node name="handMenuPoint" type="Node3D" parent="xrplayer/lefthand/handproxy"]
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, 0, -0.203)
 
-[node name="StaticBody3D" type="StaticBody3D" parent="CharacterBody3D/xrplayer/lefthand/handproxy"]
+[node name="StaticBody3D" type="StaticBody3D" parent="xrplayer/lefthand/handproxy"]
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, 0, 0)
 visible = false
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D/xrplayer/lefthand/handproxy/StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="xrplayer/lefthand/handproxy/StaticBody3D"]
 shape = SubResource("BoxShape3D_ndmcs")
 disabled = true
 
-[node name="grabjoint" type="Generic6DOFJoint3D" parent="CharacterBody3D/xrplayer/lefthand/handproxy"]
+[node name="grabjoint" type="Generic6DOFJoint3D" parent="xrplayer/lefthand/handproxy"]
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, 0, 0)
 node_a = NodePath("../StaticBody3D")
 
-[node name="notificationparent" type="Node3D" parent="CharacterBody3D/xrplayer/lefthand/handproxy" groups=["notificationparent"]]
+[node name="notificationparent" type="Node3D" parent="xrplayer/lefthand/handproxy" groups=["notificationparent"]]
 transform = Transform3D(-4.37114e-09, -4.37114e-09, 0.1, -4.37114e-09, -0.1, -4.37114e-09, 0.1, -4.37114e-09, 4.37114e-09, 0.048, -0.064, -0.077)
 script = ExtResource("8_n4qtp")
 
-[node name="lefthandtracking" type="Node3D" parent="CharacterBody3D/xrplayer"]
+[node name="lefthandtracking" type="Node3D" parent="xrplayer"]
 unique_name_in_owner = true
 script = ExtResource("11_3flo1")
 
-[node name="righthandtracking" type="Node3D" parent="CharacterBody3D/xrplayer"]
+[node name="righthandtracking" type="Node3D" parent="xrplayer"]
 unique_name_in_owner = true
 script = ExtResource("11_3flo1")
 hand = 1
 
-[node name="XRAnchor3D" type="XRAnchor3D" parent="CharacterBody3D/xrplayer"]
+[node name="XRAnchor3D" type="XRAnchor3D" parent="xrplayer"]
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterBody3D/xrplayer/XRAnchor3D"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="xrplayer/XRAnchor3D"]
 mesh = SubResource("BoxMesh_kgbb2")
 
-[node name="menuoffset" type="Node3D" parent="CharacterBody3D/xrplayer"]
+[node name="menuoffset" type="Node3D" parent="xrplayer"]
 unique_name_in_owner = true
 
-[node name="handmenu" parent="CharacterBody3D/xrplayer/menuoffset" instance=ExtResource("9_opil0")]
+[node name="handmenu" parent="xrplayer/menuoffset" instance=ExtResource("9_opil0")]
 unique_name_in_owner = true
 visible = false
 
-[node name="Panel3D" type="StaticBody3D" parent="CharacterBody3D/xrplayer/menuoffset" groups=["localuipanel"]]
+[node name="Panel3D" type="StaticBody3D" parent="xrplayer/menuoffset" groups=["localuipanel"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -1)
 collision_layer = 4
 collision_mask = 4
@@ -273,28 +260,15 @@ render_priority = 127
 on_top = true
 metadata/grabbable = true
 
-[node name="parent_lookat_user_camera" type="Node" parent="CharacterBody3D/xrplayer/menuoffset/Panel3D" groups=["localuilookat"]]
+[node name="parent_lookat_user_camera" type="Node" parent="xrplayer/menuoffset/Panel3D" groups=["localuilookat"]]
 script = SubResource("GDScript_2vxca")
 flipped = true
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.496656, 0)
 shape = SubResource("CylinderShape3D_clvwe")
 
-[node name="playercamoffset" type="Node3D" parent="CharacterBody3D"]
+[node name="playercamoffset" type="Node3D" parent="."]
 
-[node name="modules" type="Node" parent="CharacterBody3D"]
-
-[node name="Label" type="Label" parent="."]
-visible = false
-offset_left = 91.0
-offset_top = 84.0
-offset_right = 131.0
-offset_bottom = 107.0
-
-[node name="screenspace" type="MeshInstance3D" parent="."]
-visible = false
-material_override = SubResource("ShaderMaterial_sgooi")
-extra_cull_margin = 16384.0
-mesh = SubResource("QuadMesh_uehvj")
+[node name="modules" type="Node" parent="."]
