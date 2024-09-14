@@ -21,36 +21,46 @@ func _ready():
 				login_existing.add_item(session)
 		)
 	if Engine.get_singleton("user_manager"):
-		Engine.get_singleton("user_manager").got_joined_rooms.connect(func():
-			add_items(Engine.get_singleton("user_manager").joinedRooms)
-			)
 		Engine.get_singleton("user_manager").user_logged_in.connect(func():
 			if Engine.get_singleton("user_manager").joinedRooms:
-				add_items(Engine.get_singleton("user_manager").joinedRooms)
-			else:
-				Engine.get_singleton("user_manager").get_joined_rooms()
+				for room in Engine.get_singleton("user_manager").joinedRooms:
+					if "state" in Engine.get_singleton("user_manager").joinedRooms[room] and "events" in Engine.get_singleton("user_manager").joinedRooms[room]['state']:
+						Engine.get_singleton("user_manager").got_room_state.emit({
+							"room_id": room,
+							"response_code":200,
+							"body":Engine.get_singleton("user_manager").joinedRooms[room].state.events})
 			Engine.get_singleton("user_manager").sync()
 			chat.show()
 			login.hide()
+			)
+		Engine.get_singleton("user_manager").leave_room.connect(func(roomid:String):
+			item_list.remove_item(roomid)
+			)
+		Engine.get_singleton("user_manager").synced.connect(func(data:Dictionary):
+			Engine.get_singleton("user_manager").sync()
 			)
 		Engine.get_singleton("user_manager").got_room_state.connect(func(data):
 			if data.response_code and data.response_code == 200:
 				var tmp_name
 				#var avatar
 				var roomId
+				if "room_id" in data:
+					roomId = data.room_id
 				for event in data.body:
-					roomId = event['room_id']
+					if "room_id" in event:
+						roomId = event['room_id']
+					elif "room_id" in data:
+						roomId = data.room_id
 					if event['type'] == "m.room.name":
 						tmp_name = event['content']['name']
-					await get_tree().process_frame
 				var _tmp
 				if tmp_name:
-					_tmp = await item_list.add_item(tmp_name,{
+					_tmp = item_list.add_item(tmp_name,{
 						'state': data.body,
 						'room_id': roomId
 					}, roomId )
 				else:
-					_tmp = await item_list.add_item(roomId.split(':')[0].right(-1),{
+					_tmp = item_list.add_item(roomId.split(':')[0].right(-1),{
 						'state': data.body,
 						'room_id': roomId
 					}, roomId )

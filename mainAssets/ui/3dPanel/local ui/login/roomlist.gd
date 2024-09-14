@@ -15,8 +15,6 @@ func _ready():
 			target_room = get_selected().get_metadata(0)['room_id']
 			messages.set_room(target_room)
 			_check_room_messages()
-		else:
-			get_selected().visible = false
 		)
 	join_button.pressed.connect(func():
 		if is_instance_valid(Engine.get_singleton("user_manager")) and Engine.get_singleton("network_manager"):

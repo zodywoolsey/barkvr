@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://doy6bwhtmwdc6"]
+[gd_scene load_steps=9 format=3 uid="uid://doy6bwhtmwdc6"]
 
 [ext_resource type="Script" path="res://mainAssets/ui/3dPanel/local ui/localmenu.gd" id="1_62fs1"]
 [ext_resource type="PackedScene" uid="uid://i3pxsgqnbjly" path="res://mainAssets/ui/3dPanel/local ui/login/matrix.tscn" id="1_wuo22"]
@@ -6,6 +6,8 @@
 [ext_resource type="PackedScene" uid="uid://jqh6stt10ct5" path="res://mainAssets/ui/3dPanel/editmode/attributes.tscn" id="4_tuvns"]
 [ext_resource type="PackedScene" uid="uid://cljm3qfem1gc1" path="res://mainAssets/ui/3dPanel/local ui/debug/webrtc_debug.tscn" id="5_2xf7q"]
 [ext_resource type="PackedScene" uid="uid://uahdxqh2pc7q" path="res://mainAssets/ui/3dPanel/local ui/load remote asset/load_html_asset.tscn" id="6_sw1xf"]
+[ext_resource type="Script" path="res://assets/patreon/support messages.gd" id="7_fduy3"]
+[ext_resource type="Script" path="res://assets/patreon/parse_patreon_csv.gd" id="7_w6fve"]
 
 [node name="Localmenu" type="Control"]
 layout_mode = 3
@@ -26,12 +28,13 @@ offset_top = 45.0
 grow_horizontal = 2
 size_flags_vertical = 3
 tab_alignment = 1
-current_tab = 0
+current_tab = 5
 tabs_position = 1
 drag_to_rearrange_enabled = true
 tab_focus_mode = 0
 
 [node name="matrix" parent="TabContainer" instance=ExtResource("1_wuo22")]
+visible = false
 clip_contents = true
 layout_mode = 2
 metadata/_tab_index = 0
@@ -55,15 +58,45 @@ visible = false
 layout_mode = 2
 metadata/_tab_index = 3
 
-[node name="todo-add-docs-tab" type="Control" parent="TabContainer"]
+[node name="Load URL" parent="TabContainer" instance=ExtResource("6_sw1xf")]
 visible = false
 layout_mode = 2
 metadata/_tab_index = 4
 
-[node name="Load URL" parent="TabContainer" instance=ExtResource("6_sw1xf")]
-visible = false
+[node name="about" type="Control" parent="TabContainer"]
+clip_contents = true
 layout_mode = 2
 metadata/_tab_index = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/about"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="TabContainer/about/VBoxContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="TabContainer/about/VBoxContainer/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="RichTextLabel" type="RichTextLabel" parent="TabContainer/about/VBoxContainer/PanelContainer/MarginContainer"]
+layout_mode = 2
+bbcode_enabled = true
+text = "[rainbow freq=.1 sat=.6][wave amp=50 freq=1][center][font_size=42]we couldn't do this without you!"
+fit_content = true
+script = ExtResource("7_fduy3")
+
+[node name="FlowContainer" type="FlowContainer" parent="TabContainer/about/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+script = ExtResource("7_w6fve")
 
 [node name="Button" type="Button" parent="."]
 layout_mode = 1

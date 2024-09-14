@@ -123,7 +123,7 @@ size_flags_horizontal = 3
 [node name="HBoxContainer" type="HBoxContainer" parent="chat/HBoxContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="Button" type="Button" parent="chat/HBoxContainer/VBoxContainer/HBoxContainer"]
+[node name="user" type="Button" parent="chat/HBoxContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 text = "name"
 
@@ -175,6 +175,37 @@ clip_contents = true
 layout_mode = 2
 size_flags_vertical = 3
 
+[node name="Control" type="Control" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.0
+
+[node name="messagetext" type="TextEdit" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/Control"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 0.85
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 0
+size_flags_vertical = 3
+placeholder_text = "type message to send here"
+wrap_mode = 1
+scroll_fit_content_height = true
+
+[node name="Button" type="Button" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/Control"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.85
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+focus_mode = 0
+text = "send"
+script = ExtResource("5_wc8jy")
+
 [node name="Control2" type="Control" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer"]
 layout_mode = 2
 size_flags_vertical = 3
@@ -196,33 +227,3 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("4_ydkch")
-
-[node name="Control" type="Control" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer"]
-custom_minimum_size = Vector2(0, 50)
-layout_mode = 2
-size_flags_vertical = 3
-size_flags_stretch_ratio = 0.0
-
-[node name="messagetext" type="TextEdit" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/Control"]
-unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = -1
-anchor_right = 0.85
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 0
-size_flags_vertical = 3
-placeholder_text = "Type message to send here"
-scroll_fit_content_height = true
-
-[node name="Button" type="Button" parent="chat/HBoxContainer/RoomSplitContainer/MessageSplitContainer/Control"]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.85
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-focus_mode = 0
-text = "send"
-script = ExtResource("5_wc8jy")

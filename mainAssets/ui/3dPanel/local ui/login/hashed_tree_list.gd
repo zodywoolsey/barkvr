@@ -3,35 +3,58 @@ extends Tree
 var tree:Dictionary = {}
 
 func add_item(text:String,metadata:Variant,replace:String=''):
-	if replace and tree.has(replace):
-		return
-	elif tree.has(text):
-		return
-	elif metadata and metadata.has('state'):
-		var roomdict = {
-			"name": text,
-			"tree_item": create_item()
-		}
+	if metadata and 'state' in metadata and 'room_id' in metadata:
+		var room_id = metadata["room_id"]
+		var roomdict = {}
+		if room_id in tree:
+			roomdict = tree[room_id]
+		else:
+			roomdict = {
+				"name": text,
+				"tree_item": create_item()
+			}
 		for event in metadata["state"]:
 			match event.type:
 				"m.space.child":
+					if event['state_key'] in Engine.get_singleton('user_manager').joinedRooms:
+						if tree.has(event['state_key']):
+							var parent = tree[event['state_key']]['tree_item'].get_parent()
+							if is_instance_valid(parent):
+								parent.remove_child(tree[event['state_key']]['tree_item'])
+							roomdict['tree_item'].add_child(tree[event['state_key']]['tree_item'])
+						else:
+							tree[event["state_key"]] = {
+								"name": event["state_key"],
+								"tree_item": create_item(roomdict["tree_item"])
+							}
+							tree[event['state_key']]['tree_item'].set_text(0,event['state_key'])
+				"m.space.parent":
 					if tree.has(event['state_key']):
-						await get_tree().process_frame
-						var parent = tree[event['state_key']]['tree_item'].get_parent()
-						if is_instance_valid(parent):
-							parent.remove_child(tree[event['state_key']]['tree_item'])
-						roomdict['tree_item'].add_child(tree[event['state_key']]['tree_item'])
+						if is_instance_valid(roomdict.tree_item.get_parent()):
+							roomdict.tree_item.get_parent().remove_child(roomdict.tree_item)
+						tree[event.state_key].tree_item.add_child(roomdict.tree_item)
 					else:
 						tree[event["state_key"]] = {
 							"name": event["state_key"],
-							"tree_item": create_item(roomdict["tree_item"]),
-							"parent": metadata['room_id']
+							"tree_item": create_item()
 						}
 						tree[event['state_key']]['tree_item'].set_text(0,event['state_key'])
-		var room_id = metadata["room_id"]
-		tree[room_id] = roomdict
-		roomdict['tree_item'].set_text(0,text)
+						if is_instance_valid(roomdict.tree_item.get_parent()):
+							roomdict.tree_item.get_parent().remove_child(roomdict.tree_item)
+						tree[event.state_key].tree_item.add_child(roomdict.tree_item)
+				"m.room.name":
+					if "content" in event and "name" in event.content:
+						roomdict.name = event.content.name
+				"m.room.power_levels":
+					if "content" in event and "users" in event.content:
+						if event.content.users is Dictionary:
+							if event.content.users.size() == 2:
+								roomdict.name = event.content.users.keys()[1] if \
+								event.content.users.keys()[0] == Engine.get_singleton("user_manager").uid else\
+								 event.content.users.keys()[0]
+		roomdict['tree_item'].set_text(0,roomdict.name)
 		roomdict['tree_item'].set_metadata(0,metadata)
+		tree[room_id] = roomdict
 	elif metadata and metadata.has('node'):
 		if is_instance_valid(metadata.node):
 			var item_id = metadata.node.get_instance_id()
@@ -72,12 +95,19 @@ func check_children() -> void:
 				tree[key].tree_item.free()
 			tree.erase(key)
 
-func remove_item(node:Node) -> void:
-	var item_id := node.get_instance_id()
-	if tree.has(item_id):
-		if is_instance_valid(tree[item_id].tree_item):
-			tree[item_id].tree_item.free()
-		tree.erase(item_id)
+func remove_item(target:Variant) -> void:
+	if target is Node:
+		var node:Node=target
+		var item_id := node.get_instance_id()
+		if tree.has(item_id):
+			if is_instance_valid(tree[item_id].tree_item):
+				tree[item_id].tree_item.free()
+			tree.erase(item_id)
+	elif target is String:
+		if tree.has(target):
+			if is_instance_valid(tree[target].tree_item):
+				tree[target].tree_item.free()
+			tree.erase(target)
 
 func update_item(node:Node) -> void:
 	var item_id := node.get_instance_id()

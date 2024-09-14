@@ -30,6 +30,7 @@ signal user_logged_in
 signal got_joined_rooms
 signal got_room_state(data:Dictionary)
 signal update_room(data:Dictionary)
+signal leave_room(roomid:String)
 signal synced(data:Dictionary)
 signal got_turn_server(data:Dictionary)
 signal got_room_messages(data:Dictionary)
@@ -37,11 +38,15 @@ signal got_room_messages(data:Dictionary)
 var requestParent:Node
 
 #aliases
-var joinedRooms : Dictionary:
+var joinedRooms : Dictionary = {}:
 	get:
 		if "joined_rooms" in userData:
+			joinedRooms = userData.joined_rooms
 			return userData.joined_rooms
 		return {}
+	set(val):
+		joinedRooms = val
+		userData.joined_rooms = val
 
 func _ready():
 	add_child(api)
@@ -85,6 +90,7 @@ func _ready():
 		for room in msgJson['joined_rooms']:
 			roomdict[room] = {}
 		userData['joined_rooms'] = roomdict
+		joinedRooms.merge(roomdict)
 		saveUserDict()
 		got_joined_rooms.emit()
 		)
@@ -115,28 +121,48 @@ func _ready():
 		else:
 			print("error getting messages")
 	)
+	## PROCESS SYNC DATA
 	api.synced.connect(func(result:int,response_code:int,header:PackedStringArray,body:PackedByteArray):
-		var msg = body.get_string_from_ascii()
-		var msgJson = JSON.parse_string(msg)
-		if msgJson.has('next_batch'):
-			userData.next_batch = msgJson.next_batch
-		if "rooms" in msgJson:
-			#print('has rooms')
-			#print(msgJson.rooms)
-			if "join" in msgJson.rooms:
-				#print('has join')
-				#print(msgJson.rooms.join)
-				for room in msgJson.rooms.join:
-					if "timeline" in msgJson.rooms.join[room]:
-						#print(msgJson.rooms.join[room].timeline)
-						if "events" in msgJson.rooms.join[room].timeline:
-							for event in msgJson.rooms.join[room].timeline.events:
-								pass
-								#if "type" in event:
-									#print(event.type)
-								#else:
-									#print("event has no type:\n"+str(event.content))
-		print('synced')
+		WorkerThreadPool.add_task(func():
+			var msg = body.get_string_from_ascii()
+			var msgJson = JSON.parse_string(msg)
+			if msgJson.has('next_batch'):
+				userData.next_batch = msgJson.next_batch
+				next_batch = msgJson.next_batch
+			if "rooms" in msgJson:
+				#print('has rooms')
+				#print(msgJson.rooms)
+				if "join" in msgJson.rooms:
+					#print('has join')
+					#print(msgJson.rooms.join)
+					for room in msgJson.rooms.join:
+						if "timeline" in msgJson.rooms.join[room]:
+							#print(msgJson.rooms.join[room].timeline)
+							if "events" in msgJson.rooms.join[room].timeline:
+								for event in msgJson.rooms.join[room].timeline.events:
+									pass
+									#if "type" in event:
+										#print(event.type)
+									#else:
+										#print("event has no type:\n"+str(event.content))
+						if "state" in msgJson.rooms.join[room]:
+							#print(msgJson.rooms.join)
+							joinedRooms = (joinedRooms.merged(msgJson.rooms.join,true))
+							if "events" in msgJson.rooms.join[room].state:
+								call_deferred("emit_signal","got_room_state",{
+									"room_id": room,
+									"response_code":200,
+									"body":msgJson.rooms.join[room].state.events}\
+									)
+				if "leave" in msgJson.rooms:
+					for room in msgJson.rooms.leave:
+						joinedRooms.erase(room)
+						call_deferred("emit_signal", "leave_room",room)
+			print('synced')
+			call_deferred("emit_signal", "synced", msgJson)
+			saveUserDict()
+			
+			)
 	)
 	api.got_turn_server.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 		var msg = body.get_string_from_ascii()
@@ -252,15 +278,17 @@ func readUserDict(target_login:String=""):
 					for room in userData.joined_rooms:
 						tmpjoinedRooms[room] = {}
 					userData.joined_rooms = tmpjoinedRooms
+					joinedRooms.merge(tmpjoinedRooms,true)
 				got_joined_rooms.emit()
 			user_logged_in.emit()
 			saveUserDict()
 			return true
-	Notifyvr.send_notification("faile to login with existing session")
+	Notifyvr.send_notification("failed to login with existing session")
 	return false
 
 func sync():
 	var reqData = {}
+	reqData.timeout = 5
 	print("next batch: "+next_batch)
 	if !next_batch.is_empty():
 		reqData['since'] = next_batch
