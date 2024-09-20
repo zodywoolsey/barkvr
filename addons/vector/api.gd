@@ -6,7 +6,7 @@ extends Node
 # accepts: {variable_name:variable_type} # :fp-function parameter :qp-query parameter :bp-body parameter
 
 # signals
-signal got_well_known(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray)
+signal got_well_known(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray,base_url:String)
 signal got_versions(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray)
 signal got_registration_token_validity(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray)
 signal got_login(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray)
@@ -48,9 +48,9 @@ func get_well_known(base_url:String='', headers:Array=[]):
 	client.request_completed.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 		# if result == RESULT_SUCCESS, emit signal
 		if result == HTTPRequest.RESULT_SUCCESS:
-			got_well_known.emit(result,response_code,headers,body)
+			got_well_known.emit(result,response_code,headers,body,base_url)
 		else:
-			print_rich("[color=red]error getting well known:\n-result: {0}\n-response_code: {1}\n[/color]".format([result,response_code]))
+			print_rich("[color=red]error getting well known:\n-result: {0}\n-response_code: {1}\n".format([result,response_code]))
 		client.queue_free()
 		)
 	res = client.request(
@@ -813,8 +813,12 @@ func login_username_password(base_url:String,headers:Array,username:String,passw
 		"device_id": OS.get_unique_id(),
 		"initial_device_display_name": "barkvr"
 		}
+	if !base_url.begins_with("https://"):
+		base_url = "https://"+base_url
+	if !base_url.ends_with("/"):
+		base_url += "/"
 	var response = client.request(
-		"https://"+base_url+"/_matrix/client/v3/login",
+		base_url+"_matrix/client/v3/login",
 		headers,
 		HTTPClient.METHOD_POST,
 		JSON.stringify(loginDict)
@@ -868,6 +872,10 @@ func sync(base_url:String, headers:PackedStringArray, options:Dictionary):
 			qp += "&timeout="+str(options.timeout)
 		if options.has('full_state'):
 			qp += "&full_state="+str(options.full_state)
+	if !base_url.begins_with("https://"):
+		base_url = "https://"+base_url
+	if !base_url.ends_with("/"):
+		base_url += "/"
 	res = client.request(
 	base_url+"_matrix/client/v3/sync"+qp,
 	headers,

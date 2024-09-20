@@ -28,7 +28,7 @@ func _ready():
 						Engine.get_singleton("user_manager").got_room_state.emit({
 							"room_id": room,
 							"response_code":200,
-							"body":Engine.get_singleton("user_manager").joinedRooms[room].state.events})
+							"body":Engine.get_singleton("user_manager").joinedRooms[room].state.events.values()})
 			Engine.get_singleton("user_manager").sync()
 			chat.show()
 			login.hide()

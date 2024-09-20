@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://mainAssets/ui/3dPanel/editmode/attributes/bool.gd" id="1_huufh"]
 
 [node name="number" type="Control"]
-custom_minimum_size = Vector2(0, 200)
+custom_minimum_size = Vector2(0, 150)
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -26,6 +26,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="Panel2" type="Panel" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
 size_flags_vertical = 3
 
@@ -41,6 +42,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="position" type="HBoxContainer" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
 size_flags_vertical = 3
 

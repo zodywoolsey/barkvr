@@ -1,5 +1,5 @@
 @icon("res://addons/vector/logo.svg")
-## Matrix api handler (must be added as an autoload script or an Engine.register_singleton)
+## Matrix api handler (must be added as an autoload script or with Engine.register_singleton)
 
 class_name vector
 extends Node
@@ -13,14 +13,49 @@ var api = api_script.new()
 # other vars
 var client = HTTPClient.new()
 var userToken :String= ""
-var base_url :String= ""
+
+## used as the actual server to talk to when doing matrix stuff
+## this should be obtained from the get_well_known by asking
+## the home_server for the /.well-known/matrix/client/ and then
+## setting the base_url from that json object to our base_url here
+var base_url : String = ""
+
+## the domain that holds the user this should only
+## ever be used by passing it to the get_well_known
+## endpoint so we can get the base_url of the user's
+## homeserver
 var home_server :String= ""
 var headers :PackedStringArray= ["content-type: application/json"]
+
+## this is the "since" field from the sync api call
+## it allows us to pass a timestamp from the server
+## tell the server to give us only new updates
 var next_batch :String= ''
 var timeout := 3000
-var userData : Dictionary = {}
 var uname : String
-var uid : String
+
+var userData : Dictionary = {}
+
+## simple helper interface to provide a direct way to get and update the 
+## current matrix user id on the userData Dictionary
+var uid : String:
+	set(val):
+		if "login" in userData and "user_id" in userData.login:
+			userData.login.user_id = val
+		uid = val
+	get:
+		if "login" in userData and "user_id" in userData.login:
+			uid = userData.login.user_id
+		return uid
+
+## used to track data about users the client knows about
+## should be used to simplify displaying profiles and other user info
+var known_users : Dictionary = {
+	"@exmaple:matrix.example": {
+		"displayname": "example",
+		"presence": "online"
+	}
+}
 
 # matrix enums
 const PRESENCE = {"offline":"offline","online":"online","unavailable":"unavailable"}
@@ -34,23 +69,37 @@ signal leave_room(roomid:String)
 signal synced(data:Dictionary)
 signal got_turn_server(data:Dictionary)
 signal got_room_messages(data:Dictionary)
+signal got_well_known(homeserver:String, base_url:String)
 
-var requestParent:Node
+# PROCESSED EVENTS SIGNALS
+signal got_new_message(event:Dictionary)
+
+var requestParent:Node = self
+
+#threaded handling variables
+var user_data_mutex := Mutex.new()
 
 #aliases
 var joinedRooms : Dictionary = {}:
 	get:
-		if "joined_rooms" in userData:
-			joinedRooms = userData.joined_rooms
-			return userData.joined_rooms
-		return {}
+		if "joined_rooms" not in userData:
+			user_data_mutex.lock()
+			userData.joined_rooms = {}
+			user_data_mutex.unlock()
+		return userData.joined_rooms
 	set(val):
 		joinedRooms = val
-		userData.joined_rooms = val
+		userData.joined_rooms = joinedRooms
 
 func _ready():
 	add_child(api)
-	requestParent = get_tree().get_first_node_in_group('requestParent')
+	api.got_well_known.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray,homeserver:String):
+		var msg = body.get_string_from_ascii()
+		var msgJson : Dictionary = JSON.parse_string(msg)
+		if msgJson and "m.homeserver" in msgJson and "base_url" in msgJson["m.homeserver"]:
+			base_url = msgJson["m.homeserver"].base_url
+			got_well_known.emit(home_server, base_url)
+		)
 	api.user_logged_in.connect(func(result:int,response_code:int,header:PackedStringArray,body:PackedByteArray):
 		var msg = body.get_string_from_ascii()
 		var msgJson : Dictionary = JSON.parse_string(msg)
@@ -68,7 +117,7 @@ func _ready():
 				uname = userData.login.user_id.split(':')[0].right(-1)
 				uid = userData.login.user_id
 				userToken = msgJson.access_token
-				base_url = msgJson.well_known["m.homeserver"].base_url
+				#base_url = msgJson.well_known["m.homeserver"].base_url
 				userData['login'] = msgJson
 				userData['login']['home_server'] = home_server
 				saveUserDict()
@@ -126,42 +175,46 @@ func _ready():
 		WorkerThreadPool.add_task(func():
 			var msg = body.get_string_from_ascii()
 			var msgJson = JSON.parse_string(msg)
-			if msgJson.has('next_batch'):
-				userData.next_batch = msgJson.next_batch
-				next_batch = msgJson.next_batch
-			if "rooms" in msgJson:
-				#print('has rooms')
-				#print(msgJson.rooms)
-				if "join" in msgJson.rooms:
-					#print('has join')
-					#print(msgJson.rooms.join)
-					for room in msgJson.rooms.join:
-						if "timeline" in msgJson.rooms.join[room]:
-							#print(msgJson.rooms.join[room].timeline)
-							if "events" in msgJson.rooms.join[room].timeline:
-								for event in msgJson.rooms.join[room].timeline.events:
-									pass
-									#if "type" in event:
-										#print(event.type)
-									#else:
-										#print("event has no type:\n"+str(event.content))
-						if "state" in msgJson.rooms.join[room]:
-							#print(msgJson.rooms.join)
-							joinedRooms = (joinedRooms.merged(msgJson.rooms.join,true))
-							if "events" in msgJson.rooms.join[room].state:
-								call_deferred("emit_signal","got_room_state",{
-									"room_id": room,
-									"response_code":200,
-									"body":msgJson.rooms.join[room].state.events}\
-									)
-				if "leave" in msgJson.rooms:
-					for room in msgJson.rooms.leave:
-						joinedRooms.erase(room)
-						call_deferred("emit_signal", "leave_room",room)
-			print('synced')
-			call_deferred("emit_signal", "synced", msgJson)
-			saveUserDict()
-			
+			if msgJson:
+				if msgJson.has('next_batch'):
+					userData.next_batch = msgJson.next_batch
+					next_batch = msgJson.next_batch
+				if "rooms" in msgJson:
+					#print('has rooms')
+					#print(msgJson.rooms)
+					if "join" in msgJson.rooms:
+						#print('has join')
+						#print(msgJson.rooms.join)
+						for room in msgJson.rooms.join:
+							if "timeline" in msgJson.rooms.join[room]:
+								#print(msgJson.rooms.join[room].timeline)
+								if "events" in msgJson.rooms.join[room].timeline:
+									for event in msgJson.rooms.join[room].timeline.events:
+										call_deferred("process_event",event, room)
+										#if "type" in event:
+											#print(event.type)
+										#else:
+											#print("event has no type:\n"+str(event.content))
+							if "state" in msgJson.rooms.join[room]:
+								#print(msgJson.rooms.join)
+								if "events" in msgJson.rooms.join[room].state:
+									for event in msgJson.rooms.join[room].state.events:
+										call_deferred("process_event",event, room)
+									call_deferred("emit_signal","got_room_state",{
+										"room_id": room,
+										"response_code":200,
+										"body":msgJson.rooms.join[room].state.events
+										}
+										)
+					if "leave" in msgJson.rooms:
+						for room in msgJson.rooms.leave:
+							joinedRooms.erase(room)
+							call_deferred("emit_signal", "leave_room",room)
+				print('synced')
+				call_deferred("emit_signal", "synced", msgJson)
+				saveUserDict()
+			else:
+				call_deferred("emit_signal","synced", {"result":result})
 			)
 	)
 	api.got_turn_server.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
@@ -216,10 +269,14 @@ func connect_to_homeserver(homeServer:String = ""):
 	return response
 
 func login_username_password(homeserver:String,username:String,password:String):
-	var homeserverurl = "https://{0}".format([
-		userData["home_server"] if homeserver == "" and userData.has("home_server") else homeserver
-		])
+	if !homeserver.begins_with("https://"):
+		homeserver = "https://"+homeserver
 	api.login_username_password(homeserver,headers,username,password)
+
+func get_well_known(homeserverurl:String):
+	if !homeserverurl.ends_with("/"):
+		homeserverurl+="/"
+	api.get_well_known("https://"+homeserverurl, headers)
 
 func get_joined_rooms():
 	api.get_joined_rooms(base_url,headers,userData.login.access_token)
@@ -243,12 +300,15 @@ func readRequestBytes():
 func saveUserDict():
 	if !DirAccess.dir_exists_absolute("user://logins"):
 		DirAccess.make_dir_absolute("user://logins")
-	var file = FileAccess.open(("user://logins/"+uid.validate_filename()+".data"),FileAccess.WRITE)
+	var file = FileAccess.open(("user://logins/"+uid.validate_filename()+".datan"),FileAccess.WRITE)
 	userData["home_server"] = home_server
-	var toStore = JSON.stringify(userData," ")
+	var tmpdata :Dictionary = userData.duplicate(true)
+	var toStore = JSON.stringify(tmpdata," ")
 	#var toStore = var_to_bytes(userData)
-	
+	print(toStore.length())
 	file.store_string(toStore)
+	DirAccess.remove_absolute("user://logins/"+uid.validate_filename()+".data")
+	DirAccess.rename_absolute("user://logins/"+uid.validate_filename()+".datan", "user://logins/"+uid.validate_filename()+".data")
 	file.close()
 
 func getExistingSessions() -> PackedStringArray:
@@ -270,15 +330,11 @@ func readUserDict(target_login:String=""):
 			headers.push_back("Authorization: Bearer {0}".format([userToken]))
 			home_server = userData['login']['user_id'].split(':')[1]
 			base_url = userData['login']['well_known']['m.homeserver']['base_url']
+			if "login" in userData and "user_id" in userData.login:
+				uid = userData.login.user_id
 			if userData.has('next_batch'):
 				next_batch = userData.next_batch
 			if userData.has('joined_rooms'):
-				var tmpjoinedRooms = {}
-				if userData.joined_rooms is Array:
-					for room in userData.joined_rooms:
-						tmpjoinedRooms[room] = {}
-					userData.joined_rooms = tmpjoinedRooms
-					joinedRooms.merge(tmpjoinedRooms,true)
 				got_joined_rooms.emit()
 			user_logged_in.emit()
 			saveUserDict()
@@ -288,34 +344,113 @@ func readUserDict(target_login:String=""):
 
 func sync():
 	var reqData = {}
-	reqData.timeout = 5
-	print("next batch: "+next_batch)
+	reqData.timeout = 30
 	if !next_batch.is_empty():
 		reqData['since'] = next_batch
 	api.sync(base_url,headers,reqData)
 
-func process_event(event:Dictionary):
+func process_event(event:Dictionary, roomid:String=""):
+	if !roomid.is_empty():
+		event.room_id = roomid
+	if "joined_rooms" not in userData:
+		userData.joined_rooms = {}
+	if event.room_id not in userData.joined_rooms:
+		userData.joined_rooms[event.room_id] = {}
+	if "state" not in userData.joined_rooms[event.room_id]:
+		userData.joined_rooms[event.room_id].state = {}
+	if "events" not in userData.joined_rooms[event.room_id].state:
+		userData.joined_rooms[event.room_id].state = {}
 	if "room_id" in event and "event_id" in event:
 		if !(event["room_id"] in userData.joined_rooms):
 			userData.joined_rooms[event["room_id"]] = {}
-		if !("state_events" in userData.joined_rooms[event["room_id"]]):
-			userData.joined_rooms[event["room_id"]]["state_events"] = {
-				"users":{}
+		if "state" not in userData.joined_rooms[event["room_id"]]:
+			userData.joined_rooms[event["room_id"]]["state"] = {
+				"events": {}
 			}
+		if "events" not in userData.joined_rooms[event["room_id"]]["state"]:
+			userData.joined_rooms[event["room_id"]]["state"]["events"] = {}
 		if "type" in event:
 			match event.type:
+				# ACCOUNT_DATA
+				"m.push_rules":
+					pass
+				"m.accepted_terms":
+					pass
+				"m.widgets":
+					pass
+				"im.vector.analytics":
+					pass
+				"m.secret_storage.key.[key]":
+					pass
+				"im.vector.setting.integration_provisioning":
+					pass
+				"in.cinny.spaces":
+					pass
+				"m.cross_signing.user_signing":
+					pass
+				"m.cross_signing.user_signing":
+					pass
+				"m.megolm_backup.v1":
+					pass
+				"io.element.recent_emoji":
+					pass
+				"m.secret_storage.default_key":
+					pass
+				"m.cross_signing.master":
+					pass
+				"im.vector.setting.breadcrumbs":
+					pass
+				"im.vector.web.settings":
+					pass
+				"m.direct":
+					pass
+				# PRESENCE
+				"m.presence":
+					pass
+				# ROOM TIMELINE
+				"m.room.message":
+					got_new_message.emit(event)
+				"bark.session.request":
+					got_new_message.emit(event)
+				"bark.session.offer":
+					got_new_message.emit(event)
+				"bark.session.answer":
+					got_new_message.emit(event)
+				"bark.session.ice":
+					got_new_message.emit(event)
+				"m.fully_read":
+					pass
+				"m.receipt":
+					pass
 				"m.room.canonical_alias":
 					pass
 				"m.room.create":
+					"m.room.space"
 					pass
 				"m.room.join_rules":
+					"m.room.membership"
 					pass
-				"m.room.member":
-					userData.joined_rooms[event["room_id"]]["state_events"]["users"]
+				#"m.room.member":
+					#userData.joined_rooms[event["room_id"]]["state_events"]["users"]
 				"m.room.power_levels":
 					pass
 				"m.room.history_visibility":
 					pass
 				"m.room.power_levels":
 					pass
-		userData.joined_rooms[event["room_id"]]["state_events"][event["event_id"]] = event
+				"m.space.child":
+					pass
+				"m.room.topic":
+					pass
+				"m.space.parent":
+					pass
+				"m.room.guest_access":
+					pass
+				"m.room.name":
+					pass
+				
+		if "joined_rooms" in userData:
+			if event.room_id in userData.joined_rooms:
+				if "state" in userData.joined_rooms[event.room_id]:
+					if "events" in userData.joined_rooms[event.room_id].state:
+						userData.joined_rooms[event.room_id]["state"]["events"][event["event_id"]] = event

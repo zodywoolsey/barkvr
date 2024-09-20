@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://mainAssets/ui/3dPanel/editmode/attributes/string.gd" id="1_7fh5n"]
 
 [node name="string" type="Control"]
-custom_minimum_size = Vector2(0, 200)
+custom_minimum_size = Vector2(0, 150)
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0

@@ -2,22 +2,11 @@
 
 [ext_resource type="Script" path="res://mainAssets/ui/3dPanel/local ui/login/loginbutton.gd" id="1_18njo"]
 [ext_resource type="Script" path="res://mainAssets/ui/3dPanel/local ui/login/matrix.gd" id="1_ptvo5"]
+[ext_resource type="Script" path="res://mainAssets/ui/3dPanel/local ui/login/hidepasswordbutton.gd" id="2_d3b4t"]
 [ext_resource type="Script" path="res://mainAssets/ui/3dPanel/local ui/login/roomlist.gd" id="4_f325r"]
 [ext_resource type="Texture2D" uid="uid://dq6wx5duagvu5" path="res://assets/icons/vr-headset.svg" id="4_keerj"]
 [ext_resource type="Script" path="res://mainAssets/ui/3dPanel/local ui/login/messages.gd" id="4_ydkch"]
 [ext_resource type="Script" path="res://mainAssets/ui/3dPanel/local ui/login/SendMessage.gd" id="5_wc8jy"]
-
-[sub_resource type="GDScript" id="GDScript_2qa45"]
-script/source = "extends LineEdit
-
-func _ready():
-	focus_entered.connect(func():
-		grab_focus()
-		get_window()
-		DisplayServer.virtual_keyboard_show(\"\")
-		print(\"keyboard\")
-		)
-"
 
 [node name="matrix" type="Control"]
 layout_mode = 3
@@ -51,6 +40,24 @@ text = "homeserver"
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="base_url" type="Label" parent="login/VBoxContainer/Label"]
+modulate = Color(1, 1, 1, 0.498039)
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -40.0
+offset_top = -16.75
+offset_bottom = 16.75
+grow_horizontal = 0
+grow_vertical = 2
+theme_override_font_sizes/font_size = 14
+text = "base_url: matrix.pupper.dev"
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="homeserver" type="LineEdit" parent="login/VBoxContainer"]
 layout_mode = 2
 text = "matrix.pupper.dev"
@@ -67,7 +74,6 @@ vertical_alignment = 1
 layout_mode = 2
 placeholder_text = "username"
 alignment = 1
-script = SubResource("GDScript_2qa45")
 
 [node name="Label3" type="Label" parent="login/VBoxContainer"]
 layout_mode = 2
@@ -81,9 +87,27 @@ placeholder_text = "password"
 alignment = 1
 secret = true
 
+[node name="hidepasswordbutton" type="Button" parent="login/VBoxContainer/pword"]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -12.0
+offset_top = -6.0
+offset_bottom = 6.0
+grow_horizontal = 0
+grow_vertical = 2
+focus_mode = 0
+toggle_mode = true
+text = "👀"
+script = ExtResource("2_d3b4t")
+
 [node name="Button" type="Button" parent="login/VBoxContainer"]
 layout_mode = 2
 focus_mode = 0
+disabled = true
 text = "log in"
 script = ExtResource("1_18njo")
 
@@ -125,6 +149,7 @@ layout_mode = 2
 
 [node name="user" type="Button" parent="chat/HBoxContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
+focus_mode = 0
 text = "name"
 
 [node name="roomlist" type="Tree" parent="chat/HBoxContainer/VBoxContainer"]
@@ -226,4 +251,5 @@ clip_contents = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+alignment = 2
 script = ExtResource("4_ydkch")

@@ -56,10 +56,10 @@ func set_target(target):
 			if prop.name.contains("bones/") and target is Skeleton3D:
 				fieldname = "bone: "+target.get_bone_name(int(prop.name.split("/")[1]))+" "+prop.name.split("/")[-1]
 			match prop.type:
-				#TYPE_OBJECT:
-					#var tmp :Object_Attribute = object_field.instantiate()
-					#v_box_container.add_child(tmp)
-					#tmp.call_deferred("set_data",fieldname, target, prop.name)
+				TYPE_OBJECT:
+					var tmp :Object_Attribute = object_field.instantiate()
+					v_box_container.add_child(tmp)
+					tmp.call_deferred("set_data",fieldname, target, prop.name)
 				TYPE_STRING_NAME:
 					var tmp :String_Attribute = string_field.instantiate()
 					v_box_container.add_child(tmp)

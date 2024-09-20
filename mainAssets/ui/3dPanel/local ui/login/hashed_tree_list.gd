@@ -11,7 +11,8 @@ func add_item(text:String,metadata:Variant,replace:String=''):
 		else:
 			roomdict = {
 				"name": text,
-				"tree_item": create_item()
+				"tree_item": create_item(),
+				"users": {}
 			}
 		for event in metadata["state"]:
 			match event.type:
@@ -25,7 +26,8 @@ func add_item(text:String,metadata:Variant,replace:String=''):
 						else:
 							tree[event["state_key"]] = {
 								"name": event["state_key"],
-								"tree_item": create_item(roomdict["tree_item"])
+								"tree_item": create_item(roomdict["tree_item"]),
+								"users": {}
 							}
 							tree[event['state_key']]['tree_item'].set_text(0,event['state_key'])
 				"m.space.parent":
@@ -36,7 +38,8 @@ func add_item(text:String,metadata:Variant,replace:String=''):
 					else:
 						tree[event["state_key"]] = {
 							"name": event["state_key"],
-							"tree_item": create_item()
+							"tree_item": create_item(),
+							"users": {}
 						}
 						tree[event['state_key']]['tree_item'].set_text(0,event['state_key'])
 						if is_instance_valid(roomdict.tree_item.get_parent()):
@@ -46,12 +49,27 @@ func add_item(text:String,metadata:Variant,replace:String=''):
 					if "content" in event and "name" in event.content:
 						roomdict.name = event.content.name
 				"m.room.power_levels":
-					if "content" in event and "users" in event.content:
-						if event.content.users is Dictionary:
-							if event.content.users.size() == 2:
-								roomdict.name = event.content.users.keys()[1] if \
-								event.content.users.keys()[0] == Engine.get_singleton("user_manager").uid else\
-								 event.content.users.keys()[0]
+					pass
+					#if "content" in event and "users" in event.content:
+						#if event.content.users is Dictionary:
+							#if event.content.users.size() == 2:
+								#roomdict.name = event.content.users.keys()[1] if \
+								#event.content.users.keys()[0] == Engine.get_singleton("user_manager").uid else\
+								#event.content.users.keys()[0]
+				"m.room.member":
+					if "content" in event and "membership" in event.content and "displayname" in event.content:
+						match event.content.membership:
+							"join":
+								if "users" not in roomdict:
+									roomdict.users = {}
+								if event.state_key not in roomdict.users:
+									roomdict.users[event.state_key] = {}
+								roomdict.users[event.state_key]["displayname"] = event.content.displayname
+		if roomdict.users.size() == 2:
+			for user in roomdict.users:
+				var tmp = Engine.get_singleton("user_manager").userData.login.user_id
+				if user != Engine.get_singleton("user_manager").uid:
+					roomdict.name = roomdict.users[user].displayname
 		roomdict['tree_item'].set_text(0,roomdict.name)
 		roomdict['tree_item'].set_metadata(0,metadata)
 		tree[room_id] = roomdict
