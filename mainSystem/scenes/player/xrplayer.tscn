@@ -70,6 +70,7 @@ radius = 0.1
 
 [node name="CharacterBody3D" type="CharacterBody3D" groups=["player"]]
 script = ExtResource("1_iwrfe")
+flymode = false
 metadata/health = SubResource("GDScript_swjn5")
 
 [node name="xrplayer" type="XROrigin3D" parent="."]

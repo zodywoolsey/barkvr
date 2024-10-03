@@ -120,7 +120,7 @@ horizontal_alignment = 2
 vertical_alignment = 1
 metadata/_edit_use_anchors_ = true
 
-[node name="CheckButton" type="CheckButton" parent="VBoxContainer/titlebar/properties header/active/HBoxContainer"]
+[node name="activetoggle" type="CheckButton" parent="VBoxContainer/titlebar/properties header/active/HBoxContainer"]
 custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 size_flags_horizontal = 3

@@ -6,7 +6,7 @@ var target_room:String = ''
 var already_processed_requests := []
 var already_processed_offers := []
 var already_processed_answers := []
-@onready var item_list := %roomlist
+@onready var roomlist :matrix_hashed_tree= %roomlist
 @onready var scroll_container := $".."
 @onready var text_edit = %messagetext
 
@@ -88,13 +88,15 @@ func _display_message(event):
 			for i in get_children():
 				if i.name == event.event_id:
 					exists = true
-	#									break
 			if !exists:
+				var displayname :String = event.sender.split(':')[0].right(-1)
+				if event.room_id in roomlist.tree and "users" in roomlist.tree[event.room_id] and event.sender in roomlist.tree[event.room_id].users and "displayname" in roomlist.tree[event.room_id].users[event.sender]:
+					displayname = roomlist.tree[event.room_id].users[event.sender].displayname
 				var tmp = load("res://mainAssets/ui/3dPanel/local ui/login/message.tscn").instantiate()
 				tmp.name = event.event_id
 				if event['content'].has('body'):
 					tmp.text = (
-						"[b][u]"+event.sender.split(':')[0].right(-1)+'[/u][/b]:\n'+event.content.body
+						"[b][u]"+displayname+'[/u][/b]:\n'+event.content.body
 						)
 				else:
 					tmp.text = str(event)
@@ -107,10 +109,6 @@ func _display_message(event):
 				else:
 					add_child(tmp)
 					move_child(tmp,0)
-
-func _gui_input(event):
-	if event is InputEventMouseButton and event.is_pressed():
-		text_edit.release_focus()
 
 func offer_created(data:Dictionary):
 	if data.for_user == requesting_user and target_room and is_instance_valid(Engine.get_singleton("user_manager")):

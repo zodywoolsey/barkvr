@@ -28,7 +28,7 @@ offset_top = 45.0
 grow_horizontal = 2
 size_flags_vertical = 3
 tab_alignment = 1
-current_tab = 5
+current_tab = 1
 tabs_position = 1
 drag_to_rearrange_enabled = true
 tab_focus_mode = 0
@@ -40,7 +40,6 @@ layout_mode = 2
 metadata/_tab_index = 0
 
 [node name="settings" parent="TabContainer" instance=ExtResource("3_tbhb0")]
-visible = false
 clip_contents = true
 layout_mode = 2
 metadata/_tab_index = 1
@@ -64,6 +63,7 @@ layout_mode = 2
 metadata/_tab_index = 4
 
 [node name="about" type="Control" parent="TabContainer"]
+visible = false
 clip_contents = true
 layout_mode = 2
 metadata/_tab_index = 5

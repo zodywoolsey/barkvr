@@ -1,25 +1,20 @@
 extends Control
-@onready var item_list = %roomlist
-@onready var chat = $chat
-@onready var login_existing :OptionButton= $login/Button
-@onready var login = $login
+@onready var roomlist: matrix_hashed_tree = %roomlist
+@onready var chat: Control = $chat
+@onready var login_existing: ItemList = %login_existing
+@onready var login: Control = $login
 
 func _ready():
-	login_existing.get_popup().hide_on_checkable_item_selection = false
-	login_existing.get_popup().hide_on_item_selection = false
-	login_existing.get_popup().hide_on_state_item_selection = false
 	login_existing.item_selected.connect(func(index):
 		if Engine.has_singleton("user_manager"):
 			if login_existing.get_item_text(index) != "existing logins":
 				Engine.get_singleton("user_manager").readUserDict(login_existing.get_item_text(index))
 		)
-	login_existing.toggled.connect(func(toggled_on):
-		if toggled_on and Engine.has_singleton("user_manager"):
-			login_existing.clear()
-			login_existing.add_item("existing logins",0)
-			for session : String in Engine.get_singleton("user_manager").getExistingSessions():
+	if Engine.has_singleton("user_manager"):
+		login_existing.clear()
+		for session : String in Engine.get_singleton("user_manager").getExistingSessions():
+			if session.ends_with("data"):
 				login_existing.add_item(session)
-		)
 	if Engine.get_singleton("user_manager"):
 		Engine.get_singleton("user_manager").user_logged_in.connect(func():
 			if Engine.get_singleton("user_manager").joinedRooms:
@@ -34,7 +29,7 @@ func _ready():
 			login.hide()
 			)
 		Engine.get_singleton("user_manager").leave_room.connect(func(roomid:String):
-			item_list.remove_item(roomid)
+			roomlist.remove_item(roomid)
 			)
 		Engine.get_singleton("user_manager").synced.connect(func(data:Dictionary):
 			Engine.get_singleton("user_manager").sync()
@@ -55,12 +50,12 @@ func _ready():
 						tmp_name = event['content']['name']
 				var _tmp
 				if tmp_name:
-					_tmp = item_list.add_item(tmp_name,{
+					_tmp = roomlist.add_item(tmp_name,{
 						'state': data.body,
 						'room_id': roomId
 					}, roomId )
 				else:
-					_tmp = item_list.add_item(roomId.split(':')[0].right(-1),{
+					_tmp = roomlist.add_item(roomId.split(':')[0].right(-1),{
 						'state': data.body,
 						'room_id': roomId
 					}, roomId )

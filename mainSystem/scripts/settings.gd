@@ -24,3 +24,13 @@ var inspector_update_interval := .1:
 	set(value):
 		inspector_update_interval = value
 		inspector_update_interval_changed.emit(inspector_update_interval)
+
+
+## emitted when the send message with ctrl+enter setting is changed
+signal send_messages_with_ctrl_enter_changed(value:bool)
+## sets whether chat messages should be sent with ctrl+enter as opposed
+## to the default which is just by pressing enter
+var send_messages_with_ctrl_enter := false:
+	set(value):
+		send_messages_with_ctrl_enter = value
+		send_messages_with_ctrl_enter_changed.emit(value)

@@ -15,7 +15,7 @@ func _ready():
 	homeserver.text_changed.connect(func(new_text:String):
 		if is_instance_valid(Engine.get_singleton("user_manager")):
 			Engine.get_singleton("user_manager").get_well_known(new_text)
-			base_url_lbl.text = ""
+			base_url_lbl.text = "contacting homeserver"
 			button.disabled = true
 		)
 	homeserver.text_changed.emit(homeserver.text)

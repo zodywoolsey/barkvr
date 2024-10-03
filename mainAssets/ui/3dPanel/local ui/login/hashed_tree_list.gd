@@ -1,5 +1,8 @@
 class_name hashed_tree_list
 extends Tree
+
+## the dictionary that holds all the objects, 
+## their data, and corresponding TreeItem
 var tree:Dictionary = {}
 
 func add_item(text:String,metadata:Variant,replace:String=''):

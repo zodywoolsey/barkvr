@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://pnqmxgn13qw2"]
+[gd_scene load_steps=11 format=3 uid="uid://pnqmxgn13qw2"]
 
 [ext_resource type="Script" path="res://mainAssets/ui/3dPanel/local ui/settings/quick_toggler.tres.gd" id="1_2xlvg"]
 
@@ -104,11 +104,23 @@ script/source = "extends Control
 func _ready():
 	value.value_changed.connect(func(_value):
 		if Engine.has_singleton(\"settings_manager\") and \"inspector_update_interval\" in Engine.get_singleton(\"settings_manager\"):
-			Engine.get_singleton(\"settings_manager\").inspector_update_interval = value
+			Engine.get_singleton(\"settings_manager\").inspector_update_interval = value.value
 		)
 "
 
 [sub_resource type="ImageTexture" id="ImageTexture_5et3l"]
+
+[sub_resource type="GDScript" id="GDScript_bjcdg"]
+script/source = "extends Control
+@onready var value = $value
+
+func _ready():
+	value.toggled.connect(func(_value):
+		if Engine.has_singleton(\"settings_manager\") and \"send_messages_with_ctrl_enter\" in Engine.get_singleton(\"settings_manager\"):
+			Engine.get_singleton(\"settings_manager\").send_messages_with_ctrl_enter = value.button_pressed
+			create_tween().tween_property(value,\"text\",\"is enabled\" if value.button_pressed else \"is disabled\", .5)
+		)
+"
 
 [sub_resource type="GDScript" id="GDScript_46aot"]
 script/source = "extends OptionButton
@@ -519,6 +531,57 @@ value = 1.0
 allow_greater = true
 allow_lesser = true
 alignment = 1
+
+[node name="chatsettingsbutton" type="Button" parent="ScrollContainer/VBoxContainer" node_paths=PackedStringArray("node_to_toggle")]
+layout_mode = 2
+focus_mode = 0
+toggle_mode = true
+text = "chat settings"
+script = ExtResource("1_2xlvg")
+node_to_toggle = NodePath("../chatsettings margin")
+
+[node name="chatsettings margin" type="MarginContainer" parent="ScrollContainer/VBoxContainer"]
+visible = false
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_right = 16
+
+[node name="ColorRect" type="ColorRect" parent="ScrollContainer/VBoxContainer/chatsettings margin"]
+layout_mode = 2
+color = Color(0, 1, 0, 0.2)
+
+[node name="chatsettings" type="VBoxContainer" parent="ScrollContainer/VBoxContainer/chatsettings margin"]
+layout_mode = 2
+
+[node name="send messages with ctrl+enter" type="VBoxContainer" parent="ScrollContainer/VBoxContainer/chatsettings margin/chatsettings"]
+layout_mode = 2
+script = SubResource("GDScript_bjcdg")
+
+[node name="Label" type="Label" parent="ScrollContainer/VBoxContainer/chatsettings margin/chatsettings/send messages with ctrl+enter"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "send messages with ctrl+enter:"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="ScrollContainer/VBoxContainer/chatsettings margin/chatsettings/send messages with ctrl+enter/Label"]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -40.0
+offset_top = -20.0
+offset_bottom = 20.0
+grow_horizontal = 0
+grow_vertical = 2
+
+[node name="value" type="Button" parent="ScrollContainer/VBoxContainer/chatsettings margin/chatsettings/send messages with ctrl+enter"]
+layout_mode = 2
+size_flags_vertical = 3
+toggle_mode = true
+text = "is disabled"
 
 [node name="audiosettingsbutton" type="Button" parent="ScrollContainer/VBoxContainer" node_paths=PackedStringArray("node_to_toggle")]
 layout_mode = 2

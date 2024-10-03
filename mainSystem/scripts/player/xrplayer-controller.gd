@@ -37,9 +37,13 @@ var camPrevPos : Vector3 = Vector3()
 		if value:
 			motion_mode = CharacterBody3D.MOTION_MODE_FLOATING
 		else:
+			if noclip:
+				noclip = false
 			motion_mode = CharacterBody3D.MOTION_MODE_GROUNDED
 @export var noclip := false:
 	set(value):
+		if value and !flymode:
+			flymode = true
 		noclip = value
 		collision_shape_3d.disabled = value
 
