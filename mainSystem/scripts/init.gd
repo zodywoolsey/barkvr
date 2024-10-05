@@ -106,7 +106,11 @@ func import_clip(loader:LoadingHalo=null, import_position:Vector3=Vector3(), pla
 		Engine.get_singleton("event_manager").import_asset('image', clip, '', false, {"loader":loader ,"position":import_position, "scale":player_size_mult})
 	else:
 		var clip = DisplayServer.clipboard_get()
-		if clip.begins_with("http://") or clip.begins_with("https://"):
+		var trysvg = Image.new()
+		if trysvg.load_svg_from_string(clip) == OK:
+			loader.set_deferred("text", "clipboard image")
+			Engine.get_singleton("event_manager").import_asset('image', trysvg, '', false, {"loader":loader ,"position":import_position, "scale":player_size_mult})
+		elif clip.begins_with("http://") or clip.begins_with("https://"):
 			loader.set_deferred("text", "clipboard url")
 			Engine.get_singleton("event_manager").import_asset('uri',clip,'', false, {"loader":loader ,"position":import_position, "scale":player_size_mult})
 		else:

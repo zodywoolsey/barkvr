@@ -460,7 +460,7 @@ func _import_glb(content: Variant, asset_name := '', data := {}) -> void:
 	_post_import.call_deferred(root, generated_scene, asset_name, data, false)
 
 ## Imports a Godot resource.
-func _import_res(_asset_name: String, asset_to_import: Variant, _data:Dictionary={}) -> void:
+func _import_res(asset_name: String, asset_to_import: Variant, data:Dictionary={}) -> void:
 	check_root()
 	# If asset to import is not a path, create a path.
 	# Note that this may mean assets might not load for peers.
@@ -475,17 +475,17 @@ func _import_res(_asset_name: String, asset_to_import: Variant, _data:Dictionary
 		asset_to_import = path
 	ResourceLoader.set_abort_on_missing_resources(false)
 	print(asset_to_import)
-	#var res :Resource
-	print(ResourceLoader.get_dependencies(asset_to_import)[0])
+	var res :Resource
+	#print(ResourceLoader.get_dependencies(asset_to_import)[0])
 	print(asset_to_import)
-	#res = ResourceLoader.load(asset_to_import,'',ResourceLoader.CACHE_MODE_IGNORE)
-	#print(res.resource_path)
-	#res = _load_res_with_dependencies(asset_to_import)
-	#if res != null:
-		#var node = res.instantiate()
-		#_post_import.call_deferred(root,node,asset_name,data)
-	#ResourceLoader.load_threaded_request(asset_to_import, '', true, ResourceLoader.CACHE_MODE_IGNORE)
-	#_check_loaded(asset_to_import,asset_name,data)
+	res = ResourceLoader.load(asset_to_import,'',ResourceLoader.CACHE_MODE_IGNORE)
+	print(res.resource_path)
+	res = _load_res_with_dependencies(asset_to_import)
+	if res != null:
+		var node = res.instantiate()
+		_post_import.call_deferred(root,node,asset_name,data)
+	ResourceLoader.load_threaded_request(asset_to_import, '', true, ResourceLoader.CACHE_MODE_IGNORE)
+	_check_loaded(asset_to_import,asset_name,data)
 
 func _load_res_with_dependencies(path:String) -> Resource:
 	var res :Resource

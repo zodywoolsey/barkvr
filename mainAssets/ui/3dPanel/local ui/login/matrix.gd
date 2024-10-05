@@ -15,7 +15,6 @@ func _ready():
 		for session : String in Engine.get_singleton("user_manager").getExistingSessions():
 			if session.ends_with("data"):
 				login_existing.add_item(session)
-	if Engine.get_singleton("user_manager"):
 		Engine.get_singleton("user_manager").user_logged_in.connect(func():
 			if Engine.get_singleton("user_manager").joinedRooms:
 				for room in Engine.get_singleton("user_manager").joinedRooms:

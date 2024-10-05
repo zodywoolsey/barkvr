@@ -255,6 +255,7 @@ collision_layer = 4
 collision_mask = 4
 script = ExtResource("9_u4nd0")
 _auto_load_ui = ExtResource("9_ydb0h")
+transparent = false
 viewport_size = Vector2i(1389, 1024)
 ANCHOR_POSITION = 3
 render_priority = 127

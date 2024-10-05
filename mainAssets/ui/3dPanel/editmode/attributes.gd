@@ -155,23 +155,22 @@ func _ready():
 
 func _export_node(tmp_target:Node):
 	Thread.set_thread_safety_checks_enabled(false)
-	print(var_to_str(tmp_target))
-	#print('start export')
-	#var downpath :String=OS.get_system_dir(OS.SYSTEM_DIR_DOWNLOADS)
-	#downpath += "/"
-	#if OS.get_name() == "Web":
-		#var packed := PackedScene.new()
-		#event_manager.take_owner_of_node_and_all_children(tmp_target,tmp_target)
-		#packed.pack(tmp_target)
-		#print("save path: "+downpath+tmp_target.name+".res")
-		#JavaScriptBridge.download_buffer(var_to_bytes_with_objects(packed),tmp_target.name+".res")
-		##print("export error: "+str(err))
-	#elif DirAccess.dir_exists_absolute(downpath):
-		#var packed := PackedScene.new()
-		#event_manager.take_owner_of_node_and_all_children(tmp_target,tmp_target)
-		#packed.pack(tmp_target)
-		#var err = ResourceSaver.save(packed, downpath+tmp_target.name+".res",ResourceSaver.FLAG_BUNDLE_RESOURCES)
+	print('start export')
+	var downpath :String=OS.get_system_dir(OS.SYSTEM_DIR_DOWNLOADS)
+	downpath += "/"
+	if OS.get_name() == "Web":
+		var packed := PackedScene.new()
+		event_manager.take_owner_of_node_and_all_children(tmp_target,tmp_target)
+		packed.pack(tmp_target)
+		print("save path: "+downpath+tmp_target.name+".res")
+		JavaScriptBridge.download_buffer(var_to_bytes_with_objects(packed),tmp_target.name+".res")
 		#print("export error: "+str(err))
+	elif DirAccess.dir_exists_absolute(downpath):
+		var packed := PackedScene.new()
+		event_manager.take_owner_of_node_and_all_children(tmp_target,tmp_target)
+		packed.pack(tmp_target)
+		var err = ResourceSaver.save(packed, downpath+tmp_target.name+".res",ResourceSaver.FLAG_BUNDLE_RESOURCES)
+		print("export error: "+str(err))
 		
 		
 	#if !dir.dir_exists("./objects"):
