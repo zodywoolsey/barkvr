@@ -108,6 +108,8 @@ func import_clip(loader:LoadingHalo=null, import_position:Vector3=Vector3(), pla
 		var clip = DisplayServer.clipboard_get()
 		var trysvg = Image.new()
 		if trysvg.load_svg_from_string(clip) == OK:
+			trysvg.load_svg_from_string(clip, 1000.0/trysvg.get_size().length())
+			print("imported svg final size: "+str(trysvg.get_size()))
 			loader.set_deferred("text", "clipboard image")
 			Engine.get_singleton("event_manager").import_asset('image', trysvg, '', false, {"loader":loader ,"position":import_position, "scale":player_size_mult})
 		elif clip.begins_with("http://") or clip.begins_with("https://"):
