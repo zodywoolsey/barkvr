@@ -5,7 +5,7 @@
 [ext_resource type="Script" path="res://mainSystem/scripts/player/flat_camera.gd" id="2_wrxg3"]
 [ext_resource type="PackedScene" uid="uid://12mm63qyglpf" path="res://mainSystem/scenes/player/handray.tscn" id="4_316iy"]
 [ext_resource type="PackedScene" uid="uid://b2r6qi0effaiw" path="res://addons/contextmenu/gridmenu/gridmenubutton.tscn" id="5_d1mpu"]
-[ext_resource type="Texture2D" uid="uid://cncindvbjlp8g" path="res://mainAssets/ui/assets/wrist_menu/UI_mockup_trasparent.png" id="6_j5bbn"]
+[ext_resource type="Texture2D" uid="uid://cv146jvkb1tja" path="res://mainAssets/ui/assets/wrist_menu/UI_mockup_trasparent.png" id="6_j5bbn"]
 [ext_resource type="Script" path="res://mainSystem/scripts/player/notificationpositioner.gd" id="8_n4qtp"]
 [ext_resource type="PackedScene" uid="uid://cr02u36wo3sqp" path="res://addons/contextmenu/gridmenu/handmenu.tscn" id="9_opil0"]
 [ext_resource type="Script" path="res://addons/Panel3D/3dpanel.gd" id="9_u4nd0"]

@@ -246,7 +246,7 @@ func laser_input(data:Dictionary):
 		_:
 			pass
 	
-	if data.pressed and "button_mask" in event:
+	if "pressed" in data and data.pressed and "button_mask" in event:
 		event.button_mask = MOUSE_BUTTON_MASK_LEFT
 	if event is InputEventWithModifiers:
 		if Input.is_key_pressed(KEY_CTRL):

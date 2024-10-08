@@ -1,7 +1,7 @@
 [gd_scene load_steps=12 format=3 uid="uid://br1vh8in0e65o"]
 
-[ext_resource type="Texture2D" uid="uid://dmqmncp1gqcy" path="res://addons/kenney_prototype_textures/purple/texture_10.png" id="1_51upi"]
-[ext_resource type="Texture2D" uid="uid://cagp818mksqu5" path="res://addons/kenney_prototype_textures/dark/texture_01.png" id="2_1wnvo"]
+[ext_resource type="Texture2D" uid="uid://c8t5cjeycroo7" path="res://addons/kenney_prototype_textures/purple/texture_10.png" id="1_51upi"]
+[ext_resource type="Texture2D" uid="uid://css2nn0yv1t1d" path="res://addons/kenney_prototype_textures/dark/texture_01.png" id="2_1wnvo"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_3royi"]
 sky_top_color = Color(0.494118, 0.772549, 1, 1)
