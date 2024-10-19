@@ -43,7 +43,6 @@ func _process(_delta):
 	var rect = get_global_rect()
 	if (rect.end.y > scrollparentrect.position.y and rect.position.y < scrollparentrect.end.y):
 		update_fields()
-		update_fields()
 
 func update_fields():
 	if target and !property_name.is_empty() and !_is_editing and is_instance_valid(target) and !_check_focus():

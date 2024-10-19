@@ -523,6 +523,7 @@ func _import_image_bytes(asset_name: String, content: PackedByteArray, data:Dict
 	var plane := MeshInstance3D.new()
 	var tmpmesh := PlaneMesh.new()
 	var tmpmat := StandardMaterial3D.new()
+	tmpmat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR
 	tmpmesh.size.y = 1.0
 	tmpmesh.size.x = ((tex.get_size()).x/(tex.get_size()).y)
 	tmpmat.albedo_texture = tex
@@ -556,6 +557,7 @@ func _import_image_image(asset_name: String, img: Image, data:Dictionary={}) -> 
 	var plane := MeshInstance3D.new()
 	var tmpmesh := PlaneMesh.new()
 	var tmpmat := StandardMaterial3D.new()
+	tmpmat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR
 	tmpmesh.size.y = 1.0
 	tmpmesh.size.x = ((tex.get_size()).x/(tex.get_size()).y)
 	tmpmat.albedo_texture = tex

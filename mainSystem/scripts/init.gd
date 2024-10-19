@@ -122,9 +122,6 @@ func import_clip(loader:LoadingHalo=null, import_position:Vector3=Vector3(), pla
 
 func _input(event):
 	if event is InputEventKey:
-		if event.keycode == KEY_F8:
-			var tmp = MeshInstance3D.new()
-			tmp.mesh = BoxMesh.new()
 		if event.physical_keycode == KEY_V and event.ctrl_pressed and event.pressed and LocalGlobals.player_state != LocalGlobals.PLAYER_STATE_TYPING:
 			var player_size_mult:float=1.0
 			if is_instance_valid(get_tree().get_first_node_in_group("player")):

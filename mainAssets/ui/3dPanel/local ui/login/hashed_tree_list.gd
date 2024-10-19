@@ -6,77 +6,7 @@ extends Tree
 var tree:Dictionary = {}
 
 func add_item(text:String,metadata:Variant,replace:String=''):
-	if metadata and 'state' in metadata and 'room_id' in metadata:
-		var room_id = metadata["room_id"]
-		var roomdict = {}
-		if room_id in tree:
-			roomdict = tree[room_id]
-		else:
-			roomdict = {
-				"name": text,
-				"tree_item": create_item(),
-				"users": {}
-			}
-		for event in metadata["state"]:
-			match event.type:
-				"m.space.child":
-					if event['state_key'] in Engine.get_singleton('user_manager').joinedRooms:
-						if tree.has(event['state_key']):
-							var parent = tree[event['state_key']]['tree_item'].get_parent()
-							if is_instance_valid(parent):
-								parent.remove_child(tree[event['state_key']]['tree_item'])
-							roomdict['tree_item'].add_child(tree[event['state_key']]['tree_item'])
-						else:
-							tree[event["state_key"]] = {
-								"name": event["state_key"],
-								"tree_item": create_item(roomdict["tree_item"]),
-								"users": {}
-							}
-							tree[event['state_key']]['tree_item'].set_text(0,event['state_key'])
-				"m.space.parent":
-					if tree.has(event['state_key']):
-						if is_instance_valid(roomdict.tree_item.get_parent()):
-							roomdict.tree_item.get_parent().remove_child(roomdict.tree_item)
-						tree[event.state_key].tree_item.add_child(roomdict.tree_item)
-					else:
-						tree[event["state_key"]] = {
-							"name": event["state_key"],
-							"tree_item": create_item(),
-							"users": {}
-						}
-						tree[event['state_key']]['tree_item'].set_text(0,event['state_key'])
-						if is_instance_valid(roomdict.tree_item.get_parent()):
-							roomdict.tree_item.get_parent().remove_child(roomdict.tree_item)
-						tree[event.state_key].tree_item.add_child(roomdict.tree_item)
-				"m.room.name":
-					if "content" in event and "name" in event.content:
-						roomdict.name = event.content.name
-				"m.room.power_levels":
-					pass
-					#if "content" in event and "users" in event.content:
-						#if event.content.users is Dictionary:
-							#if event.content.users.size() == 2:
-								#roomdict.name = event.content.users.keys()[1] if \
-								#event.content.users.keys()[0] == Engine.get_singleton("user_manager").uid else\
-								#event.content.users.keys()[0]
-				"m.room.member":
-					if "content" in event and "membership" in event.content and "displayname" in event.content:
-						match event.content.membership:
-							"join":
-								if "users" not in roomdict:
-									roomdict.users = {}
-								if event.state_key not in roomdict.users:
-									roomdict.users[event.state_key] = {}
-								roomdict.users[event.state_key]["displayname"] = event.content.displayname
-		if roomdict.users.size() == 2:
-			for user in roomdict.users:
-				var tmp = Engine.get_singleton("user_manager").userData.login.user_id
-				if user != Engine.get_singleton("user_manager").uid:
-					roomdict.name = roomdict.users[user].displayname
-		roomdict['tree_item'].set_text(0,roomdict.name)
-		roomdict['tree_item'].set_metadata(0,metadata)
-		tree[room_id] = roomdict
-	elif metadata and metadata.has('node'):
+	if metadata and metadata.has('node'):
 		if is_instance_valid(metadata.node):
 			var item_id = metadata.node.get_instance_id()
 			if tree.has(item_id):
@@ -105,6 +35,9 @@ func add_item(text:String,metadata:Variant,replace:String=''):
 				else:
 					tree[item_id].tree_item = create_item()
 					#tree[item_id].tree_item.add_button(0,load("res://assets/icons/teenyicons/solid/bin.svg"))
+				if metadata.node.has_method('equip_to_local_user'):
+					tree[item_id].tree_item.add_button(0, load("res://assets/icons/teenyicons/outline/drag.svg"), -1, false, "equip avatar")
+					
 				tree[item_id].tree_item.collapsed = true
 				tree[item_id].tree_item.set_text(0,text)
 				tree[item_id].tree_item.set_metadata(0,metadata)

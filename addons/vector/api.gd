@@ -26,6 +26,7 @@ signal placed_room_state(result:int,response_code:int,headers:PackedStringArray,
 signal placed_room_send(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray)
 signal got_turn_server(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray)
 signal got_room_members(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray)
+signal got_media(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray,media_id:String)
 
 signal user_logged_in(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray)
 signal got_joined_rooms(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray)
@@ -44,7 +45,7 @@ func get_well_known(base_url:String='', headers:Array=[]):
 	var client = HTTPRequest.new()
 	print("getting well known for: ",base_url)
 	client.use_threads = false
-	get_tree().get_first_node_in_group("requestParent").add_child(client)
+	add_child(client)
 	client.request_completed.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 		# if result == RESULT_SUCCESS, emit signal
 		if result == HTTPRequest.RESULT_SUCCESS:
@@ -70,7 +71,7 @@ func get_versions(base_url:String='', headers:Array=[]):
 	var client = HTTPRequest.new()
 	print("getting versions for: ",base_url)
 	client.use_threads = false
-	get_tree().get_first_node_in_group("requestParent").add_child(client)
+	add_child(client)
 	client.request_completed.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 		# if result == RESULT_SUCCESS, emit signal
 		if result == HTTPRequest.RESULT_SUCCESS:
@@ -101,7 +102,7 @@ func get_registration_token_validity(base_url:String='', headers:Array=[], token
 	var client = HTTPRequest.new()
 	print("getting registration token validity for: ",base_url)
 	client.use_threads = false
-	get_tree().get_first_node_in_group("requestParent").add_child(client)
+	add_child(client)
 	client.request_completed.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 		# if result == RESULT_SUCCESS, emit signal
 		if result == HTTPRequest.RESULT_SUCCESS:
@@ -127,7 +128,7 @@ func get_login(base_url:String='', headers:Array=[]):
 	var client = HTTPRequest.new()
 	print("getting login configuration for: ",base_url)
 	client.use_threads = false
-	get_tree().get_first_node_in_group("requestParent").add_child(client)
+	add_child(client)
 	client.request_completed.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 		# if result == RESULT_SUCCESS, emit signal
 		if result == HTTPRequest.RESULT_SUCCESS:
@@ -157,7 +158,7 @@ func post_login(home_server:String='', headers:Array=[], address:String='', devi
 	var client = HTTPRequest.new()
 	print("posting login for: ",home_server)
 	client.use_threads = false
-	get_tree().get_first_node_in_group("requestParent").add_child(client)
+	add_child(client)
 	client.request_completed.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 		# if result == RESULT_SUCCESS, emit signal
 		if result == HTTPRequest.RESULT_SUCCESS:
@@ -208,7 +209,7 @@ func post_refresh(base_url:String='', headers:Array=[], refresh_token:String='')
 	var client = HTTPRequest.new()
 	print("posting refresh for: ",base_url)
 	client.use_threads = false
-	get_tree().get_first_node_in_group("requestParent").add_child(client)
+	add_child(client)
 	client.request_completed.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 		# if result == RESULT_SUCCESS, emit signal
 		if result == HTTPRequest.RESULT_SUCCESS:
@@ -240,7 +241,7 @@ func post_logout(base_url:String='', headers:Array=[]):
 	var client = HTTPRequest.new()
 	print("posting logout for: ",base_url)
 	client.use_threads = false
-	get_tree().get_first_node_in_group("requestParent").add_child(client)
+	add_child(client)
 	client.request_completed.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 		# if result == RESULT_SUCCESS, emit signal
 		if result == HTTPRequest.RESULT_SUCCESS:
@@ -266,7 +267,7 @@ func post_logout_all(base_url:String='', headers:Array=[]):
 	var client = HTTPRequest.new()
 	print("posting logout_all for: ",base_url)
 	client.use_threads = false
-	get_tree().get_first_node_in_group("requestParent").add_child(client)
+	add_child(client)
 	client.request_completed.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 		# if result == RESULT_SUCCESS, emit signal
 		if result == HTTPRequest.RESULT_SUCCESS:
@@ -295,7 +296,7 @@ func post_account_deactivate(base_url:String='', headers:Array=[], auth:Dictiona
 	var client = HTTPRequest.new()
 	print("posting account_deactivate for: ",base_url)
 	client.use_threads = false
-	get_tree().get_first_node_in_group("requestParent").add_child(client)
+	add_child(client)
 	client.request_completed.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 		# if result == RESULT_SUCCESS, emit signal
 		if result == HTTPRequest.RESULT_SUCCESS:
@@ -331,7 +332,7 @@ func post_account_password(base_url:String='', headers:Array=[], auth:Dictionary
 	var client = HTTPRequest.new()
 	print("posting account_password for: ",base_url)
 	client.use_threads = false
-	get_tree().get_first_node_in_group("requestParent").add_child(client)
+	add_child(client)
 	client.request_completed.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 		# if result == RESULT_SUCCESS, emit signal
 		if result == HTTPRequest.RESULT_SUCCESS:
@@ -366,7 +367,7 @@ func post_account_password_email_requestToken(base_url:String='', headers:Array=
 	var client = HTTPRequest.new()
 	print("posting account_password for: ",base_url)
 	client.use_threads = false
-	get_tree().get_first_node_in_group("requestParent").add_child(client)
+	add_child(client)
 	client.request_completed.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 		# if result == RESULT_SUCCESS, emit signal
 		if result == HTTPRequest.RESULT_SUCCESS:
@@ -408,7 +409,7 @@ func post_account_password_msisdn_requestToken(base_url:String='', headers:Array
 	var client = HTTPRequest.new()
 	print("posting account_password for: ",base_url)
 	client.use_threads = false
-	get_tree().get_first_node_in_group("requestParent").add_child(client)
+	add_child(client)
 	client.request_completed.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 		# if result == RESULT_SUCCESS, emit signal
 		if result == HTTPRequest.RESULT_SUCCESS:
@@ -455,7 +456,7 @@ func post_register(base_url:String='', headers:Array=[], kind:String='user', aut
 	var client = HTTPRequest.new()
 	print("registering for: ",base_url)
 	client.use_threads = false
-	get_tree().get_first_node_in_group("requestParent").add_child(client)
+	add_child(client)
 	client.request_completed.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 		# if result == RESULT_SUCCESS, emit signal
 		if result == HTTPRequest.RESULT_SUCCESS:
@@ -504,7 +505,7 @@ func get_register_available(base_url:String='', headers:Array=[], username:Strin
 	var client = HTTPRequest.new()
 	print("getting register_available for: ",base_url)
 	client.use_threads = false
-	get_tree().get_first_node_in_group("requestParent").add_child(client)
+	add_child(client)
 	client.request_completed.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 		# if result == RESULT_SUCCESS, emit signal
 		if result == HTTPRequest.RESULT_SUCCESS:
@@ -535,7 +536,7 @@ func post_register_email_requesttoken(base_url:String='', headers:Array=[], clie
 	var client = HTTPRequest.new()
 	print("registering email_requesttoken for: ",base_url)
 	client.use_threads = false
-	get_tree().get_first_node_in_group("requestParent").add_child(client)
+	add_child(client)
 	client.request_completed.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 		# if result == RESULT_SUCCESS, emit signal
 		if result == HTTPRequest.RESULT_SUCCESS:
@@ -577,7 +578,7 @@ func post_register_msisdn_requesttoken(base_url:String='', headers:Array=[], cli
 	var client = HTTPRequest.new()
 	print("registering msisdn_requesttoken for: ",base_url)
 	client.use_threads = false
-	get_tree().get_first_node_in_group("requestParent").add_child(client)
+	add_child(client)
 	client.request_completed.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 		# if result == RESULT_SUCCESS, emit signal
 		if result == HTTPRequest.RESULT_SUCCESS:
@@ -628,7 +629,7 @@ func get_room_messages(base_url:String='', headers:Array=[], roomId: String = ''
 	var client = HTTPRequest.new()
 #	print("getting room_messages for: ",roomId)
 	client.use_threads = false
-	get_tree().get_first_node_in_group("requestParent").add_child(client)
+	add_child(client)
 	client.request_completed.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 		# if result == RESULT_SUCCESS, emit signal
 		if result == HTTPRequest.RESULT_SUCCESS:
@@ -679,7 +680,7 @@ func put_room_state(base_url:String='', headers:Array=[], room_id:String='', eve
 	var client = HTTPRequest.new()
 	print("putting room_state for: ",room_id)
 	client.use_threads = false
-	get_tree().get_first_node_in_group("requestParent").add_child(client)
+	add_child(client)
 	client.request_completed.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 		# if result == RESULT_SUCCESS, emit signal
 		if result == HTTPRequest.RESULT_SUCCESS:
@@ -713,7 +714,7 @@ func put_room_send(base_url:String='', headers:Array=[], room_id:String='', even
 	var client = HTTPRequest.new()
 	print("putting room_send for: ",room_id)
 	client.use_threads = false
-	get_tree().get_first_node_in_group("requestParent").add_child(client)
+	add_child(client)
 	client.request_completed.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 		if result == HTTPRequest.RESULT_SUCCESS and response_code == 200:
 			placed_room_send.emit(result,response_code,headers,body)
@@ -739,7 +740,7 @@ func get_turn_server(base_url:String='', headers:Array=[]):
 	var client = HTTPRequest.new()
 	print("getting turn_server")
 	client.use_threads = false
-	get_tree().get_first_node_in_group("requestParent").add_child(client)
+	add_child(client)
 	client.request_completed.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 		# if result == RESULT_SUCCESS, emit signal
 		if result == HTTPRequest.RESULT_SUCCESS:
@@ -784,7 +785,7 @@ func get_room_members(base_url:String='', headers:Array=[], room_id:String='', m
 	var client = HTTPRequest.new()
 	print("getting room_members for: ",room_id)
 	client.use_threads = false
-	get_tree().get_first_node_in_group("requestParent").add_child(client)
+	add_child(client)
 	client.request_completed.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 		if result == HTTPRequest.RESULT_SUCCESS:
 			got_room_members.emit(result,response_code,headers,body)
@@ -801,7 +802,7 @@ func get_room_members(base_url:String='', headers:Array=[], room_id:String='', m
 func login_username_password(base_url:String,headers:Array,username:String,password:String):
 	var client = HTTPRequest.new()
 	client.use_threads = false
-	get_tree().get_first_node_in_group("requestParent").add_child(client)
+	add_child(client)
 	client.request_completed.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 		user_logged_in.emit(result,response_code,headers,body)
 		client.queue_free()
@@ -834,7 +835,7 @@ func get_joined_rooms(base_url:String, headers:PackedStringArray, access_token:S
 	if access_token:
 		var client = HTTPRequest.new()
 		client.use_threads = false
-		get_tree().get_first_node_in_group("requestParent").add_child(client)
+		add_child(client)
 		client.request_completed.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 			got_joined_rooms.emit(result,response_code,headers,body)
 			client.queue_free()
@@ -854,7 +855,7 @@ func sync(base_url:String, headers:PackedStringArray, options:Dictionary):
 	var res
 	var client = HTTPRequest.new()
 	client.use_threads = false
-	get_tree().get_first_node_in_group("requestParent").add_child(client)
+	add_child(client)
 	client.request_completed.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 		synced.emit(result,response_code,headers,body)
 		client.queue_free()
@@ -887,7 +888,7 @@ func sync(base_url:String, headers:PackedStringArray, options:Dictionary):
 func get_room_state(base_url:String, headers:PackedStringArray, room_id:String):
 	var client = HTTPRequest.new()
 	client.use_threads = false
-	get_tree().get_first_node_in_group("requestParent").add_child(client)
+	add_child(client)
 	client.request_completed.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
 		got_room_state.emit(result,response_code,headers,body)
 		client.queue_free()
@@ -899,28 +900,41 @@ func get_room_state(base_url:String, headers:PackedStringArray, room_id:String):
 		HTTPClient.METHOD_GET
 		)
 	assert(res == OK)
-	
-## Gets a list of message and state events for a room. It uses pagination query parameters to paginate history in the room.
-## Url: /_matrix/client/v3/rooms/{roomId}/messages
-#func get_room_messages(room_id:String, dir:String='', filter:String='',from:String='', limit:int=-1, to:String=''):
-#	var res
-#	if Vector.client.get_status() == HTTPClient.STATUS_CONNECTED:
-#		res = Vector.client.request(HTTPClient.METHOD_GET, "/_matrix/client/v3/rooms/{0}/messages?limit={1}".format([
-#			room_id,
-#			limit if limit<-1 else 100
-#			]),Vector.headers)
-#		var msg = await Vector.readRequestBytes()
-#		return JSON.parse_string(msg)
-	
-## Gets a list of aliases for the specified room
-## Url: /_matrix/client/v3/rooms/{roomId}/aliases
-#func get_room_aliases(room_id:String):
-	#var res
-	#if Vector.client.get_status() == HTTPClient.STATUS_CONNECTED:
-		#res = Vector.client.request(
-			#HTTPClient.METHOD_GET,
-			#"/_matrix/client/v3/rooms/{0}/aliases".format([room_id]),
-			#Vector.headers)
-		#var msg = await Vector.readRequestBytes()
-		#var pmsg = JSON.parse_string(msg)
-		#return pmsg
+
+func get_media(base_url:String='', headers:Array=[], server_name:String='', media_id:String=''):
+	# make request
+	var res
+	var client = HTTPRequest.new()
+	client.use_threads = false
+	add_child(client)
+	client.request_completed.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
+		if result == HTTPRequest.RESULT_SUCCESS:
+			got_media.emit(result,response_code,headers,body,media_id)
+		else:
+			print("error getting media:\n	result: {0}\n	response_code: {1}\n".format([result,response_code]))
+		client.queue_free()
+		)
+	res = client.request(
+	base_url+"_matrix/client/v1/media/download/"+server_name+"/"+media_id+"?allow_redirect=true",
+	headers,
+	HTTPClient.METHOD_GET
+	)
+
+func get_media_authenticated(base_url:String='', headers:Array=[], server_name:String='', media_id:String=''):
+	# make request
+	var res
+	var client = HTTPRequest.new()
+	client.use_threads = false
+	add_child(client)
+	client.request_completed.connect(func(result:int,response_code:int,headers:PackedStringArray,body:PackedByteArray):
+		if result == HTTPRequest.RESULT_SUCCESS:
+			got_media.emit(result,response_code,headers,body,media_id)
+		else:
+			print("error getting media:\n	result: {0}\n	response_code: {1}\n".format([result,response_code]))
+		client.queue_free()
+		)
+	res = client.request(
+	base_url+"_matrix/media/v3/download/"+server_name+"/"+media_id+"?allow_redirect=true",
+	headers,
+	HTTPClient.METHOD_GET
+	)

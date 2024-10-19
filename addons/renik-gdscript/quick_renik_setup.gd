@@ -18,6 +18,10 @@ extends Node3D
 		ren_ik_foot_placement.armature_skeleton_path = ren_ik_foot_placement.get_path_to(armature_skeleton)
 		print(ren_ik_foot_placement.armature_skeleton_path)
 
+func equip_to_local_user():
+	var player = get_tree().get_first_node_in_group('player')
+	head.reparent(player.get_viewport().get_camera_3d())
+
 func _ready():
 	ren_ik.armature_skeleton_path = ren_ik.get_path_to(armature_skeleton)
 	ren_ik_foot_placement.armature_skeleton_path = ren_ik_foot_placement.get_path_to(armature_skeleton)

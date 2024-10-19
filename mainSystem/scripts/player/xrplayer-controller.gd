@@ -226,6 +226,8 @@ func _physics_process(delta):
 	move_and_slide()
 
 func _input(event):
+	if event.is_action("cleargizmos"):
+		LocalGlobals.clear_gizmos.emit()
 	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		if Input.is_key_pressed(KEY_E):
 			if vr_mode_enabled:
@@ -394,7 +396,8 @@ func flat_movement():
 			camera_3d.rotate_x( -(lookdrag.position.y-lookdrag.startposition.y)*(MOUSE_SPEED/800) )
 
 func contextMenuSummon():
-	handmenu.summon(camera_3d.to_global(Vector3(0,0,-.5)), camera_3d.global_position)
+	if LocalGlobals.player_state != LocalGlobals.PLAYER_STATE_TYPING:
+		handmenu.summon(camera_3d.to_global(Vector3(0,0,-.5)), camera_3d.global_position)
 
 func place_grabbed_nodes():
 	for item in grabbed.values():

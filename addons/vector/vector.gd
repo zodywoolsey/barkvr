@@ -161,12 +161,16 @@ func _ready():
 		var msg = body.get_string_from_ascii()
 		var msgJson = JSON.parse_string(msg)
 		if result == 0:
-			got_room_messages.emit({
-				"result_code": result,
-				"response_code": response_code,
-				"headers": headers,
-				"body": msgJson
-			})
+			if "chunk" in msgJson:
+				msgJson.chunk.reverse()
+				for event in msgJson.chunk:
+					process_event(event)
+			#got_room_messages.emit({
+				#"result_code": result,
+				#"response_code": response_code,
+				#"headers": headers,
+				#"body": msgJson
+			#})
 		else:
 			print("error getting messages")
 	)
@@ -212,7 +216,7 @@ func _ready():
 							call_deferred("emit_signal", "leave_room",room)
 				print('synced')
 				call_deferred("emit_signal", "synced", msgJson)
-				saveUserDict()
+				call_deferred("saveUserDict")
 			else:
 				call_deferred("emit_signal","synced", {"result":result})
 			)
@@ -307,9 +311,9 @@ func saveUserDict():
 	#var toStore = var_to_bytes(userData)
 	print(toStore.length())
 	file.store_string(toStore)
+	file.close()
 	DirAccess.remove_absolute("user://logins/"+uid.validate_filename()+".data")
 	DirAccess.rename_absolute("user://logins/"+uid.validate_filename()+".datan", "user://logins/"+uid.validate_filename()+".data")
-	file.close()
 
 func getExistingSessions() -> PackedStringArray:
 	var files = DirAccess.get_files_at("user://logins/")
@@ -409,7 +413,13 @@ func process_event(event:Dictionary, roomid:String=""):
 					pass
 				# ROOM TIMELINE
 				"m.room.message":
-					got_new_message.emit(event)
+					if "content" in event and "msgtype" in event.content:
+						match event.content.msgtype:
+							"m.text":
+								got_new_message.emit(event)
+							"m.image":
+								got_new_message.emit(event)
+								# TODO get the media here 
 				"bark.session.request":
 					got_new_message.emit(event)
 				"bark.session.offer":

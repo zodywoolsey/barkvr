@@ -6,12 +6,19 @@ extends StaticBody3D
 @onready var label_3d :Label3D = $Label3D
 @onready var collision_shape_3d :CollisionShape3D = $CollisionShape3D
 
-## 
+## if this button is meant to spawn a scene,
+## you can set that scene file with this variable
 @export_file var itemToSpawn
-## 
+
+## sets how many of the set item should be created
+## each time the button is pressed
+@export var item_spawn_multiplier:float = 1
+
+## label for the text on the button
 @export var text :String:
 	set(value):
 		text = value
+		name = text
 		if label_3d:
 			label_3d.text = text
 
@@ -23,6 +30,7 @@ extends StaticBody3D
 		callscript = value
 		if callscript and callscript.can_instantiate():
 			callscriptinstance = callscript.new()
+
 var callscriptinstance:
 	set(value):
 		callscriptinstance = value
@@ -60,6 +68,7 @@ func _physics_process(delta):
 	label_3d.position.y = lerpf(label_3d.position.y, label_target_position, .1)
 	mesh_instance_3d.mesh.size.y = lerpf(mesh_instance_3d.mesh.size.y,mesh_target_size.y,.2)
 	mesh_instance_3d.mesh.size.x = lerpf(mesh_instance_3d.mesh.size.x,mesh_target_size.y,.2)
+
 func _check_callscriptinstance():
 	if !is_instance_valid(callscriptinstance) and callscript != null and callscript.can_instantiate():
 		callscriptinstance = callscript.new()
@@ -73,7 +82,7 @@ func laser_input(data:Dictionary):
 					isclicked = true
 					clicked.emit()
 					if itemToSpawn != null:
-						for i in range(1):
+						for i in range(item_spawn_multiplier):
 							var tmp = load(itemToSpawn).instantiate()
 							get_tree().get_first_node_in_group("localworldroot").add_child(tmp)
 							tmp.global_position = global_position

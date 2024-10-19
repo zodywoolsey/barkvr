@@ -1,9 +1,8 @@
-[gd_scene load_steps=13 format=3 uid="uid://dv0etfy0ao5"]
+[gd_scene load_steps=11 format=3 uid="uid://dv0etfy0ao5"]
 
 [ext_resource type="PackedScene" uid="uid://br1vh8in0e65o" path="res://mainAssets/worlds/basic_starter.tscn" id="1_ad4cs"]
 [ext_resource type="PackedScene" uid="uid://dckbok0o553v7" path="res://mainSystem/scenes/objects/worldObjects/playerSpawnLocation.tscn" id="2_humgq"]
 [ext_resource type="PackedScene" uid="uid://d0wvfw354l2i5" path="res://mainAssets/ui/3dui/loading halo demo.tscn" id="3_eytop"]
-[ext_resource type="Script" path="res://mainSystem/scripts/mic_playback.gd" id="4_5gnpn"]
 [ext_resource type="Script" path="res://addons/Panel3D/3dpanel.gd" id="5_ykx2e"]
 [ext_resource type="PackedScene" uid="uid://b3sbt3oft3cxg" path="res://mainAssets/ui/3dPanel/editmode/vreditor.tscn" id="9_k6sjl"]
 [ext_resource type="PackedScene" uid="uid://r68jre2w5k33" path="res://mainSystem/scenes/player/xrplayer.tscn" id="11_qw71v"]
@@ -24,9 +23,6 @@ func _ready():
 		await get_tree().create_timer(.01).timeout
 	)
 "
-
-[sub_resource type="AudioStreamGenerator" id="AudioStreamGenerator_f6fry"]
-mix_rate = 44800.0
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xtqms"]
 albedo_color = Color(0, 0, 0, 1)
@@ -67,11 +63,6 @@ script = SubResource("GDScript_icupb")
 
 [node name="playercontainer" parent="multiplayer world root" instance=ExtResource("11_qw71v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.08992, 0.91664, 2.46325)
-
-[node name="AudioStreamPlayer2" type="AudioStreamPlayer" parent="." groups=["mic_playback"]]
-stream = SubResource("AudioStreamGenerator_f6fry")
-autoplay = true
-script = ExtResource("4_5gnpn")
 
 [node name="Node3D" type="Node3D" parent="."]
 

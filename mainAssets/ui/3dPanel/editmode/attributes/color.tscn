@@ -10,7 +10,7 @@ shadow_size = 0
 shadow_color = Color(0, 0, 0, 1)
 shadow_offset = Vector2(0, 0)
 
-[node name="vector3" type="Control"]
+[node name="color" type="Control"]
 custom_minimum_size = Vector2(0, 200)
 layout_mode = 3
 anchors_preset = 15
@@ -172,7 +172,7 @@ label_settings = SubResource("LabelSettings_ta0h6")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="aval" type="LineEdit" parent="VBoxContainer/TabContainer/rgba/a"]
+[node name="rgbaval" type="LineEdit" parent="VBoxContainer/TabContainer/rgba/a"]
 layout_mode = 2
 size_flags_horizontal = 3
 
@@ -283,7 +283,7 @@ label_settings = SubResource("LabelSettings_ta0h6")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="aval" type="LineEdit" parent="VBoxContainer/TabContainer/hsva/a"]
+[node name="hsvaval" type="LineEdit" parent="VBoxContainer/TabContainer/hsva/a"]
 layout_mode = 2
 size_flags_horizontal = 3
 
@@ -317,6 +317,6 @@ label_settings = SubResource("LabelSettings_ta0h6")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="hval" type="LineEdit" parent="VBoxContainer/TabContainer/hex/h"]
+[node name="hexval" type="LineEdit" parent="VBoxContainer/TabContainer/hex/h"]
 layout_mode = 2
 size_flags_horizontal = 3

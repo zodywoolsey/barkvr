@@ -19,9 +19,25 @@ var number_field = load("res://mainAssets/ui/3dPanel/editmode/attributes/number.
 var bool_field = load("res://mainAssets/ui/3dPanel/editmode/attributes/bool.tscn")
 var enum_field = load("res://mainAssets/ui/3dPanel/editmode/attributes/enum.tscn")
 var string_field = load("res://mainAssets/ui/3dPanel/editmode/attributes/string.tscn")
-var object_field = preload("res://mainAssets/ui/3dPanel/editmode/attributes/object.tscn")
+var object_field = load("res://mainAssets/ui/3dPanel/editmode/attributes/object.tscn")
+var color_field = load("res://mainAssets/ui/3dPanel/editmode/attributes/color.tscn")
 var is_field_focused = false
-var target : Node = null
+var target : Object = null
+
+
+#titlebar stuffs
+@onready var titlebar: VBoxContainer = $VBoxContainer/titlebar
+@onready var titlebar_top_row: HBoxContainer = $VBoxContainer/titlebar/HBoxContainer
+@onready var properties_header: HBoxContainer = $"VBoxContainer/titlebar/properties header"
+@onready var titlebar_active: ColorRect = $"VBoxContainer/titlebar/properties header/active"
+
+var hide_titlebar := false:
+	set(val):
+		hide_titlebar = val
+		if is_instance_valid(titlebar_top_row):
+			titlebar_top_row.visible = !hide_titlebar
+		if is_instance_valid(titlebar_active):
+			titlebar_active.visible = !hide_titlebar
 
 var event_manager
 
@@ -51,16 +67,23 @@ func set_target(new_target):
 			if prop.name.contains("bones/") and new_target is Skeleton3D:
 				fieldname = "bone: "+new_target.get_bone_name(int(prop.name.split("/")[1]))+" "+prop.name.split("/")[-1]
 			match prop.type:
-				#TYPE_OBJECT:
-					#var tmp :Object_Attribute = object_field.instantiate()
-					#v_box_container.add_child(tmp)
-					#tmp.call_deferred("set_data",fieldname, target, prop.name)
+				TYPE_OBJECT:
+					if prop.hint_string == "Node":
+						print('node don\'t add')
+					else:
+						var tmp :Object_Attribute = object_field.instantiate()
+						v_box_container.add_child(tmp)
+						tmp.call_deferred("set_data",fieldname, target, prop.name)
 				TYPE_STRING_NAME:
 					var tmp :String_Attribute = string_field.instantiate()
 					v_box_container.add_child(tmp)
 					tmp.set_data(fieldname, new_target, prop.name)
 				TYPE_STRING:
 					var tmp :String_Attribute = string_field.instantiate()
+					v_box_container.add_child(tmp)
+					tmp.set_data(fieldname, new_target, prop.name)
+				TYPE_COLOR:
+					var tmp :Color_Attribute = color_field.instantiate()
 					v_box_container.add_child(tmp)
 					tmp.set_data(fieldname, new_target, prop.name)
 				TYPE_BOOL:
@@ -108,6 +131,8 @@ func clear_fields():
 			targetname.text = target.name
 
 func _ready():
+	titlebar_top_row.visible = !hide_titlebar
+	titlebar_active.visible = !hide_titlebar
 	event_manager = Engine.get_singleton("event_manager")
 	print("event supplierattrib: "+str(event_manager))
 	print(event_manager)
@@ -123,7 +148,7 @@ func _ready():
 			clear_fields()
 		)
 	activetoggle.toggled.connect(func(on:bool):
-		if target and is_instance_valid(target):
+		if target and is_instance_valid(target) and target is Node:
 			event_manager.set_property(event_manager.root.get_path_to(target),"visible",activetoggle.button_pressed)
 			#target.visible = active.button_pressed
 		)

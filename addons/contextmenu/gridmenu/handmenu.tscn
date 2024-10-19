@@ -1,7 +1,21 @@
-[gd_scene load_steps=8 format=3 uid="uid://cr02u36wo3sqp"]
+[gd_scene load_steps=10 format=3 uid="uid://cr02u36wo3sqp"]
 
 [ext_resource type="PackedScene" uid="uid://b2r6qi0effaiw" path="res://addons/contextmenu/gridmenu/gridmenubutton.tscn" id="1_1fmp6"]
 [ext_resource type="Script" path="res://addons/contextmenu/gridmenu/handmenu.gd" id="1_jd5nk"]
+
+[sub_resource type="GDScript" id="GDScript_mkksm"]
+script/source = "extends Node
+
+func onclick():
+	get_tree().get_first_node_in_group(\"player\").scale *= 1.1
+"
+
+[sub_resource type="GDScript" id="GDScript_apv3r"]
+script/source = "extends Node
+
+func onclick():
+	get_tree().get_first_node_in_group(\"player\").scale *= .9
+"
 
 [sub_resource type="GDScript" id="GDScript_3v3kl"]
 script/source = "extends Node
@@ -44,45 +58,47 @@ func onclick():
 [node name="handmenu" type="Node3D"]
 script = ExtResource("1_jd5nk")
 
-[node name="StaticBody3D" parent="." instance=ExtResource("1_1fmp6")]
+[node name="scale up" parent="." instance=ExtResource("1_1fmp6")]
 transform = Transform3D(-1, -8.74228e-08, 3.82137e-15, 0, -4.37114e-08, -1, 8.74228e-08, -1, 4.37114e-08, 0.1, 0.1, -8.74228e-09)
-text = "set root"
+text = "scale up"
+callscript = SubResource("GDScript_mkksm")
 
-[node name="StaticBody3D2" parent="." instance=ExtResource("1_1fmp6")]
+[node name="scale down" parent="." instance=ExtResource("1_1fmp6")]
 transform = Transform3D(-1, -8.74228e-08, 3.82137e-15, 0, -4.37114e-08, -1, 8.74228e-08, -1, 4.37114e-08, 0, 0.1, 0)
-itemToSpawn = "res://mainSystem/scenes/objects/toys/rigid_body_3d_grabbable.tscn"
-text = "spawn cube"
+text = "scale down"
+callscript = SubResource("GDScript_apv3r")
 
-[node name="StaticBody3D3" parent="." instance=ExtResource("1_1fmp6")]
+[node name="cube" parent="." instance=ExtResource("1_1fmp6")]
 transform = Transform3D(-1, -8.74228e-08, 3.82137e-15, 0, -4.37114e-08, -1, 8.74228e-08, -1, 4.37114e-08, -0.1, 0.1, 8.74228e-09)
-itemToSpawn = "res://mainSystem/scenes/objects/toys/static_body_3d_grabbable.tscn"
-text = "static cube"
+itemToSpawn = "res://mainSystem/scenes/objects/toys/rigid_body_3d_grabbable.tscn"
+item_spawn_multiplier = 100.0
+text = "cube"
 
-[node name="StaticBody3D4" parent="." instance=ExtResource("1_1fmp6")]
+[node name="fly mode" parent="." instance=ExtResource("1_1fmp6")]
 transform = Transform3D(-1, -8.74228e-08, 3.82137e-15, 0, -4.37114e-08, -1, 8.74228e-08, -1, 4.37114e-08, 0.1, 0, -8.74228e-09)
 text = "fly mode"
 callscript = SubResource("GDScript_3v3kl")
 
-[node name="StaticBody3D5" parent="." instance=ExtResource("1_1fmp6")]
+[node name="noclip" parent="." instance=ExtResource("1_1fmp6")]
 transform = Transform3D(-1, -8.74228e-08, 3.82137e-15, 0, -4.37114e-08, -1, 8.74228e-08, -1, 4.37114e-08, 0, 0, 0)
 text = "noclip"
 callscript = SubResource("GDScript_ft12v")
 
-[node name="StaticBody3D6" parent="." instance=ExtResource("1_1fmp6")]
+[node name="print when clicked" parent="." instance=ExtResource("1_1fmp6")]
 transform = Transform3D(-1, -8.74228e-08, 3.82137e-15, 0, -4.37114e-08, -1, 8.74228e-08, -1, 4.37114e-08, -0.1, 0, 8.74228e-09)
 text = "print when clicked"
 callscript = SubResource("GDScript_djyhs")
 
-[node name="StaticBody3D7" parent="." instance=ExtResource("1_1fmp6")]
+[node name="undo" parent="." instance=ExtResource("1_1fmp6")]
 transform = Transform3D(-1, -8.74228e-08, 3.82137e-15, 0, -4.37114e-08, -1, 8.74228e-08, -1, 4.37114e-08, 0.1, -0.1, -8.74228e-09)
 text = "undo"
 callscript = SubResource("GDScript_wrd3g")
 
-[node name="StaticBody3D8" parent="." instance=ExtResource("1_1fmp6")]
+[node name="redo" parent="." instance=ExtResource("1_1fmp6")]
 transform = Transform3D(-1, -8.74228e-08, 3.82137e-15, 0, -4.37114e-08, -1, 8.74228e-08, -1, 4.37114e-08, 0, -0.1, 0)
 text = "redo"
 
-[node name="StaticBody3D9" parent="." instance=ExtResource("1_1fmp6")]
+[node name="clear gizmos" parent="." instance=ExtResource("1_1fmp6")]
 transform = Transform3D(-1, -8.74228e-08, 3.82137e-15, 0, -4.37114e-08, -1, 8.74228e-08, -1, 4.37114e-08, -0.1, -0.1, 8.74228e-09)
 text = "clear gizmos"
 callscript = SubResource("GDScript_hxyqk")
