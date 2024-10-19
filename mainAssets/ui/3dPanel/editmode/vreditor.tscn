@@ -7,26 +7,22 @@
 [ext_resource type="PackedScene" uid="uid://oyjnngbldb6v" path="res://mainAssets/ui/3dPanel/editmode/popup/add_node.tscn" id="5_r0hk5"]
 [ext_resource type="PackedScene" uid="uid://cw57xg0xewjcv" path="res://mainAssets/ui/3dPanel/editmode/gdscriptpanel.tscn" id="5_s3be6"]
 
-[node name="inspector" type="StaticBody3D"]
-transform = Transform3D(1, 0, 0, 0, 1, -1.06581e-14, 0, 1.06581e-14, 1, 0, 0, 0)
-collision_layer = 2
-collision_mask = 2
-script = ExtResource("2_tnd62")
-_auto_load_ui = ExtResource("2_sp2og")
-transparent = false
-metadata/grabbable = true
+[node name="vreditor" type="Node3D"]
+script = ExtResource("1_8pitw")
 
 [node name="script" type="StaticBody3D" parent="."]
-transform = Transform3D(0.707107, -8.9407e-08, 0.707107, 5.96046e-08, 1, 8.74228e-08, -0.707107, 2.98023e-08, 0.707107, -0.442787, -2.4232e-15, 0.18931)
+unique_name_in_owner = true
+transform = Transform3D(0.707107, -8.9407e-08, 0.707107, 5.96046e-08, 1, 8.74228e-08, -0.707107, 2.98023e-08, 0.707107, -0.442787, -4.44088e-15, 0.18931)
 collision_layer = 2
-collision_mask = 2
+collision_mask = 6
 script = ExtResource("2_tnd62")
 _auto_load_ui = ExtResource("5_s3be6")
 transparent = false
 metadata/grabbable = true
 
 [node name="attributes" type="StaticBody3D" parent="."]
-transform = Transform3D(0.707107, 0, -0.707107, 7.53645e-15, 1, 4.37114e-08, 0.707107, -1.06581e-14, 0.707107, 0.445292, -7.28004e-16, 0.181695)
+unique_name_in_owner = true
+transform = Transform3D(0.707107, 0, -0.707107, 3.30343e-20, 1, 4.37114e-08, 0.707107, 0, 0.707107, 0.445292, -2.66453e-15, 0.181695)
 collision_layer = 2
 collision_mask = 2
 script = ExtResource("2_tnd62")
@@ -35,6 +31,7 @@ transparent = false
 metadata/grabbable = true
 
 [node name="addnode" type="StaticBody3D" parent="."]
+unique_name_in_owner = true
 transform = Transform3D(1, 2.51218e-15, 0, -2.17558e-15, 0.866025, -0.5, -1.25607e-15, 0.5, 0.866026, 0, 0.4, 0.0629571)
 collision_layer = 2
 collision_mask = 2
@@ -44,5 +41,12 @@ transparent = false
 viewport_size = Vector2i(1014, 504)
 metadata/grabbable = true
 
-[node name="vreditor" type="Node" parent="."]
-script = ExtResource("1_8pitw")
+[node name="inspector" type="StaticBody3D" parent="."]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, -1.06581e-14, 0, 1.06581e-14, 1, 0, 0, 0)
+collision_layer = 4
+collision_mask = 4
+script = ExtResource("2_tnd62")
+_auto_load_ui = ExtResource("2_sp2og")
+transparent = false
+metadata/grabbable = true

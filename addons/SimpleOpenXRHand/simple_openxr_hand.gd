@@ -112,4 +112,3 @@ func setup_hand():
 				#disable collision for this join to prevent weird physics
 				#	behaviors with the button positions
 				tmp.collon = true
-

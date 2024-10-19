@@ -49,10 +49,25 @@ func onclick():
 "
 
 [sub_resource type="GDScript" id="GDScript_hxyqk"]
-script/source = "extends Object
+script/source = "extends Node
 
 func onclick():
-	LocalGlobals.clear_gizmos.emit()
+	var space = XRServer.get_interface(0).get_play_area()
+	var amesh := ArrayMesh.new()
+	var vertices = PackedVector3Array()
+	vertices.push_back(Vector3(0, 1, 0))
+	vertices.push_back(Vector3(1, 0, 0))
+	vertices.push_back(Vector3(0, 0, 1))
+	
+	var arrays = []
+	arrays.resize(Mesh.ARRAY_MAX)
+	arrays[Mesh.ARRAY_VERTEX] = vertices
+
+	# Create the Mesh.
+	amesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
+	var m = MeshInstance3D.new()
+	m.mesh = amesh
+	get_tree().root.add_child(m)
 "
 
 [node name="handmenu" type="Node3D"]
@@ -100,5 +115,5 @@ text = "redo"
 
 [node name="clear gizmos" parent="." instance=ExtResource("1_1fmp6")]
 transform = Transform3D(-1, -8.74228e-08, 3.82137e-15, 0, -4.37114e-08, -1, 8.74228e-08, -1, 4.37114e-08, -0.1, -0.1, 8.74228e-09)
-text = "clear gizmos"
+text = "get space mesh"
 callscript = SubResource("GDScript_hxyqk")

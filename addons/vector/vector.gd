@@ -326,25 +326,29 @@ func readUserDict(target_login:String=""):
 	else:
 		file = FileAccess.open("user://logins/"+target_login,FileAccess.READ_WRITE)
 	if file:
-		var read :String= file.get_as_text()
-		userData = JSON.parse_string(read)
-		# user_id, access_token, home_server, device_id, well_known{m.homeserver{base_url}}
-		if userData['login'].has("access_token"):
-			userToken = userData['login']["access_token"]
-			headers.push_back("Authorization: Bearer {0}".format([userToken]))
-			home_server = userData['login']['user_id'].split(':')[1]
-			base_url = userData['login']['well_known']['m.homeserver']['base_url']
-			if "login" in userData and "user_id" in userData.login:
-				uid = userData.login.user_id
-			if userData.has('next_batch'):
-				next_batch = userData.next_batch
-			if userData.has('joined_rooms'):
-				got_joined_rooms.emit()
-			user_logged_in.emit()
-			saveUserDict()
-			return true
-	Notifyvr.send_notification("failed to login with existing session")
-	return false
+		WorkerThreadPool.add_task(_load_user_dictionary.bind(file),true)
+		#_load_user_dictionary(file)
+
+func _load_user_dictionary(file:FileAccess):
+	var read :String= file.get_as_text()
+	userData = JSON.parse_string(read)
+	# user_id, access_token, home_server, device_id, well_known{m.homeserver{base_url}}
+	if userData['login'].has("access_token"):
+		userToken = userData['login']["access_token"]
+		headers.push_back("Authorization: Bearer {0}".format([userToken]))
+		home_server = userData['login']['user_id'].split(':')[1]
+		base_url = userData['login']['well_known']['m.homeserver']['base_url']
+		if "login" in userData and "user_id" in userData.login:
+			uid = userData.login.user_id
+		if userData.has('next_batch'):
+			next_batch = userData.next_batch
+		if userData.has('joined_rooms'):
+			#got_joined_rooms.emit()
+			call_deferred("emit_signal","got_joined_rooms")
+		#user_logged_in.emit()
+		call_deferred("emit_signal","user_logged_in")
+		#saveUserDict()
+		call_deferred("saveUserDict")
 
 func sync():
 	var reqData = {}

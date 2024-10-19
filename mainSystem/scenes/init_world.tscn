@@ -1,8 +1,10 @@
-[gd_scene load_steps=11 format=3 uid="uid://dv0etfy0ao5"]
+[gd_scene load_steps=14 format=3 uid="uid://dv0etfy0ao5"]
 
 [ext_resource type="PackedScene" uid="uid://br1vh8in0e65o" path="res://mainAssets/worlds/basic_starter.tscn" id="1_ad4cs"]
 [ext_resource type="PackedScene" uid="uid://dckbok0o553v7" path="res://mainSystem/scenes/objects/worldObjects/playerSpawnLocation.tscn" id="2_humgq"]
 [ext_resource type="PackedScene" uid="uid://d0wvfw354l2i5" path="res://mainAssets/ui/3dui/loading halo demo.tscn" id="3_eytop"]
+[ext_resource type="Script" path="res://mainSystem/scripts/mic_playback.gd" id="4_5gnpn"]
+[ext_resource type="PackedScene" uid="uid://b2r6qi0effaiw" path="res://addons/contextmenu/gridmenu/gridmenubutton.tscn" id="4_gqc8a"]
 [ext_resource type="Script" path="res://addons/Panel3D/3dpanel.gd" id="5_ykx2e"]
 [ext_resource type="PackedScene" uid="uid://b3sbt3oft3cxg" path="res://mainAssets/ui/3dPanel/editmode/vreditor.tscn" id="9_k6sjl"]
 [ext_resource type="PackedScene" uid="uid://r68jre2w5k33" path="res://mainSystem/scenes/player/xrplayer.tscn" id="11_qw71v"]
@@ -61,6 +63,9 @@ transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -2.760
 transform = Transform3D(-0.250853, 0, 0.968025, 0, 1, 0, -0.968025, 0, -0.250853, -3.40314, 1.01349, 3.20371)
 script = SubResource("GDScript_icupb")
 
+[node name="StaticBody3D2" parent="multiplayer world root/basic starter world" instance=ExtResource("4_gqc8a")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.875336, 0)
+
 [node name="playercontainer" parent="multiplayer world root" instance=ExtResource("11_qw71v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.08992, 0.91664, 2.46325)
 
@@ -77,7 +82,7 @@ metadata/grabbable = true
 [node name="local_ui" type="Node3D" parent="."]
 
 [node name="vreditor" parent="local_ui" instance=ExtResource("9_k6sjl")]
-transform = Transform3D(-4.37114e-08, 1.06581e-14, 1, 0, 1, -1.06581e-14, -1, -4.6588e-22, -4.37114e-08, -4, 2, 2)
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -3.68789, 2.21137, 1.85839)
 
 [node name="keyboard panel" type="StaticBody3D" parent="local_ui"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.4736, 1.7588, 0)

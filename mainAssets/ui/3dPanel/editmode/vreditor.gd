@@ -1,12 +1,12 @@
 extends Node
 
-@onready var inspector:Panel3D = $".."
+@onready var inspector:Panel3D = %inspector
 var scene_inspector
-@onready var attributes:Panel3D = $"../attributes"
+@onready var attributes:Panel3D = %attributes
 var attributes_ui
-@onready var gdscript:Panel3D = $"../script"
+@onready var gdscript:Panel3D = %script
 var gdscript_ui
-@onready var addnode = $"../addnode"
+@onready var addnode = %addnode
 var addnode_ui
 
 func _ready():
