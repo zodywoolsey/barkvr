@@ -276,7 +276,7 @@ func query_raycast() -> Dictionary:
 			if smoothing_enabled:
 				smooth_raycast_position = smooth_raycast_position.lerp(
 					ray_intersects_plane_at,
-					smoothing_speed
+					smoothing_speed*get_process_delta_time()
 				)
 			# update the relevant data so we can pretend that the laser is actually colliding with
 			# the object that we started clicking when we entered planar projection mode
@@ -532,3 +532,41 @@ func fwd_event(event:InputEvent):
 				})
 			#pressed = false
 	#prevPressed = null
+
+### GRABBING LOGIC ###
+
+class GrabbedNode3D:
+	## the node subject to this grab
+	##[br] the setter here automatically grabs the initial transform
+	var target : Node3D:
+		set(val):
+			target = val
+			if is_instance_valid(val):
+				starting_transform_3d = target.global_transform
+	## capture the initial transform so we can revert if the user cancels
+	var starting_transform_3d : Transform3D
+	## the transform we want the target to have now
+	var goal_transform_3d : Transform3D
+## track all the nodes we have grabbed
+var grabbed_nodes : Dictionary[int, GrabbedNode3D] = {}
+
+func grab(target:Node=null):
+	if !is_instance_valid(target) and is_colliding():
+		target = get_collider()
+	if target is Node3D:
+		pass
+		return
+	if target is Node2D:
+		pass
+
+## ungrabs, not much to say here lol
+func release_grab(target:Node=null):
+	# if the instance is valid, g
+	if is_instance_valid(target) and target.get_instance_id() in grabbed_nodes:
+		pass
+
+## move the grabbed nodes to the goal transform
+func _place_grabbed_nodes():
+	# TODO: generate the goal
+	for grabbed_node : GrabbedNode3D in grabbed_nodes.values():
+		pass
