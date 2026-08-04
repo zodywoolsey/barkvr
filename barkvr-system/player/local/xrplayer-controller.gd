@@ -2,7 +2,7 @@ class_name BarkvrPlayerController
 extends CharacterBody3D
 
 # TODO plans:
-# use child nodes to modularize player abilities like grabbing and movement
+# THIS WHOLE CLASS NEEDS TO BE REWRITTEN THIS IS SUCH A MESS FUCK
 
 #controllers:
 @onready var righthand: BarkHand= %righthand
@@ -135,9 +135,12 @@ func _toggle_xr(value):
 
 func respawn_player():
 	velocity = Vector3()
-	var spawnLoc = get_tree().get_nodes_in_group("PlayerSpawnLocation").pick_random()
-	if spawnLoc:
-		global_position = spawnLoc.global_position
+	var spawn_locations : Array = get_tree().get_nodes_in_group("PlayerSpawnLocation")
+	var spawn_location
+	if !spawn_locations.is_empty():
+		spawn_location = spawn_locations.pick_random()
+	if spawn_location:
+		global_position = spawn_location.global_position
 	else:
 		global_position = Vector3(0,4,0)
 
@@ -584,23 +587,22 @@ func place_grabbed_nodes():
 
 func grip():
 	print('grip')
-	if ui_ray.is_colliding():
-		var rayCollided = ui_ray.get_collider()
-		if rayCollided.has_meta("grabbable"):
-			grab(rayCollided,true)
-	grabbing = true
+	if "grab" in ui_ray:
+		ui_ray.grab()
+	#if ui_ray.is_colliding():
+		#var rayCollided = ui_ray.get_collider()
+		#if rayCollided.has_meta("grabbable"):
+			#grab(rayCollided,true)
+	#grabbing = true
 
 func ungrip():
-	for item in grabbed.values():
-		if is_instance_valid(item.node):
-			releasegrab(item.node)
+	ui_ray.release_grab()
 
 func grab(node:Node, laser:bool=false):
-	var tmpgrab = node.get_meta("grabbable")
-	if tmpgrab:
+	if node.get_meta("grabbable"):
 		if node.is_class("RigidBody3D"):
-			if !grabbed.has(node.name):
-				grabbed[node.name] = {
+			if !grabbed.has(node.get_instance_id()):
+				grabbed[node.get_instance_id()] = {
 					"parent": node.get_parent(),
 					'offset': camera_3d.global_transform.affine_inverse() * node.global_transform,
 					'rotoffset': node.global_rotation,
@@ -611,8 +613,8 @@ func grab(node:Node, laser:bool=false):
 		else:
 			if laser:
 				pass
-			if !grabbed.has(node.name):
-				grabbed[node.name] = {
+			if !grabbed.has(node.get_instance_id()):
+				grabbed[node.get_instance_id()] = {
 					"parent": node.get_parent(),
 					'offset': camera_3d.global_transform.affine_inverse() * node.global_transform,
 					'rotoffset': node.global_rotation,
@@ -620,10 +622,10 @@ func grab(node:Node, laser:bool=false):
 				}
 
 func releasegrab(node:Node):
-	if grabbed.has(node.name):
+	if grabbed.has(node.get_instance_id()):
 		if node is RigidBody3D:
-			node.freeze = grabbed[node.name].isfrozen
-		grabbed.erase(node.name)
+			node.freeze = grabbed[node.get_instance_id()].isfrozen
+		grabbed.erase(node.get_instance_id())
 		return
 	grabbed.clear()
 

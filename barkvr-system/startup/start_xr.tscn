@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://dqavqvokiyaq1"]
+
+[ext_resource type="Script" uid="uid://dbumpexofbhsu" path="res://barkvr-system/startup/startxr.gd" id="1_x66qd"]
+
+[node name="StartXR" type="Node" unique_id=1162338548 groups=["startxr"]]
+script = ExtResource("1_x66qd")
+target_refresh_rate = 1000.0
+
+[node name="EnterWebXR" type="CanvasLayer" parent="." unique_id=763464504]
+visible = false
+
+[node name="EnterVRButton" type="Button" parent="EnterWebXR" unique_id=403735485]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -105.0
+offset_right = 264.0
+grow_vertical = 0
+text = "Enter VR"
+
+[connection signal="pressed" from="EnterWebXR/EnterVRButton" to="." method="_on_enter_webxr_button_pressed"]

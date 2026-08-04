@@ -6,7 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://b4fxdub5kj8fr" path="res://barkvr-system/assets/icons/editor-icons/Search.svg" id="4_kjqj7"]
 [ext_resource type="Texture2D" uid="uid://c1t0gdaysusy8" path="res://barkvr-system/assets/icons/editor-icons/Favorites.svg" id="5_veb4y"]
 
-[node name="AddNodeMenu" type="Panel" unique_id=773232357]
+[node name="CreateMenu" type="Panel" unique_id=773232357]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0

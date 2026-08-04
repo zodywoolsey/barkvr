@@ -1,8 +1,13 @@
 [gd_scene format=3 uid="uid://65726t2vi0vh"]
 
+[ext_resource type="Script" uid="uid://bcrijf62huk7r" path="res://barkvr-system/systems/worldgen/world_generator.gd" id="1_nfme6"]
+
 [sub_resource type="BoxMesh" id="BoxMesh_qnlmp"]
 
 [node name="MountainRetreat" type="Node3D" unique_id=434286557]
 
 [node name="CSGMesh3D" type="CSGMesh3D" parent="." unique_id=886792458]
 mesh = SubResource("BoxMesh_qnlmp")
+
+[node name="WorldGenerator" type="Node" parent="." unique_id=992412612]
+script = ExtResource("1_nfme6")

@@ -3,5 +3,4 @@
 [ext_resource type="Script" uid="uid://b3opf6aydu7h7" path="res://barkvr-system/objects/pens/voxel_draw_test.gd" id="1_lncpd"]
 
 [node name="voxel draw test" type="Node3D" unique_id=886625534]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.8943, 4.04754, 3.91274)
 script = ExtResource("1_lncpd")

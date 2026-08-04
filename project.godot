@@ -15,7 +15,7 @@ run/main_scene="res://barkvr-system/startup/main.tscn"
 run/enable_alt_space_menu=true
 config/use_custom_user_dir=true
 config/custom_user_dir_name="bark"
-config/features=PackedStringArray("4.6", "Mobile")
+config/features=PackedStringArray("4.7", "Mobile")
 boot_splash/bg_color=Color(0, 0, 0, 0)
 boot_splash/show_image=false
 boot_splash/stretch_mode=0
@@ -243,6 +243,7 @@ limits/message_queue/max_size_mb=128
 
 [physics]
 
+3d/run_on_separate_thread=true
 common/physics_jitter_fix=0.0
 3d/physics_engine="Jolt Physics"
 common/physics_interpolation=true

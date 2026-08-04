@@ -70,10 +70,14 @@ var hide_titlebar := false:
 var event_manager : BarkJournal
 
 ## updates the current target of this attributes panel
-func set_target(new_target):
+func set_target(new_target:Node):
+	if is_instance_valid(target):
+		target.property_list_changed.disconnect(target_property_list_changed)
+	
 	print_debug("setting target in: ",self, "to look at: ",new_target)
 	# check that the new_target is valid
 	if is_instance_valid(new_target) and new_target is Object:
+		new_target.property_list_changed.connect(target_property_list_changed)
 		# update the holder variable so the target is available across the script
 		target = new_target
 		# if the target has a name, then set the ui to reflect it
@@ -98,6 +102,7 @@ func set_target(new_target):
 			properties_header_label.text += " Signals," if load_properties else " Signals"
 		if load_properties:
 			properties_header_label.text += " Properties"
+		MeshInstance3D.new().create_tween().tween_property(self, "transparency", 1.0, 4.0)
 		
 		# this is a dubious hack to forcibly limit how much time we will take
 		# to process and add fields each frame. this allows us to set a fixed
@@ -132,6 +137,13 @@ func set_target(new_target):
 		# call the method to add these fields. we call deferred beacuse it prevents the frontend from
 		# stuttering
 		call_deferred("_add_fields", prop_list, new_target)
+
+var tmp_prop_list : Array[Dictionary]
+func target_property_list_changed():
+	#if tmp_prop_list:
+		#print_debug(tmp_prop_list == target.get_property_list())
+	#tmp_prop_list = target.get_property_list()
+	print_debug("props_changed ", target)
 
 ## helper method to simply add the type of TYPE_CALLABLE to every entry in the passed array
 ## so we can include the method/signal list without needing to change how we handle the property list

@@ -60,7 +60,7 @@ func _ready() -> void:
 	if LocalGlobals.vr_supported:
 		($ScrollContainer/VBoxContainer/GeneralSettingsMargin/GeneralSettings/RestartInVR as VBoxContainer).hide()
 	var settings_singleton: SettingsSingleton = Engine.get_singleton("settings_manager")
-	if settings_singleton is SettingsSingleton:
+	if settings_singleton:
 		set_button(passthrough_button, passthrough_rect, settings_singleton.vr_passthrough, Color.GREEN)
 		set_button(hand_tracking_button, hand_tracking_rect, settings_singleton.hand_tracking_enabled, Color.GREEN)
 		set_button(local_menu_lookat_x_button, local_menu_lookat_x_rect, settings_singleton.ui_local_menu_lookat_x, Color.RED)
@@ -74,7 +74,7 @@ func _ready() -> void:
 		interface_scaling_factor.set_data("Interface Scaling Factor", settings_singleton, "interface_scaling_factor")
 		screen_space_anti_aliasing.set_data("Scren Space Anti Aliasing", settings_singleton, "screen_space_anti_aliasing", {"hint_string":"Disabled, FXAA_Enabled"})
 		(viewport_disable_3d as Bool_Attribute).set_data("Disable 3D", settings_singleton, "viewport_disable_3d")
-		inspector_as_singleton.set_data("Inspector As Singleton", settings_singleton, "inspector_as_singleton")
+		inspector_as_singleton.call_deferred("set_data","Inspector As Singleton", settings_singleton, "inspector_as_singleton")
 		laser_smoothing_enabled.set_data("Laser Smoothing Enabled", settings_singleton, "laser_smoothing")
 		laser_smoothing_speed.set_data("Laser Smoothing Speed", settings_singleton, "laser_smoothing_speed")
 		desktop_laser_origin.set_data("Laser Origin", settings_singleton, "desktop_laser_origin", {"hint_string":"Left Hand, Right Hand, Head"})

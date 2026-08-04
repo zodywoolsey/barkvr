@@ -90,8 +90,8 @@ icon_alignment = 1
 expand_icon = true
 
 [node name="divider" type="Panel" parent="ScrollContainer/VBoxContainer/GeneralSettingsMargin/GeneralSettings" unique_id=1868521272]
-clip_contents = true
 custom_minimum_size = Vector2(50, 50)
+clip_contents = true
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_dbica")
 
@@ -216,17 +216,14 @@ size_flags_stretch_ratio = 0.1
 [node name="UISettingsMargin" type="FoldableContainer" parent="ScrollContainer/VBoxContainer" unique_id=1200934037]
 layout_mode = 2
 theme_override_font_sizes/font_size = 32
-folded = true
 title = "ui settings"
 title_alignment = 1
 
 [node name="ColorRect" type="ColorRect" parent="ScrollContainer/VBoxContainer/UISettingsMargin" unique_id=1241815477]
-visible = false
 layout_mode = 2
 color = Color(0, 1, 0, 0.2)
 
 [node name="UISettings" type="VBoxContainer" parent="ScrollContainer/VBoxContainer/UISettingsMargin" unique_id=2145027632]
-visible = false
 layout_mode = 2
 
 [node name="InspectorAsSingleton" parent="ScrollContainer/VBoxContainer/UISettingsMargin/UISettings" unique_id=1578106198 instance=ExtResource("2_dbica")]

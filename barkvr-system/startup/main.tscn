@@ -1,14 +1,15 @@
 [gd_scene format=3 uid="uid://c3i4ahamrqxcq"]
 
 [ext_resource type="Script" uid="uid://uik6keiylg15" path="res://barkvr-system/startup/init.gd" id="1_gkt54"]
-[ext_resource type="Script" uid="uid://dbumpexofbhsu" path="res://barkvr-system/startup/startxr.gd" id="2_3r3cq"]
 [ext_resource type="PackedScene" uid="uid://dgelhxrx1g8lr" path="res://barkvr-system/assets/builtin_worlds/init_world_empty.tscn" id="2_p00ge"]
 [ext_resource type="Script" uid="uid://d0e58hos64wvw" path="res://barkvr-system/startup/bark_singletons_manager.gd" id="3_hjfed"]
-[ext_resource type="Script" uid="uid://b4618ilskmgou" path="res://barkvr-system/managers/journaling.gd" id="4_yl0pk"]
+[ext_resource type="Script" uid="uid://b4618ilskmgou" path="res://barkvr-system/managers/BarkJournal.gd" id="4_yl0pk"]
 [ext_resource type="Script" uid="uid://co7b0xchpliyg" path="res://barkvr-system/managers/networkHandler.gd" id="5_36gsm"]
 [ext_resource type="Script" uid="uid://4a6yceroxafw" path="res://barkvr-system/managers/settings.gd" id="6_60o4m"]
 [ext_resource type="Script" uid="uid://b1ijrenh1x14d" path="res://addons/vector/vector.gd" id="7_ldaby"]
 [ext_resource type="Script" uid="uid://b3opf6aydu7h7" path="res://barkvr-system/objects/pens/voxel_draw_test.gd" id="8_4ywql"]
+[ext_resource type="PackedScene" uid="uid://dqavqvokiyaq1" path="res://barkvr-system/startup/start_xr.tscn" id="9_vq5v2"]
+[ext_resource type="PackedScene" uid="uid://dd52tl2k4gref" path="res://barkvr-system/objects/pens/voxel_draw_test.tscn" id="10_vq5v2"]
 
 [sub_resource type="AudioStreamMicrophone" id="AudioStreamMicrophone_ve6pm"]
 
@@ -34,20 +35,6 @@ autoplay = true
 bus = &"mic"
 playback_type = 1
 
-[node name="StartXR" type="Node" parent="." unique_id=1880105625 groups=["startxr"]]
-script = ExtResource("2_3r3cq")
-target_refresh_rate = 1000.0
+[node name="StartXR" parent="." unique_id=1162338548 instance=ExtResource("9_vq5v2")]
 
-[node name="EnterWebXR" type="CanvasLayer" parent="StartXR" unique_id=1594752446]
-visible = false
-
-[node name="EnterVRButton" type="Button" parent="StartXR/EnterWebXR" unique_id=1323902182]
-anchors_preset = 2
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_top = -105.0
-offset_right = 264.0
-grow_vertical = 0
-text = "Enter VR"
-
-[connection signal="pressed" from="StartXR/EnterWebXR/EnterVRButton" to="StartXR" method="_on_enter_webxr_button_pressed"]
+[node name="voxel draw test" parent="." unique_id=886625534 instance=ExtResource("10_vq5v2")]

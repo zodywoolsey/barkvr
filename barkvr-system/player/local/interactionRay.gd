@@ -9,9 +9,6 @@
 class_name InteractionRay
 extends Node3D
 
-## holder for the line_3d to use for the laser line visual
-@export var line_3d : Line3D
-
 ## holder for the rayvis node used for drawing the 3d cursor
 @onready var vis: Node3D = $rayvis
 
@@ -19,8 +16,6 @@ extends Node3D
 var vispos := Vector3():
 	set(val):
 		vispos = val
-		if line_3d:
-			line_3d.target = line_3d.to_local(vispos)
 		vis.target = vispos
 
 ## tracks the previous Node that was hovered
@@ -310,7 +305,7 @@ func query_raycast() -> Dictionary:
 		# TODO: we should probably make it calculate it's own delta so it can behave consistently
 		smooth_raycast_position = smooth_raycast_position.lerp(
 			target_position,
-			smoothing_speed
+			smoothing_speed*get_process_delta_time()
 		)
 		rayquery_holder.to = smooth_raycast_position
 	# if smoothing isn't enabled...
@@ -346,6 +341,7 @@ func query_raycast() -> Dictionary:
 ## bother adding comments to this because it just doesn't deserve it. if you have
 ## Qs then ask zodie
 func interact() -> void:
+	_place_grabbed_nodes.call_deferred()
 	var tmpcol
 	var point : Vector3
 	if is_instance_valid(prevHover):
@@ -536,17 +532,53 @@ func fwd_event(event:InputEvent):
 ### GRABBING LOGIC ###
 
 class GrabbedNode3D:
+	static func create_from_target(new_target: Node3D) -> GrabbedNode3D:
+		var tmp := GrabbedNode3D.new()
+		tmp.target = new_target
+		return tmp
+	static func create_from_target_and_laser_positions(new_target: Node3D,\
+	current_laser_global_position: Vector3,\
+	current_laser_local_position: Vector3) -> GrabbedNode3D:
+		var tmp := GrabbedNode3D.new()
+		tmp.target = new_target
+		tmp.start_global_laser_position = current_laser_global_position
+		tmp.start_local_laser_position = current_laser_local_position
+		return tmp
 	## the node subject to this grab
 	##[br] the setter here automatically grabs the initial transform
 	var target : Node3D:
 		set(val):
 			target = val
 			if is_instance_valid(val):
-				starting_transform_3d = target.global_transform
-	## capture the initial transform so we can revert if the user cancels
-	var starting_transform_3d : Transform3D
+				start_global_position = target.global_position
+				last_global_position = target.global_position
+				start_global_rotation = target.global_rotation
+	
+	## update the transforms of the target node, we do this here so it is self 
+	## managing
+	func move_target(goal_global_position: Vector3, goal_global_rotation: Vector3, delta: float):
+		if is_smooth_transform:
+			goal_global_position = lerp(last_global_position, goal_global_position, smooth_transform_speed * delta)
+		target.global_position = goal_global_position
+		last_global_position = target.global_position
+	
+	## is transform smoothing enabled?
+	var is_smooth_transform : bool = true
+	## smooth transform speed
+	var smooth_transform_speed : float = 100.0
+	## hold the previous global position for smoothing
+	var last_global_position : Vector3
+	## capture the initial position so we can revert if the user cancels
+	var start_global_position : Vector3
+	## capture the initial rotation so we can revert if the user cancels
+	var start_global_rotation : Vector3
+	## capture the collision position in global space as the interaction origin
+	var start_global_laser_position : Vector3
+	## capture the collision position in local space as the interaction offset
+	var start_local_laser_position : Vector3
 	## the transform we want the target to have now
-	var goal_transform_3d : Transform3D
+	var goal_transform_3d : Transform3D = Transform3D()
+
 ## track all the nodes we have grabbed
 var grabbed_nodes : Dictionary[int, GrabbedNode3D] = {}
 
@@ -554,19 +586,28 @@ func grab(target:Node=null):
 	if !is_instance_valid(target) and is_colliding():
 		target = get_collider()
 	if target is Node3D:
-		pass
+		grabbed_nodes[target.get_instance_id()] = GrabbedNode3D.\
+		create_from_target_and_laser_positions(\
+			target,\
+			get_collision_point(),\
+			to_local( get_collision_point() )\
+			)
 		return
 	if target is Node2D:
 		pass
 
 ## ungrabs, not much to say here lol
 func release_grab(target:Node=null):
-	# if the instance is valid, g
+	# if no target was passed in, clear all grabbed nodes
+	if target == null:
+		grabbed_nodes.clear()
+	
+	# if the instance is valid, find and remove it from the dictionary
 	if is_instance_valid(target) and target.get_instance_id() in grabbed_nodes:
-		pass
+		grabbed_nodes.erase(target.get_instance_id())
 
 ## move the grabbed nodes to the goal transform
 func _place_grabbed_nodes():
-	# TODO: generate the goal
+	# TODO: use goal and start offset to translate the grabbed nodes
 	for grabbed_node : GrabbedNode3D in grabbed_nodes.values():
-		pass
+		grabbed_node.move_target(to_global(grabbed_node.start_local_laser_position), Vector3(), get_process_delta_time())
