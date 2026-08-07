@@ -532,16 +532,22 @@ func fwd_event(event:InputEvent):
 ### GRABBING LOGIC ###
 
 class GrabbedNode3D:
+	## accepts a target node and returns the GrabbedNode3D for the target
 	static func create_from_target(new_target: Node3D) -> GrabbedNode3D:
 		var tmp := GrabbedNode3D.new()
 		tmp.target = new_target
 		return tmp
+	
+	## accepts a target node, the laser global position, and the laser local position (local to the node being grabbed)
+	## and returns a setup GrabbedNode3D based on that data. this allows us to track
+	## the laser offsets for more intuitive interaction (aka: the node doesn't have to 
+	## align it's origin with the goal position this way)
 	static func create_from_target_and_laser_positions(new_target: Node3D,\
-	current_laser_global_position: Vector3,\
-	current_laser_local_position: Vector3) -> GrabbedNode3D:
+		current_laser_global_position: Vector3,\
+		current_laser_local_position := Vector3()) -> GrabbedNode3D:
 		var tmp := GrabbedNode3D.new()
 		tmp.target = new_target
-		tmp.start_global_laser_position = current_laser_global_position
+		tmp.start_target_offset_position = current_laser_global_position - new_target.global_position
 		tmp.start_local_laser_position = current_laser_local_position
 		return tmp
 	## the node subject to this grab
@@ -558,24 +564,27 @@ class GrabbedNode3D:
 	## managing
 	func move_target(goal_global_position: Vector3, goal_global_rotation: Vector3, delta: float):
 		if is_smooth_transform:
-			goal_global_position = lerp(last_global_position, goal_global_position, smooth_transform_speed * delta)
+			goal_global_position = lerp(last_global_position, goal_global_position-start_target_offset_position, smooth_transform_speed * delta)
 		target.global_position = goal_global_position
 		last_global_position = target.global_position
 	
 	## is transform smoothing enabled?
 	var is_smooth_transform : bool = true
 	## smooth transform speed
-	var smooth_transform_speed : float = 100.0
+	var smooth_transform_speed : float = 10.0
 	## hold the previous global position for smoothing
 	var last_global_position : Vector3
 	## capture the initial position so we can revert if the user cancels
 	var start_global_position : Vector3
 	## capture the initial rotation so we can revert if the user cancels
 	var start_global_rotation : Vector3
-	## capture the collision position in global space as the interaction origin
-	var start_global_laser_position : Vector3
-	## capture the collision position in local space as the interaction offset
+	## capture the collision position in local space to use in generating the goal
+	## (relative to the laser, not the object)
 	var start_local_laser_position : Vector3
+	## capture the offset of the initial collision from the target's origin 
+	## so we can use it to offset the center of the grabbed node
+	## (relative to the targegt node, not the laser)
+	var start_target_offset_position : Vector3
 	## the transform we want the target to have now
 	var goal_transform_3d : Transform3D = Transform3D()
 
@@ -591,7 +600,7 @@ func grab(target:Node=null):
 			target,\
 			get_collision_point(),\
 			to_local( get_collision_point() )\
-			)
+		)
 		return
 	if target is Node2D:
 		pass
