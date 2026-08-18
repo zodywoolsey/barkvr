@@ -1,6 +1,5 @@
-// Copyright © 2025 Cory Petkovsek, Roope Palmroos, and Contributors.
-// This shader is a version of minimum.gdshader with flat normals for a low poly look.
-// Increase vertex_spacing for a better result.
+// Copyright © 2023-2026 Cory Petkovsek, Roope Palmroos, and Contributors.
+// This shader is the minimum needed to allow the terrain to function, without any texturing.
 
 shader_type spatial;
 render_mode blend_mix,depth_draw_opaque,cull_back,diffuse_burley,specular_schlick_ggx,skip_vertex_transform;
@@ -17,6 +16,7 @@ render_mode blend_mix,depth_draw_opaque,cull_back,diffuse_burley,specular_schlic
 #endif
 
 // Private uniforms
+// Commented uniforms aren't needed for this shader, but are available for your own needs.
 uniform vec3 _camera_pos = vec3(0.f);
 uniform float _mesh_size = 48.f;
 uniform uint _background_mode = 1u; // NONE = 0, FLAT = 1, NOISE = 2
@@ -27,9 +27,18 @@ uniform float _region_size = 1024.0;
 uniform float _region_texel_size = 0.0009765625; // = 1/1024
 uniform int _region_map_size = 32;
 uniform int _region_map[1024];
-uniform vec2 _region_locations[1024];
+//uniform vec2 _region_locations[1024];
+//uniform float _texture_uv_scale_array[32];
+//uniform float _texture_detile_array[32];
+//uniform vec4 _texture_color_array[32];
 uniform highp sampler2DArray _height_maps : repeat_disable;
 uniform highp sampler2DArray _control_maps : repeat_disable;
+//uniform highp sampler2DArray _color_maps : source_color, filter_linear_mipmap_anisotropic, repeat_disable;
+//uniform highp sampler2DArray _texture_array_albedo : source_color, filter_linear_mipmap_anisotropic, repeat_enable;
+//uniform highp sampler2DArray _texture_array_normal : hint_normal, filter_linear_mipmap_anisotropic, repeat_enable;
+
+// Public Uniforms
+uniform bool flat_terrain_normals = false;
 
 // Varyings & Types
 // Some are required for editor functions
@@ -91,13 +100,13 @@ void vertex() {
 	UV2 = fma(UV, vec2(_region_texel_size), vec2(0.5 * _region_texel_size));
 
 	// Discard vertices for Holes. 1 lookup
-	ivec3 region = get_index_coord(start_pos, VERTEX_PASS);
-	uint control = floatBitsToUint(texelFetch(_control_maps, region, 0)).r;
+	ivec3 v_region = get_index_coord(start_pos, VERTEX_PASS);
+	uint control = floatBitsToUint(texelFetch(_control_maps, v_region, 0)).r;
 	bool hole = bool(control >>2u & 0x1u);
 
 	// Show holes to all cameras except mouse camera (on exactly 1 layer)
 	if ( !(CAMERA_VISIBLE_LAYERS == _mouse_layer) &&
-			(hole || (_background_mode == 0u && region.z < 0))) {
+			(hole || (_background_mode == 0u && v_region.z < 0))) {
 		v_vertex.x = 0. / 0.;
 	} else {
 		// Interpolate Geomorph Start & End, set height. 2 Lookups.
@@ -121,12 +130,86 @@ void vertex() {
 void fragment() {
 	// Recover UVs
 	vec2 uv = UV;
-	vec2 uv2 = UV2;
+	//vec2 uv2 = UV2;
+
+	// Lookup offsets, ID and blend weight
+	const vec3 offsets = vec3(0, 1, 2);
+	vec2 index_id = floor(uv);
+	vec2 weight = fract(uv);
+	vec2 invert = 1.0 - weight;
+	vec4 weights = vec4(
+		invert.x * weight.y, // 0
+		weight.x * weight.y, // 1
+		weight.x * invert.y, // 2
+		invert.x * invert.y  // 3
+	);
+
+	vec3 base_ddx = dFdxCoarse(v_vertex);
+	vec3 base_ddy = dFdyCoarse(v_vertex);
+	//vec4 base_derivatives = vec4(base_ddx.xz, base_ddy.xz);
+	// Calculate the effective mipmap for regionspace, and if less than 0,
+	// skip all extra lookups required for bilinear blend.
+	float region_mip = log2(max(length(base_ddx.xz), length(base_ddy.xz)) * _vertex_density);
+	bool bilerp = region_mip < 0.0;
+
+	ivec3 index[4];
+	// control map lookups, used for some normal lookups as well
+	index[0] = get_index_coord(index_id + offsets.xy, FRAGMENT_PASS);
+	index[1] = get_index_coord(index_id + offsets.yy, FRAGMENT_PASS);
+	index[2] = get_index_coord(index_id + offsets.yx, FRAGMENT_PASS);
+	index[3] = get_index_coord(index_id + offsets.xx, FRAGMENT_PASS);
+
+	// Terrain normals
+	vec3 index_normal[4];
+	float h[4];
+	// allows additional derivatives, eg world noise, brush previews etc
+	float u = 0.0;
+	float v = 0.0;
+
+	// Re-use index[] for the first lookups, skipping some math. 3 lookups
+	h[3] = texelFetch(_height_maps, index[3], 0).r; // 0 (0,0)
+	h[2] = texelFetch(_height_maps, index[2], 0).r; // 1 (1,0)
+	h[0] = texelFetch(_height_maps, index[0], 0).r; // 2 (0,1)
+	index_normal[3] = normalize(vec3(h[3] - h[2] + u, _vertex_spacing, h[3] - h[0] + v));
+
+	// Set flat world normal - overriden if bilerp is true
+	vec3 w_normal = index_normal[3];
+
+	// Branching smooth normals must be done seperatley for correct normals at all 4 index ids
+	if (bilerp) {
+		// 5 lookups
+		// Fetch the additional required height values for smooth normals
+		h[1] = texelFetch(_height_maps, index[1], 0).r; // 3 (1,1)
+		float h_4 = texelFetch(_height_maps, get_index_coord(index_id + offsets.yz, FRAGMENT_PASS), 0).r; // 4 (1,2)
+		float h_5 = texelFetch(_height_maps, get_index_coord(index_id + offsets.zy, FRAGMENT_PASS), 0).r; // 5 (2,1)
+		float h_6 = texelFetch(_height_maps, get_index_coord(index_id + offsets.zx, FRAGMENT_PASS), 0).r; // 6 (2,0)
+		float h_7 = texelFetch(_height_maps, get_index_coord(index_id + offsets.xz, FRAGMENT_PASS), 0).r; // 7 (0,2)
+
+		// Calculate the normal for the remaining index ids.
+		index_normal[0] = normalize(vec3(h[0] - h[1] + u, _vertex_spacing, h[0] - h_7 + v));
+		index_normal[1] = normalize(vec3(h[1] - h_5 + u, _vertex_spacing, h[1] - h_4 + v));
+		index_normal[2] = normalize(vec3(h[2] - h_6 + u, _vertex_spacing, h[2] - h[1] + v));
+
+		// Set interpolated world normal
+		w_normal =
+			index_normal[0] * weights[0] +
+			index_normal[1] * weights[1] +
+			index_normal[2] * weights[2] +
+			index_normal[3] * weights[3] ;
+	}
 
 	// Apply terrain normals
-	NORMAL = normalize(cross(dFdyCoarse(VERTEX),dFdxCoarse(VERTEX)));
-	TANGENT = normalize(cross(NORMAL, vec3(0.0, 0.0, 1.0)));
-	BINORMAL = normalize(cross(NORMAL, TANGENT));
+	vec3 w_tangent = normalize(cross(w_normal, vec3(0.0, 0.0, 1.0)));
+	vec3 w_binormal = normalize(cross(w_normal, w_tangent));
+	NORMAL = mat3(VIEW_MATRIX) * w_normal;
+	TANGENT = mat3(VIEW_MATRIX) * w_tangent;
+	BINORMAL = mat3(VIEW_MATRIX) * w_binormal;
+
+	if (flat_terrain_normals) {
+		NORMAL = normalize(cross(dFdyCoarse(VERTEX),dFdxCoarse(VERTEX)));
+		TANGENT = normalize(cross(NORMAL, VIEW_MATRIX[2].xyz));
+		BINORMAL = normalize(cross(NORMAL, TANGENT));
+	}
 
 	// Apply PBR
 	ALBEDO = vec3(.2);

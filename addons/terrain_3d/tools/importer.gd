@@ -1,4 +1,4 @@
-# Copyright © 2025 Cory Petkovsek, Roope Palmroos, and Contributors.
+# Copyright © 2023-2026 Cory Petkovsek, Roope Palmroos, and Contributors.
 # Importer for Terrain3D
 @tool
 extends Terrain3D
@@ -32,9 +32,10 @@ func reset_terrain(p_value) -> void:
 	data.update_maps(Terrain3DRegion.TYPE_MAX, true, false)
 
 
+## Recalculates min and max heights for all regions.
 func update_heights(p_value) -> void:
 	if p_value and data:
-		data.update_height_range()
+		data.calc_height_range(true)
 
 
 @export_group("Import File")

@@ -1,6 +1,6 @@
-[gd_scene format=3 uid="uid://blaieaqp413k7"]
+[gd_scene load_steps=9 format=3 uid="uid://blaieaqp413k7"]
 
-[ext_resource type="Script" uid="uid://cib2rig7vup10" path="res://addons/terrain_3d/tools/importer.gd" id="1_60b8f"]
+[ext_resource type="Script" path="res://addons/terrain_3d/tools/importer.gd" id="1_60b8f"]
 
 [sub_resource type="Gradient" id="Gradient_88f3t"]
 offsets = PackedFloat32Array(0.2, 1)
@@ -19,31 +19,23 @@ domain_warp_fractal_lacunarity = 1.5
 domain_warp_fractal_gain = 1.0
 
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_ve0yk"]
-noise = SubResource("FastNoiseLite_muvel")
-color_ramp = SubResource("Gradient_88f3t")
 seamless = true
+color_ramp = SubResource("Gradient_88f3t")
+noise = SubResource("FastNoiseLite_muvel")
 
 [sub_resource type="Terrain3DMaterial" id="Terrain3DMaterial_p55u0"]
 _shader_parameters = {
-&"bias_distance": 512.0,
 "blend_sharpness": 0.87,
-&"depth_blur": 0.0,
-&"enable_macro_variation": true,
-&"enable_projection": true,
 "height_blending": true,
 "macro_variation1": Color(1, 1, 1, 1),
 "macro_variation2": Color(1, 1, 1, 1),
-&"macro_variation_slope": 0.333,
-&"mipmap_bias": 1.0,
 "noise1_angle": 0.0,
 "noise1_offset": Vector2(0.5, 0.5),
 "noise1_scale": 0.04,
 "noise2_scale": 0.076,
 "noise3_scale": 0.225,
 "noise_texture": SubResource("NoiseTexture2D_ve0yk"),
-&"projection_angular_division": 2.0,
-&"projection_threshold": 0.8,
-&"world_space_normal_blend": true
+"vertex_normals_distance": 128.0
 }
 show_checkered = true
 
@@ -54,21 +46,18 @@ backlight_enabled = true
 backlight = Color(0.5, 0.5, 0.5, 1)
 
 [sub_resource type="Terrain3DMeshAsset" id="Terrain3DMeshAsset_7je72"]
-generated_type = 1
 height_offset = 0.5
+density = 10.0
 material_override = SubResource("StandardMaterial3D_8rvqy")
-last_lod = 0
-last_shadow_lod = 0
-lod0_range = 128.0
+generated_type = 1
 
 [sub_resource type="Terrain3DAssets" id="Terrain3DAssets_op32e"]
 mesh_list = Array[Terrain3DMeshAsset]([SubResource("Terrain3DMeshAsset_7je72")])
 
-[node name="Importer" type="Terrain3D" unique_id=3605900]
+[node name="Importer" type="Terrain3D"]
 material = SubResource("Terrain3DMaterial_p55u0")
 assets = SubResource("Terrain3DAssets_op32e")
 mesh_lods = 8
-show_checkered = true
 top_level = true
 script = ExtResource("1_60b8f")
 metadata/_edit_lock_ = true
