@@ -232,25 +232,25 @@ func import(files:PackedStringArray, loader:LoadingHalo=null, import_position:Ve
 		# and pass the import process to the import handling code (currently in BarkJournal)
 		if dropped.to_lower().ends_with('.gltf') or \
 			dropped.to_lower().ends_with('.glb'):
-			Engine.get_singleton("event_manager").import_asset('glb', dropped, filename, false, {"base_path":dropped, "position":new_import_position,"scale":player_size_mult})
+			BarkJournal.current_bark_journal.import_asset('glb', dropped, filename, false, {"base_path":dropped, "position":new_import_position,"scale":player_size_mult})
 		elif dropped.to_lower().ends_with('.fbx'):
-			Engine.get_singleton("event_manager").import_asset('glb', dropped, filename, false, {"base_path":dropped, "position":new_import_position,"scale":player_size_mult,"type":'fbx'})
+			BarkJournal.current_bark_journal.import_asset('glb', dropped, filename, false, {"base_path":dropped, "position":new_import_position,"scale":player_size_mult,"type":'fbx'})
 		#elif dropped.to_lower().ends_with('.obj'):
-			#Engine.get_singleton("event_manager").import_asset('glb', dropped, filename, false, {"base_path":dropped, "position":new_import_position,"scale":player_size_mult,"type":'fbx'})
+			#BarkJournal.current_bark_journal.import_asset('glb', dropped, filename, false, {"base_path":dropped, "position":new_import_position,"scale":player_size_mult,"type":'fbx'})
 		elif dropped.to_lower().ends_with('.vrm'):
-			Engine.get_singleton("event_manager").import_asset('vrm',dropped, filename, false, {"position":new_import_position,"scale":player_size_mult})
+			BarkJournal.current_bark_journal.import_asset('vrm',dropped, filename, false, {"position":new_import_position,"scale":player_size_mult})
 		elif dropped.to_lower().ends_with('.obj'):
-			Engine.get_singleton("event_manager").import_asset('obj',dropped, filename, false, {"position":new_import_position,"scale":player_size_mult})
+			BarkJournal.current_bark_journal.import_asset('obj',dropped, filename, false, {"position":new_import_position,"scale":player_size_mult})
 		elif dropped.to_lower().ends_with('.res') or \
 			dropped.to_lower().ends_with('.tres') or \
 			dropped.to_lower().ends_with('.scn')  or \
 			dropped.to_lower().ends_with('.tscn') or \
 			dropped.to_lower().ends_with('.blend') or \
 			dropped.to_lower().ends_with('.mtl'):
-			Engine.get_singleton("event_manager").import_asset('res',dropped, filename, false, {"position":new_import_position,"scale":player_size_mult})
+			BarkJournal.current_bark_journal.import_asset('res',dropped, filename, false, {"position":new_import_position,"scale":player_size_mult})
 		#elif dropped.ends_with('.zip') or dropped.ends_with('.pck'):
 		#elif dropped.to_lower().ends_with('.pck'):
-			#Engine.get_singleton("event_manager").import_asset('pck', dropped, filename, false, {"position":new_import_position,"scale":player_size_mult})
+			#BarkJournal.current_bark_journal.import_asset('pck', dropped, filename, false, {"position":new_import_position,"scale":player_size_mult})
 		elif dropped.to_lower().ends_with('.png') or \
 			dropped.to_lower().ends_with('.jpg')  or \
 			dropped.to_lower().ends_with('.jpeg') or \
@@ -260,13 +260,13 @@ func import(files:PackedStringArray, loader:LoadingHalo=null, import_position:Ve
 			dropped.to_lower().ends_with('.ktx')  or \
 			dropped.to_lower().ends_with('.webp') or \
 			type == "img":
-			Engine.get_singleton("event_manager").import_asset('image', FileAccess.get_file_as_bytes(dropped), filename, false, {"position":new_import_position,"scale":player_size_mult})
+			BarkJournal.current_bark_journal.import_asset('image', FileAccess.get_file_as_bytes(dropped), filename, false, {"position":new_import_position,"scale":player_size_mult})
 		elif dropped.ends_with(".zip") or dropped.to_lower().ends_with('.pck') or dropped.to_lower().ends_with(".resonitepackage") or type == "rpkg":
-			Engine.get_singleton("event_manager").import_asset('zip', dropped, filename, false, {"position":new_import_position,"scale":player_size_mult})
+			BarkJournal.current_bark_journal.import_asset('zip', dropped, filename, false, {"position":new_import_position,"scale":player_size_mult})
 		elif dropped.ends_with(".mp3") or dropped.ends_with(".ogg") or dropped.ends_with(".wav"):
-			Engine.get_singleton("event_manager").import_asset('audio', dropped, filename, false, {"position":new_import_position,"scale":player_size_mult})
+			BarkJournal.current_bark_journal.import_asset('audio', dropped, filename, false, {"position":new_import_position,"scale":player_size_mult})
 		else:
-			Engine.get_singleton("event_manager").import_asset('file', FileAccess.get_file_as_bytes(dropped), filename, false, {"position":new_import_position,"scale":player_size_mult})
+			BarkJournal.current_bark_journal.import_asset('file', FileAccess.get_file_as_bytes(dropped), filename, false, {"position":new_import_position,"scale":player_size_mult})
 	# since this process is blocking for the thread it exists in, we can assume the files are fully imported once this 
 	# code is finished executing.
 	# tell the loader to play the done animation and close itself
@@ -287,7 +287,7 @@ func import_clip(loader:LoadingHalo=null, import_position:Vector3=Vector3(), pla
 		# set the loader text to indicate what it's importing is an image
 		loader.set_deferred("text", "clipboard image")
 		# pass onto the next part of the import process
-		Engine.get_singleton("event_manager").import_asset('image', clip, '', false, {"loader":loader ,"position":import_position, "scale":player_size_mult})
+		BarkJournal.current_bark_journal.import_asset('image', clip, '', false, {"loader":loader ,"position":import_position, "scale":player_size_mult})
 	else:
 		# create a holder for attempting to load the plain text as an svg
 		var trysvg = Image.new()
@@ -299,15 +299,15 @@ func import_clip(loader:LoadingHalo=null, import_position:Vector3=Vector3(), pla
 			# if we did load an svg we wanna update the text to say it's an image
 			# since godot will rasterize the svg to an image resource
 			loader.set_deferred("text", "clipboard image")
-			Engine.get_singleton("event_manager").import_asset('image', trysvg, '', false, {"loader":loader ,"position":import_position, "scale":player_size_mult})
+			BarkJournal.current_bark_journal.import_asset('image', trysvg, '', false, {"loader":loader ,"position":import_position, "scale":player_size_mult})
 		# if the text is a URL, then we wanna import it as a remote uri
 		elif clipstr.begins_with("http://") or clipstr.begins_with("https://"):
 			loader.set_deferred("text", "clipboard url")
-			Engine.get_singleton("event_manager").import_asset('uri',clipstr,'', false, {"loader":loader ,"position":import_position, "scale":player_size_mult})
+			BarkJournal.current_bark_journal.import_asset('uri',clipstr,'', false, {"loader":loader ,"position":import_position, "scale":player_size_mult})
 		# otehrwise we just import it as a 3d text object
 		else:
 			loader.set_deferred("text", "clipboard text")
-			Engine.get_singleton("event_manager").import_asset('text', clipstr, '', false, {"loader":loader ,"position":import_position, "scale":player_size_mult})
+			BarkJournal.current_bark_journal.import_asset('text', clipstr, '', false, {"loader":loader ,"position":import_position, "scale":player_size_mult})
 		
 # here we capture inputs so we can capture when the player is pasting something
 # TODO: make this so it's not hard-coded to ctrl+v
@@ -331,4 +331,4 @@ func _input(event):
 			loader.global_position = import_position
 		# if the player is pressing the keys to undo, then we wanna send an undo to the BarkJournal
 		if event.physical_keycode == KEY_Z and event.ctrl_pressed and event.pressed:
-			Engine.get_singleton("event_manager").undo_action()
+			BarkJournal.current_bark_journal.undo_action()

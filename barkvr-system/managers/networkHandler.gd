@@ -155,10 +155,10 @@ func _ready():
 	if is_instance_valid(Engine.get_singleton("user_manager")):
 		Engine.get_singleton("user_manager").got_turn_server.connect(got_turn_server)
 		Engine.get_singleton("user_manager").user_logged_in.connect(user_logged_in)
-	thread.start(poll)
-	BarkHelpers.rejoin_thread_when_finished(thread)
-	voip_thread.start(voip_poll)
-	BarkHelpers.rejoin_thread_when_finished(voip_thread)
+	#thread.start(poll)
+	#BarkHelpers.rejoin_thread_when_finished(thread)
+	#voip_thread.start(voip_poll)
+	#BarkHelpers.rejoin_thread_when_finished(voip_thread)
 	get_window().close_requested.connect(func():
 		close_requested = true
 		thread.wait_to_finish()

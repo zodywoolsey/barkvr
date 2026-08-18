@@ -4,8 +4,6 @@
 [ext_resource type="PackedScene" uid="uid://cn1wel2bnigbf" path="res://barkvr-system/ui/3dPanel/2d scenes/video.tscn" id="2_rxrh6"]
 
 [node name="Video3d" type="StaticBody3D" unique_id=102430247]
-freeze = true
-freeze_mode = 1
 script = ExtResource("1_ta86q")
 _auto_load_ui = ExtResource("2_rxrh6")
 metadata/grabbable = true

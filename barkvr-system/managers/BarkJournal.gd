@@ -13,6 +13,8 @@
 class_name BarkJournal
 extends Node
 
+static var current_bark_journal: BarkJournal
+
 ## tracks all historical actions
 var actions: Array[Dictionary] = []
 ## holder for actions that have been undone (intended to be used for the redo operation)
@@ -93,6 +95,8 @@ func _ready() -> void:
 	# and create our journal tree (for centrally tracking the local tree)
 	journal_tree = JournalTreeClass.new()
 	add_child(journal_tree)
+	# set the static variable to this instance so we can access it from anywhere
+	current_bark_journal = self
 
 ## this is a helper to add a new event into the journal
 ## accepts the action requested and whether it is an undo operation
@@ -394,7 +398,9 @@ func import_asset( type: String, asset_to_import: Variant, asset_name := '', rec
 	# TODO pck support
 	data.type = type
 	match type:
-		"text":
+		"text", "txt":
+			if asset_to_import is PackedByteArray:
+				asset_to_import = asset_to_import.get_string_from_utf8()
 			_import_text(asset_to_import,asset_to_import, data)
 		"glb", "vrm":
 			_import_glb(asset_to_import, asset_name, data)
@@ -404,7 +410,7 @@ func import_asset( type: String, asset_to_import: Variant, asset_name := '', rec
 			# TODO scenes and resources can't easily be sent to peers because of
 			# possible dependencies in other files.
 			_import_res(asset_name, asset_to_import, data)
-		"image":
+		"image", "img":
 			if asset_to_import is Image:
 				_import_image_image(asset_name, asset_to_import, data)
 			else:
@@ -420,10 +426,20 @@ func import_asset( type: String, asset_to_import: Variant, asset_name := '', rec
 			_import_uri(asset_to_import, data)
 		"zip":
 			_import_zip(asset_name, asset_to_import, data)
-
+		"ogv":
+			if asset_to_import is PackedByteArray:
+				#var tmp_file := FileAccess.create_temp(FileAccess.WRITE_READ,"",".ogv")
+				var tmp_file := FileAccess.open(OS.get_temp_dir()+"/"+str(asset_name.hash())+".ogv",FileAccess.WRITE_READ)
+				tmp_file.store_buffer(asset_to_import)
+				#tmp_file.close()
+				asset_to_import = tmp_file.get_path_absolute()
+			_import_video(asset_name, asset_to_import)
 		_:
 			if "loader" in data:
 				data.loader.done('failed')
+			if asset_to_import is PackedByteArray:
+				asset_to_import = asset_to_import.get_string_from_utf8()
+			_import_text(asset_to_import,asset_to_import, data)
 	# Send message to peers.
 	if !recieved:
 		match type:
@@ -517,6 +533,18 @@ func import_asset( type: String, asset_to_import: Variant, asset_name := '', rec
 				if "loader" in data:
 					data.loader.done('failed')
 
+## imports a video TODO: we need more video formats supported, asap
+func _import_video(asset_name:String, asset_path:String) -> void:
+	var tmp_video_player: Panel3D = (load("res://barkvr-system/ui/3dPanel/2d scenes/video3d.tscn") as PackedScene).instantiate()
+	root.add_child(tmp_video_player)
+	_post_import_video(asset_name, asset_path, tmp_video_player)
+
+func _post_import_video(asset_name:String, asset_path:String, video_player:Panel3D):
+	if "video" in video_player.ui and video_player.ui.video:
+		var tmp := VideoStreamTheora.new()
+		tmp.file = asset_path
+		video_player.ui.video.stream = tmp
+		video_player.ui.video.play()
 
 ## imports a remote uri (currently only http[s])
 func _import_uri(uri:String, data:Dictionary={}):
