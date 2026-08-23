@@ -3,7 +3,7 @@ extends Control
 
 @onready var val :Button= $VBoxContainer/position/v/val
 
-var target:Node
+var target:Object
 var _is_editing:bool = false
 var calling:Callable
 var emission:Signal
@@ -20,7 +20,7 @@ func _ready():
 
 ## sets the name, field target node, and the property name for the field to look for
 ## name:String, new_target:Node, new_property_name:String
-func set_data(new_name:String, new_target:Node, new_property_name:String):
+func set_data(new_name:String, new_target:Object, new_property_name:String):
 	if new_property_name.begins_with("_"):
 		queue_free()
 		return

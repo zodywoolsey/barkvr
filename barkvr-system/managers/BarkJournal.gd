@@ -33,7 +33,7 @@ var actions_mutex := Mutex.new()
 # immediately rather than latently, which reduces a massive amount of performance overhead 
 # with the inspectors.
 ## holder which loads the journal_tree class
-var JournalTreeClass = load("res://barkvr-system/managers/journal_tree.gd")
+var JournalTreeClass = load("uid://km5yk6l5xyvc")
 ## holder for the actual instance of the journal tree
 var journal_tree: Node 
 

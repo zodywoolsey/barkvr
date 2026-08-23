@@ -47,9 +47,9 @@ var target : Object = null
 ## toggles whether properties should be loaded in this editor
 @export var load_properties : bool = true
 ## toggles whether methods should be loaded in this editor
-@export var load_methods : bool = true
+@export var load_methods : bool = false
 ## toggles whether signals should be loaded in this editor
-@export var load_signals : bool = true
+@export var load_signals : bool = false
 
 
 ## sets whether the titlebar should be hidden or not and shows/hides the necessary
@@ -70,7 +70,7 @@ var hide_titlebar := false:
 var event_manager : BarkJournal
 
 ## updates the current target of this attributes panel
-func set_target(new_target:Node):
+func set_target(new_target:Object):
 	if is_instance_valid(target):
 		target.property_list_changed.disconnect(target_property_list_changed)
 	
@@ -102,7 +102,7 @@ func set_target(new_target:Node):
 			properties_header_label.text += " Signals," if load_properties else " Signals"
 		if load_properties:
 			properties_header_label.text += " Properties"
-		MeshInstance3D.new().create_tween().tween_property(self, "transparency", 1.0, 4.0)
+		#MeshInstance3D.new().create_tween().tween_property(self, "transparency", 1.0, 4.0)
 		
 		# this is a dubious hack to forcibly limit how much time we will take
 		# to process and add fields each frame. this allows us to set a fixed
@@ -202,7 +202,7 @@ func _add_fields(prop_list, new_target) -> void:
 				var tmp :Object_Attribute = object_field.instantiate()
 				v_box_container.add_child(tmp)
 				tmp.name = fieldname
-				tmp.set_data(fieldname, target, prop.name)
+				tmp.set_data(fieldname, target, prop.name, prop.class_name)
 			TYPE_ARRAY:
 				var tmp :Array_Attribute = array_field.instantiate()
 				v_box_container.add_child(tmp)

@@ -5,21 +5,38 @@ extends Control
 @onready var expand: Button = $VBoxContainer/Panel2/expand
 var ATTRIBUTES_SCENE = load("res://barkvr-system/ui/3dPanel/editmode/attributes.tscn")
 var ATTRIBUTES_POPUP_SCENE = load("res://barkvr-system/ui/3dPanel/editmode/popup/attributes_popup.tscn")
+var CREATE_RESOURCE_POPUP_SCENE = load("res://barkvr-system/ui/3dPanel/editmode/inspector/panels/add_resource/add_resource_menu.tscn")
 var attributes: Control
 @onready var create: Button = %create
 @onready var copy: Button = %copy
 @onready var paste: Button = %paste
 
+var target_type : StringName
+
 @export var full_height := false
 
-var target:Object
+var popup : Control
+
+var target:Object:
+	set(val):
+		target = val
 var property_name:String = '':
 	set(val):
 		property_name = val
 
 func _ready() -> void:
 	create.pressed.connect(func():
-		pass
+		if !popup:
+			popup = CREATE_RESOURCE_POPUP_SCENE.instantiate()
+		popup.target = target
+		popup.property_name = property_name
+		popup.root_class = target_type.split(",")[0]
+		popup.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		popup.top_level = true
+		if !popup.is_inside_tree():
+			add_child(popup)
+		#popup.set_deferred("target", target[property_name])
+		popup.show()
 		)
 	copy.pressed.connect(func():
 		if target[property_name]:
@@ -53,17 +70,18 @@ func _ready() -> void:
 		tmp.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		get_parent().get_parent().get_parent().get_parent().add_child(tmp)
 		tmp.set_deferred("target", target[property_name])
-		print('opened single object inspector: ',target)
+		print('opened single object inspector: ',target, " -> ", property_name)
 		)
 
 ## sets the name, field target node, and the property name for the field to look for
 ## name:String, new_target:Node, new_property_name:String
-func set_data(new_name:String, new_target:Object, new_property_name:String, above_targets=[]):
+func set_data(new_name:String, new_target:Object, new_property_name:String, target_class_name:StringName, above_targets=[]):
 	if new_property_name in new_target:
 		above_targets.append(new_target)
 		label.text = new_name
 		target = new_target
 		property_name = new_property_name
+		target_type = target_class_name
 
 func show_attributes_modal() -> void:
 		attributes = ATTRIBUTES_SCENE.instantiate()

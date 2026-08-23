@@ -1,3 +1,4 @@
+class_name BarkJournalTree
 extends Node
 
 ## the dictionary that holds all the objects, 
