@@ -337,7 +337,8 @@ func _on_search_bar_edited(search_text : String) -> void:
 			child.visible = true
 		else:
 			child.visible = false
-
+## TODO make it so the properties are sorted as well, but we need to preserve
+## the original order so it's consistent for user muscle memory
 	# Sort the list to make the "most accurate" result the top item.
 	#filtered_list.sort_custom(func(a : String, b : String) -> bool:
 		#return true if search_text.similarity(a.to_lower()) > search_text.similarity(b.to_lower()) else false
