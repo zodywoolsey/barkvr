@@ -1,7 +1,10 @@
 extends Control
 
 ## holds a ref to the vbox container that will hold all the fields
-@onready var v_box_container: VBoxContainer = %VBoxContainer
+@onready var v_box_container: VBoxContainer = %properties_vbox
+
+## hold ref to the searchbar linedit in the scene
+@onready var search_bar: LineEdit = %SearchBar
 
 ## here, we load each of the field scenes we will be using.
 ## we use load instead of preload so that the user can live-mod the game if they so desire
@@ -294,6 +297,7 @@ func _add_fields(prop_list, new_target) -> void:
 	LocalGlobals.is_inspector_loading = false
 
 func _ready():
+	search_bar.text_changed.connect(_on_search_bar_edited)
 	# reset vars with setters so they apply on first set
 	titlebar_top_row.visible = !hide_titlebar
 	titlebar_active.visible = !hide_titlebar
@@ -312,3 +316,29 @@ func _ready():
 			target.set_meta("display_name",new_text)
 			target.name = target.name
 		)
+
+## Search through the item list.
+func _on_search_bar_edited(search_text : String) -> void:
+	search_text = search_text.to_lower()
+
+	var filtered_list := Array()
+	for child : Node in v_box_container.get_children():
+		var contains_all_chars := true
+		var class_string_lower := child.name.to_lower()
+		for character in search_text:
+			if !class_string_lower.contains(character):
+				contains_all_chars = false
+				break
+		if (
+				contains_all_chars
+				or class_string_lower.contains(search_text)
+				or class_string_lower.similarity(search_text) > 0.8
+		):
+			child.visible = true
+		else:
+			child.visible = false
+
+	# Sort the list to make the "most accurate" result the top item.
+	#filtered_list.sort_custom(func(a : String, b : String) -> bool:
+		#return true if search_text.similarity(a.to_lower()) > search_text.similarity(b.to_lower()) else false
+	#)

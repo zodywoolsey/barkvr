@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://jqh6stt10ct5"]
 
 [ext_resource type="Script" uid="uid://e6vcef2box0j" path="res://barkvr-system/ui/3dPanel/editmode/attributes.gd" id="1_sps2y"]
+[ext_resource type="Texture2D" uid="uid://b4fxdub5kj8fr" path="res://barkvr-system/assets/icons/editor-icons/Search.svg" id="2_j7cyo"]
 
 [node name="attributes" type="Control" unique_id=1151730990]
 layout_mode = 3
@@ -120,14 +121,23 @@ size_flags_horizontal = 3
 focus_mode = 0
 metadata/_edit_use_anchors_ = true
 
-[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer" unique_id=1231111383]
+[node name="SearchBar" type="LineEdit" parent="VBoxContainer" unique_id=2030522323]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Filter Properties"
+context_menu_enabled = false
+clear_button_enabled = true
+right_icon = ExtResource("2_j7cyo")
+
+[node name="properties_scroll_container" type="ScrollContainer" parent="VBoxContainer" unique_id=1231111383]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 follow_focus = true
 metadata/_edit_use_anchors_ = true
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/ScrollContainer" unique_id=1177283434]
+[node name="properties_vbox" type="VBoxContainer" parent="VBoxContainer/properties_scroll_container" unique_id=1177283434]
 unique_name_in_owner = true
 clip_contents = true
 layout_mode = 2
