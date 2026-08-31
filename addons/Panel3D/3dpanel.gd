@@ -15,6 +15,9 @@ var tex : ViewportTexture
 
 ## variable for tracking the known popouts on this panel3d
 var popouts: Array[Window] = []
+## variable for tracking the actual panels accompanying the above windows,
+## we have this so we can free all of them when the root panel is deleted
+var popout_panels: Array[Panel3D] = []
 
 ## material rendered in "next_pass" of the default material good for backgrounds
 ## behind transparent panels
@@ -268,14 +271,14 @@ func _ready():
 			viewport.gui_release_focus()
 			)
 
-# this is an attempt to capture and track any embedded subwindows
-# into their own Panel3D so they can be treated like normal popups
-# kindof. this is rough, for obvious reasons if you look around here...
-# [br]i think we should contemplate writing a better shim, or a custom
-# system for summoning popups explicitly for Panel3D. [br]
-# [br]PS: there is a chance we could just put a Window at the top 
-# of the [code]viewport[/code] variable so we can use the Window's signal
-# [code]about_to_popup[/code] to intercept this entirely. but that feels jank...
+##this is an attempt to capture and track any embedded subwindows
+##into their own Panel3D so they can be treated like normal popups
+##kindof. this is rough, for obvious reasons if you look around here...
+##[br]i think we should contemplate writing a better shim, or a custom
+##system for summoning popups explicitly for Panel3D. [br]
+##[br]PS: there is a chance we could just put a Window at the top 
+##of the [code]viewport[/code] variable so we can use the Window's signal
+##[code]about_to_popup[/code] to intercept this entirely. but that feels jank...
 #func capture_embedded_subwindows():
 	#var embedded := viewport.get_embedded_subwindows()
 	#for window in embedded:
@@ -283,6 +286,7 @@ func _ready():
 			#window.set_meta("already_moved", true)
 			#popouts.append(window)
 			#var tmppanel := Panel3D.new()
+			#popout_panels.append(tmppanel)
 			#tmppanel.collision_layer = collision_layer
 			#tmppanel.collision_mask = collision_mask
 			#get_parent().add_child(tmppanel)
@@ -307,6 +311,8 @@ func _ready():
 #func update_floating_popup(popup_panel:Panel3D):
 	##popouts.erase(popup_panel.ui)
 	##popup_panel.queue_free()
+	#popup_panel.colshape.disabled = !popup_panel.ui.visible
+	#popup_panel.visible = popup_panel.ui.visible
 	#var one = popup_panel.ui.position.x/viewport.size.x
 	#var two = one*mesh.mesh.size.x
 	#var popup_pos_3d := Vector3(
@@ -316,11 +322,13 @@ func _ready():
 	#)
 	#popup_panel.global_position = to_global(popup_pos_3d)
 #
-#func remove_floating_popup(popup_panel:Panel3D):
-	#pass
-#
 #func _process(delta: float) -> void:
 	#capture_embedded_subwindows()
+#
+#func _notification(what: int) -> void:
+	#if what == NOTIFICATION_PREDELETE:
+		#for popout in popout_panels:
+			#popout.queue_free()
 
 func laser_input(data:Dictionary):
 	var event
