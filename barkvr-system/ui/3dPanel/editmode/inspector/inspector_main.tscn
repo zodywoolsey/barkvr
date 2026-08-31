@@ -74,22 +74,20 @@ tab_focus_mode = 0
 
 [node name="Properties" parent="MarginContainer/HSplitContainer/TabRight" unique_id=733846550 instance=ExtResource("5_nal8t")]
 layout_mode = 2
-load_methods = false
-load_signals = false
 metadata/_tab_index = 0
 
 [node name="Quick Methods" parent="MarginContainer/HSplitContainer/TabRight" unique_id=1151730990 instance=ExtResource("5_nal8t")]
 visible = false
 layout_mode = 2
 load_properties = false
-load_signals = false
+load_methods = true
 metadata/_tab_index = 1
 
 [node name="Quick Signals" parent="MarginContainer/HSplitContainer/TabRight" unique_id=1016834459 instance=ExtResource("5_nal8t")]
 visible = false
 layout_mode = 2
 load_properties = false
-load_methods = false
+load_signals = true
 metadata/_tab_index = 2
 
 [node name="Script" parent="MarginContainer/HSplitContainer/TabRight" unique_id=1868787893 instance=ExtResource("6_niosx")]
