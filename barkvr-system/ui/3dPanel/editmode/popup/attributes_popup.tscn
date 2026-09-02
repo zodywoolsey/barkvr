@@ -18,9 +18,10 @@ script = ExtResource("1_otumx")
 [node name="ColorRect" type="ColorRect" parent="." unique_id=370391131]
 unique_name_in_owner = true
 layout_mode = 2
-color = Color(0, 0, 0, 0.77254903)
+color = Color(0, 0, 0, 0.88235295)
 
-[node name="right" type="ColorRect" parent="ColorRect" unique_id=1003893899]
+[node name="border_right" type="ColorRect" parent="ColorRect" unique_id=1003893899]
+unique_name_in_owner = true
 z_index = 4
 custom_minimum_size = Vector2(2, 2)
 layout_mode = 1
@@ -31,7 +32,8 @@ anchor_bottom = 1.0
 grow_horizontal = 0
 grow_vertical = 2
 
-[node name="left" type="ColorRect" parent="ColorRect" unique_id=623130627]
+[node name="border_left" type="ColorRect" parent="ColorRect" unique_id=623130627]
+unique_name_in_owner = true
 z_index = 4
 custom_minimum_size = Vector2(2, 2)
 layout_mode = 1
@@ -39,7 +41,8 @@ anchors_preset = 9
 anchor_bottom = 1.0
 grow_vertical = 2
 
-[node name="top" type="ColorRect" parent="ColorRect" unique_id=1365409733]
+[node name="border_top" type="ColorRect" parent="ColorRect" unique_id=1365409733]
+unique_name_in_owner = true
 z_index = 4
 custom_minimum_size = Vector2(2, 2)
 layout_mode = 1
@@ -47,7 +50,8 @@ anchors_preset = 10
 anchor_right = 1.0
 grow_horizontal = 2
 
-[node name="bottom" type="ColorRect" parent="ColorRect" unique_id=1631825730]
+[node name="border_bottom" type="ColorRect" parent="ColorRect" unique_id=1631825730]
+unique_name_in_owner = true
 z_index = 4
 custom_minimum_size = Vector2(2, 2)
 layout_mode = 1

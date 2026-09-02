@@ -25,35 +25,10 @@ var property_name:String = '':
 		property_name = val
 
 func _ready() -> void:
-	create.pressed.connect(func():
-		if !popup:
-			popup = CREATE_RESOURCE_POPUP_SCENE.instantiate()
-		popup.target = target
-		popup.property_name = property_name
-		popup.root_class = target_type.split(",")[0]
-		popup.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		popup.top_level = true
-		if !popup.is_inside_tree():
-			add_child(popup)
-		#popup.set_deferred("target", target[property_name])
-		popup.show()
-		)
-	copy.pressed.connect(func():
-		if target[property_name]:
-			DisplayServer.clipboard_set(str(target[property_name].get_instance_id()))
-		)
-	paste.pressed.connect(func():
-		var pasted := DisplayServer.clipboard_get()
-		if !pasted.is_empty() and pasted.is_valid_int():
-			var derived = instance_from_id(pasted.to_int())
-			if is_instance_valid(derived) and typeof(derived) == typeof(target[property_name]):
-				target[property_name] = derived
-				print('pasted')
-		)
-	get_child(0).resized.connect(func():
-		if full_height and expand.button_pressed:
-			custom_minimum_size.y = get_child(0).size.y
-		)
+	create.pressed.connect(create_pressed)
+	copy.pressed.connect(copy_pressed)
+	paste.pressed.connect(paste_pressed)
+	get_child(0).resized.connect(on_first_child_resized)
 	expand.toggled.connect(func(on:bool):
 		if on:
 			if full_height:
@@ -89,3 +64,35 @@ func show_attributes_modal() -> void:
 		attributes.full_height = full_height
 		attributes.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		attributes.call_deferred("set_target",target[property_name])
+
+func create_pressed() -> void:
+		if !popup:
+			popup = CREATE_RESOURCE_POPUP_SCENE.instantiate()
+		popup.target = target
+		popup.property_name = property_name
+		popup.root_class = target_type
+		popup.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		popup.top_level = true
+		if !popup.is_inside_tree():
+			add_child(popup)
+		#popup.set_deferred("target", target[property_name])
+		popup.show()
+		
+
+func copy_pressed() -> void:
+		if target[property_name]:
+			DisplayServer.clipboard_set(str(target[property_name].get_instance_id()))
+		
+func paste_pressed() -> void:
+		var pasted := DisplayServer.clipboard_get()
+		if !pasted.is_empty() and pasted.is_valid_int():
+			var derived = instance_from_id(pasted.to_int())
+			if is_instance_valid(derived) and typeof(derived) == typeof(target[property_name]):
+				target[property_name] = derived
+				print('pasted')
+		
+
+func on_first_child_resized() -> void:
+		if full_height and expand.button_pressed:
+			custom_minimum_size.y = get_child(0).size.y
+		

@@ -62,12 +62,16 @@ func _ready() -> void:
 func _setup_icons() -> void:
 	window_icon.set_texture(load(ProjectSettings.get_setting("application/config/icon")))
 
-## Load the initial, unfiltered, class list.
+## Load the initial class list for the selected root class type.
 func _load_class_list() -> void:
+	# first we gotta get all the classes because we can't ask for a subset lol
 	for cls : String in ClassDB.get_class_list():
-		if not ClassDB.is_parent_class(cls, root_class): continue
-
-		add_class_to_item_list(item_list, cls)
+		# if the target class is a list of options, then we should split it
+		# and then check for each option!
+		for target_class in root_class.split(","):
+			# check if target_class is an ancestor of cls
+			if ClassDB.is_parent_class(cls, target_class):
+				add_class_to_item_list(item_list, cls)
 
 	item_list.select(0)
 
