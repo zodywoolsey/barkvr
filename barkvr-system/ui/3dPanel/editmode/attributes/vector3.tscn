@@ -15,6 +15,15 @@ size_flags_vertical = 3
 mouse_filter = 1
 script = ExtResource("1_f17vl")
 
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1532005873]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
 [node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=683390450]
 layout_mode = 1
 anchors_preset = -1

@@ -23,6 +23,15 @@ size_flags_stretch_ratio = 2.0
 mouse_filter = 1
 script = ExtResource("1_b15ae")
 
+[node name="ColorRect" type="ColorRect" parent="." unique_id=891467832]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
 [node name="hashcolorbackground" type="ColorRect" parent="." unique_id=575368769]
 visible = false
 layout_mode = 1

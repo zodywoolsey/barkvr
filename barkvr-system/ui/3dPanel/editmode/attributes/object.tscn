@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://dddtbbin6ty1l"]
 
 [ext_resource type="Script" uid="uid://bgsuycn851owg" path="res://barkvr-system/ui/3dPanel/editmode/attributes/object.gd" id="1_bl13v"]
+[ext_resource type="Texture2D" uid="uid://crntc6gogeqpk" path="res://barkvr-system/assets/icons/editor-icons/Zoom.svg" id="2_27vjx"]
 
 [node name="object" type="Control" unique_id=1251757812]
 custom_minimum_size = Vector2(0, 100)
@@ -18,26 +19,44 @@ mouse_filter = 1
 script = ExtResource("1_bl13v")
 full_height = true
 
-[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1388915496]
-clip_contents = true
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1555922123]
 layout_mode = 1
-anchors_preset = -1
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1388915496]
+clip_contents = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Panel2" type="Panel" parent="VBoxContainer" unique_id=482078410]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=138610433]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+alignment = 2
+
+[node name="Panel2" type="Panel" parent="VBoxContainer/HBoxContainer" unique_id=482078410]
 custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
+size_flags_horizontal = 3
 mouse_filter = 1
 
-[node name="Label" type="Label" parent="VBoxContainer/Panel2" unique_id=1412630499]
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer/Panel2" unique_id=1412630499]
+unique_name_in_owner = true
 layout_mode = 1
-anchors_preset = -1
+anchors_preset = 15
 anchor_right = 1.0
-anchor_bottom = 0.5
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 1
@@ -45,30 +64,16 @@ text = "object"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="expand" type="Button" parent="VBoxContainer/Panel2" unique_id=395930113]
-layout_mode = 1
-anchors_preset = -1
-anchor_top = 0.45
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="expand" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=395930113]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(146.224, 0)
+layout_mode = 2
 focus_mode = 0
-theme_override_font_sizes/font_size = 24
-text = "\\/"
-flat = true
+text = "View Resource"
+icon = ExtResource("2_27vjx")
+expand_icon = true
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/Panel2" unique_id=138610433]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-alignment = 2
-
-[node name="create" type="Button" parent="VBoxContainer/Panel2/HBoxContainer" unique_id=1103705699]
+[node name="create" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=1103705699]
 unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0
@@ -76,14 +81,14 @@ mouse_filter = 1
 text = "create"
 expand_icon = true
 
-[node name="copy" type="Button" parent="VBoxContainer/Panel2/HBoxContainer" unique_id=111902467]
+[node name="copy" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=111902467]
 unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0
 text = "copy"
 expand_icon = true
 
-[node name="paste" type="Button" parent="VBoxContainer/Panel2/HBoxContainer" unique_id=48252139]
+[node name="paste" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=48252139]
 unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0

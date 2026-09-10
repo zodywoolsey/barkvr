@@ -1,8 +1,8 @@
 class_name Object_Attribute
 extends Control
 
-@onready var label :Label= $VBoxContainer/Panel2/Label
-@onready var expand: Button = $VBoxContainer/Panel2/expand
+@onready var label: Label = %Label
+@onready var expand: Button = %expand
 var ATTRIBUTES_SCENE = load("res://barkvr-system/ui/3dPanel/editmode/attributes.tscn")
 var ATTRIBUTES_POPUP_SCENE = load("res://barkvr-system/ui/3dPanel/editmode/popup/attributes_popup.tscn")
 var CREATE_RESOURCE_POPUP_SCENE = load("res://barkvr-system/ui/3dPanel/editmode/inspector/panels/add_resource/add_resource_menu.tscn")
@@ -53,10 +53,10 @@ func _ready() -> void:
 func set_data(new_name:String, new_target:Object, new_property_name:String, target_class_name:StringName, above_targets=[]):
 	if new_property_name in new_target:
 		above_targets.append(new_target)
-		label.text = new_name
+		target_type = target_class_name
+		label.text = new_name+" : "+target_type
 		target = new_target
 		property_name = new_property_name
-		target_type = target_class_name
 
 func show_attributes_modal() -> void:
 		attributes = ATTRIBUTES_SCENE.instantiate()
