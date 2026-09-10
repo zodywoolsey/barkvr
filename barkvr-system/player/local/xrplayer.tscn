@@ -71,8 +71,10 @@ script = ExtResource("2_npgyv")
 [node name="grabParent" type="Node3D" parent="xrplayer/righthand/handproxy" unique_id=1002520922]
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, 0, 0)
 
-[node name="uiRay" parent="xrplayer/righthand/handproxy" unique_id=398823697 instance=ExtResource("4_316iy")]
+[node name="uiRay" parent="xrplayer/righthand/handproxy" unique_id=398823697 node_paths=PackedStringArray("query_exception_nodes") instance=ExtResource("4_316iy")]
 follow_mouse = false
+smoothing_enabled = false
+query_exception_nodes = [NodePath("../handbody")]
 private_ui_collision_layers = 512
 edit_ui_collision_layers = 4
 world_collision_layers = 4294966779
@@ -109,10 +111,11 @@ script = ExtResource("2_npgyv")
 
 [node name="handproxy" type="Node3D" parent="xrplayer/lefthand" unique_id=1928227331]
 
-[node name="uiRay" parent="xrplayer/lefthand/handproxy" unique_id=1609942515 instance=ExtResource("4_316iy")]
+[node name="uiRay" parent="xrplayer/lefthand/handproxy" unique_id=1609942515 node_paths=PackedStringArray("query_exception_nodes") instance=ExtResource("4_316iy")]
 interaction_index = 1
 follow_mouse = false
-smoothing_speed = 0.1
+smoothing_speed = 3.091
+query_exception_nodes = [NodePath("../handbody")]
 private_ui_collision_layers = 512
 edit_ui_collision_layers = 4
 world_collision_layers = 4294966779

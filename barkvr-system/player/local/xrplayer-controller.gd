@@ -268,10 +268,11 @@ func vr_movement(delta:float) -> void:
 			velocity.y = motion.y
 		velocity.z = motion.z
 
+## movement code specifically for flat mode (touch and desktop modes)
 func flat_movement(_delta:float) -> void:
-	place_grabbed_nodes()
 	var joy_look_vector = Input.get_vector('lookleft','lookright','lookdown','lookup')
-	if joy_look_vector.length()>.05:
+	# if the joystick vector isn't 0 then use it to rotate to player
+	if !joy_look_vector.is_zero_approx():
 		rotate_y(-joy_look_vector.x*JOY_SPEED)
 		xr_camera_3d.rotate_x(joy_look_vector.y*JOY_SPEED)
 		camera_3d.rotate_x(joy_look_vector.y*JOY_SPEED)
@@ -384,40 +385,10 @@ func _unhandled_input(event: InputEvent) -> void:
 	# TODO(?): Does this work as expected when the player is rotated? Axis might need to be WRT the
 	# Player's root
 	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
-		if Input.is_action_pressed("rotateHeld"):
-			if vr_mode_enabled:
-				#VR rotation suppport, if someone wanted to use their mouse to rotate
-				for node in righthand.grabbed.values():
-					var rotation_basis = (basis*Vector3.UP*node.node.basis).normalized()
-					node.offset = node.offset.rotated_local(
-						rotation_basis,
-						-event.relative.x*(MOUSE_SPEED/100)
-						)
-					if !Input.is_action_pressed("modifier"):
-						rotation_basis = (basis*Vector3.RIGHT*node.node.basis)
-						node.offset = node.offset.rotated_local(
-							rotation_basis.normalized(),
-							event.relative.y*(MOUSE_SPEED/100)
-							)
-			else:
-				#desktop rotation support
-				for node in grabbed.values():
-					var rotation_basis = (basis*Vector3.UP*node.node.basis).normalized()
-					node.offset = node.offset.rotated_local(
-						rotation_basis,
-						-event.relative.x*(MOUSE_SPEED/100)
-						)
-					if !Input.is_action_pressed("modifier"):
-						rotation_basis = (basis*Vector3.RIGHT*node.node.basis)
-						node.offset = node.offset.rotated_local(
-							rotation_basis.normalized(),
-							event.relative.y*(MOUSE_SPEED/100)
-							)
-		else:
-			#Mouselook, should rotation not be active
-			rotate_y(-event.relative.x*(MOUSE_SPEED/100))
-			xr_camera_3d.rotate_x(-event.relative.y*(MOUSE_SPEED/100))
-			camera_3d.rotate_x(-event.relative.y*(MOUSE_SPEED/100))
+		#Mouselook, should rotation not be active
+		rotate_y(-event.relative.x*(MOUSE_SPEED/100))
+		xr_camera_3d.rotate_x(-event.relative.y*(MOUSE_SPEED/100))
+		camera_3d.rotate_x(-event.relative.y*(MOUSE_SPEED/100))
 
 	if event.is_action("pause"):
 		if event.is_pressed():
@@ -542,48 +513,6 @@ func summon_inspector():
 func post_summon_inspector():
 		last_spawned_inspector.global_position = camera_3d.to_global(Vector3(0,0,-.5))
 		last_spawned_inspector.look_at(camera_3d.global_position, Vector3.UP, true)
-
-func place_grabbed_nodes():
-	var settings_singleton := Engine.get_singleton("settings_manager")
-	for item in grabbed.values():
-		if settings_singleton:
-			if Input.is_action_just_pressed("scrollup"):
-				if Input.is_physical_key_pressed(KEY_SHIFT):
-					item.offset.basis.x *= settings_singleton.grabbed_object_scale_factor
-					item.offset.basis.y *= settings_singleton.grabbed_object_scale_factor
-					item.offset.basis.z *= settings_singleton.grabbed_object_scale_factor
-				else:
-					item.offset.origin *= settings_singleton.grabbed_object_scale_factor
-			if Input.is_action_just_pressed("scrolldown"):
-				if Input.is_physical_key_pressed(KEY_SHIFT):
-					item.offset.basis.x *= 1.0/settings_singleton.grabbed_object_scale_factor
-					item.offset.basis.y *= 1.0/settings_singleton.grabbed_object_scale_factor
-					item.offset.basis.z *= 1.0/settings_singleton.grabbed_object_scale_factor
-				else:
-					item.offset.origin *= 1.0/settings_singleton.grabbed_object_scale_factor
-		if is_instance_valid(item.node):
-			item.node.global_transform = camera_3d.global_transform * item.offset
-			if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
-				item.node.global_position = camera_3d.project_position(get_viewport().get_mouse_position(), camera_3d.global_position.distance_to(item.node.global_position))
-			# TODO: we need to make it so grabbing doesn't spam events like this. i think the best option is to make it so grabbing
-			# sends a no-track event until the objects are released to prevent tracking hundreds of visual only actions to the journal
-			if is_instance_valid(Engine.get_singleton("event_manager")):
-					print("apply")
-					Engine.get_singleton("event_manager").set_property(
-						get_tree().get_first_node_in_group('localworldroot').get_path_to(item.node),
-						"position",
-						item.node.position
-					)
-					Engine.get_singleton("event_manager").set_property(
-						get_tree().get_first_node_in_group('localworldroot').get_path_to(item.node),
-						"rotation",
-						item.node.rotation
-					)
-					Engine.get_singleton("event_manager").set_property(
-						get_tree().get_first_node_in_group('localworldroot').get_path_to(item.node),
-						"scale",
-						item.node.scale
-					)
 
 func grip():
 	print('grip')

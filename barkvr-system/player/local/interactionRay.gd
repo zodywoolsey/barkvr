@@ -105,11 +105,10 @@ var smooth_raycast_position := Vector3()
 ## (this can be made into a local position if
 ## `target_position_is_local = true`
 @export var target_position := Vector3(0,0,-1):
-	set(val):
-		if target_position_is_local and is_inside_tree():
-			target_position = to_global(val)
-		else:
-			target_position = val
+	get:
+		if target_position_is_local:
+			return to_global(target_position)
+		return target_position
 
 ## self explanatory, but if this is true, then when the target_position is set
 ## we will assume we need to convert it from local space to global space
@@ -231,11 +230,12 @@ func _ready() -> void:
 		using_touch = false
 		)
 
-func _process(_delta):
-	if enabled:
-		query_raycast()
-		# run the interaction function
-		interact()
+## THIS DOESN'T WORK RN BTW
+#func _process(_delta):
+	#if enabled:
+		#query_raycast()
+		## run the interaction function
+		#interact()
 
 func _physics_process(_delta: float) -> void:
 	if enabled:
@@ -244,7 +244,11 @@ func _physics_process(_delta: float) -> void:
 		interact()
 
 ## create holder variables for `query_raycast` to save on performance
-var physspace_holder : PhysicsDirectSpaceState3D
+var physspace_holder : PhysicsDirectSpaceState3D:
+	get:
+		if is_instance_valid(physspace_holder): return physspace_holder
+		physspace_holder = get_world_3d().direct_space_state
+		return physspace_holder
 var rayquery_holder : PhysicsRayQueryParameters3D
 var was_previously_planar : bool = false
 ## runs the physics query for the raycast
@@ -291,8 +295,6 @@ func query_raycast() -> Dictionary:
 		query_collision_data = Dictionary()
 		was_previously_planar = false
 	
-	# update holder variable so it has the latest state
-	physspace_holder = get_world_3d().direct_space_state
 	# if we don't have an existing query params object to use, then create one
 	if !is_instance_valid(rayquery_holder):
 		rayquery_holder = PhysicsRayQueryParameters3D.new()
@@ -319,6 +321,11 @@ func query_raycast() -> Dictionary:
 	# now for actually checking for intersections
 	# we start by querying for anything on the private ui layer
 	rayquery_holder.collision_mask = private_ui_collision_layers
+	
+	# update holder variable so it has the latest state
+	if query_on_process and !physspace_holder:
+		await get_tree().physics_frame
+	physspace_holder = get_world_3d().direct_space_state
 	query_collision_data = physspace_holder.intersect_ray(rayquery_holder)
 	# if we get data back from the intersection check, then we return it
 	if query_collision_data:
