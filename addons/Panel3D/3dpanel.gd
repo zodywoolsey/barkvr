@@ -92,7 +92,7 @@ var popout_panels: Array[Panel3D] = []
 				offset.y -= ((pixel_size/1000.0)*(viewport.size.y-val.y))/2.0
 				global_position = to_global(offset)
 		viewport_size = val
-		viewport.size = viewport_size
+		viewport.size = viewport_size.clamp(minimum_viewport_size, maximum_viewport_size)
 		mesh.mesh.size.x = (pixel_size/1000.0)*viewport.size.x
 		mesh.mesh.size.y = (pixel_size/1000.0)*viewport.size.y
 		#mesh.mesh.size.z = (pixel_size/1000.0)
@@ -113,8 +113,11 @@ const MIDDLE_RIGHT = 7
 const BOTTOM_RIGHT = 8
 @export_enum("TOP_LEFT", "MIDDLE_LEFT", "BOTTOM_LEFT", "MIDDLE_TOP", "MIDDLE_MIDDLE", "MIDDLE_BOTTOM", "TOP_RIGHT", "MIDDLE_RIGHT", "BOTTOM_RIGHT") var ANCHOR_POSITION := MIDDLE_MIDDLE
 
-## Restricts the viewport sizing to be above a specific height
+## Restricts the viewport sizing to be above a specific
 @export var minimum_viewport_size:Vector2i=Vector2i(50,50)
+
+## Restricts the viewport sizing to be below a specific size
+@export var maximum_viewport_size:Vector2i=Vector2i(2048,2048)
 
 ## Sets the size of each pixel[br][code]meters/100[/code]
 @export var pixel_size:float=.5:
