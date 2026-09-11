@@ -106,7 +106,7 @@ var smooth_raycast_position := Vector3()
 ## `target_position_is_local = true`
 @export var target_position := Vector3(0,0,-1):
 	get:
-		if target_position_is_local:
+		if target_position_is_local and is_inside_tree():
 			return to_global(target_position)
 		return target_position
 
@@ -126,7 +126,7 @@ var query_exceptions : Array[RID]
 	set(val):
 		query_exception_nodes = val
 		for i : CollisionObject3D in val:
-			if i.get_rid() not in query_exceptions:
+			if i and i.get_rid() not in query_exceptions:
 				query_exceptions.append(i.get_rid())
 
 ## the collision layers the ui raycast should collide with
@@ -247,8 +247,10 @@ func _physics_process(_delta: float) -> void:
 var physspace_holder : PhysicsDirectSpaceState3D:
 	get:
 		if is_instance_valid(physspace_holder): return physspace_holder
-		physspace_holder = get_world_3d().direct_space_state
+		if is_inside_tree():
+			physspace_holder = get_world_3d().direct_space_state
 		return physspace_holder
+
 var rayquery_holder : PhysicsRayQueryParameters3D
 var was_previously_planar : bool = false
 ## runs the physics query for the raycast
@@ -398,7 +400,6 @@ func interact() -> void:
 			'action': 'hover',
 			'index': interaction_index
 		})
-	#vispos = point
 
 ## here we use the input method to capture any relevant input device stuff
 ## this is basically only for flat mode inputs

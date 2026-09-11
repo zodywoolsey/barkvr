@@ -1,4 +1,4 @@
-[gd_scene format=4 uid="uid://b5e67b4tlsvfs"]
+[gd_scene format=3 uid="uid://b5e67b4tlsvfs"]
 
 [ext_resource type="Script" uid="uid://oqbd1hprv0a1" path="res://barkvr-system/player/local/rayvis.gd" id="1_6wvgr"]
 [ext_resource type="Texture2D" uid="uid://drxq6fs75fbvi" path="res://barkvr-system/ui/assets/rayvis_icons/pointing.svg" id="2_exe05"]
@@ -41,12 +41,12 @@ stencil_flags = 2
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_cccqi"]
 _surfaces = [{
-"aabb": AABB(-0.08, 0, -1.02, 0.08, 0.6, 1.02),
+"aabb": AABB(-6e-45, 0, -6e-45, 1e-05, 0.10000004, 1e-05),
 "format": 34359738369,
 "primitive": 2,
 "uv_scale": Vector4(0, 0, 0, 0),
-"vertex_count": 21,
-"vertex_data": PackedByteArray("AAAAAAAAAAAAAAAAr0dhuzQz0zwfhTO9hOvxu83MYj2vx8C9zMxMvAAAwD00MyO+AACYvAGADj7+P3K+ehSzvDTjJz5StI6+KFzPvGZmQj5wPaW+mpnsvAHQXT5miry+rkcFvWfmeT49atS+AIAUvQE4iz4ArOy+CtcjvZqZmT5cjwK/FC4zvTP7pz64yA6/ZmZCvQBAtj6Z6Rq/R2FRvTRLxD6F2Sa/AABgvQAA0j4AgDK/1yNuvZpB3z6OxD2/FK57vTTz6z64jki/cD2KvZqZAT/sUVy/UriUvc1sCz/CBW2/zMycvQAAEz9m5nm/CtejvZqZGT9cj4K/")
+"vertex_count": 3,
+"vertex_data": PackedByteArray(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 206, 204, 76, 61, 0, 0, 0, 0, 4, 0, 0, 128, 210, 204, 204, 61, 4, 0, 0, 128)
 }]
 
 [node name="rayvis" type="Node3D" unique_id=1420301323 node_paths=PackedStringArray("path3d")]
@@ -111,8 +111,7 @@ curve = SubResource("Curve3D_cccqi")
 script = ExtResource("6_fnmbx")
 
 [node name="CSGPolygon3D" type="CSGPolygon3D" parent="Path3D" unique_id=1260730331]
-visible = false
-polygon = PackedVector2Array(0, 0.01, 0.01, 0, 0, -0.01, -0.01, 0)
+polygon = PackedVector2Array(0, 0.001, 0.001, 0, 0, -0.001, -0.001, 0)
 mode = 2
 path_node = NodePath("..")
 path_interval_type = 1
@@ -128,9 +127,8 @@ smooth_faces = true
 material = SubResource("StandardMaterial3D_cccqi")
 
 [node name="Line3D" type="MeshInstance3D" parent="Path3D" unique_id=1757794882 node_paths=PackedStringArray("get_other_node_target")]
+visible = false
 mesh = SubResource("ArrayMesh_cccqi")
 script = ExtResource("7_cccqi")
-iswobbly = false
-target = Vector3(-0.08, 0.6, -1.02)
 get_other_node_target = NodePath("../..")
 metadata/_custom_type_script = "uid://qd3xl7i1soeg"

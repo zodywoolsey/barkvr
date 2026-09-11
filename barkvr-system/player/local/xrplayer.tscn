@@ -19,9 +19,6 @@ albedo_color = Color(0.6, 0.466667, 0.866667, 1)
 material = SubResource("StandardMaterial3D_cw1w7")
 size = Vector3(0.05, 0.05, 0.15)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_abacp"]
-size = Vector3(0.05, 0.05, 0.15)
-
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_clvwe"]
 height = 1.0
 radius = 0.1
@@ -74,7 +71,7 @@ transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, 0, 
 [node name="uiRay" parent="xrplayer/righthand/handproxy" unique_id=398823697 node_paths=PackedStringArray("query_exception_nodes") instance=ExtResource("4_316iy")]
 follow_mouse = false
 smoothing_enabled = false
-query_exception_nodes = [NodePath("../handbody")]
+query_exception_nodes = [NodePath("")]
 private_ui_collision_layers = 512
 edit_ui_collision_layers = 4
 world_collision_layers = 4294966779
@@ -93,13 +90,6 @@ mesh = SubResource("BoxMesh_mky8q")
 [node name="handMenuPoint" type="Node3D" parent="xrplayer/righthand/handproxy" unique_id=1010963410]
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, 0, -0.203)
 
-[node name="handbody" type="StaticBody3D" parent="xrplayer/righthand/handproxy" unique_id=1135898952]
-collision_layer = 1024
-collision_mask = 1024
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="xrplayer/righthand/handproxy/handbody" unique_id=1244385321]
-shape = SubResource("BoxShape3D_abacp")
-
 [node name="handiktarget" type="Node3D" parent="xrplayer/righthand" unique_id=258425654]
 transform = Transform3D(-1, 0, 8.74228e-08, -8.74228e-08, 4.37114e-08, -1, 0, -1, -4.37114e-08, 0, 0, 0)
 
@@ -114,8 +104,8 @@ script = ExtResource("2_npgyv")
 [node name="uiRay" parent="xrplayer/lefthand/handproxy" unique_id=1609942515 node_paths=PackedStringArray("query_exception_nodes") instance=ExtResource("4_316iy")]
 interaction_index = 1
 follow_mouse = false
-smoothing_speed = 3.091
-query_exception_nodes = [NodePath("../handbody")]
+target_position = Vector3(0, 0, -100000)
+query_exception_nodes = [NodePath("")]
 private_ui_collision_layers = 512
 edit_ui_collision_layers = 4
 world_collision_layers = 4294966779
@@ -136,13 +126,6 @@ mesh = SubResource("BoxMesh_mky8q")
 
 [node name="handMenuPoint" type="Node3D" parent="xrplayer/lefthand/handproxy" unique_id=1910762934]
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, 0, -0.203)
-
-[node name="handbody" type="StaticBody3D" parent="xrplayer/lefthand/handproxy" unique_id=1488514963]
-collision_layer = 1024
-collision_mask = 1024
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="xrplayer/lefthand/handproxy/handbody" unique_id=1949710740]
-shape = SubResource("BoxShape3D_abacp")
 
 [node name="handiktarget" type="Node3D" parent="xrplayer/lefthand" unique_id=1773178828]
 transform = Transform3D(-1, 0, 8.74228e-08, -8.74228e-08, 4.37114e-08, -1, 0, -1, -4.37114e-08, 0, 0, 0)
