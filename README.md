@@ -31,17 +31,16 @@ support the project however you wish, or not at all.
 ## Core Focus:
 - **Accessibility**: Making BarkVR welcoming to everyone, regardless of
   background or ability.
-- **Decentralized Design**: Giving users the power to shape BarkVR's world
-  through decentralization.
+- **Decentralized Design**: Giving users the freedom to create without borders and no reliance on a login system.
 - **User Empowerment**: Providing users with complete control over their
-  creations for a sense of ownership.
-- **Open Design**: Welcoming collaboration and transparency to evolve BarkVR
+  creations.
+- **Open Design**: Welcoming collaboration, transparency, and teaching to evolve BarkVR
   together.
 - **Social VR**: Creating a space where connections thrive beyond physical
   limits, fostering shared experiences and boundless imagination.
 
-We are working to incorporate technologies like the Matrix messaging API for
-user management, ppfs or any other static file hosting, and WebRTC for the peer
+We are working to incorporate technologies like Activitypub (and matrix) for
+user management, ppfs or any other static file hosting, and WebRTC/QUIC for the peer
 connections for our storage solution. This means the whole platform is
 completely open and capable of being run/hosted without any reliance on the
 maintainers.
