@@ -34,11 +34,9 @@ normal_texture = SubResource("NoiseTexture2D_ttheo")
 texture_filter = 1
 
 [node name="UnifiedInspector3d" type="StaticBody3D" unique_id=117416126]
+physics_interpolation_mode = 2
 collision_layer = 4
 collision_mask = 4
-freeze = true
-freeze_mode = 1
-continuous_cd = true
 script = ExtResource("1_2f3s4")
 background_material = SubResource("StandardMaterial3D_o5mcw")
 _auto_load_ui = ExtResource("2_8d3jq")
