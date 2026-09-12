@@ -100,7 +100,7 @@ var popout_panels: Array[Panel3D] = []
 		colshape.shape.size = Vector3((pixel_size/1000.0)*viewport.size.x,(pixel_size/1000.0)*viewport.size.y,panel_thickness)
 
 ## sets the thickness of the collider
-@export var panel_thickness := .05
+@export var panel_thickness := .00
 
 const TOP_LEFT = 0
 const MIDDLE_LEFT = 1
@@ -114,7 +114,7 @@ const BOTTOM_RIGHT = 8
 @export_enum("TOP_LEFT", "MIDDLE_LEFT", "BOTTOM_LEFT", "MIDDLE_TOP", "MIDDLE_MIDDLE", "MIDDLE_BOTTOM", "TOP_RIGHT", "MIDDLE_RIGHT", "BOTTOM_RIGHT") var ANCHOR_POSITION := MIDDLE_MIDDLE
 
 ## Restricts the viewport sizing to be above a specific
-@export var minimum_viewport_size:Vector2i=Vector2i(50,50)
+@export var minimum_viewport_size:Vector2i=Vector2i(750,500)
 
 ## Restricts the viewport sizing to be below a specific size
 @export var maximum_viewport_size:Vector2i=Vector2i(2048,2048)
